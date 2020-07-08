@@ -1,0 +1,179 @@
+name: Unit and Integration Tests
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch/tag/hash to use (defaults to master)
+        required: false
+        default: master
+      jobs:
+        description: Jobs to run (defaults to all)
+        required: false
+
+jobs:
+  log-params:
+    name: Log Params
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')
+    strategy:
+      matrix:
+        java-version: [8, 11]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+      - run: bin/build/install-plugin-sdk.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-unit
+          restore-keys: |
+            maven-
+      - run: bin/build/run-unit-tests.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: unit-tests-coverage-java-${{ matrix.java-version }}
+          path: '**/target/site/jacoco/**'
+
+  integration-tests-jira7:
+    name: Integration Tests - Jira 7.13.3
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira7')
+    needs: unit-tests
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/install-int-test-libs.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-integration-jira-7
+          restore-keys: |
+            maven-integration-jira-
+            maven-integration-
+            maven-
+      - run: bin/build/install-common-modules.sh
+      - run: VERSION=7.13.3 TESTKIT_VERSION=7.12.5 bin/build/run-jira-its.sh
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: webdriver-screenshots-jira-7
+          path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**
+
+  integration-tests-jira8:
+    name: Integration Tests - Jira 8.3.0
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira8')
+    needs: unit-tests
+    strategy:
+      matrix:
+        java-version: [8, 11]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+      - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/install-int-test-libs.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-integration-jira-8
+          restore-keys: |
+            maven-integration-jira-
+            maven-integration-
+            maven-
+      - run: bin/build/install-common-modules.sh
+      - run: VERSION=8.3.0 TESTKIT_VERSION=8.1.8 bin/build/run-jira-its.sh
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: webdriver-screenshots-jira-8-java-${{ matrix.java-version }}
+          path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**
+
+  integration-tests-confluence:
+    name: Integration Tests - Confluence
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence')
+    needs: unit-tests
+    strategy:
+      matrix:
+        confluence-version: [6.4.3, 6.15.6]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/install-int-test-libs.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-integration-confluence-${{ matrix.confluence-version }}
+          restore-keys: |
+            maven-integration-confluence-
+            maven-integration-
+            maven-
+      - run: bin/build/install-common-modules.sh
+      - run: VERSION=${{ matrix.confluence-version }} bin/build/run-confluence-its.sh
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: webdriver-screenshots-confluence-${{ matrix.confluence-version }}
+          path: confluence-slack-server-integration-plugin/target/webdriverTests/**
+
+  integration-tests-bitbucket:
+    name: Integration Tests - Bitbucket 6.7.1
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
+    needs: unit-tests
+    strategy:
+      matrix:
+        java-version: [8, 11]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+      - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/install-int-test-libs.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-integration-bitbucket
+          restore-keys: |
+            maven-integration-
+            maven-
+      - run: bin/build/install-common-modules.sh
+      - run: bin/build/run-bitbucket-its.sh
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: webdriver-screenshots-bitbucket-java-${{ matrix.java-version }}
+          path: bitbucket-slack-server-integration-plugin/target/webdriverTests/**
