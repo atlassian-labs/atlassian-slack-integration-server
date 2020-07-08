@@ -1,0 +1,36 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.plugins.slack.spacetochannel.actions.SlackViewSpaceInstallationAction" *#
+#requireResource("confluence.web.resources:space-admin")
+
+<html>
+<head>
+    <title>$i18n.getText("slack2-space-configuration.title")</title>
+    <meta name="decorator" content="atl.general"/>
+</head>
+<body>
+#applyDecorator("root")
+    #decoratorParam("helper" $action.helper)
+    #decoratorParam("context" "space-administration")
+    #decoratorParam("mode" "view-space-administration")
+    #decoratorParam("space" $action.space)
+
+    #applyDecorator("root")
+        #decoratorParam("context" "spaceadminpanel")
+        #decoratorParam("selection" "slack2-space-configuration")
+        #decoratorParam("title" "Slack Configuration")
+        #decoratorParam("selectedTab" "admin")
+        #decoratorParam("selectedSpaceToolsWebItem" "slack2-space-configuration-2")
+        #decoratorParam("helper" $action.helper)
+
+
+        $webResourceManager.requireResource("com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-base-link-resources")
+        $webResourceManager.requireResource("com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-resources")
+        #set ($context = {
+            "space": $action.space
+        })
+        #foreach ($webPanel in $webInterfaceManager.getDisplayableWebPanels("plugins.slack.configure", $context))
+            $!webPanel.getHtml($context)
+        #end
+    #end
+#end
+</body>
+</html>

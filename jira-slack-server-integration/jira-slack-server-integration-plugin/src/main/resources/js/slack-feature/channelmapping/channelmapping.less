@@ -1,0 +1,299 @@
+@import "../../../slack-less/global";
+
+@default-border: 1px solid #ccc;
+@selected-background: @paleBlueColor;
+@icon-colour: @mediumGrayColor;
+@icon-colour-hover: @charcoalColor;
+@shaded: @lightGrayColor;
+@error-colour: @warmRedColor;
+@form-label-text-colour: @mediumGrayColor;
+
+@cell-width: 250px;
+
+#dropdown-team-selector {
+  .selected a:not(:hover) {
+    background-color: @paleBlueColor;
+  }
+  .selected {
+    font-weight: bold;
+  }
+}
+
+#slack-channel-configuration {
+
+  .slack-team-selector-box {
+    margin: 15px;
+    vertical-align: text-bottom;
+
+    button {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .slack-channel-mapping-form {
+
+    .project-name {
+      .field-group {
+        /* Override AUI project selector style */
+        display: inline-block;
+        padding: 0;
+        width: 240px;
+      }
+
+      .drop-menu {
+        height: 28px;
+        top: 2px;
+      }
+
+    }
+
+    .slack-channel-selector-container {
+      margin-left: 10px;
+      display: inline-block;
+    }
+
+    .slack-workspace-selector-container {
+      display: inline-block;
+    }
+
+    #slack-project-to-channel-add-select-single-select {
+      margin-left: 10px;
+    }
+
+    #slack-project-to-workspace-add-select-single-select {
+      margin-left: 10px;
+    }
+
+    .loading {
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+  }
+
+  table {
+
+    td {
+      vertical-align: middle;
+    }
+    .project-name {
+      width: 300px;
+      .slack-project-mapping-field {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .team-name {
+      .slack-team-mapping-field {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .channel-name {
+      min-width: @cell-width;
+
+      .slack-channel-mapping-field {
+        display: inline-block;
+        margin-right: 10px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .inline-toolbar {
+      .wrap {
+        max-width: 200px;
+
+        .spinner {
+          display: inline-block;
+          float: right;
+        }
+      }
+
+      .aui-iconfont-delete {
+        color: @mediumGrayColor;
+
+        &:hover {
+          color: @charcoalColor;
+        }
+      }
+
+      .trash-channel-mapping {
+        .aui-icon {
+          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAcCAYAAAB75n/uAAAAAXNSR0IArs4c6QAAAWJJREFUSA3tVj1uwjAUrk3FVC4Q9RwkB+iAWJgyUqkjS5IbECqxJ5nYKlCvUHXp2A7JzAHoGVgAKTGfIxw5KK4phAGEJcvv/9nfi19M7tSDuK4bEEJeYNKqMFsyxt7CMPSgYxX6XERUCsdxupTSD5VekneDIPiU+BJ5X+IkBsHbO3aEAL6kyknP87hsiGliKhNQKCtHlmVAgK2gXFcaHCgktm03DcN4B9Y9+DQP9PvLrFQbiuB9BLdrCs4TtxDPAYQdzlDA8MiJugcgzmuorEHdCS83XnHRcLGG+Pb9U48C7P0oikYiztlrcMUJcD8W6EGErxxPHS8w31+vGKL9ox7L3yDSIneDSAtR0U3xBnrGr26q9dAYoJsO0E0nwqyoQZqmX0J47Ip2wpDgR/ZvCCZJkqVpmmuc4knI/rvCF5uPZrJfkYAL4zj+tizrF+QDNmPAQfkwk4JsQM8xX9Ecx5I8J7eeHn3WhK1k5gAAAABJRU5ErkJggg==) no-repeat center center transparent;
+          background-size: 12px 14px;
+        }
+      }
+
+      .close-edit-notification {
+        .aui-icon {
+          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAaCAYAAACkVDyJAAAAAXNSR0IArs4c6QAAAspJREFUSA3dlk9IVGEQwH1v17X1YB2KQg9hl4g6Fe62SNQhIsIIi+1QmF3a1tx/HbqEZ6Gbbi4dIom2gyUULBaExwxcpIvUqU4GEoSSQcGiu9tvNmd9Pdd8uu/UwLfzzbyZ+X1/5j1taPifpL+//3Aymeyy7smwGm7O4/H4HtM084ZhtJfL5Sfo5NDQ0HfTTYjWAtbk8XheCkx86GuoZzL3yo/bAuwhNTu1Ljv8yvyG2K4DubO71O2R4iLAfhWLxfMjIyNzYrt6h8AuUXOcI9S6JYDdw8PDOYGJuHaHiUTiGPWkORQmu7tthbkGjEajbXByjGYpKgIsDSz9x1r7ra5mzbW1WSQSaUbeknVUM4HlgHVjl9Snut4jNfx+/1OKWWHvFxcXr9SCCbQuIE0yyDHKTirCzuaWl5e7stnsT/XZ9baPlCbp5UvyWAsC+8HoTKfTH9RXS3vEGYvF2js6OtpmZma+1Qqy+/iSnODlHsdfyUevMC4Am7bH2m05UoPk0cbGxlcc0V57gN3u6+s7QPwL/D59xs6iNMmk2v/SZiqVusU9nCJov7R2OBz2b5RAR+70+XwTPN+tMcAGgT1SezNtknDVEhRobW2Vrlt3tyzEQ/s/Z1GHNJ7cMWADajvRZqFQCBP4RYMpeJGjvae2ahYiL/EZtdHvSqXSdXTZ4tt0WtmJ/KH0er1TwHZpBquPsHr56jewgBjP7usz9Gfa/3gmk1mw+BxNq0dH552kzd9QuGk1cwXoOYYH3wSj0pHYC4wQHfnJEcEWVAWKn3frMoXHGOpforiYLfKceQF1mp1Pib0d0feokpvP5z+GQqEljLOrxXYAq+wYmEgPO3u9HZDm/AUU5zQSCARaAIU0aFUPAHtg823ZXAeUCux0MhgMHgR6RGy6cRTYHZnXKxv9i1Gen5/v5VXYB3Rldnb2Zr0gR/nyZZHhKNhh0G9yHPqggiEmXwAAAABJRU5ErkJggg==) no-repeat center center transparent;
+          background-size: 14px 13px;
+        }
+      }
+    }
+
+
+    .loading {
+      .spinner {
+        margin: 5px 10px 0 0;
+      }
+
+      .summary-menu,
+      .edit-menu {
+        display: none;
+      }
+    }
+
+
+    .group {
+      margin-top: 8px;
+      max-width: 800px;
+
+      h6 {
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      ul {
+        margin-top: 0;
+        vertical-align: top;
+
+        li {
+          position: relative;
+          list-style-type: none;
+
+          .matcher-type {
+            margin-right: 7px;
+          }
+
+          .icon-wait {
+            position: absolute;
+            left: 1px;
+            top: 2px;
+          }
+        }
+      }
+
+      .slack-notification-config {
+        margin: 0 7px 0 0;
+      }
+
+      ul.issue-events {
+        padding: 0;
+
+        li {
+          line-height: 30px;
+        }
+
+        .criteria-list {
+
+          button {
+            margin-left: 20px;
+            border-color: #cccccc;
+          }
+        }
+      }
+
+      ul.transition-criteria {
+        display: inline-block;
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+button.criteria-selector {
+  width: 200px;
+  background-color: transparent;
+}
+
+
+#slack-channel-messages {
+  margin-top: 10px;
+}
+
+#slack-remove-link .remove-warning {
+  background-color: @error-colour;
+  color: #fff;
+}
+
+.query-component.slack-styled {
+
+
+  .search-container {
+
+    .criteria-list {
+      li {
+        display: none;
+
+        &[data-id='issuetype'],
+        &[data-id='priority'] {
+          display: inline-block;
+        }
+
+        &:before {
+          content: "&";
+          margin-left: 6px;
+        }
+
+        &:first-child:before {
+          content: none;
+        }
+
+        button {
+          margin-left: 12px;
+          height: 30px;
+          border-color:#cccccc;
+        }
+
+        &:first-child button {
+          margin-left: 0;
+        }
+
+      }
+
+    }
+
+    #advanced-search {
+      height: 33px;
+    }
+
+  }
+
+  .search-container[data-mode="advanced"] {
+    width: 100%;
+
+    .search-options-container {
+      width: 1%;
+    }
+
+    .search-button {
+      display: none;
+    }
+
+  }
+
+  .notifications {
+    margin-top: 10px;
+  }
+
+}
+
+.aui-list {
+  .slack-login-dropdown-footer {
+
+    a, a:hover {
+      text-decoration: none;
+      color: #3572b0;
+    }
+  }
+}

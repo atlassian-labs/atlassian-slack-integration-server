@@ -1,0 +1,91 @@
+@import "global";
+
+@icon-colour: @mediumGrayColor;
+
+button.migrate-to-slack {
+    vertical-align: bottom;
+    padding: 4px;
+    margin: 0;
+    line-height: 0;
+
+    .slack-logo-image {
+        background-position: center center;
+        background-repeat: no-repeat;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+
+        &:not(.migrated) {
+            background-image: url("images/slack-logo.svg");
+        }
+        &.migrated {
+            background-image: url("images/slack-logo-check.svg");
+        }
+    }
+}
+
+#hipchat-room-configuration table .inline-toolbar .wrap {
+    max-width: 250px !important;
+}
+
+
+#migrate-to-slack-dialog {
+    .dialog-errors {
+        color: @warmRedColor;
+        padding: 5px 20px;
+    }
+
+    .slack-button-spinner {
+        display: none;
+        padding-left: 40px;
+        vertical-align: middle;
+    }
+
+    .item-team {
+        float: right;
+        font-weight: 700;
+    }
+
+    form.slack-channel-select-form {
+        padding: 0;
+        display: flex;
+
+        .field-group {
+            padding: 10px 0;
+        }
+        .mapping-arrow-column {
+            flex-grow: 0;
+            padding-top: 56px;
+        }
+        .mapping-arrow {
+            color: @icon-colour;
+        }
+        .aui-item {
+            padding: 20px 20px 5px;
+            flex-grow: 1;
+        }
+        .room-name {
+            padding: 4px;
+            margin-top: 11px;
+            border: 1px solid @dividerColor;
+            border-radius: 3px;
+            background-color: @lightGrayColor;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 220px;
+        }
+    }
+
+    .form-footer {
+        .throbber {
+            margin-bottom: 0;
+        }
+    }
+
+    .dialog-panel-body {
+        p {
+            padding: 20px;
+        }
+    }
+}

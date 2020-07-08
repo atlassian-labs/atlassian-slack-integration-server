@@ -1,0 +1,41 @@
+{namespace JIRA.Templates.Slack.Config}
+
+/**
+  *
+  */
+{template .configure}
+<div class="slack-jira-configure">
+    <h1>{getText('plugins.slack.admin.title')}</h1>
+
+    {call Slack.Templates.Configuration.Steps.integrationStepsStart}
+        {param slackNotLinkedImageUrl: pluginResourceUrl('com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-image-resources','images/slack-needs-signin.svg') /}
+    {/call}
+</div>
+{/template}
+
+/**
+  * Render channel mapping for global scope
+  * @param links
+  * @param routes
+  * @param? link
+  * @param? recentInstall
+  * @param projectConfigurations
+  * @param projectsField
+  * @param jqlHelpUrl
+  * @param? slackUserName
+  */
+{template .renderChannelMapping}
+    <div id="slack-space-to-channel-configuration">
+        {call JIRA.Templates.Slack.Project.ChannelMapping.projectToChannelConfiguration}
+            {param links: $links /}
+            {param projectConfigurations: $projectConfigurations /}
+            {param recentInstall: $recentInstall /}
+            {param showRemoveButton: true /}
+            {param projectsField: $projectsField /}
+            {param slackUserName: $slackUserName /}
+            {param jqlHelpUrl: $jqlHelpUrl /}
+            {param link: $link /}
+            {param routes: $routes /}
+        {/call}
+    </div>
+{/template}

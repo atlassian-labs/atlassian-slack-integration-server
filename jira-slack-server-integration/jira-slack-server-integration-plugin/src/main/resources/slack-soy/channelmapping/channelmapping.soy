@@ -1,0 +1,164 @@
+{namespace JIRA.Templates.Slack.Project.ChannelMapping}
+
+/**
+ *
+ * @param projectConfigurations
+ * @param links
+ * @param jqlHelpUrl
+ * @param? link
+ * @param? recentInstall
+ * @param? projectsField
+ * @param? projectKey
+ * @param? projectId
+ * @param? projectName
+ * @param? routes
+ * @param? showRemoveButton
+ * @param? slackUserName
+ */
+{template .projectToChannelConfiguration}
+    <div id="slack-channel-configuration" class="slack-channel-mappings"
+        {if $projectKey}data-project-key="{$projectKey}"{/if}
+        {if $projectId}data-project-id="{$projectId}"{/if}
+        {if $slackUserName}data-slack-user-name="{$slackUserName}"{/if}
+        {if $link}data-slack-team-id="{$link.teamId}"{/if}
+        {if $link}data-slack-team-name="{$link.teamName}"{/if}>
+        <div class="slack-configuration-toolbar" id="team-dropdown-alignment-container">
+            <button class="aui-button aui-dropdown2-trigger aui-dropdown2-trigger-arrowless" aria-controls="dropdown-settings">
+                <span class="aui-icon aui-icon-small aui-iconfont-handle-horizontal"></span>
+            </button>
+            <aui-dropdown-menu id="dropdown-settings" data-aui-alignment-container="#team-dropdown-alignment-container">
+                {if $showRemoveButton}
+                <aui-section label="{getText('plugins.slack.admin.installed.team.coonnection')}">
+                    <aui-item-link href="{contextPath() + '/plugins/servlet/slack/configure?action=edit&teamId=' + $link.teamId}">
+                        <span class="aui-icon aui-icon-small aui-iconfont-edit">Configure</span> {getText('plugins.slack.admin.installed.update.team')}
+                    </aui-item-link>
+                    <aui-item-link id="slack-uninstall" href="#">
+                        <span class="aui-icon aui-icon-small aui-iconfont-delete">Configure</span> {getText('plugins.slack.admin.installed.disconnect.team')}
+                    </aui-item-link>
+                </aui-section>
+                {/if}
+                <aui-section>
+                    <aui-item-link
+                        id="open-advanced-settings-button"
+                        class="trigger-dialog-large slack-settings-button"
+                        {if $projectKey}
+                           href="{contextPath() + '/EditSlackProjectSettings.jspa?projectKey=' + $projectKey}"
+                        {else}
+                            href="{contextPath() + '/EditSlackGlobalSettings.jspa'}"
+                        {/if}
+                    >
+                        <span class="aui-icon aui-icon-small aui-iconfont-configure"></span> &nbsp;{getText('jira.plugins.slack.admin.settings.advanced')}
+                    </aui-item-link>
+                </aui-section>
+            </aui-dropdown-menu>
+        </div>
+        <h1 class="slack-configuration-title">
+            {getText('jira.plugins.slack.channelmapping.title')}
+            {if $link}
+            <span class="slack-team-selector-box">
+                <button class="aui-button aui-dropdown2-trigger" aria-controls="dropdown-team-selector">
+                    {$link.teamName}
+                </button>
+                <aui-dropdown-menu id="dropdown-team-selector">
+                    <aui-section label="{getText('jira.plugins.slack.channelmapping.slack.team.list.title')}">
+                    {foreach $l in $links}
+                        <aui-item-link
+                                href="{addQueryParam($routes.adminConfigurationPage, 'teamId', $l.teamId)}"
+                                class="{if $l.teamId == $link.teamId}selected{/if}">
+                            {if $l.teamId == $link.teamId}
+                            <span class="aui-icon aui-icon-small aui-iconfont-arrows-right"></span>&nbsp;
+                            {/if}
+                            {$l.teamName}
+                        </aui-item-link>
+                    {/foreach}
+                    </aui-section>
+                    {if $showRemoveButton}
+                    <aui-section>
+                        <aui-item-link href="{contextPath() + '/plugins/servlet/slack/configure?action=add'}">
+                            <span class="aui-icon aui-icon-small aui-iconfont-add">Configure</span> {getText('plugins.slack.admin.installed.connect.new.team')}
+                        </aui-item-link>
+                    </aui-section>
+                    {/if}
+                </aui-dropdown-menu>
+            </span>
+            {/if}
+        </h1>
+
+        {if $link}
+            {call Slack.Templates.Configuration.Steps.integrationStepsChoose}
+                 {param link: $link /}
+                 {param recentInstall: $recentInstall /}
+                 {param slackUserName: $slackUserName /}
+                 {param slackLinkImageUrl: pluginResourceUrl('com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-image-resources','images/big-news.svg') /}
+                 {param slackLinkImageUrlNoUser: pluginResourceUrl('com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-image-resources','images/slack-needs-signin.svg') /}
+                 {param hasConfig: length($projectConfigurations) > 0 /}
+            {/call}
+
+            <div id="slack-channel-messages"></div>
+
+            {if $slackUserName}
+            <form class="slack-channel-mapping-form aui">
+                <div class="has-arrow">
+                    <span class="project-name mapping-origin-label">
+                        {if $projectsField}
+                            {$projectsField|noAutoescape}
+                        {else}
+                            {$projectName}
+                        {/if}
+                    </span>
+                    <span class="aui-icon aui-icon-small aui-iconfont-devtools-arrow-right mapping-arrow">{getText('jira.plugins.slack.channelmapping.arrow.label')}</span>
+                </div>
+
+                <div class="slack-channel-selector-container">
+                    <select id="slack-project-to-channel-add-select" class="hidden slack-channel-selector">
+                        <option value="" disabled selected>{getText('jira.plugins.slack.channelselector.select.channel')}</option>
+                    </select>
+                </div>
+
+                {if not $projectsField}
+                    <input type="hidden" id="project-field" value="{$projectName} ({$projectKey})"/>
+                {/if}
+                <button id="slack-project-to-channel-add" class="aui-button aui-button-primary" aria-disabled="true" disabled>{getText('plugins.slack.channelmapping.add.label')}</button>
+                <span class="loading">&nbsp;</span>
+            </form>
+            {/if}
+
+            <meta name="ajs-advanced-search-help-title" content="{$jqlHelpUrl.title}">
+            <meta name="ajs-advanced-search-help-url" content="{$jqlHelpUrl.url}">
+            <table class="aui aui-table-sortable slack-channel-mapping-list">
+                <thead>
+                    <tr>
+                      <th id="project" class="header"><h5>{getText('jira.plugins.slack.channelmapping.project.header')}</h5></th>
+                      <th id="team" class="header"><h5>{getText('plugins.slack.channelmapping.team.header')}</h5></th>
+                      <th id="channel" class="header"><h5>{getText('plugins.slack.channelmapping.channel.header')}</h5></th>
+                      <th id="actions" class="header"></th>
+                    </tr>
+                  </thead>
+                {foreach $projectConfiguration in $projectConfigurations}
+                    {foreach $channelId in $projectConfiguration.orderedChannelIds}
+                        {foreach $configTeam in $projectConfiguration.configuration[$channelId]}
+                            {call JIRA.Templates.Slack.Project.ChannelMapping.channelMapping}
+                                {param teamId: $projectConfiguration.channels[$channelId].teamId /}
+                                {param teamName: $projectConfiguration.channels[$channelId].teamName /}
+                                {param channelId: $channelId /}
+                                {param channelName: $projectConfiguration.channels[$channelId].channelName /}
+                                {param projectName: $projectConfiguration.projectName /}
+                                {param projectKey: $projectConfiguration.projectKey /}
+                                {param projectId: $projectConfiguration.projectId /}
+                                {param config: $configTeam.settings /}
+                                {param configurationGroupId: $configTeam.configurationGroupId /}
+                            {/call}
+                        {/foreach}
+                    {/foreach}
+                {/foreach}
+            </table>
+        {else}
+            {call aui.message.info}
+                {param isCloseable : false /}
+                {param content}
+                    {getText('jira.plugins.slack.channelmapping.not-connected', $routes.globalConfigurationPage)|noAutoescape}
+                {/param}
+            {/call}
+        {/if}
+    </div>
+{/template}

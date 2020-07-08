@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.atlassian.plugins</groupId>
+        <artifactId>atlassian-slack-server-integration-parent</artifactId>
+        <version>1.1.13</version>
+    </parent>
+
+    <artifactId>jira-slack-server-integration</artifactId>
+    <packaging>pom</packaging>
+    <version>1.1.13</version>
+    <name>Jira Slack Integration Modules</name>
+
+    <modules>
+        <module>jira-slack-server-integration-plugin</module>
+        <module>jira-8-compat</module>
+        <module>jira-service-desk-compat</module>
+    </modules>
+
+    <properties>
+        <aui.version>5.1.3</aui.version>
+
+        <!-- this is the version we will run integration tests against -->
+        <jira.version>7.10.2</jira.version>
+        <testkit.version>7.7.10</testkit.version>
+        <jira.test.unit.version>${jira.version}</jira.test.unit.version>
+
+        <jira.webdriver.version>${jira.version}</jira.webdriver.version>
+        <atlassian.selenium.version>2.5.1-jira-1</atlassian.selenium.version>
+        <reactive.extension.version>1.0.0</reactive.extension.version>
+
+        <!-- This is the version the plugin is compiled against -->
+        <jira.compile.version>7.3.9</jira.compile.version>
+
+        <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
+
+        <jira.data.version>${jira.version}</jira.data.version>
+        <jira-project-config.version>${jira.version}</jira-project-config.version>
+        <triggers.version>2.3.8</triggers.version>
+        <selenium.version>2.41.0</selenium.version>
+        <httpclient.version>0.15.0</httpclient.version>
+        <httpclient-core.version>4.3.2</httpclient-core.version>
+
+        <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
+
+        <project.root.directory>${project.basedir}/..</project.root.directory>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.atlassian.vcache</groupId>
+                <artifactId>atlassian-vcache-api</artifactId>
+                <version>${atlassian.vcache.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.atlassian.jira</groupId>
+                <artifactId>jira-api</artifactId>
+                <version>${jira.compile.version}</version>
+                <exclusions>
+                    <!-- Old version of the Jackson bundled into Jira. We bundle newer Jackson implementation -->
+                    <exclusion>
+                        <groupId>org.codehaus.jackson</groupId>
+                        <artifactId>jackson-core-asl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>fugue</artifactId>
+                        <groupId>com.atlassian.fugue</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.javascript</groupId>
+                        <artifactId>closure-compiler</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.jira</groupId>
+                <artifactId>jira-core</artifactId>
+                <version>${jira.compile.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>fugue</artifactId>
+                        <groupId>com.atlassian.fugue</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-mapper-asl</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.jira</groupId>
+                <artifactId>jira-admin-project-config-plugin</artifactId>
+                <version>${jira-project-config.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>atlassian-spring-scanner-runtime</artifactId>
+                        <groupId>com.atlassian.plugin</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.jira</groupId>
+                <artifactId>jira-webdriver-tests</artifactId>
+                <version>${jira.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>fugue</artifactId>
+                        <groupId>com.atlassian.fugue</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-core-asl</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-jaxrs</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-mapper-asl</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-xc</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.jira</groupId>
+                <artifactId>atlassian-jira-pageobjects</artifactId>
+                <version>${jira.pageobjects.version}</version>
+            </dependency>
+
+            <!--<dependency>-->
+            <!--<groupId>org.seleniumhq.selenium</groupId>-->
+            <!--<artifactId>selenium-java</artifactId>-->
+            <!--<version>${selenium.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>org.seleniumhq.selenium</groupId>-->
+            <!--<artifactId>selenium-remote-driver</artifactId>-->
+            <!--<version>${selenium.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+            <!--<groupId>com.atlassian.selenium</groupId>-->
+            <!--<artifactId>atlassian-selenium</artifactId>-->
+            <!--<version>${atlassian.selenium.version}</version>-->
+            <!--<exclusions>-->
+            <!--<exclusion>-->
+            <!--<groupId>org.seleniumhq.selenium</groupId>-->
+            <!--<artifactId>selenium-remote-driver</artifactId>-->
+            <!--</exclusion>-->
+            <!--</exclusions>-->
+            <!--</dependency>-->
+            <dependency>
+                <groupId>com.atlassian.jira</groupId>
+                <artifactId>jira-tests</artifactId>
+                <version>${jira.test.unit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.jira.tests</groupId>
+                <artifactId>jira-testkit-client</artifactId>
+                <version>${testkit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>jackson-jaxrs</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-core-asl</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-xc</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jackson-mapper-asl</artifactId>
+                        <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.httpclient</groupId>
+                <artifactId>atlassian-httpclient-apache-httpcomponents</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${httpclient-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-beans.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <scm>
+        <connection>scm:git:ssh://git@bitbucket.org:atlassianlabs/atlassian-slack-integration-server.git</connection>
+        <developerConnection>scm:git:ssh://git@bitbucket.org/atlassianlabs/atlassian-slack-integration-server.git</developerConnection>
+        <url>https://bitbucket.org/atlassianlabs/atlassian-slack-integration-server/src</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Luiz Silva</name>
+            <email>lsilva@atlassian.com</email>
+            <organization>Atlassian</organization>
+            <organizationUrl>https://atlassian.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mykhailo Vlasov</name>
+            <email>mvlasov@atlassian.com</email>
+            <organization>Atlassian</organization>
+            <organizationUrl>https://atlassian.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+</project>

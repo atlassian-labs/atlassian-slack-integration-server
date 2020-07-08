@@ -1,0 +1,15 @@
+{namespace JIRA.Templates.Slack.Banner}
+
+/**
+ * @param teamName
+ * @param teamId
+ * @param connectionError
+ */
+{template .updateSlackLink}
+     <div class="slack-update-banner">
+        <b>{getText('jira.plugins.slack.disconnection.banner.title', $teamName)}</b>
+        <p>{getText('jira.plugins.slack.disconnection.banner.description', $connectionError)}</p>
+        <p/>
+        <a href="{contextPath() + '/plugins/servlet/slack/configure?teamId' + $teamId}">{getText('plugins.slack.reinstall.discovery.action')}</a>
+     </div>
+{/template}

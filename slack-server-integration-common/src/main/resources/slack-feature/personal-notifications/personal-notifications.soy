@@ -1,0 +1,84 @@
+{namespace Slack.Templates.Profile}
+
+/**
+ * @param notificationMap
+ * @param notificationKeys
+ * @param isNotConfluence
+ * @param oauthSessionsPage
+ * @param teamId
+ * @param links
+ */
+{template .viewPersonalNotificationsPage}
+    {call aui.page.document}
+        {param windowTitle: getText('plugins.slack.pn.page.title') /}
+        {param headContent}
+            <meta name="decorator" content="atl.userprofile"/>
+            <meta name="tab" content="slack-user-personal-settings-link">
+            <meta name="activeTab" content="slack-user-personal-settings-link">
+        {/param}
+        {param content}
+            <section id="slack-content" role="main">
+              {if $isNotConfluence}
+                  {call aui.page.pageHeader}
+                    {param content}
+                        {call aui.page.pageHeaderMain}
+                            {param content}
+                                <h1>{getText('plugins.slack.pn.page.title')}</h1>
+                            {/param}
+                        {/call}
+                    {/param}
+                  {/call}
+              {/if}
+              {call aui.page.pagePanel}
+                {param content}
+                    {call aui.page.pagePanelContent}
+                        {param content}
+                            <p>{getText('plugins.slack.pn.page.info', $oauthSessionsPage)|noAutoescape}</p>
+
+                            {if length($notificationKeys) > 0}
+                                <h3>{getText('plugins.slack.pn.notifications.title')}</h3>
+                                <p>{getText('plugins.slack.pn.notifications.description')}</p>
+                                <form class="aui top-label">
+                                    <fieldset class="top-label">
+                                        {foreach $key in $notificationKeys}
+                                            <div class="checkbox">
+                                                <input class="checkbox slack-personal-notification"
+                                                    id="pn-{$key}"
+                                                    data-key="{$key}"
+                                                    type="checkbox"
+                                                    {if $notificationMap[$key]} checked="checked"{/if}>
+                                                <label for="pn-{$key}">{getText('plugins.slack.pn.field.' + $key)}</label>
+                                            </div>
+                                        {/foreach}
+                                    </fieldset>
+
+                                    <fieldset class="top-label">
+                                        <div class="field-group top-label">
+                                            <label for="pn-workspace-select">{getText('plugins.slack.pn.workspace.title')}</label>
+                                            <p>{getText('plugins.slack.pn.workspace.description', $oauthSessionsPage)|noAutoescape}</p>
+                                            {if length($links) > 0}
+                                                <select id="pn-workspace-select" class="select">
+                                                    <option value="" disabled {if not $teamId}selected{/if}>
+                                                        {getText('plugins.slack.pn.workspace.default')}
+                                                    </option>
+                                                    {foreach $link in $links}
+                                                        <option value="{$link.teamId}" {if $link.teamId == $teamId}selected{/if}>
+                                                            {$link.teamName}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            {else}
+                                            {getText('plugins.slack.pn.workspace.empty')}
+                                            {/if}
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            {/if}
+                        {/param}
+                    {/call}
+                {/param}
+              {/call}
+            </section>
+        {/param}
+    {/call}
+{/template}

@@ -1,0 +1,426 @@
+@import "global";
+
+@icon-colour: @mediumGrayColor;
+@icon-colour-hover: @charcoalColor;
+
+.slack-issue-panel {
+
+  .confirm-remaining-accounts-sidebar {
+    margin: 10px 0;
+  }
+
+  .aui-iconfont-remove-label {
+    color: @icon-colour;
+  }
+
+  #slack-dedicated-channel-section {
+
+    .buttons-container {
+
+      span {
+        margin-left: 10px;
+      }
+
+      .aui-message {
+        margin: 10px 0 0 0;
+      }
+    }
+
+    .slack-dedicated-channel {
+      .trash-dedicated-channel {
+        padding-left: 10px;
+        vertical-align: middle;
+        visibility: hidden;
+      }
+    }
+
+    .slack-dedicated-channel:hover {
+      .trash-dedicated-channel {
+        visibility: visible;
+      }
+    }
+
+    .slack-button-spinner {
+      display: none;
+      padding-left: 40px;
+      vertical-align: middle;
+    }
+
+    .slack-dedicated-channel-not-logged-in {
+      width: auto;
+
+
+      .aui-help-content {
+        font-size: 14px;
+        line-height: 1.42857142857143;
+      }
+    }
+
+    .dedicated-channel-label {
+      vertical-align: middle;
+    }
+
+    .slack-dedicated-channel-content {
+      vertical-align: middle;
+    }
+
+    .aui-iconfont-remove {
+      color: @icon-colour;
+      margin-left: 10px;
+
+      &:hover {
+        color: @icon-colour-hover;
+      }
+    }
+  }
+
+  #slack-dedicated-channel-footer {
+    margin-top: 10px;
+
+    #slack-dedicated-channel-errors {
+      margin-top: 10px;
+      color: @warmRedColor;
+      display: none;
+    }
+  }
+
+  #slack-mentioned-channels-section {
+    .mentions-label {
+      vertical-align: middle;
+    }
+
+    .slack-mentioned-channels-content {
+      vertical-align: middle;
+    }
+  }
+
+  .slack-issue-panel-button {
+    margin-right: 10px;
+  }
+
+  .errors {
+    color: @warmRedColor;
+  }
+
+  #slack-issue-panel-hide {
+    margin-left: 10px;
+  }
+}
+
+#slack-dedicated-channel-select-suggestions {
+  .aui-list-item-li-filler {
+    display: none;
+  }
+
+  .aui-lozenge {
+    margin-left:20px;
+  }
+
+  .aui-list-item-link {
+    padding-left: 32px;
+    background: no-repeat 10px center;
+  }
+
+  .active {
+    .aui-list-item-link {
+      background-color: #3b73af;
+
+      &.public-channel {
+        background-image: url("images/public_channel_active.png");
+      }
+
+      &.private-channel {
+        background-image: url("images/private_channel_active.png");
+      }
+    }
+  }
+}
+
+.slack-dedicated-channel {
+
+  .slack-dedicated-channel-icon {
+    position: relative;
+    color: @greenColor;
+
+    span {
+      position: absolute;
+      left: 0;
+      top: 2px;
+
+      .transition(opacity 1000ms ease-in-out);
+    }
+
+    .aui-iconfont-approve {
+      opacity: 0;
+    }
+
+    .public-channel {
+      background: 0 0 url("images/public_channel.png") no-repeat;
+      opacity: 1;
+    }
+
+    .private-channel {
+      background: 0 0 url("images/private_channel.png") no-repeat;
+      opacity: 1;
+    }
+
+  }
+
+  .slack-dedicated-channel-icon.success {
+    .aui-iconfont-approve {
+      opacity: 1;
+    }
+
+    .public-channel {
+      opacity: 0;
+    }
+
+    .private-channel {
+      opacity: 0;
+    }
+  }
+
+  .slack-dedicated-channel-name {
+    margin-left: 20px;
+  }
+}
+
+#slack-select-dedicated-channel-dialog {
+  #slack-dedicated-channel-select-field {
+    max-width: 260px;
+  }
+
+  form.slack-channel-select-form {
+    padding: 20px;
+
+    .field-group {
+      padding: 10px 0;
+    }
+  }
+
+  .form-footer {
+
+    .throbber {
+      margin-bottom: 0;
+    }
+  }
+
+  .dialog-panel-body {
+    p {
+      padding: 20px;
+    }
+  }
+}
+
+#slack-dedicated-channel-select-single-select {
+  .aui-ss-field {
+    &.public-channel,
+    &.private-channel {
+      padding-left: 25px;
+      background: no-repeat 5px center;
+    }
+  }
+}
+
+#slack-dedicated-channel-select-single-select .aui-ss-field,
+#slack-dedicated-channel-select-suggestions .aui-list-item-link {
+
+  &.public-channel {
+    background-image: url("images/public_channel.png");
+  }
+
+  &.private-channel {
+    background-image: url("images/private_channel.png");
+  }
+
+}
+
+#slack-issue-mentions-list-dialog {
+
+  .delete-issue-mention {
+    float: right;
+    visibility: hidden;
+  }
+
+  tr:hover {
+    .delete-issue-mention {
+      visibility: visible;
+    }
+  }
+
+  .aui-iconfont-remove-label {
+    color: @icon-colour;
+  }
+
+  .slack-mentions-dialog-content {
+    padding: 20px;
+    min-height: 300px;
+    max-height: 450px;
+    overflow: auto;
+  }
+
+  #slack-mentioned-author {
+    max-width: 100px;
+  }
+
+  #slack-mentioned-team {
+    max-width: 100px;
+  }
+
+  #slack-mentioned-channel {
+    max-width: 100px;
+  }
+
+/*  #slack-mentioned-message {
+    max-width: 200px;
+  }*/
+
+  #slack-mentioned-date {
+    max-width: 100px;
+  }
+
+  .slack-mentions-dialog-login {
+    padding: 20px;
+    min-height: 60px;
+  }
+
+  .slack-user {
+    color: #0576b9;
+    background: #eaf5fc;
+    padding: 2px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .slack-user::before {
+    content: '@';
+  }
+  .slack-channel {
+    color: #0576b9;
+    cursor: pointer;
+  }
+  .slack-channel::before {
+    content: '#';
+  }
+  .slack-cmd {
+    font-weight: 700;
+    background: #fff6d1;
+    padding: 2px;
+    border-radius: 3px;
+  }
+  .slack-cmd::before {
+    content: '@';
+  }
+}
+
+.create-tip-icon {
+  float: right;
+  margin: 6px 0 0 5px;
+}
+
+.selector-with-help {
+  width: auto;
+  overflow: hidden;
+}
+
+#inline-dialog-dedicated-channel-not-logged-in-dialog {
+
+  .aui-help {
+    margin: 20px;
+    width: auto;
+
+    .aui-help-content {
+      font-size: 14px;
+      line-height: 1.42857142857143;
+    }
+  }
+}
+
+#slack-invite-contributors-dialog {
+  .dialog-panel-body {
+
+    form.slack-invite-contributors-form {
+      padding: 20px;
+
+      .field-group {
+        padding: 10px 0;
+      }
+
+      .field-group label {
+        position: absolute;
+        left: -9999px;
+      }
+
+      .slack-invitee-list {
+        max-height: 201px;
+        overflow-y:auto;
+        margin: 0;
+      }
+    }
+
+    .form-footer {
+      .throbber {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  #dedicated-channel-invite-users-picker-container {
+    margin: 20px 0 0 0;
+    border-top: 1px solid #cccccc;
+
+    .aui-select2-container {
+      max-width: 360px;
+      .aui-dropdown {
+        width: 100%;
+      }
+    }
+  }
+
+  p {
+    padding: 20px;
+  }
+
+  .dialog-errors {
+    color: @warmRedColor;
+  }
+
+  .user-picker-errors {
+    color: @warmRedColor;
+  }
+
+  .slack-button-spinner {
+    display: none;
+    padding-left: 40px;
+    vertical-align: middle;
+  }
+}
+
+.slack-settings-panel{
+  padding:20px;
+}
+
+.slack-settings-button{
+  float:right;
+  cursor: pointer;
+}
+
+.slack-remaining-accounts-button {
+  float:right;
+  margin-right: 10px;
+  cursor: pointer;
+  &.has-unconfirmed {
+    color: @warmRedColor;
+  }
+}
+
+.confirm-remaining-accounts-dialog {
+  padding:20px;
+
+  .aui-iconfont-approve {
+    color: @greenColor
+  }
+}
+
+.see-linked-accounts-dialog {
+  margin-top:10px;
+}

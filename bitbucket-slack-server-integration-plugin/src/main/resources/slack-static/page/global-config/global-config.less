@@ -1,0 +1,42 @@
+@import "webstatic:/static/global.less";
+@import "../bitbucket-slack-plugin";
+
+@arrowSize: 30px;
+@pageWidth: 800px;
+
+.slack-configuration-page {
+    width: @pageWidth;
+}
+
+.slack-bitbucket-configure-more {
+    margin-top: @doubleSpacing;
+}
+
+.slack-setup-additional-channels {
+    display: none;
+}
+
+.slack-not-linked,
+.slack-integration-admin-image {
+    width: 200px;
+}
+
+.slack-repo-mapping-form {
+    #slack-repo-to-channel-add {
+        margin-left: @baseSpacing;
+    }
+
+    .has-arrow {
+        display: inline-block;
+        margin-left: @baseSpacing;
+
+        .mapping-origin-label {
+            line-height: @arrowSize;
+            vertical-align: middle;
+        }
+
+        .mapping-arrow {
+            height: @arrowSize;
+        }
+    }
+}

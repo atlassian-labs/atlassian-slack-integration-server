@@ -1,0 +1,104 @@
+{namespace Confluence.Templates.Slack.SpaceToChannel.Config}
+
+/**
+ * Render a channel mapping
+ * @param spaceName
+ * @param spaceKey
+ * @param? spaceUrlPath
+ * @param teamId
+ * @param teamName
+ * @param channelId
+ * @param channelName
+ * @param isPrivate
+ * @param isMuted
+ * @param config
+ * @param channel
+ * @param notificationTypes
+ */
+{template .renderSingleChannelMapping}
+    <tbody class="slack-channel-config"
+            data-channel-id="{$channelId}"
+            data-channel-name="{$channelName}"
+            data-team-id="{$teamId}"
+            data-team-name="{$teamName}"
+            data-channel-private="{$isPrivate}"
+            data-space-key="{$spaceKey}">
+        <tr class="summary">
+            <td headers="space" class="space-name">
+                <div class="slack-channel-mapping-field has-arrow">
+                    <a href="{contextPath() + $spaceUrlPath}">
+                        <span class="mapping-origin-label" title="{$spaceName}">{$spaceName}</span>
+                    </a>
+                    <span class="aui-icon aui-icon-small aui-iconfont-devtools-arrow-right mapping-arrow">linked to</span>
+                </div>
+            </td>
+            <td headers="team" class="team-name">
+                <span class="slack-channel-mapping-field">
+                    <a href="#" class="slack-team-link-url" data-team-id="{$teamId}">{$teamName}</a>
+                </span>
+            </td>
+            <td headers="channel" class="channel-name">
+                <span class="slack-channel-mapping-field">
+                    <a href="#" class="slack-channel-link-url" data-team-id="{$teamId}" data-channel-id="{$channelId}">
+                        #{$channelName}
+                    </a>
+                </span>
+                {if $isMuted}
+                    <span class="aui-lozenge aui-lozenge-current slack-channel-muted-label">{getText('slack2-space-configuration.muted')}</span>
+                {/if}
+            </td>
+            <td headers="actions" class="inline-toolbar">
+                <div class="wrap">
+                    <ul class="menu summary-menu">
+                        <li><a href="#" class="edit-notification">{getText('slack2-space-configuration.edit')}</a></li>
+                        <li><a href="#" class="trash-channel-mapping"><span class="aui-icon aui-icon-small aui-iconfont-remove">{getText('slack2-space-configuration.delete')}</span></a></li>
+                    </ul>
+                    <ul class="menu edit-menu">
+                        <li><a href="#" class="close-edit-notification">{getText('slack2-space-configuration.close')}</a></li>
+                        <li><a href="#" class="trash-channel-mapping"><span class="aui-icon aui-icon-small aui-iconfont-remove">{getText('slack2-space-configuration.delete')}</span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="edit" colspan="4">
+                <h6>{getText('slack2-space-configuration.edit.instructions')}</h6>
+                <ul class="slack-notification-types">
+                    {foreach $notificationType in $notificationTypes}
+                        {let $isEnabled: isSlackChannelNotificationEnabled($config, $channel, $notificationType.key, $notificationType.activeByDefault) /}
+                        <li>
+                            <input type="checkbox" class="notification-type" data-notification-name="{$notificationType.key}" {if $isEnabled}checked="checked"{/if} autocomplete="off">
+                                {$notificationType.label}
+                            </input>
+                        </li>
+                    {/foreach}
+                </ul>
+            </td>
+        </tr>
+    </li>
+{/template}
+
+/**
+ * Renders a line item for the channel picker
+ *
+ * @param name
+ * @param isPrivate
+ */
+{template .renderChannelItem}
+    <span class="aui-icon aui-icon-small {if $isPrivate}private-channel{else}public-channel{/if}"></span>{$name}
+{/template}
+
+/**
+ * Renders a line item to create a new channel
+ *
+ * @param name
+ * @param isPrivate
+ */
+{template .renderNewChannelItem}
+    <span class="create-new-channel-in-slack-option">
+        <span class="aui-icon aui-icon-small {if $isPrivate}private-channel{else}public-channel{/if}"></span>{$name}
+        <span class="aui-lozenge aui-lozenge-subtle aui-lozenge-complete">
+            {getText('slack2-space-configuration.select.channel.new')}
+        </span>
+    </span>
+{/template}

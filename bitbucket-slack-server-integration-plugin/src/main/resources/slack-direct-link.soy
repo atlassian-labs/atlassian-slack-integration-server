@@ -1,0 +1,23 @@
+{namespace slack.integration.plugin.userlink}
+
+/**
+ * @param slackUsers
+*/
+{template .render}
+    {if length($slackUsers) == 0}
+        // don't show any link
+    {else}
+        {requireSlackResourcesByContext('slack-user-profile-page')}
+        <div id="slack-user-links">
+            {foreach $user in $slackUsers}
+                <div class="slack-link">
+                    <a href="#" class="slack-user-link-url"
+                       data-user-id="{$user.slackUserId}" data-team-id="{$user.teamId}">
+                        <span class="slack-direct-chat"></span>
+                        {getText('plugins.slack.user.link.tooltip.single', $user.teamName)}
+                    </a>
+                </div>
+            {/foreach}
+        </div>
+    {/if}
+{/template}

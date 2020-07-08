@@ -1,0 +1,31 @@
+.slack-jql-container {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    width: 500px;
+}
+
+.slack-jql-loading {
+    margin-right: 6px;
+}
+
+.slack-jql-container #slack-jql-error {
+    position: absolute;
+    left: 5px;
+    top: 14px;
+    margin-top: -8px;
+    width: 16px;
+    height: 16px;
+    z-index: 2;
+}
+
+.slack-jql-container textarea#slack-jql-text {
+    resize: vertical;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    padding-left: 26px;
+    padding-right: 46px;
+    vertical-align: top;
+    z-index: 1;
+}

@@ -1,0 +1,144 @@
+{namespace Slack.Templates.Configuration}
+
+/**
+ * @param installingImage String url to the installed image
+ */
+{template .installing}
+    {call .connected}
+        {param id: 'slack-installing' /}
+        {param installHeading: getText('plugins.slack.admin.installing.heading') /}
+        {param installImage: $installingImage /}
+    {/call}
+{/template}
+
+/**
+ * @param uninstallingImage String url to the installed image
+ */
+{template .uninstalling}
+    {call .connected}
+        {param id: 'slack-uninstalling' /}
+        {param installHeading: getText('plugins.slack.admin.uninstalling.heading') /}
+        {param installImage: $uninstallingImage /}
+    {/call}
+{/template}
+
+/**
+ * @param id
+ * @param? installHeading
+ * @param? installMessageHtml
+ * @param? installImage String url to the installed image
+ */
+{template .connected}
+<div id="{$id}">
+    {if $installImage}
+        <img src="{$installImage}" />
+    {/if}
+
+    {if $installHeading}
+        <h5>{$installHeading}</h5>
+    {/if}
+
+    <hr/>
+
+    <div class="slack-install-message">
+        {if $installMessageHtml}
+            <p>{$installMessageHtml|noAutoescape}</p>
+        {/if}
+    </div>
+</div>
+{/template}
+
+/**
+  */
+{template .error}
+{call .message}
+    {param type:'error' /}
+    {param title: getText('plugins.slack.admin.error') /}
+    {param content}
+        {getProductText('plugins.slack.admin.error.message') }
+        <p>{getText('plugins.slack.admin.error.message.workaround')}</p>
+    {/param}
+{/call}
+{/template}
+
+/**
+  */
+{template .uninstallConnectionError}
+{call .message}
+    {param type:'error' /}
+    {param title: getText('plugins.slack.admin.uninstallError') /}
+    {param content}
+        {getProductText('plugins.slack.admin.uninstallError.message.connection') }
+    {/param}
+{/call}
+{/template}
+
+/**
+  */
+{template .uninstallPermissionError}
+{call .message}
+    {param type:'error' /}
+    {param title: getText('plugins.slack.admin.uninstallError') /}
+    {param content}
+        {getText('plugins.slack.admin.uninstallError.message.permission') }
+    {/param}
+{/call}
+{/template}
+
+/**
+  */
+{template .refreshToken}
+{call .message}
+    {param type:'error' /}
+    {param title:'Setting up your Slack link' /}
+    {param content}
+        {getText('plugins.slack.admin.error')}
+    {/param}
+{/call}
+{/template}
+
+/**
+ * @param type String {error|information|success}
+ * @param title String
+ * @param content String - must already be escaped.
+ * @param? altClass additional message classes
+ */
+{template .message}
+<div class="aui-message {$type} {if $altClass}{$altClass}{/if}">
+    <p class="title">
+        <span class="aui-icon icon-{$type}"></span>
+        <strong>{$title}</strong>
+    </p>
+    {if $content}
+    <p>{$content|noAutoescape}</p>
+    {/if}
+</div>
+{/template}
+
+/**
+ *
+ */
+{template .removeLinkMessage}
+    <div class='remove-link-message'>
+        {getProductText('plugins.slack.admin.disconnect.team.message.html')|noAutoescape}
+    </div>
+{/template}
+
+/**
+ *
+ */
+{template .installButton}
+    <div class="slack-install-form">
+        <button class="aui-button aui-button-primary" type="submit" id="slack-install" disabled="disabled">{getText('plugins.slack.admin.connect')}</button>
+        <div id="slack-loading"><span class="aui-icon aui-icon-wait"></span> {getText('plugins.slack.admin.checking.visible')}</div>
+        <div id="slack-server-failure" class="hidden">
+            <p>
+                <span class="aui-icon aui-icon-small aui-iconfont-warning slack-failure-marker"></span> {getText('plugins.slack.admin.server.not.visible')}
+            </p>
+            <p class="details">
+                {getProductText('plugins.slack.admin.server.not.visible.detail')}
+            </p>
+        </div>
+    </div>
+{/template}
+

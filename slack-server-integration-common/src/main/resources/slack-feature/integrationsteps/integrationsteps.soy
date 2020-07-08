@@ -1,0 +1,166 @@
+{namespace Slack.Templates.Configuration.Steps}
+
+/**
+ * Step 0 of integration when Slack is not linked yet
+ * @param slackNotLinkedImageUrl
+ */
+{template .integrationStepsStart}
+    <div class="slack-server-integration-steps-container">
+        <img class="slack-not-linked" src="{$slackNotLinkedImageUrl}"/>
+        <p>{getText('plugins.slack.admin.description')}</p>
+        {call Slack.Templates.Configuration.installButton /}
+    </div>
+{/template}
+
+/**
+ * Integration steps:
+ * 1. Connect
+ * 2. Choose channel
+ * 3. Connected to Slack panel
+ *
+ * @param slackLinkImageUrl
+ * @param? slackLinkImageUrlNoUser
+ * @param? link
+ * @param? recentInstall
+ * @param? slackUserName
+ * @param? hasConfig
+ */
+{template .integrationStepsChoose}
+    {let $complete: true /}
+    {if $recentInstall}
+        <ol class="slack-server-integration-steps {if $complete}complete{/if}">
+            {call .connectCompleted}
+                {param link: $link /}
+            {/call}
+            {call .connectAccount}
+                {param slackUserName: $slackUserName /}
+            {/call}
+            {if $slackUserName}
+                {if $hasConfig}
+                    {call .chooseCompleted}
+                        {param extraClasses: 'steps-complete' /}
+                    {/call}
+                {else}
+                    {call .choose /}
+                {/if}
+            {/if}
+        </ol>
+    {else}
+        {call .default}
+            {param slackLinkImageUrl: $slackLinkImageUrl /}
+            {param slackLinkImageUrlNoUser: $slackLinkImageUrlNoUser /}
+            {param slackUserName: $slackUserName /}
+            {param link: $link /}
+        {/call}
+    {/if}
+{/template}
+
+/**
+ * Confirm account step
+ * @param? slackUserName
+ */
+{template .connectAccount}
+    <li class="slack-server-integration-step {if $slackUserName}steps-complete checked{/if}">
+        <h4 class="slack-server-integration-step-title">{getText('plugins.slack.admin.confirm.title')}</h4>
+        <div class="slack-server-integration-step-content">
+        {if $slackUserName}
+            {call Slack.Templates.Configuration.ConnectionStatus.userStatus}
+                {param label: getText('plugins.slack.admin.connection.status.short.title') /}
+            {/call}
+            <span class="slack-server-integration-account-text hidden">{getText('plugins.slack.user.linked.html', $slackUserName)|noAutoescape}</span>
+            <span class="slack-server-integration-account-text-error hidden">{getText('plugins.slack.user.failure.html')|noAutoescape}</span>
+        {else}
+            {getText('plugins.slack.user.not.linked.html')|noAutoescape}
+        {/if}
+        </div>
+    </li>
+{/template}
+
+/**
+ * Connect step
+ */
+{template .connect}
+    <li class="slack-server-integration-step">
+        <h4 class="slack-server-integration-step-title">{getText('plugins.slack.admin.connect.title')}</h4>
+        <div class="slack-server-integration-step-content">
+            {getText('plugins.slack.admin.connect.content')}
+        </div>
+    </li>
+{/template}
+
+/**
+ * Connect completed step
+ * @param link
+ */
+{template .connectCompleted}
+    <li class="slack-server-integration-step checked">
+        <h4 class="slack-server-integration-step-title">{getText('plugins.slack.admin.connect.title')}</h4>
+        <div class="slack-server-integration-step-content">
+            {call Slack.Templates.Configuration.ConnectionStatus.status}
+                {param label: getText('plugins.slack.admin.connection.status.short.title') /}
+            {/call}
+            {getProductText('plugins.slack.admin.installed.detail.html', $link.teamName, $link.teamId)|noAutoescape}
+        </div>
+    </li>
+{/template}
+
+/**
+ * Choose step
+ * @param? extraClasses
+ */
+{template .choose}
+    <li class="slack-server-integration-step {if $extraClasses}{$extraClasses}{/if}">
+        <h4 class="slack-server-integration-step-title">{getText('plugins.slack.admin.choose.title')}</h4>
+        <div class="slack-server-integration-step-content">
+            {getText('plugins.slack.admin.choose.content')}
+        </div>
+    </li>
+{/template}
+
+/**
+ * Choose completed step
+ * @param? extraClasses
+ */
+{template .chooseCompleted}
+    <li class="slack-server-integration-step checked {if $extraClasses}{$extraClasses}{/if}">
+        <h4 class="slack-server-integration-step-title">{getText('plugins.slack.admin.choose.title')}</h4>
+        <div class="slack-server-integration-step-content">
+            {getText('plugins.slack.admin.choose.complete.content')|noAutoescape}
+        </div>
+    </li>
+{/template}
+
+/**
+  * @param slackLinkImageUrl
+  * @param? slackLinkImageUrlNoUser
+  * @param? slackUserName
+  * @param? link
+  */
+{template .default}
+    <div class="slack-server-integration-admin aui-group">
+        <div class="aui-item slack-server-integration-admin-image">
+            {if not $slackUserName and $slackLinkImageUrlNoUser}
+                <img src="{$slackLinkImageUrlNoUser}" width="150" alt="Slack linking image"/>
+            {else}
+                <img src="{$slackLinkImageUrl}" width="110" alt="Slack linking image"/>
+            {/if}
+        </div>
+        <div class="aui-item slack-server-integration-admin-content">
+            {call Slack.Templates.Configuration.ConnectionStatus.status /}
+            {if $link}
+                <span class="slack-server-integration-credentials-update hidden">
+                    {getText('plugins.slack.update.credentials', contextPath() + '/plugins/servlet/slack/configure?action=edit&teamId=' + $link.teamId)|noAutoescape}
+                </span>
+            {/if}
+            <p class='slack-link-user'>
+                {if $slackUserName}
+                    {call Slack.Templates.Configuration.ConnectionStatus.userStatus /}
+                    <span class="slack-server-integration-account-text hidden">{getText('plugins.slack.user.linked.html', $slackUserName)|noAutoescape}</span>
+                    <span class="slack-server-integration-account-text-error hidden">{getText('plugins.slack.user.failure.html')|noAutoescape}</span>
+                {else}
+                    {getText('plugins.slack.user.link.account.html')|noAutoescape}
+                {/if}
+            </p>
+        </div>
+    </div>
+{/template}

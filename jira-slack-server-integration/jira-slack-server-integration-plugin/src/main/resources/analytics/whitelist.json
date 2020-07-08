@@ -1,0 +1,71 @@
+{
+  "notifications.slack.link.clicked":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "type": ["site", "user", "project", "issue", "comment"]
+  }],
+  "notifications.slack.projectchannel.linked": [
+    "userKeyHash", "teamIdHash", "slackUserIdHash", "projectId", "channelIdHash", "ownerHash"
+  ],
+  "notifications.slack.projectchannel.unlinked": [
+    "userKeyHash", "teamIdHash", "slackUserIdHash", "projectId", "channelIdHash", "ownerHash"
+  ],
+
+  "notifications.slack.autoconvert.global.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "enabled"],
+  "notifications.slack.autoconvert.global.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "enabled"],
+  "notifications.slack.autoconvert.project.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "enabled"],
+  "notifications.slack.autoconvert.project.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "enabled"],
+  "notifications.slack.autoconvert.guests.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "enabled"],
+  "notifications.slack.autoconvert.guests.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "enabled"],
+
+  "jira.slack.integration.dedicatedchannel.linked": [
+    "userKeyHash", "teamIdHash", "slackUserIdHash", "projectId", "issueKeyHash", "channelIdHash", "ownerHash"
+  ],
+  "jira.slack.integration.dedicatedchannel.unlinked": [
+    "userKeyHash", "teamIdHash", "slackUserIdHash", "projectId", "issueKeyHash", "channelIdHash", "ownerHash"
+  ],
+  "jira.slack.integration.dedicatedchannel.issue.mentioned":[
+    "userKeyHash", "teamIdHash", "slackUserIdHash", "sourceChannelIdHash", "destinationChannelIdHash", "issueId"
+  ],
+
+  "notifications.slack.page.visited.project.config": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "notifications.slack.personal.notification.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["assigned", "watcher"]
+  }],
+  "notifications.slack.personal.notification.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["assigned", "watcher"]
+  }],
+
+  "jira.slack.integration.issuepanel.hidden": ["userKeyHash", "teamIdHash", "slackUserIdHash", "projectId"],
+  "jira.slack.integration.issuepanel.shown": ["userKeyHash", "teamIdHash", "slackUserIdHash", "projectId"],
+
+  "jira.slack.integration.notification.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "projectId", {
+    "notificationKey": ["MATCHER:ISSUE_CREATED", "MATCHER:ISSUE_ASSIGNMENT_CHANGED", "MATCHER:ISSUE_TRANSITIONED",
+      "MATCHER:ISSUE_COMMENTED", "FILTER:JQL_QUERY"]
+  }],
+  "jira.slack.integration.notification.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "projectId", {
+    "notificationKey": ["MATCHER:ISSUE_CREATED", "MATCHER:ISSUE_ASSIGNMENT_CHANGED", "MATCHER:ISSUE_TRANSITIONED",
+      "MATCHER:ISSUE_COMMENTED", "FILTER:JQL_QUERY"]
+  }],
+
+  "jira.slack.integration.notification.regular.sent":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["MATCHER:ISSUE_CREATED", "MATCHER:ISSUE_ASSIGNMENT_CHANGED", "MATCHER:ISSUE_TRANSITIONED",
+      "MATCHER:ISSUE_COMMENTED", "FILTER:JQL_QUERY"]
+  }],
+  "jira.slack.integration.notification.postfunction.sent":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["MATCHER:ISSUE_CREATED", "MATCHER:ISSUE_ASSIGNMENT_CHANGED", "MATCHER:ISSUE_TRANSITIONED",
+      "MATCHER:ISSUE_COMMENTED", "FILTER:JQL_QUERY"]
+  }],
+  "jira.slack.integration.notification.dedicated.sent":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["MATCHER:ISSUE_CREATED", "MATCHER:ISSUE_ASSIGNMENT_CHANGED", "MATCHER:ISSUE_TRANSITIONED",
+      "MATCHER:ISSUE_COMMENTED", "FILTER:JQL_QUERY"]
+  }],
+  "jira.slack.integration.notification.personal.sent":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["MATCHER:ISSUE_CREATED", "MATCHER:ISSUE_ASSIGNMENT_CHANGED", "MATCHER:ISSUE_TRANSITIONED",
+      "MATCHER:ISSUE_COMMENTED", "FILTER:JQL_QUERY"]
+  }],
+  "jira.slack.integration.notification.unfurling.sent":["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "jira.slack.integration.mentions.page.visited": ["userKeyHash", "teamIdHash", "slackUserIdHash", "mentionsCount"],
+  "jira.slack.integration.mentions.popup.opened": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "jira.slack.integration.mentions.deleted": ["userKeyHash", "teamIdHash", "slackUserIdHash"]
+}

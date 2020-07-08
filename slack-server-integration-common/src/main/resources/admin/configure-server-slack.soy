@@ -1,0 +1,71 @@
+{namespace Slack.Templates.Configuration}
+
+/**
+ * @param routes com.atlassian.plugins.slack.api.routes.SlackRoutesProvider
+ * @param baseUrl String
+ * @param installedImage
+ * @param uninstallingImage
+ * @param? link
+ * @param? recentInstall
+ */
+{template .panel}
+    <div id="slack-configuration-panel">
+        {if $link}
+            <input type="hidden" id="slack-server-integration-configuration" value="installed"/>
+            {call Slack.Templates.Configuration.installed }
+                {param link: $link /}
+                {param recentInstall: $recentInstall /}
+            {/call}
+        {else}
+            <input type="hidden" id="slack-server-integration-configuration" value="configure"/>
+            {call Slack.Templates.Configuration.configure}
+            {/call}
+        {/if}
+    </div>
+    {call Slack.Templates.Configuration.routes}
+        {param routes: $routes/}
+        {param baseUrl: $baseUrl/}
+        {param installedImage: $installedImage/}
+        {param uninstallingImage: $uninstallingImage/}
+    {/call}
+{/template}
+
+/**
+ * @param routes com.atlassian.plugins.slack.api.routes.SlackRoutesProvider
+ * @param baseUrl String
+ * @param installedImage
+ * @param uninstallingImage
+*/
+{template .routes}
+    <input type="hidden" id="slack-route-config" value="{$routes.adminConfigurationPage}"/>
+    <input type="hidden" id="slack-server-resource-installed" value="{$installedImage}"/>
+    <input type="hidden" id="slack-base-url" value="{$baseUrl}">
+
+    <input type="hidden" id="slack-server-resource-uninstalling" value="{$uninstallingImage}"/>
+{/template}
+
+/**
+  * @param link
+  * @param? recentInstall
+  */
+{template .installed}
+    {requireSlackResourcesByContext('slack-global-configuration')}
+    {foreach $panel in getWebPanelsSlack('slack.integration.configure.installed', [
+        'recentInstall': $recentInstall ?: '',
+        'link': $link
+    ])}
+        {$panel|noAutoescape}
+    {/foreach}
+{/template}
+
+/**
+  * Renders the configure slack view
+  */
+{template .configure}
+    <div id="slack-configure">
+        {requireSlackResourcesByContext('slack-global-configuration-install')}
+        {foreach $panel in getWebPanelsSlack('slack.integration.configure.install')}
+            {$panel|noAutoescape}
+        {/foreach}
+    </div>
+{/template}

@@ -1,0 +1,31 @@
+{namespace JIRA.Templates.Slack.ChannelSelector}
+
+/**
+ *
+ */
+{template .loginDropdownFooter}
+    <div class="slack-login-dropdown-footer">
+        <h6>{getText('jira.plugins.slack.channelmapping.channels.actions.title')}</h6>
+        <p>{getText('jira.plugins.slack.channelmapping.channels.actions.with.create.description')|noAutoescape}</p>
+      </div>
+{/template}
+
+/**
+ */
+{template .errorDropdownFooter}
+    <div class="slack-login-dropdown-footer error">
+        <h6>{getText('jira.plugins.slack.channelmapping.channels.error.title')}</h6>
+        <p>{getText('jira.plugins.slack.channelmapping.channels.error.description')}</p>
+    </div>
+{/template}
+
+/**
+ *
+ */
+{template .createChannelDropdownItem}
+    <div class="slack-create-channel-dropdown-item">
+        <a href="#" class="slack-create-channel-head-link">
+            {getText('jira.plugins.slack.channelmapping.channels.create.new.suggestion')|noAutoescape}
+        </a>
+    </div>
+{/template}

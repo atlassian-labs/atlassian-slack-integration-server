@@ -1,0 +1,33 @@
+{namespace slack.integration.plugin.channelSelector}
+
+/**
+ * Renders a line item for the channel picker
+ *
+ * @param name
+ * @param isPrivate
+ */
+{template .renderChannelItem}
+    <span class="aui-icon aui-icon-small {if $isPrivate}private-channel{else}public-channel{/if}"></span>{$name}
+{/template}
+
+/**
+ * Renders a line item to create a new channel
+ *
+ * @param name
+ * @param isPrivate
+ */
+{template .renderNewChannelItem}
+    <span class="create-new-channel-in-slack-option">
+        <span class="aui-icon aui-icon-small {if $isPrivate}private-channel{else}public-channel{/if}"></span>{$name}
+        <span class="aui-lozenge aui-lozenge-subtle aui-lozenge-complete">
+            {getText('slack2-repository-configuration.select.channel.new')}
+        </span>
+    </span>
+{/template}
+
+/**
+ * Renders the private channel footer for unlinked users in the channel picker dropdown.
+ */
+{template .renderLoginLink}
+    <button class="slack-user-link aui-button aui-button-link">{getText('bitbucket.plugins.slack.channel-selector.login')}</button>
+{/template}

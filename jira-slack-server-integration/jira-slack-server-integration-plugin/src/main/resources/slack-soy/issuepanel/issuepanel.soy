@@ -1,0 +1,373 @@
+{namespace JIRA.Templates.Slack.Project.IssuePanel}
+
+/**
+ * @param admin
+ * @param projectAdmin
+ * @param isLoggedIn
+ * @param projectKey
+ * @param issueKey
+ * @param canAssignChannel
+ * @param userCanAccessChannel
+ * @param notConfirmedLinks
+ * @param? dedicatedChannel
+ */
+{template .slackPanel}
+    <div class="slack-issue-panel"
+        data-issue-key="{$issueKey}">
+        {if not $isLoggedIn and length($notConfirmedLinks) == 0}
+            {call .slackNotConfigured}
+                {param isAdmin: $admin /}
+                {param isProjectAdmin: $projectAdmin /}
+                {param projectKey: $projectKey /}
+            {/call}
+        {elseif $isLoggedIn}
+            <div id="slack-issue-panel-channels-container"
+                data-logged-in="{$isLoggedIn}"
+                data-can-assign-channel="{$canAssignChannel}"
+                {if $dedicatedChannel}data-dedicated-team-id="{$dedicatedChannel.teamId}"{/if}
+                {if $dedicatedChannel}data-dedicated-channel-id="{$dedicatedChannel.channelId}"{/if}>
+                <ul class="item-details">
+                    {call .dedicatedChannelSection}
+                        {param issueKey: $issueKey /}
+                        {param notConfirmedLinks: $notConfirmedLinks /}
+                        {param dedicatedChannel: $dedicatedChannel /}
+                        {param canAssignChannel: $canAssignChannel /}
+                        {param userCanAccessChannel: $userCanAccessChannel /}
+                    {/call}
+                    {call .mentionedChannelSection/}
+                </ul>
+            </div>
+        {else}
+            {if not $isLoggedIn}
+                {call .slackLinkAccount}
+                    {param notConfirmedLinks: $notConfirmedLinks /}
+                {/call}
+            {/if}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * @param isAdmin
+ * @param isProjectAdmin
+ * @param projectKey
+ */
+{template .slackNotConfigured}
+    <div id="slack-issue-panel-channels-container" data-project-key="{$projectKey}">
+        {if $isAdmin or $isProjectAdmin}
+            {let $configureUrl: $isAdmin
+                ? contextPath() + '/plugins/servlet/slack/configure?source=issue-panel'
+                : '/secure/ConfigureSlack.jspa?source=issue-panel&projectKey=' + $projectKey /}
+            <p>{getText('jira.plugins.slack.viewissue.panel.channel.label')}</p>
+            <p>
+                {call aui.buttons.button}
+                    {param id: 'slack-issue-panel-configure-button' /}
+                    {param text: getText('jira.plugins.slack.viewissue.panel.channel.configure') /}
+                    {param extraAttributes: 'data-configure-url="' + $configureUrl + '"' /}
+                {/call}
+                <a id="slack-issue-panel-hide" href="#">{getText('jira.plugins.slack.viewissue.panel.channel.hide.label')}</a>
+            </p>
+        {else}
+            <p>{getText('jira.plugins.slack.viewissue.panel.channel.label.not.admin')}</p>
+        {/if}
+    </div>
+{/template}
+
+/**
+ * @param notConfirmedLinks
+ */
+{template .slackLinkAccount}
+    <div class="confirm-remaining-accounts-sidebar">
+        {getText('jira.plugins.slack.viewissue.panel.confirm.access')|noAutoescape}
+        {' '}
+        {foreach $link in $notConfirmedLinks}
+            <a href="#" class="slack-user-link" data-slack-team-id="{$link.teamId}">
+                {$link.teamName}
+            </a>{if length($notConfirmedLinks) > 0 and index($link) < length($notConfirmedLinks) - 1}, {/if}
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * @param issueKey
+ * @param notConfirmedLinks
+ * @param canAssignChannel
+ * @param? dedicatedChannel
+ * @param? userCanAccessChannel
+ */
+{template .dedicatedChannelSection}
+    <li id="slack-dedicated-channel-section">
+        <div class="slack-settings-button">
+            <span class="aui-icon aui-icon-small aui-iconfont-configure hidden" id="slack-panel-settings"></span>
+        </div>
+        <div class="slack-remaining-accounts-button{if length($notConfirmedLinks) > 0} has-unconfirmed{/if}">
+            <span class="aui-icon aui-icon-small aui-iconfont-space-personal" id="slack-remaining-accounts"></span>
+        </div>
+        {foreach $link in $notConfirmedLinks}
+        <input type="hidden" name="non-confirmed-user-link-account" data-team-id="{$link.teamId}" data-team-name="{$link.teamName}">
+        {/foreach}
+
+        {if $dedicatedChannel and not $userCanAccessChannel}
+        {getText('jira.plugins.slack.viewissue.panel.private.channel')}<p>
+        {else}
+        <dl>
+            <dt class="dedicated-channel-label">{getText('jira.plugins.slack.viewissue.panel.dedicated.channel.label')}:</dt>
+            <dd class="slack-dedicated-channel-content">
+                {if $dedicatedChannel}
+                    {call JIRA.Templates.Slack.Project.IssuePanel.dedicatedChannelDetails}
+                        {param dedicatedChannel: $dedicatedChannel /}
+                    {/call}
+                {else}
+                    {call JIRA.Templates.Slack.Project.IssuePanel.dedicatedChannelForm}
+                        {param canAssignChannel: $canAssignChannel /}
+                        {param issueKey: $issueKey /}
+                    {/call}
+                {/if}
+            </dd>
+        </dl>
+        {/if}
+        <div id="slack-dedicated-channel-footer">
+            <div id="slack-dedicated-channel-errors" class="errors"/>
+            <div id="dedicated-channel-message-bar" />
+        </div>
+    </li>
+{/template}
+
+/**
+ * @param confirmedLinks
+ */
+{template .selectChannelDialog}
+    <h1>
+        <span class="aui-icon aui-icon-small aui-iconfont-info create-tip-icon" title="{getText('jira.plugins.slack.selectchannel.dialog.create.tip')}">
+            {getText('jira.plugins.slack.selectchannel.dialog.create.tip')}
+        </span>
+        {getText('jira.plugins.slack.selectchannel.dialog.title')}
+    </h1>
+    {if length($confirmedLinks) > 0}
+        <div class="dialog-panel-body">
+            <form class="slack-channel-select-form aui">
+                <div class="dialog-panel-body-header aui-item">
+                    <strong>{getText('jira.plugins.slack.selectchannel.dialog.select.workspace.title')}</strong>
+                </div>
+                <div class="field-group">
+                    <div id="slack-dedicated-team-select-container" class="slack-channel-selector-container">
+                        <aui-select
+                                id="slack-dedicated-team-select"
+                                class="slack-team-selector"
+                                no-empty-values="true"
+                                placeholder="{getText('jira.plugins.slack.channelselector.select.team')}">
+                            {foreach $l in $confirmedLinks}
+                            <aui-option value="{$l.teamId}" {if index($l) == 0}selected="true"{/if}>{$l.teamName}</aui-option>
+                            {/foreach}
+                        </aui-select>
+                    </div>
+                </div>
+                <div class="dialog-panel-body-header aui-item">
+                    <strong>{getText('jira.plugins.slack.selectchannel.dialog.select.channel.title')}</strong>
+                </div>
+                <div class="field-group">
+                    <div id="slack-dedicated-channel-select-container" class="slack-channel-selector-container selector-with-help">
+                        <select id="slack-dedicated-channel-select" class="hidden slack-channel-selector">
+                            <option value="" disabled selected>{getText('jira.plugins.slack.channelselector.select.channel')}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="dialog-errors error"></div>
+            </form>
+        </div>
+        <div class="buttons-container form-footer">
+            {call .selectChannelDialogButtons /}
+        </div>
+    {else}
+        <div class="dialog-panel-body">
+            <p>{getText('jira.plugins.slack.selectchannel.dialog.not.logged.in')|noAutoescape}</p>
+        </div>
+    {/if}
+{/template}
+
+/**
+ */
+{template .selectChannelDialogButtons}
+    <div class="buttons">
+        <button class="aui-button submit" id="slack-select-dedicated-channel-dialog-submit">{getText('jira.plugins.slack.selectchannel.dialog.select.label')}</button>
+        <button class="aui-button aui-button-link cancel" id="slack-select-dedicated-channel-dialog-close">{getText('plugins.slack.button.cancel')}</button>
+    </div>
+{/template}
+
+/**
+ */
+{template .mentionedChannelSection}
+    <li id="slack-mentioned-channels-section">
+        <dl>
+            <dt class="mentions-label">{getText('jira.plugins.slack.viewissue.panel.mentions.channels.label')}</dt>
+            <dd class="slack-mentioned-channels-content">
+                <span class="aui-icon aui-icon-wait"></span>
+            </dd>
+        </dl>
+    </li>
+{/template}
+
+/**
+ */
+{template .loginMentionsDialog}
+    <div class="slack-mentions-dialog-login">
+        <h6>{getText('jira.plugins.slack.mentions.dialog.title')}</h6>
+        <p>{getText('jira.plugins.slack.mentions.dialog.login.message')|noAutoescape}</p>
+      </div>
+{/template}
+
+/**
+ * @param errors errors
+ */
+{template .errorPage}
+    <h1>{getText('jira.plugins.slack.mentions.dialog.title')}</h1>
+    <div class="slack-mentions-dialog-content">
+        {call aui.message.error}
+            {param titleContent: getText('jira.plugins.slack.mentions.dialog.error.header') /}
+            {param content}
+                <ul>
+                    {foreach $error in $errors}
+                        <li>{$error}</li>
+                    {/foreach}
+                </ul>
+            {/param}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @param issueMentions
+ * @param mentionChannels
+ * @param totalChannels
+ */
+{template .mentionedChannelDialog}
+    <h1>{getText('jira.plugins.slack.mentions.dialog.title')}</h1>
+    <div class="slack-mentions-dialog-content">
+        {let $channelsMentionsLength : length($mentionChannels) /}
+        {let $channelsNotAvailable : $totalChannels - $channelsMentionsLength /}
+        <h4>{getText('jira.plugins.slack.mentions.dialog.subtitle', length($issueMentions), $totalChannels)}</h4>
+        {if  $channelsNotAvailable > 0}
+            <h7>{getText('jira.plugins.slack.mentions.dialog.description', $channelsNotAvailable)}</h7>
+        {/if}
+
+        <table class="aui">
+            <thead>
+                <tr>
+                    <th id="slack-mentioned-author">{getText('jira.plugins.slack.mentions.dialog.table.header.author')}</th>
+                    <th id="slack-mentioned-team">{getText('jira.plugins.slack.mentions.dialog.table.header.team')}</th>
+                    <th id="slack-mentioned-channel">{getText('jira.plugins.slack.mentions.dialog.table.header.channel')}</th>
+                    <th id="slack-mentioned-message">{getText('jira.plugins.slack.mentions.dialog.table.header.message')}</th>
+                    <th id="slack-mentioned-date">{getText('jira.plugins.slack.mentions.dialog.table.header.date')}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $mention in $issueMentions}
+                    {let $mentionMessage: $mention.message /}
+                    {let $mentionChannel: $mention.channel /}
+                    {let $mentionUser: $mention.user /}
+                    <tr>
+                        <td headers="slack-mentioned-author">
+                            <a href="#"
+                                    class="slack-user-link-url"
+                                    data-team-id="{$mentionUser.teamId}"
+                                    data-user-id="{$mentionUser.id}">
+                                {$mentionUser.name|truncate:50}
+                            </a>
+                        </td>
+                        <td headers="slack-mentioned-team">
+                             <a href="#" class="slack-dedicated-team-name public-channel slack-team-link-url"
+                                        data-team-id="{$mentionChannel.key.teamId}">
+                                {$mentionChannel.teamName|truncate:50}
+                            </a>
+                        </td>
+                        <td headers="slack-mentioned-channel">
+                             <a href="#" class="slack-dedicated-channel-name public-channel slack-channel-link-url"
+                                        data-team-id="{$mentionChannel.key.teamId}"
+                                        data-channel-id="{$mentionChannel.key.channelId}">
+                                #{$mentionChannel.conversation.name}
+                            </a>
+                        </td>
+                        <td
+                            headers="slack-mentioned-message"
+                            title="{$mentionMessage.text}"
+                            class="slack-message-content"
+                            data-team-id="{$mentionChannel.key.teamId}">
+                            {$mentionMessage.text|truncate:150}
+                        </td>
+                        <td headers="slack-mentioned-date">
+                            <a class="delete-issue-mention" href="#"
+                                    data-channel-id="{$mentionChannel.key.channelId}"
+                                    data-message-ts="{$mentionMessage.ts}"
+                                    title="{getText('jira.plugins.slack.viewissue.panel.issue.mention.delete.tooltip')}">
+                                <span class="aui-icon aui-icon-small aui-iconfont-remove-label">Delete</span>
+                            </a>
+                            <a href="#"
+                                    class="slack-message-link-url"
+                                    data-team-id="{$mentionUser.teamId}"
+                                    data-channel-id="{$mentionChannel.key.channelId}"
+                                    data-message-ts="{$mentionMessage.ts}">
+                                <time class="livestamp date user-tz" data-datetime-format="fullAge" datetime="{$mention.localizedMessageDate}">{$mention.localizedMessageDate}</time>
+                            <a/>
+                        </td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+{/template}
+
+
+/**
+ * @param dedicatedChannel
+ * @param? slackUserId
+ */
+{template .inviteContributorsDialog}
+    <h1>{getText('jira.plugins.slack.invitecontributors.dialog.title')}</h1>
+    {if $slackUserId}
+        {if $dedicatedChannel}
+            <div class="dialog-panel-body">
+                <form id="slack-invite-contributors-form"
+                    class="slack-invite-contributors-form aui"
+                    data-dedicated-team-id="{$dedicatedChannel.teamId}"
+                    data-dedicated-channel-id="{$dedicatedChannel.channelId}">
+                    <div class="dialog-panel-body-header aui-item">
+                        {call JIRA.Templates.Slack.Project.IssuePanel.dedicatedChannelDetails}
+                            {param loggedIn: $slackUserId /}
+                            {param dedicatedChannel: $dedicatedChannel /}
+                            {param hideUnlink: true /}
+                            // Image transition doesn't work in the dialog, that's why we always send false.
+                            {param justLinked: false /}
+                        {/call}
+                    </div>
+                    <div id="dedicated-channel-invite-users-picker-container" class="field-group dedicated-channel-invite-user-field">
+                        <label for="dedicated-channel-invite-user">{getText('jira.plugins.slack.invitecontributors.user.picker.placeholder')}</label>
+                        <input type="hidden" name="dedicated-channel-invite-user" id="dedicated-channel-invite-user" placeholder="{getText('jira.plugins.slack.invitecontributors.user.picker.placeholder')}"/>
+                        <div class="user-picker-errors"></div>
+                    </div>
+                    {call Slack.Templates.Configuration.inviteeList /}
+                    <div class="dialog-errors"></div>
+                </form>
+            </div>
+            <div class="buttons-container form-footer">
+                {call .inviteContributorsDialogButtons /}
+            </div>
+        {else}
+            <div class="dialog-panel-body">
+                <p>{getText('jira.plugins.slack.invitecontributors.dialog.no.dedicated.channel')}</p>
+            </div>
+        {/if}
+    {else}
+        <div class="dialog-panel-body">
+            <p>{getText('jira.plugins.slack.invitecontributors.dialog.not.logged.in')|noAutoescape}</p>
+        </div>
+    {/if}
+{/template}
+
+/**
+ */
+{template .inviteContributorsDialogButtons}
+    <div class="buttons">
+        <button class="aui-button submit" id="slack-invite-contributors-dialog-submit">{getText('jira.plugins.slack.invitecontributors.dialog.invite.label')}</button>
+        <button class="aui-button aui-button-link cancel" id="slack-invite-contributors-dialog-close">{getText('admin.common.words.close')}</button>
+    </div>
+{/template}

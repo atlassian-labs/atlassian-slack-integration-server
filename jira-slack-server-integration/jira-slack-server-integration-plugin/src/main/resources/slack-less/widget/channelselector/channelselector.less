@@ -1,0 +1,112 @@
+@import "../../../slack-less/global";
+
+#slack-project-to-channel-add-select-suggestions {
+  .aui-list-item-li-filler {
+    display: none;
+  }
+
+  .aui-lozenge {
+    float: right;
+    margin-top: 2px;
+  }
+
+  .aui-list-item-link {
+    padding-left: 32px;
+    background: no-repeat 10px center;
+  }
+
+  .active {
+    .aui-list-item-link {
+      background-color: #3b73af;
+
+      &.public-channel {
+        background-image: url("images/public_channel_active.png");
+      }
+
+      &.private-channel {
+        background-image: url("images/private_channel_active.png");
+      }
+    }
+  }
+
+}
+
+#slack-project-to-channel-add-select-single-select {
+  .aui-ss-field {
+    &.public-channel,
+    &.private-channel {
+      padding-left: 25px;
+      background: no-repeat 5px center;
+    }
+  }
+}
+
+#slack-project-to-channel-add-select-single-select .aui-ss-field,
+#slack-project-to-channel-add-select-suggestions .aui-list-item-link {
+
+  &.public-channel {
+    background-image: url("images/public_channel.png");
+  }
+
+  &.private-channel {
+    background-image: url("images/private_channel.png");
+  }
+
+  &.suggest-create-channel {
+    padding-left: 10px;
+  }
+
+}
+
+.aui-list {
+  .slack-login-dropdown-footer {
+
+    border-left: 5px solid @cheetoOrangeColor;
+    padding-left: 10px;
+    margin: 10px;
+
+    &.error {
+      border-left-color: @warmRedColor;
+    }
+
+    a, a:hover {
+      text-decoration: none;
+      color: #3572b0;
+    }
+
+
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+
+  #slack-project-to-channel-add-select-suggestions {
+    .active {
+      .aui-list-item-link {
+        &.public-channel {
+          background-image: url("images/public_channel_active@2x.png");
+        }
+
+        &.private-channel {
+          background-image: url("images/private_channel_active@2x.png");
+        }
+      }
+    }
+  }
+
+  #slack-project-to-channel-add-select-single-select .aui-ss-field,
+  #slack-project-to-channel-add-select-suggestions .aui-list-item-link {
+
+    &.public-channel {
+      background-size: 16px;
+      background-image: url("images/public_channel@2x.png");
+    }
+
+    &.private-channel {
+      background-size: 16px;
+      background-image: url("images/private_channel@2x.png");
+    }
+
+  }
+
+}

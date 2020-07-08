@@ -1,0 +1,23 @@
+#* @vtlvariable name="i18n" type="com.atlassian.jira.util.I18nHelper" *#
+#* @vtlvariable name="dto" type="com.atlassian.jira.plugins.slack.postfunction.SlackPostFunctionFactory.ViewDto" *#
+#* @vtlvariable name="baseUrl" type="java.lang.String" *#
+#if($dto.responseError)
+    $i18n.getText("slack.postfunction.requesterror", "$baseUrl/plugins/servlet/slack/configure")
+#else
+    #if ($dto.channelsToNotify.isEmpty())
+        $i18n.getText("slack.postfunctionview.nochannelselected")
+    #elseif (!$dto.jqlValid)
+        $i18n.getText("slack.postfunctionview.jqlinvalid", $textutils.htmlEncode($dto.jql))
+    #else
+        #if ($!dto.jql != '')
+            $i18n.getText("slack.postfunctionview.jqlfilter", $textutils.htmlEncode($dto.jql))
+        #else
+            $i18n.getText("slack.postfunctionview.withoutfilter")
+        #end
+    <ul>
+        #foreach($channel in $dto.channelsToNotify)
+            <li>$textutils.htmlEncode($channel.channelName) ($textutils.htmlEncode($channel.teamName))</li>
+        #end
+    </ul>
+    #end
+#end

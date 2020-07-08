@@ -1,0 +1,174 @@
+{namespace JIRA.Templates.Slack.Settings}
+
+/**
+ * @param allowGlobalAutoConvert
+ * @param allowAutoConvertInGuestChannels
+ * @param hideIssuePanel
+ */
+{template .globalConfiguration}
+    {call .header /}
+    <div class="slack-settings-content">
+        {call .preview /}
+        <form class="aui top-label" id="slack-settings-form">
+            {call .allowAutoConvertCheckbox}
+                {param allowAutoConvert: $allowGlobalAutoConvert/}
+                {param checkboxText: getText('jira.plugins.slack.admin.settings.global.autoconvert.enabled') /}
+                {param checkboxDescription: getText('jira.plugins.slack.admin.settings.global.autoconvert.description') /}
+            {/call}
+             {call .allowAutoConvertInGuestChannels}
+                {param allowAutoConvert: $allowAutoConvertInGuestChannels/}
+                {param checkboxText: getText('jira.plugins.slack.admin.settings.global.autoconvert.enabled.for.guest.channels') /}
+                {param checkboxDescription: getText('jira.plugins.slack.admin.settings.global.autoconvert.enabled.for.guest.channels.description') /}
+            {/call}
+            {call .hideIssuePanel}
+                {param hideIssuePanel: $hideIssuePanel/}
+                {param checkboxText: getText('jira.plugins.slack.admin.settings.global.hide.issue.panel') /}
+                {param checkboxDescription: getText('jira.plugins.slack.admin.settings.global.hide.issue.panel.description') /}
+            {/call}
+        </form>
+    </div>
+    {call .buttonContainer /}
+{/template}
+
+/**
+ * @param projectKey
+ * @param allowProjectAutoConvert
+ * @param allowGlobalAutoConvert
+ * @param hideIssuePanel
+ * @param hideIssuePanelProject
+ * @param sendRestrictedCommentsToDedicated
+ */
+{template .projectConfiguration}
+    <input type="hidden" id="project-key" value="{$projectKey}"/>
+    {call .header /}
+    <div class="slack-settings-content">
+        {call .preview /}
+        <form class="aui top-label" id="slack-settings-form">
+            {call .allowAutoConvertCheckbox}
+                {param allowAutoConvert: $allowProjectAutoConvert/}
+                {param checkboxText: getText('jira.plugins.slack.admin.settings.project.autoconvert.enabled') /}
+                {param checkboxDescription: getText('jira.plugins.slack.admin.settings.project.autoconvert.description',
+                    $allowGlobalAutoConvert ? getText('admin.common.words.on') : getText('admin.common.words.off')) /}
+            {/call}
+            {call .hideIssuePanel}
+                {param hideIssuePanel: $hideIssuePanelProject/}
+                {param checkboxText: getText('jira.plugins.slack.admin.settings.project.hide.issue.panel') /}
+                {param checkboxDescription: getText('jira.plugins.slack.admin.settings.project.hide.issue.panel.description',
+                    $hideIssuePanel ? getText('admin.common.words.on') : getText('admin.common.words.off')) /}
+            {/call}
+            {call .sendRestrictedCommentsToDedicated}
+                {param shouldSend: $sendRestrictedCommentsToDedicated/}
+                {param checkboxText: getText('jira.plugins.slack.admin.settings.project.send.restricted.comments.dedicated') /}
+                {param checkboxDescription: getText('jira.plugins.slack.admin.settings.project.send.restricted.comments.dedicated.description') /}
+            {/call}
+        </form>
+    </div>
+    {call .buttonContainer /}
+{/template}
+
+/**
+ *
+ */
+{template .header}
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">{getText('jira.plugins.slack.admin.settings.advanced')}</h2>
+    </header>
+{/template}
+
+/**
+ * Show general information about issue preview in global and project configuration
+ */
+{template .preview}
+    <div class="aui-message aui-message-error error-panel"></div>
+    <h5>{getText('jira.plugins.slack.admin.settings.autoconvert.preview')}</h5>
+    <p>{getText('jira.plugins.slack.admin.settings.autoconvert.description')}</p>
+    <img class="autoconvert-image-preview"/>
+{/template}
+
+/**
+ *
+ */
+{template .buttonContainer}
+    <div class="buttons-container form-footer">
+        <div class="buttons">
+            <button id="dialog-save-button" class="aui-button">{getText('plugins.slack.button.save')}</button>
+            <a id="dialog-close-button" class="aui-button aui-button-link cancel">{getText('common.words.close')}</a>
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param allowAutoConvert
+ * @param checkboxText the checkbox text changes from project/global
+ * @param checkboxDescription the checkbox description changes from project/global
+ */
+{template .allowAutoConvertCheckbox}
+    <div class="field-group">
+        <div class="checkbox">
+            <input class="checkbox"
+                type="checkbox"
+                name="allowAutoConvertCheckbox"
+                id="allowAutoConvertCheckbox"
+                {if $allowAutoConvert} checked="checked"{/if}>
+            <label for="allowAutoConvertCheckbox">{$checkboxText}</label>
+            <div class="description">{$checkboxDescription}</div>
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param allowAutoConvert
+ * @param checkboxText the checkbox text changes from project/global
+ * @param checkboxDescription
+ */
+{template .allowAutoConvertInGuestChannels}
+    <div class="field-group">
+        <div class="checkbox">
+            <input class="checkbox"
+                type="checkbox"
+                name="allowAutoConvertInGuestChannels"
+                id="allowAutoConvertInGuestChannels"
+                {if $allowAutoConvert} checked="checked"{/if}>
+            <label for="allowAutoConvertInGuestChannels">{$checkboxText}</label>
+            <div class="description">{$checkboxDescription}</div>
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param hideIssuePanel
+ * @param checkboxText the checkbox text changes from project/global
+ * @param checkboxDescription
+ */
+{template .hideIssuePanel}
+    <div class="field-group">
+        <div class="checkbox">
+            <input class="checkbox"
+                type="checkbox"
+                name="hideIssuePanel"
+                id="hideIssuePanel"
+                {if $hideIssuePanel} checked="checked"{/if}>
+            <label for="hideIssuePanel">{$checkboxText}</label>
+            <div class="description">{$checkboxDescription}</div>
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param shouldSend
+ * @param checkboxText the checkbox text changes from project/global
+ * @param checkboxDescription
+ */
+{template .sendRestrictedCommentsToDedicated}
+    <div class="field-group">
+        <div class="checkbox">
+            <input class="checkbox"
+                   type="checkbox"
+                   name="sendRestrictedCommentsToDedicated"
+                   id="sendRestrictedCommentsToDedicated"
+                    {if $shouldSend} checked="checked"{/if}>
+            <label for="sendRestrictedCommentsToDedicated">{$checkboxText}</label>
+            <div class="description">{$checkboxDescription}</div>
+        </div>
+    </div>
+{/template}

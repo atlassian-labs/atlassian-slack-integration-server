@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>jira-slack-server-integration</artifactId>
+        <groupId>com.atlassian.plugins</groupId>
+        <version>1.1.13</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>jira-service-desk-compat-common</module>
+        <module>jira-service-desk-3-compat</module>
+        <module>jira-service-desk-4-compat</module>
+        <module>jira-service-desk-compat-main</module>
+    </modules>
+
+    <artifactId>jira-service-desk-compat</artifactId>
+    <name>Jira Service Desk Compatibility Package</name>
+    <description>Provides compatibility with Jira Service Desk.</description>
+</project>

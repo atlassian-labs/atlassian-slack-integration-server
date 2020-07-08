@@ -1,0 +1,43 @@
+{namespace JIRA.Templates.Slack.Config.LinkSettings}
+
+
+/**
+ * Dialog that will prompt the user
+ * if to go to the Slack web or the Slack client
+ * @param isAppLinkEnable
+ */
+{template .enableInAppLinksForSlack}
+<div class="slack-settings-panel">
+    <h6>{getText('jira.plugins.slack.settings.enable.native.links.title')}</h6>
+    <p>{getText('jira.plugins.slack.settings.enable.native.links.description')}</p>
+    <p></p>
+    <input type="checkbox" class="matcher-type" id="slack-inapp-links" autocomplete="off" {if $isAppLinkEnable} checked{/if}/>
+    <label for="slack-inapp-links">{getText('jira.plugins.slack.settings.enable.native.links.enable')}</label>
+    <p>{getText('jira.plugins.slack.settings.enable.native.links.more')|noAutoescape}</p>
+</div>
+{/template}
+
+/**
+ * @param nonConfirmedLinks
+ */
+{template .slackRemainingLinkAccount}
+<div class="confirm-remaining-accounts-dialog">
+    {if length($nonConfirmedLinks) > 0}
+        {getText('jira.plugins.slack.viewissue.panel.confirm.access.more')|noAutoescape}
+        {' '}
+        {foreach $link in $nonConfirmedLinks}
+            <a href="#" class="slack-user-link" data-slack-team-id="{$link.teamId}">
+                {$link.teamName}
+            </a>{if length($nonConfirmedLinks) > 0 and index($link) < length($nonConfirmedLinks) - 1}, {/if}
+        {/foreach}
+    {else}
+        <span class="aui-icon aui-icon-small aui-iconfont-approve"></span>&nbsp;
+        {getText('jira.plugins.slack.viewissue.panel.confirm.access.all')|noAutoescape}
+    {/if}
+    <div class="see-linked-accounts-dialog">
+        <a href="{contextPath() + '/plugins/servlet/slack/view-oauth-sessions'}" target="_blank">
+            {getText('jira.plugins.slack.viewissue.panel.see.linked.accounts')|noAutoescape}
+        </a>
+    </div>
+</div>
+{/template}

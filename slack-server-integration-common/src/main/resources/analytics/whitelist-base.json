@@ -1,0 +1,37 @@
+{
+  "notifications.slack.team.registered": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.team.updated": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.team.unregistered": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.team.registration.page.permission.error": ["userKeyHash", "teamIdHash", "slackUserIdHash", "sourceNameHash"],
+
+  "notifications.slack.user.mapped": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.user.unmapped": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.user.updated": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "notifications.slack.channel.created": ["userKeyHash", "teamIdHash", "slackUserIdHash", "channelIdHash", "private"],
+
+  "notifications.slack.page.visited.global.config": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.page.visited.personal.config": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.page.visited.connect.team": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.page.visited.edit.team": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.page.visited.oauth.sessions": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "notifications.slack.oauth.started": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.oauth.succeeded": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.oauth.failed": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "notifications.slack.inbound.slash.command": ["userKeyHash", "teamIdHash", "slackUserIdHash",
+    {"subCommand":  ["help", "account", "search"]}
+  ],
+  "notifications.slack.inbound.action": ["userKeyHash", "teamIdHash", "slackUserIdHash",
+    {"type":  ["block_actions", "dialog_submission"]}
+  ],
+  "notifications.slack.inbound.link.shared": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.inbound.direct.message": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+  "notifications.slack.inbound.bot.mention": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "notifications.slack.signature.verification.failed": [
+    "userKeyHash", "teamIdHash", "slackUserIdHash",
+    {"cause": ["REQUEST_EXPIRED", "BAD_SIGNATURE", "NO_TEAM_ID", "OTHER"]}
+  ]
+}

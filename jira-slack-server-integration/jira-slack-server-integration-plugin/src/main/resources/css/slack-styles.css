@@ -1,0 +1,53 @@
+.vcard {
+    position:relative;
+}
+a.slack-status {
+    display: block;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    position: absolute;
+    top: 35px;
+    left: 35px;
+}
+a.slack-status.available {
+    background-image:url(../com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-image-resources/images/available@2x.png);
+    background-size:cover;
+}
+a.slack-status.away {
+    background-image: url(../com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-image-resources/images/away@2x.png);
+    background-size:cover;
+}
+a.slack-status.dnd {
+    background-image: url(../com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-image-resources/images/dnd@2x.png);
+    background-size:cover;
+}
+a.slack-status.offline {
+    background-image: url(../com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-image-resources/images/offline@2x.png);
+    background-size:cover;
+    width: 20px;
+    height: 20px;
+}
+a.slack-status span {
+    display:none;
+}
+a.slack-direct-chat {
+    background-image: url("images/slack-logo.svg");
+    display: block;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    position: absolute;
+    top: 7px;
+    right: 10px;
+}
+
+.slack-user-link-menu-header {
+    color: #707070;
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 10px 5px !important;
+    text-transform: uppercase;
+    border-top: 1px solid #ccc;
+}

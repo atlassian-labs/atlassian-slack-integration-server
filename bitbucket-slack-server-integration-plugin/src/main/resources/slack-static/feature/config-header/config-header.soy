@@ -1,0 +1,77 @@
+{namespace bitbucket.slack.feature.configHeader}
+
+/**
+ * @param link
+ * @param links
+ * @param routes
+ * @param? showRemoveButton
+ */
+{template .configHeader}
+<div class="slack-configuration-toolbar" id="team-dropdown-alignment-container">
+    {if $link}
+        <span class="slack-team-selector-box">
+        <button class="aui-button aui-dropdown2-trigger" aria-controls="dropdown-team-selector">
+            {$link.teamName}
+        </button>
+        <aui-dropdown-menu id="dropdown-team-selector">
+            <aui-section label="{getText('bitbucket.plugins.slack.slack.team.list.title')}">
+                {foreach $l in $links}
+                    <aui-item-link
+                            href="{addQueryParam($routes.adminConfigurationPage, 'teamId', $l.teamId)}"
+                            class="{if $l.teamId == $link.teamId}selected{/if}">
+                    {if $l.teamId == $link.teamId}
+                        <span class="aui-icon aui-icon-small aui-iconfont-arrows-right"></span>&nbsp;
+                    {/if}
+                        {$l.teamName}
+                </aui-item-link>
+                {/foreach}
+            </aui-section>
+            {if $showRemoveButton}
+                <aui-section>
+                <aui-item-link href="{contextPath() + '/plugins/servlet/slack/configure?action=add'}">
+                    <span class="aui-icon aui-icon-small aui-iconfont-add">Configure</span>
+                    {getText('plugins.slack.admin.installed.connect.new.team')}
+                </aui-item-link>
+            </aui-section>
+            {/if}
+        </aui-dropdown-menu>
+    </span>
+    {/if}
+    {if $showRemoveButton}
+        &nbsp;
+        <button class="aui-button aui-dropdown2-trigger aui-dropdown2-trigger-arrowless" aria-controls="dropdown-settings">
+            <span class="aui-icon aui-icon-small aui-iconfont-handle-horizontal"></span>
+        </button>
+        <aui-dropdown-menu id="dropdown-settings" data-aui-alignment-container="#team-dropdown-alignment-container">
+            <aui-section label="{getText('plugins.slack.admin.installed.team.coonnection')}">
+                <aui-item-link href="{contextPath() + '/plugins/servlet/slack/configure?action=edit&teamId=' + $link.teamId}">
+                    <span class="aui-icon aui-icon-small aui-iconfont-edit">Configure</span> {getText('plugins.slack.admin.installed.update.team')}
+                </aui-item-link>
+                <aui-item-link id="slack-uninstall" href="#">
+                    <span class="aui-icon aui-icon-small aui-iconfont-delete">Configure</span> {getText('plugins.slack.admin.installed.disconnect.team')}
+                </aui-item-link>
+            </aui-section>
+        </aui-dropdown-menu>
+    {/if}
+</div>
+{/template}
+
+/**
+ * @param? repository
+ */
+{template .createMapping}
+    <form id="bitbucket-repository-to-channel-mapping-form" class="slack-repo-mapping-form slack-channel-mapping-form">
+        <div class="has-arrow">
+            {if $repository}
+                {let $repositoryName}{$repository.name}{/let}
+                <span class="repository-name mapping-origin-label" title="{$repositoryName}">{getText('bitbucket.plugins.slack.repo.mapping.repo', $repositoryName)|noAutoescape}</span>
+            {else}
+                <input type="hidden" id="slack-repository-select"/>
+            {/if}
+            <span class="aui-icon aui-icon-small aui-iconfont-devtools-arrow-right mapping-arrow">linked to</span>
+        </div>
+        <input type="hidden" id="slack-repository-to-channel-add-select">
+        <button id="slack-repository-to-channel-add" class="aui-button aui-button-primary" aria-disabled="true" disabled>{getText('plugins.slack.channelmapping.add.label')}</button>
+        <span id="slack-repository-to-channel-add-mapping-spinner" class="loading">&nbsp;</span>
+    </form>
+{/template}

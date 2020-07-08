@@ -1,0 +1,33 @@
+{namespace Confluence.Templates.Slack.User}
+
+/**
+ * @param slackUsers
+ */
+{template .teamLinks}
+    <li class="slack-user-link-menu-header">{getText('plugins.slack.user.link.menu')}</li>
+    {foreach $user in $slackUsers}
+        <li>
+            <a href="#" class="slack-user-link-url"
+               data-user-id="{$user.slackUserId}" data-team-id="{$user.teamId}">
+                {getText('plugins.slack.user.link.contact', $user.teamName)}
+            </a>
+        </li>
+    {/foreach}
+{/template}
+
+/**
+ * @param slackUsers
+ */
+{template .slackIcon}
+    {if length($slackUsers) == 0}
+
+    {elseif length($slackUsers) == 1}
+        {let $user: $slackUsers[0] /}
+        <a href="#" class="slack-direct-chat slack-user-link-url"
+           data-user-id="{$user.slackUserId}" data-team-id="{$user.teamId}"
+           title="{getText('plugins.slack.user.link.tooltip.single', $user.teamName)}"></a>
+    {elseif length($slackUsers) > 1}
+        <a href="#" class="slack-direct-chat"
+           title="{getText('plugins.slack.user.link.tooltip.multiple')}"></a>
+    {/if}
+{/template}

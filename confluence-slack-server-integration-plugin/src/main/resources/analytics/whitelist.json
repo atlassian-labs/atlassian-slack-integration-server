@@ -1,0 +1,35 @@
+{
+  "notifications.slack.link.clicked":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "type": ["site", "user", "space", "calendar", "page", "blogpost", "search"]
+  }],
+  "notifications.slack.spacetochannel.linked": ["userKeyHash", "teamIdHash", "slackUserIdHash", "spaceId", "channelIdHash"],
+  "notifications.slack.spacetochannel.unlinked": ["userKeyHash", "teamIdHash", "slackUserIdHash", "spaceId", "channelIdHash"],
+
+  "notifications.slack.spacetochannel.notification.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "spaceId",
+    "channelIdHash", {
+      "notificationKey": ["BlogCreate", "PageCreate", "PageUpdate", "QuestionAsked", "QuestionAnswered", "CalendarEventCreated"]
+    }
+  ],
+  "notifications.slack.spacetochannel.notification.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash",
+    "spaceId", "channelIdHash", {
+      "notificationKey": ["BlogCreate", "PageCreate", "PageUpdate", "QuestionAsked", "QuestionAnswered", "CalendarEventCreated"]
+    }
+  ],
+
+  "notifications.slack.page.visited.space.config":  ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "notifications.slack.personal.notification.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["watcher_updates", "watcher_comments", "creator_updates", "creator_comments"]
+  }],
+  "notifications.slack.personal.notification.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["watcher_updates", "watcher_comments", "creator_updates", "creator_comments"]
+  }],
+
+  "notifications.slack.notification.regular.sent":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["BlogCreate", "PageCreate", "PageUpdate", "QuestionAsked", "QuestionAnswered", "CalendarEventCreated"]
+  }],
+  "notifications.slack.notification.personal.sent":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["watcher_updates", "watcher_comments", "creator_updates", "creator_comments"]
+  }],
+  "notifications.slack.notification.unfurling.sent":["userKeyHash", "teamIdHash", "slackUserIdHash"]
+}

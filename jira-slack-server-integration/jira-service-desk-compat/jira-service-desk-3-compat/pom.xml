@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>jira-service-desk-compat</artifactId>
+        <groupId>com.atlassian.plugins</groupId>
+        <version>1.1.13</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jira-service-desk-3-compat</artifactId>
+    <name>Jira Service Desk 3.x Compatibility Package</name>
+    <description>Provides compatibility with Jira Service Desk 3.x.</description>
+
+    <dependencies>
+        <!-- Jira API -->
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-api</artifactId>
+            <version>${jira.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSD API -->
+        <dependency>
+            <groupId>com.atlassian.servicedesk</groupId>
+            <artifactId>jira-servicedesk-api</artifactId>
+            <version>3.16.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.pocketknife</groupId>
+            <artifactId>atlassian-pocketknife-api-commons</artifactId>
+            <version>0.21.2-D20160629T042217</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.fugue</groupId>
+            <artifactId>fugue</artifactId>
+            <version>2.6.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Common JSD compatibility module -->
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>jira-service-desk-compat-common</artifactId>
+            <version>1.1.13</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Utils -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test dependencies-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-migrationsupport</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-tests</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>jacoco</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com/atlassian/plugin/slack/**</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

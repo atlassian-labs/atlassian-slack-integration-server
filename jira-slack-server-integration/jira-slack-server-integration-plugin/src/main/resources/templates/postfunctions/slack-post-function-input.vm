@@ -1,0 +1,113 @@
+#* @vtlvariable name="i18n" type="com.atlassian.jira.util.I18nHelper" *#
+#* @vtlvariable name="baseUrl" type="java.lang.String" *#
+#* @vtlvariable name="dto" type="com.atlassian.jira.plugins.slack.postfunction.SlackPostFunctionFactory.EditDto" *#
+
+${webResourceManager.requireResource("com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slackChannelPicker")}
+
+<script type="text/javascript">
+    // Ideally we should make this change in Jira, but for now this will do
+    AJS.toInit(function ($) {
+        $("form[action='AddWorkflowTransitionFunctionParams.jspa']").addClass("aui");
+        $("form[action='EditWorkflowTransitionPostFunctionParams.jspa']").addClass("aui");
+    });
+</script>
+
+<tr>
+    <td colspan="2">
+        #if($dto.links.empty)
+            $i18n.getText("slack.postfunction.tokennotconfigured", "$baseUrl/plugins/servlet/slack/configure",
+                "$baseUrl/plugins/servlet/slack/view-oauth-sessions")
+        #end
+
+        #if($dto.responseError)
+            $i18n.getText("slack.postfunction.requesterror", "$baseUrl/plugins/servlet/slack/configure")
+        #end
+    </td>
+</tr>
+#if ($dto.links.empty || $dto.responseError)
+<style>
+    /* quick fix to hide add button on error */
+    #add_submit, #update_submit {
+        display: none;
+    }
+</style>
+#else
+<tr>
+    <td colspan="2">$i18n.getText("slack.postfunctionedit.jqlintro")</td>
+</tr>
+<tr>
+    <td class="fieldLabelArea">
+        <span class="icon loading slack-jql-loading" style="display: none;"></span>
+        $i18n.getText("slack.postfunctionedit.jql")
+    </td>
+    <td nowrap>
+        <div class="slack-jql-container">
+            <span id="slack-jql-error" class="icon #if ($dto.jqlValid)jqlgood #else jqlerror #end"></span>
+            <textarea class="textarea long-field" name="jql" id="slack-jql-text" rows="3">$textutils.htmlEncode($!dto.jql)</textarea>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">$i18n.getText("slack.postfunctionedit.channelsintro")</td>
+</tr>
+<tr>
+    <td class="fieldLabelArea">
+        $i18n.getText("slack.postfunctionedit.teamslistlabel")
+    </td>
+    <td nowrap>
+        <aui-select
+                id="slack-dedicated-team-select"
+                class="slack-team-selector"
+                no-empty-values="true"
+                placeholder="$i18n.getText('jira.plugins.slack.channelselector.select.team')">
+            #foreach($l in $dto.links)
+            <aui-option value="$l.teamId"#if($velocityCount == 1) selected#end>$l.teamName</aui-option>
+            #end
+        </aui-select>
+    </td>
+</tr>
+<tr>
+    <td class="fieldLabelArea">
+        $i18n.getText("slack.postfunctionedit.channelslistlabel")
+    </td>
+    <td>
+        <select id="slackChannelSelect" name="channelsToNotify" class="hidden" multiple="true">
+            #foreach($channel in $dto.channelsToNotify)
+                <option value="${channel.teamId}|${channel.channelId}" selected="selected">${textutils.htmlEncode($channel.channelName)}@${textutils.htmlEncode($channel.teamName)}</option>
+            #end
+        </select>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">$i18n.getText("slack.notification")</td>
+</tr>
+<tr>
+    <td class="fieldLabelArea">
+        $i18n.getText("slack.notification.message")
+    </td>
+    <td nowrap>
+        <div class="slack-notification-editor-toolbar">
+            <div class="aui-buttons">
+                <div class="aui-button" data-macro="issue.key" title="$i18n.getText('slack.notification.macro.key.desc')">$i18n.getText("issue.field.key")</div>
+                <div class="aui-button" data-macro="issue.summary" title="$i18n.getText('slack.notification.macro.summary.desc')">$i18n.getText("issue.field.summary")</div>
+                <div class="aui-button" data-macro="project.name" title="$i18n.getText('slack.notification.macro.project.desc')">$i18n.getText("common.concepts.project")</div>
+                <div class="aui-button" data-macro="issueType.name" title="$i18n.getText('slack.notification.macro.type.desc')">$i18n.getText("issue.field.type")</div>
+                <div class="aui-button" data-macro="assignee.name" title="$i18n.getText('slack.notification.macro.assignee.desc')">$i18n.getText("issue.field.assignee")</div>
+                <div class="aui-button" data-macro="user.name" title="$i18n.getText('slack.notification.macro.user.desc')">$i18n.getText("common.words.user")</div>
+                <div class="aui-button" data-macro="example" title="$i18n.getText('slack.notification.macro.example.desc')">$i18n.getText("slack.notification.macro.example")</div>
+                <a class="aui-button aui-button-link" title="$i18n.getText('slack.notification.macro.help.desc')" href="https://confluence.atlassian.com/slack/using-jira-applications-with-slack-966662163.html#UsingJiraapplicationswithSlack-HowdoIsetupSlackpostfunctionnotifications?" target="_blank"><span class="aui-icon aui-icon-small aui-iconfont-help">$i18n.getText('slack.notification.macro.help.desc')</span></a>
+            </div>
+        </div>
+        <textarea name="message" id="message" rows="10" class="textarea long-field slack-notification-editor slack-notification-preview-source">$textutils.htmlEncode($!dto.message)</textarea>
+        <input type="hidden" name="owner" value="$!dto.owner" />
+    </td>
+</tr>
+<tr>
+    <td class="fieldLabelArea">
+        $i18n.getText("slack.notification.preview")
+    </td>
+    <td nowrap>
+        <div class="slack-notification-preview"></div>
+    </td>
+</tr>
+#end

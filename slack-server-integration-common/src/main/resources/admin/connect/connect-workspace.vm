@@ -1,0 +1,210 @@
+#* @vtlvariable name="webResourceManager" type="com.atlassian.plugin.webresource.WebResourceManager" *#
+#* @vtlvariable name="pageBuilderService" type="com.atlassian.webresource.api.assembler.PageBuilderService" *#
+#* @vtlvariable name="webInterfaceManager" type="com.atlassian.plugin.web.WebInterfaceManager" *#
+#* @vtlvariable name="i18n" type="com.atlassian.sal.api.message.I18nResolver" *#
+#* @vtlvariable name="link" type="com.atlassian.plugins.slack.api.SlackLink" *#
+#* @vtlvariable name="baseUrl" type="java.lang.String" *#
+#* @vtlvariable name="slackPluginResourceProvider" type="com.atlassian.plugins.slack.spi.SlackPluginResourceProvider" *#
+#* @vtlvariable name="isConfluence" type="java.lang.Boolean" *#
+<html>
+<head>
+    <title>$i18n.getText("plugins.slack.admin.title")</title>
+    <meta name="activeTab" content="bitbucket-slack-menu-item">
+    <meta name="decorator" content="atl.admin"/>
+    <content tag="selectedWebItem">slack-conf-menu-item</content>
+    $webResourceManager.requireResource("${slackPluginResourceProvider.pluginKey}:slack-connect-workspace-resources")
+</head>
+<body>
+    #set($basic = !$link || "$!link.rawCredentials" != '')
+    <div class="slack-connect-edit-page">
+        #* don't add the page header in Confluence. It adds his own same header *#
+        #if (!$isConfluence)
+            <h1>
+                <span class="basic-config#if(!$basic) hidden#end">
+                #if ( !$link )
+                    $i18n.getText('plugins.slack.admin.connect.new.workspace.title')
+                #else
+                    $i18n.getText('plugins.slack.admin.connect.edit.workspace.title')
+                #end
+                </span>
+                <span class="custom-config#if($basic) hidden#end">
+                #if ( !$link )
+                    $i18n.getText('plugins.slack.admin.connect.new.workspace.title')
+                #else
+                    $i18n.getText('plugins.slack.admin.connect.edit.workspace.title')
+                #end
+                </span>
+            </h1>
+        #end
+
+        <div class="slack-server-connections-steps-container">
+            <p>
+                $!i18n.getText('plugins.slack.admin.connect.workspace.description')
+            </p>
+
+            <ol class="slack-server-connections-steps start">
+                <li class="slack-server-connections-step">
+                    <p class="slack-server-connections-step-title">
+                        $i18n.getText('plugins.slack.admin.connect.installation.type.title')
+                    </p>
+                    <div class="slack-server-connections-step-content">
+                        <div class="radio">
+                            <input class="radio" type="radio" #if($basic) checked="checked"#end
+                                   name="connection-type" id="basic-connection-type">
+                            <label for="basic-connection-type">
+                                $i18n.getText('plugins.slack.admin.connect.installation.type.option.blueprint')
+                                <span class="aui-lozenge aui-lozenge-success">
+                                    $i18n.getText('plugins.slack.admin.connect.installation.type.option.recommended')
+                                </span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <input class="radio" type="radio" #if(!$basic) checked="checked"#end
+                                   name="connection-type" id="custom-connection-type">
+                            <label for="custom-connection-type">
+                                $i18n.getText('plugins.slack.admin.connect.installation.type.option.custom')
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="slack-server-connections-step">
+                    <p class="slack-server-connections-step-title">
+                        <span class="basic-config#if(!$basic) hidden#end">
+                        #if ( !$link )
+                            $i18n.getText('plugins.slack.admin.connect.workspace.install.in.slack')
+                        #else
+                            $i18n.getText('plugins.slack.admin.connect.workspace.edit.in.slack')
+                        #end
+                        </span>
+                        <span class="custom-config#if($basic) hidden#end">
+                        #if ( !$link )
+                            $i18n.getText('plugins.slack.admin.connect.workspace.create.in.slack')
+                        #else
+                            $i18n.getText('plugins.slack.admin.connect.workspace.update.in.slack')
+                        #end
+                        </span>
+                    </p>
+                    <div class="slack-server-connections-step-content">
+                        <p>
+                            <span class="basic-config#if(!$basic) hidden#end">
+                                #set($descHtml = $i18n.getText('plugins.slack.admin.connect.workspace.basic.button.description'))
+                                $!descHtml
+                            </span>
+                            <span class="custom-config#if($basic) hidden#end">
+                                #set($descHtml = $i18n.getText('plugins.slack.admin.connect.workspace.advanced.button.description'))
+                                $!descHtml
+                            </span>
+                        </p>
+                        <button class="aui-button" id="slack-go-to" data-app-id="$!link.appId">
+                            <span class="basic-config#if(!$basic) hidden#end">
+                                $i18n.getText('plugins.slack.admin.connect.workspace.go.to.slack')
+                            </span>
+                            <span class="custom-config#if($basic) hidden#end">
+                                $i18n.getText('plugins.slack.admin.connect.workspace.go.to.slack')
+                            </span>
+                        </button>
+                    </div>
+                </li>
+                <li class="slack-server-connections-step">
+                    <p class="slack-server-connections-step-title">
+                        <span class="basic-config#if(!$basic) hidden#end">
+                            $i18n.getText('plugins.slack.admin.connect.workspace.credentials.title')
+                        </span>
+                        <span class="custom-config#if($basic) hidden#end">
+                            $i18n.getText('plugins.slack.admin.connect.workspace.custom.credentials.title')
+                        </span>
+                    </p>
+                    <div class="slack-server-connections-step-content">
+                        <!-- Basic form -->
+                        <div class="basic-config#if(!$basic) hidden#end">
+                            <button class="aui-button basic-config#if(!$basic) hidden#end" id="slack-paste-credentials">$i18n.getText('plugins.slack.admin.connect.workspace.paste')</button>
+                            <textarea name="slackCredentials"
+                                      id="slack-credentials"
+                                      class="textarea long-field slack-credentials-input ajs-dirty-warning-exempt"
+                                      rows="19">$!link.rawCredentials</textarea>
+                        </div>
+                        <!-- Advanced form -->
+                        <div class="custom-config#if($basic) hidden#end">
+                            <p>
+                                #set($descHtml = $i18n.getText('plugins.slack.admin.connect.workspace.credentials.description'))
+                                $!descHtml
+                            </p>
+                            <form class="aui ajs-dirty-warning-exempt">
+                                #set($basicMessageWithHtml = $i18n.getText('plugins.slack.admin.connect.installation.field.where.to.find.basic'))
+                                <div class="field-group">
+                                    <label for="client-id">
+                                        $i18n.getText('plugins.slack.admin.connect.installation.field.client.id')
+                                        <span class="aui-icon icon-required">*</span></label>
+                                    <input class="text full-width-field" type="text" value="$!link.clientId"
+                                           id="client-id" name="client-id" placeholder="123456789012.123456789012">
+                                    <div class="description">$basicMessageWithHtml</div>
+                                </div>
+                                <div class="field-group">
+                                    <label for="client-secret">
+                                        $i18n.getText('plugins.slack.admin.connect.installation.field.client.secret')
+                                        <span class="aui-icon icon-required">*</span></label>
+                                    <input class="text full-width-field" type="password" value="$!link.clientSecret"
+                                           id="client-secret" name="client-secret" placeholder="axyzfef4ad123c2a4abcd09bd61dda85">
+                                    <div class="description">$basicMessageWithHtml</div>
+                                </div>
+                                <div class="field-group">
+                                    <label for="signing-secret">
+                                        $i18n.getText('plugins.slack.admin.connect.installation.field.signing.secret')
+                                        <span class="aui-icon icon-required">*</span></label>
+                                    <input class="text full-width-field" type="password" value="$!link.signingSecret"
+                                           id="signing-secret" name="signing-secret" placeholder="7903c2a1882e40e4b49768231a62e991">
+                                    <div class="description">$basicMessageWithHtml</div>
+                                </div>
+                                <div class="field-group">
+                                    <label for="verification-token">
+                                        $i18n.getText('plugins.slack.admin.connect.installation.field.verification.token')
+                                        <span class="aui-icon icon-required">*</span></label>
+                                    <input class="text full-width-field" type="text" value="$!link.verificationToken"
+                                           id="verification-token" name="verification-token" placeholder="jM1juq23DgiUYZFLMajTYX9i">
+                                    <div class="description">$basicMessageWithHtml</div>
+                                </div>
+
+                                #set($customMessageWithHtml = $i18n.getText('plugins.slack.admin.connect.installation.field.where.to.find.install'))
+                                <div class="field-group">
+                                    <label for="access-token">
+                                        $i18n.getText('plugins.slack.admin.connect.installation.field.access.token')
+                                        <span class="aui-icon icon-required">*</span></label>
+                                    <input class="text full-width-field" type="text" value="$!link.accessToken"
+                                           id="access-token" name="access-token" placeholder="xoxp-123456789012-123456789012-123456789012-6ef291c1cd890fcd8b85c36b09fc3223">
+                                    <div class="description">$customMessageWithHtml</div>
+                                </div>
+                                <div class="field-group">
+                                    <label for="bot-access-token">
+                                        $i18n.getText('plugins.slack.admin.connect.installation.field.bot.access.token')
+                                        <span class="aui-icon icon-required">*</span></label>
+                                    <input class="text full-width-field" type="text" value="$!link.botAccessToken"
+                                           id="bot-access-token" name="bot-access-token" placeholder="xoxb-123456789012-123456789012-BdCxfdsFiA7dn9P1PkRur1zP">
+                                    <div class="description">$customMessageWithHtml</div>
+                                </div>
+
+                            </form>
+                        </div>
+                        <!-- Submit -->
+                        <div class="slack-connect-workspace-submit-container">
+                            <div id="slack-loading" class="hidden"><span class="aui-icon aui-icon-wait"></span> $i18n.getText('plugins.slack.admin.connect.workspace.saving')</div>
+                            <button class="aui-button submit aui-button-primary"
+                                    id="slack-submit-credentials"
+                                    data-team-id="$!link.teamId">
+                                $i18n.getText('plugins.slack.button.connect.workspace')
+                            </button>
+                            <a class="aui-button aui-button-subtle" href="$baseUrl/plugins/servlet/slack/configure#if($link.teamId)?teamId=$link.teamId#end">
+                                $i18n.getText('plugins.slack.button.cancel')
+                            </a>
+                        </div>
+
+                        <div id="slack-server-failure" class="hidden">
+                            <span class="aui-icon aui-icon-small aui-iconfont-warning slack-failure-marker"></span> <span class="details">&nbsp;</span>
+                        </div>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+    </div>
+</body>
+</html>

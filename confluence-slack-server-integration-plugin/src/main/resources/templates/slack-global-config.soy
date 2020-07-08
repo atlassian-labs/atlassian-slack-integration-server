@@ -1,0 +1,26 @@
+{namespace Confluence.Templates.Slack.SpaceToChannel.Global.Config}
+
+/**
+  * Render channel mapping for global scope
+  * @param? recentInstall
+  * @param configs
+  * @param notificationTypes
+  * @param? slackUserName
+  * @param links
+  * @param? link
+  * @param routes
+  */
+{template .renderChannelMapping}
+    <div id="slack-space-to-channel-configuration" class="space-to-channel-configuration-container">
+        {call Confluence.Templates.Slack.SpaceToChannel.Config.configureMappings}
+            {param recentInstall: $recentInstall /}
+            {param configs: $configs /}
+            {param notificationTypes: $notificationTypes /}
+            {param showRemoveButton: true /}
+            {param slackUserName: $slackUserName /}
+            {param links: $links /}
+            {param link: $link /}
+            {param routes: $routes /}
+        {/call}
+    </div>
+{/template}

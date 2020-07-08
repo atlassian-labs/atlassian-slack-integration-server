@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+     xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="-208 366 194 61"
+     enable-background="new -208 366 194 61" xml:space="preserve">
+<title>JIRA-help-graphic-connected</title>
+<desc>Created with Sketch.</desc>
+<g id="Page-1" sketch:type="MSPage">
+	<g id="JIRA-help-graphic-connected" sketch:type="MSLayerGroup">
+		<g id="Line-_x2B_-Line-_x2B_-Line-16" transform="translate(67.000000, 25.887712)" sketch:type="MSShapeGroup">
+			<path id="Line" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-linecap="square" d="M-207.5,371h59"/>
+			<path id="Line_1_" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-linecap="square" d="M-152.5,366.5l4.5,4.5"/>
+			<path id="Line-16" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-linecap="square" d="M-152.5,375.5l4.5-4.5"/>
+		</g>
+		<path id="Oval-36" sketch:type="MSShapeGroup" fill="none" stroke="#F6A623" stroke-width="2" d="M-44.5,418.5c2.5,0,5.6,0,8-0.5
+			c2,2.5,11.5,7.5,11,6c-3-4-3.6-9.1-2.3-9.8C-20,409.8-15,402.4-15,394c0-13.5-13.2-24.5-29.5-24.5S-74,380.5-74,394
+			S-60.8,418.5-44.5,418.5z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<g>
+			<path fill="#AAAAAA" d="M-165.1,423.5h-30.1c-4.4,0-8-3.5-8-8v-31.9c0-4.4,3.5-8,8-8h30.1c4.4,0,8,3.5,8,8v31.9
+				C-157.1,419.9-160.7,423.5-165.1,423.5z M-195.2,377.4c-3.5,0-6.2,2.7-6.2,6.2v31.9c0,3.5,2.7,6.2,6.2,6.2h30.1
+				c3.5,0,6.2-2.7,6.2-6.2v-31.9c0-3.5-2.7-6.2-6.2-6.2H-195.2z"/>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path fill="#AAAAAA" d="M-158.3,418c-0.4,0-0.8-0.3-0.9-0.7c-0.1-0.4,0.2-1,0.7-1.1c2.8-0.6,4.9-3.2,4.9-6v-31.9
+				c0-3.5-2.7-6.2-6.2-6.2h-30.1c-2.8,0-5.3,1.9-6,4.6c-0.1,0.5-0.6,0.8-1.1,0.7c-0.4-0.2-0.8-0.6-0.6-1.1c0.9-3.5,4.1-6,7.7-6h30.1
+				c4.4,0,8,3.5,8,8v31.9c0,3.7-2.7,7-6.3,7.8C-158.2,418-158.2,418-158.3,418z"/>
+		</g>
+	</g>
+	<g>
+		<path fill="#AAAAAA" d="M-189.9,423.5c-0.5,0-0.9-0.4-0.9-0.9v-46c0-0.5,0.4-0.9,0.9-0.9c0.5,0,0.9,0.4,0.9,0.9v46
+			C-189,423.1-189.4,423.5-189.9,423.5z"/>
+	</g>
+	<g>
+		<path fill="#AAAAAA" d="M-189.4,412c-0.5,0-0.9-0.4-0.9-0.9c0-0.5,0.4-0.9,0.9-0.9c7.1,0,12.8-5.8,12.8-12.8
+			c0-0.5,0.4-0.9,0.9-0.9c0.5,0,0.9,0.4,0.9,0.9C-174.8,405.4-181.4,412-189.4,412z"/>
+	</g>
+	<circle fill="#AAAAAA" cx="-175.7" cy="394.3" r="4.4"/>
+</g>
+</svg>

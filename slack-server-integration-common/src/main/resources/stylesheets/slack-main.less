@@ -1,0 +1,203 @@
+@import "slack-global.less";
+
+@headingColour: @blueColor;
+@alertColour: @warmRedColor;
+@alertText: @whiteColor;
+@warningColour: @yellowColor;
+@infoTextColour: @mediumGrayColor;
+@disabledColour: @ashGrayColor;
+
+#slack-server-failure {
+  .slack-failure-marker {
+    color: @warningColour;
+  }
+
+  .details {
+    margin-left: 20px;
+  }
+}
+
+#slack-configure {
+  margin-top: 0;
+
+  #slack-install {
+    margin: 20px 0 10px;
+  }
+
+  h2 {
+    color: @headingColour;
+    margin-top: 0;
+  }
+}
+
+#jira {
+  #slack-configuration-panel {
+    margin: 0px;
+
+    .slack-user {
+      font-weight: 700;
+    }
+  }
+}
+
+#slack-installing,
+#slack-uninstalling,
+#slack-installed {
+  max-width: 800px;
+  text-align: center;
+  margin-top: 80px;
+
+  h5 {
+    margin-bottom: 10px;
+  }
+
+  button {
+    margin-top: 20px;
+    color: @infoTextColour;
+  }
+
+  p {
+    margin: 0;
+  }
+
+}
+
+#slack-installing .slack-install-message,
+#slack-uninstalling .slack-install-message {
+  height: 80px;
+}
+
+#slack-remove-link-dialog {
+  // TODO CONFDEV-28519 ADG 2 - Evil hacks to make this look ADG 2
+  border: 0;
+
+  .dialog-title {
+    background-color: @alertColour;
+    color: @alertText;
+  }
+}
+
+.slack-install-form {
+  #slack-btf-install {
+    display: none;
+  }
+  #btf-error{
+    display: none;
+  }
+}
+
+.slack-install-form.slack-btf {
+
+  #slack-install {
+    display: none;
+  }
+
+  #slack-btf-install {
+    display: block;
+  }
+
+  #btf-error{
+    display: none;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.slack-credentials-input {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #f5f5f5;
+}
+
+.slack-connect-workspace-submit-container {
+  padding: 0;
+  margin: 0;
+}
+
+.slack-connect-edit-page {
+  //width: 500px;
+}
+
+/* integration steps */
+@stepNumberDiameter: 32px;
+@large-border-radius: 5px;
+
+.slack-server-connections-steps {
+  display: table;
+  margin: 30px 0;
+  padding: 0;
+  counter-reset: step;
+
+  .slack-server-connections-step {
+    display: block;
+    position: relative;
+    padding: 0 10px 0 (@stepNumberDiameter + 10px);
+    margin-top: 30px;
+
+    &:before {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: @stepNumberDiameter;
+      line-height: (32.0 / 14.0);
+      width: @stepNumberDiameter;
+      background: @cheetoOrangeColor;
+      border-radius: (@stepNumberDiameter / 2px);
+      text-align: center;
+      color: @whiteColor;
+      counter-increment: step;
+      content: counter(step);
+    }
+
+    &.checked:before {
+      background: @greenColor;
+      font-weight: bold;
+      content: '\2713';
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .slack-server-connections-step-title {
+      font-weight: bold;
+    }
+
+    .slack-server-connections-step-content {
+      margin-top: 10px;
+
+      .radio {
+        display: inline-block;
+        padding-right: 72px;
+      }
+      .active-tooltip {
+        padding-right: 8px;
+      }
+
+      #slack-go-to {
+        margin-top: 10px;
+      }
+
+      #slack-paste-credentials {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.slack-server-connections-steps.start {
+  margin: 0;
+  width: 700px;
+  padding: 20px;
+  text-align: left;
+
+  .slack-server-connections-step {
+    width: 600px;
+  }
+}

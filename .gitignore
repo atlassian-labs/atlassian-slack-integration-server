@@ -1,0 +1,6 @@
+.idea/
+*.iml
+.DS_Store
+target/
+*.log
+junit.xml

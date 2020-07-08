@@ -1,0 +1,53 @@
+{
+  "notifications.slack.link.clicked":["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "type": ["site", "user", "repository", "commit", "comment", "pullRequest", "pullRequestComment", "tag", "branch",
+      "pullRequestCommit", "file"]
+  }],
+  "notifications.slack.personal.notification.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["commit_author_comment", "pr_author", "pr_watcher", "pr_reviewer_created", "pr_reviewer_updated"]
+  }],
+  "notifications.slack.personal.notification.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["commit_author_comment", "pr_author", "pr_watcher", "pr_reviewer_created", "pr_reviewer_updated"]
+  }],
+
+  "notifications.slack.repotochannel.linked":  ["userKeyHash", "teamIdHash", "slackUserIdHash", "repositoryId",
+    "channelIdHash"],
+  "notifications.slack.repotochannel.unlinked":  ["userKeyHash", "teamIdHash", "slackUserIdHash", "repositoryId",
+    "channelIdHash"],
+
+  "notifications.slack.repotochannel.notification.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "repositoryId",
+    "channelIdHash", {
+      "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
+        "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
+        "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
+        "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed",
+        "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
+        "TagDeleted", "BranchCreated", "BranchDeleted"]
+    }
+  ],
+  "notifications.slack.repotochannel.notification.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "repositoryId",
+    "channelIdHash", {
+      "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
+        "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
+        "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
+        "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed",
+        "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
+        "TagDeleted", "BranchCreated", "BranchDeleted"]
+    }
+  ],
+
+  "notifications.slack.page.visited.repository.config": ["userKeyHash", "teamIdHash", "slackUserIdHash"],
+
+  "notifications.slack.notification.regular.sent": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
+      "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
+      "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
+      "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed",
+      "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
+      "TagDeleted", "BranchCreated", "BranchDeleted"]
+  }],
+  "notifications.slack.notification.personal.sent": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
+    "notificationKey": ["commit_author_comment", "pr_author", "pr_watcher", "pr_reviewer_created", "pr_reviewer_updated"]
+  }],
+  "notifications.slack.notification.unfurling.sent": ["userKeyHash", "teamIdHash", "slackUserIdHash"]
+}

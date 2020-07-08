@@ -1,0 +1,170 @@
+{namespace Slack.Templates.Configuration.ConnectionStatus}
+
+/**
+* @param? label
+*/
+{template .status}
+    <h6 class="slack-connection-status-container">
+        {if $label}
+            {$label}
+        {else}
+            {getText('plugins.slack.admin.connection.status.title')}
+        {/if}
+        <span class="slack-connection-status"></span>
+    </h6>
+{/template}
+
+/**
+* @param? label
+*/
+{template .userStatus}
+    <h6 class="slack-user-connection-status-container">
+        {if $label}
+            {$label}
+        {else}
+            {getText('plugins.slack.admin.connection.user.status.title')}
+        {/if}
+        <span class="slack-user-connection-status"></span>
+    </h6>
+{/template}
+
+/**
+ * Creates an AUI Lozenge
+ * @param text
+ * @param? tagName Default is 'span'
+ * @param? id
+ * @param? title sets a tooltip using the title attribute
+ * @param? type the lozenge type. Valid options are 'success', 'error', 'current', 'complete', or 'moved'. Leave empty for the generic (grey) lozenge.
+ * @param? isSubtle Boolean. Specify if it's a subtle lozenge style
+ * @param? maxLength truncates the lozenge text to a maximum number of characters
+ * @param? toolTipId id of tooltip that will be triggered oh hovering over this lozenge
+ */
+{template .lozenge}
+    <{$tagName ? $tagName : 'span'}
+        {if $id} id="{$id}"{/if}
+        {if $title} title="{$title}"{/if}
+        {if $toolTipId} data-aui-trigger aria-controls="{$toolTipId}" {/if}
+        {sp}class="aui-lozenge{$type ? ' aui-lozenge-' + $type : ''}{$isSubtle ? ' aui-lozenge-subtle' : ''}">
+        {if $maxLength}
+            {$text|truncate:$maxLength}
+        {else}
+            {$text}
+        {/if}
+    </{$tagName ? $tagName : 'span'}>
+{/template}
+
+/**
+ * @param id
+ * @param title
+ * @param description
+ */
+{template .inlineDialog}
+    <aui-inline-dialog id="{$id}" alignment="top center" responds-to="hover">
+        <h5>{$title}</h5>
+        <span>{$description|noAutoescape}</span>
+    </aui-inline-dialog>
+{/template}
+
+/**
+ * @param extraClasses
+ */
+{template .connectedStatus}
+    {call Slack.Templates.Configuration.ConnectionStatus.lozenge}
+        {param text: getText('plugins.slack.admin.connection.status.connected') /}
+        {param type: 'success' /}
+        {param isSubtle: false /}
+        {param extraClasses: $extraClasses /}
+    {/call}
+{/template}
+
+/**
+ * @param extraClasses
+ * @param toolTipTitle
+ * @param toolTipDescription
+ * @param toolTipId
+ */
+{template .partialConnectivityStatus}
+    {call Slack.Templates.Configuration.ConnectionStatus.lozenge}
+        {param text: getText('plugins.slack.admin.connection.status.partial.connectivity') /}
+        {param type: 'current' /}
+        {param isSubtle: false /}
+        {param extraClasses: $extraClasses /}
+        {param toolTipId: $toolTipId /}
+    {/call}
+    {if $toolTipDescription}
+        {call Slack.Templates.Configuration.ConnectionStatus.inlineDialog}
+            {param id: $toolTipId /}
+            {param title: $toolTipTitle /}
+            {param description: $toolTipDescription /}
+        {/call}
+    {/if}
+{/template}
+
+/**
+ * @param extraClasses
+ * @param toolTipTitle
+ * @param toolTipDescription
+ * @param toolTipId
+ */
+{template .unknownStatus}
+    {call Slack.Templates.Configuration.ConnectionStatus.lozenge}
+        {param text: getText('plugins.slack.admin.connection.status.unknown') /}
+        {param type: '' /}
+        {param isSubtle: false /}
+        {param extraClasses: $extraClasses /}
+        {param toolTipId: $toolTipId /}
+    {/call}
+    {if $toolTipDescription}
+        {call Slack.Templates.Configuration.ConnectionStatus.inlineDialog}
+            {param id: $toolTipId /}
+            {param title: $toolTipTitle /}
+            {param description: $toolTipDescription /}
+        {/call}
+    {/if}
+{/template}
+
+/**
+ * @param extraClasses
+ * @param toolTipTitle
+ * @param toolTipDescription
+ * @param toolTipId
+ */
+{template .notConnectedStatus}
+    {call Slack.Templates.Configuration.ConnectionStatus.lozenge}
+        {param text: getText('plugins.slack.admin.connection.status.not.connected') /}
+        {param type: 'error' /}
+        {param isSubtle: false /}
+        {param extraClasses: $extraClasses /}
+        {param toolTipId: $toolTipId /}
+    {/call}
+    {if $toolTipDescription}
+        {call Slack.Templates.Configuration.ConnectionStatus.inlineDialog}
+            {param id: $toolTipId /}
+            {param title: $toolTipTitle /}
+            {param description: $toolTipDescription /}
+        {/call}
+    {/if}
+{/template}
+
+/**
+ * @param extraClasses
+ * @param toolTipTitle
+ * @param toolTipDescription
+ * @param toolTipId
+ */
+{template .oauthFailureStatus}
+    {call Slack.Templates.Configuration.ConnectionStatus.lozenge}
+        {param text: getText('plugins.slack.admin.connection.status.oauth.failure') /}
+        {param type: 'error' /}
+        {param isSubtle: false /}
+        {param extraClasses: $extraClasses /}
+        {param toolTipId: $toolTipId /}
+    {/call}
+    {if $toolTipDescription}
+        {call Slack.Templates.Configuration.ConnectionStatus.inlineDialog}
+            {param id: $toolTipId /}
+            {param title: $toolTipTitle /}
+            {param description: $toolTipDescription /}
+        {/call}
+    {/if}
+{/template}

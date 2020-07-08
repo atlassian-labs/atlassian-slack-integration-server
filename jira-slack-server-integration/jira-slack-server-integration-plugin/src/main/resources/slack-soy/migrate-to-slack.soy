@@ -1,0 +1,55 @@
+{namespace Slack.Templates.Migration}
+
+/**
+ * @param? migrated
+ */
+{template .migrateToSlack}
+    <li>
+        <button class="aui-button aui-button-subtle migrate-to-slack" title="{getText('jira.plugins.slack.migration.to.slack.label')}">
+            <span class="slack-logo-image{if $migrated} migrated{/if}" />
+        </button>
+    </li>
+{/template}
+
+/**
+ * @param roomName
+ */
+{template .selectChannelDialog}
+    <h1>
+        {getText('jira.plugins.slack.migration.dialog.title')}
+    </h1>
+    <div class="dialog-panel-body">
+        <form class="slack-channel-select-form aui">
+            <div class="dialog-panel-body-header aui-item">
+                <div>
+                    <strong>{getText('jira.plugins.slack.migration.field.room')}</strong>
+                </div>
+                <div class="field-group room-name" title="{$roomName}">
+                    {$roomName}
+                </div>
+            </div>
+            <div class="mapping-arrow-column">
+                <span class="aui-icon aui-icon-small aui-iconfont-devtools-arrow-right mapping-arrow">{getText('jira.plugins.slack.channelmapping.arrow.label')}</span>
+            </div>
+            <div class="dialog-panel-body-header aui-item">
+                <div>
+                    <strong>{getText('jira.plugins.slack.migration.field.channel')}</strong>
+                </div>
+                <div class="field-group">
+                    <div id="slack-migrate-channel-select-container" class="slack-migrate-channel-selector-container selector-with-help">
+                        <select id="slack-migrate-channel-select" class="hidden slack-channel-selector">
+                            <option value="" disabled selected>{getText('jira.plugins.slack.channelselector.select.channel')}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="dialog-errors error"></div>
+    </div>
+    <div class="buttons-container form-footer">
+        <div class="buttons">
+            <button class="aui-button submit" id="slack-migrate-select-channel-dialog-submit">{getText('jira.plugins.slack.migration.confirm.button')}</button>
+            <button class="aui-button aui-button-link cancel" id="slack-migrate-select-channel-dialog-close">{getText('plugins.slack.button.cancel')}</button>
+        </div>
+    </div>
+{/template}

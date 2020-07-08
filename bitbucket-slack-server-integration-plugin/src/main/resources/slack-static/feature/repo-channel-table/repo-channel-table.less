@@ -1,0 +1,136 @@
+@import "webstatic:/static/global.less";
+
+@arrowSize: 30px;
+@pageWidth: 800px;
+
+.has-arrow {
+    box-sizing: border-box;
+    padding-right: @arrowSize + @baseSpacing;
+    position: relative;
+    width: 300px;
+
+    .mapping-arrow {
+        right: @baseSpacing;
+        position: absolute;
+    }
+}
+
+.slack-channel-mapping-list {
+
+    max-width: @pageWidth;
+
+    .edit, .edit-menu {
+        display: none;
+    }
+
+    .expanded {
+        .edit {
+            display: table-row;
+        }
+
+        .edit-menu {
+            display: inline-block;
+        }
+
+        .summary-menu {
+            display: none;
+            white-space: nowrap;
+        }
+    }
+
+    .hidden-channel {
+        font-style: italic;
+    }
+
+    // the selector for the hover style is a little bit to specific so we need some hacks :(
+    .expanded.expanded.expanded {
+        > tr,
+        > tr:hover {
+            background-color: @primaryActiveColor;
+        }
+    }
+
+    .inline-toolbar {
+        white-space: nowrap;
+        ul {
+            margin-top: 0;
+            padding: 0;
+            float: right;
+
+            li {
+                display: inline;
+                margin-right: 10px;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .menu > li {
+        float: none;
+    }
+
+    .notifications-heading {
+        margin: 0 0 @baseSpacing @baseSpacing;
+    }
+
+    .notifications {
+        display: inline-block;
+        padding: 0;
+        margin: 0 0 0 @doubleSpacing;
+
+        > li {
+            display: inline-block;
+            padding-left: @baseSpacing;
+            vertical-align: top;
+            padding-right: 100px;
+
+            .notification-group-title,
+            .option-group-title {
+                display: inline-block;
+                vertical-align: top;
+                color: @secondaryTextColor;
+            }
+
+            .notification-group-wrapper,
+            .option-group-wrapper {
+                margin-bottom: 16px;
+            }
+        }
+
+        hr {
+            border: .5px solid #eee;
+            margin: 3px auto;
+        }
+    }
+
+    .notification-group,
+    .option-group {
+        display: inline-block;
+        margin: 0;
+        padding-left: @baseSpacing;
+
+        > li {
+            list-style: none;
+        }
+
+        .notification-option-label {
+            margin-right: @baseSpacing;
+        }
+    }
+
+    .channel-name {
+        .text-overflow();
+    }
+
+    tbody[data-channel-state="NOT_FOUND"] > tr { // deleted channel
+
+        td.channel-name {
+            text-decoration: line-through;
+        }
+    }
+}
+
+#delete-mapping-dialog .display-name {
+    font-weight: bold;
+}
+

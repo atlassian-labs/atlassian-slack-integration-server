@@ -1,0 +1,55 @@
+{namespace bitbucket.page.slack.global.config}
+
+/**
+ *
+ */
+{template .install}
+<div class="slack-bitbucket-configure">
+    <div class="slack-server-integration-steps-container">
+        <img class="slack-not-linked" src="{pluginResourceUrl('com.atlassian.bitbucket.plugins.bitbucket-slack-server-integration-plugin:slack-bitbucket-image-resources','big-news.svg')}"/>
+        <h1>{getText('bitbucket.plugins.slack.admin.title')}</h1>
+        <p>{getText('bitbucket.plugins.slack.admin.description')}</p>
+        {call Slack.Templates.Configuration.installButton /}
+    </div>
+</div>
+{/template}
+
+/**
+ * @param link
+ * @param links
+ * @param recentInstall
+ * @param routes
+ * @param configsPage
+ * @param? slackUserName
+*/
+{template .installed}
+{call bitbucket.slack.feature.configHeader.configHeader}
+    {param link: $link /}
+    {param links: $links /}
+    {param routes: $routes /}
+    {param showRemoveButton: true /}
+{/call}
+
+<div class="slack-bitbucket-configure" id="slack-channel-configuration" class="slack-channel-mappings"
+      {if $slackUserName}data-slack-user-name="{$slackUserName}"{/if}
+      {if $link}data-slack-team-id="{$link.teamId}"{/if}
+      {if $link}data-slack-team-name="{$link.teamName}"{/if}>
+    <h1>{getText('bitbucket.plugins.slack.admin.title')}</h1>
+    {call Slack.Templates.Configuration.Steps.integrationStepsChoose}
+        {param link: $link /}
+        {param recentInstall: $recentInstall /}
+        {param slackUserName: $slackUserName /}
+        {param slackLinkImageUrl: pluginResourceUrl('com.atlassian.bitbucket.plugins.bitbucket-slack-server-integration-plugin:slack-bitbucket-image-resources','bitbucket-slack-not-connected.svg') /}
+        {param hasConfig: $configsPage.size > 0 /}
+    {/call}
+
+    {if $slackUserName}
+        <div class="slack-repo-mappings">
+            {call bitbucket.slack.feature.configHeader.createMapping/}
+            {call bitbucket.slack.feature.repoChannelTable.channelMappingTable}
+                {param configsPage: $configsPage /}
+            {/call}
+        </div>
+    {/if}
+</div>
+{/template}

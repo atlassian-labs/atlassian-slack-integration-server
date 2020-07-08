@@ -1,0 +1,194 @@
+{namespace JIRA.Templates.Slack.Project.ChannelMapping}
+
+/**
+ *
+ * @param teamName
+ * @param teamId
+ * @param channelId
+ * @param channelName
+ * @param projectName
+ * @param projectKey
+ * @param projectId
+ * @param config
+ * @param configurationGroupId
+ */
+{template .channelMapping}
+    <tbody class="slack-channel-config"
+                  data-team-id="{$teamId}"
+                  data-team-name="{$teamName}"
+                  data-channel-id="{$channelId}"
+                  data-channel-name="{$channelName}"
+                  data-configuration-group-id="{$configurationGroupId}"
+                  data-project-key="{$projectKey}"
+                  data-project-name="{$projectName}"
+                  data-project-id="{$projectId}">
+        <tr class="summary">
+            <td headers="project" class="project-name">
+                <div class="slack-project-mapping-field has-arrow">
+                    <span class="mapping-origin-label" title="{$projectName}">
+                        <a href="{contextPath() + '/browse/' + $projectKey}" target="_blank">{$projectName}</a>
+                    </span>
+                    <span class="aui-icon aui-icon-small aui-iconfont-devtools-arrow-right mapping-arrow">linked to</span>
+                </div>
+            </td>
+            <td headers="team" class="team-name">
+                <span class="slack-team-mapping-field" title="{$teamName}">
+                    <a href="#" class="slack-team-link-url" data-team-id="{$teamId}">{$teamName}</a>
+                </span>
+            </td>
+            <td headers="channel" class="channel-name">
+                <span class="slack-channel-mapping-field" title="{$channelName}">
+                    <a href="https://slack.com/app_redirect?team={$teamId}&channel={$channelId}" target="_blank">#{$channelName}</a>
+                </span>
+                {if $config['IS_MUTED']}
+                    <span class="aui-lozenge aui-lozenge-current">{getText('jira.plugins.slack.channelmapping.muted')}</span>
+                {/if}
+            </td>
+            <td headers="actions" class="inline-toolbar">
+                <div class="wrap">
+                    <span class="spinner"></span>
+                    <ul class="menu summary-menu">
+                        <li>
+                            <button class="aui-button aui-button-subtle edit-notification">
+                                <span class="aui-icon aui-icon-small aui-iconfont-edit">{getText('jira.plugins.slack.channelmapping.edit')}</span>
+                                &nbsp;{getText('jira.plugins.slack.channelmapping.edit')}
+                            </button>
+                        </li>
+                        <li>
+                            {call .deleteButton/}
+                        </li>
+                    </ul>
+                    <ul class="menu edit-menu">
+                        <li>
+                            <button class="aui-button aui-button-subtle close-edit-notification">
+                                <span class="aui-icon aui-icon-small">{getText('jira.plugins.slack.channelmapping.done')}</span>
+                                &nbsp;{getText('jira.plugins.slack.channelmapping.done')}
+                            </button>
+                        </li>
+                        <li>
+                            {call .deleteButton/}
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="edit" colspan="4">
+                {call .channelMappingConfig}
+                    {param config: $config/}
+                    {param configurationGroupId: $configurationGroupId/}
+                {/call}
+            </td>
+        </tr>
+    </tbody>
+{/template}
+
+/**
+ */
+{template .deleteButton}
+    <button class="aui-button aui-button-subtle trash-channel-mapping">
+        <span class="aui-icon aui-icon-small">{getText('jira.plugins.slack.channelmapping.delete')}</span>
+        &nbsp;{getText('jira.plugins.slack.channelmapping.delete')}
+    </button>
+{/template}
+
+/**
+ *
+ * @param config
+ * @param configurationGroupId
+ */
+{template .channelMappingConfig}
+    <div class="group">
+        <div class="errors"></div>
+        <h6>{getText('jira.plugins.slack.channelmapping.filters.label')}</h6>
+        <div class="basic-search-container"
+             {if $config['FILTER:JQL_QUERY']} data-jql="{$config['FILTER:JQL_QUERY'].value}" {/if}>
+        </div>
+
+        <div class="slack-notification-config-column">
+            <h6>{getText('jira.plugins.slack.channelmapping.matchers.label')}</h6>
+            <ul class="issue-events slack-notification-types">
+                <li>
+                    <input type="checkbox" class="matcher-type" id="issuecreate-{$configurationGroupId}" data-notification-name="IssueCreate"
+                           {if $config['MATCHER:ISSUE_CREATED']}checked="checked"{/if} autocomplete="off"/>
+                    <label for="issuecreate-{$configurationGroupId}">{getText('jira.plugins.slack.channelmapping.edit.issue.created')}</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="matcher-type" id="issueassignmentchanged-{$configurationGroupId}" data-notification-name="IssueAssignmentChanged"
+                           {if $config['MATCHER:ISSUE_ASSIGNMENT_CHANGED']}checked="checked"{/if} autocomplete="off"/>
+                    <label for="issueassignmentchanged-{$configurationGroupId}">{getText('jira.plugins.slack.channelmapping.edit.issue.assigned')}</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="matcher-type" id="issuecommented-{$configurationGroupId}" data-notification-name="IssueCommented"
+                           {if $config['MATCHER:ISSUE_COMMENTED']}checked="checked"{/if} autocomplete="off"/>
+                    <label for="issuecommented-{$configurationGroupId}">{getText('jira.plugins.slack.channelmapping.edit.issue.commented')}</label>
+                </li>
+                <li class="criteria-list">
+                    <input type="checkbox" class="matcher-type" id="issuetransition-{$configurationGroupId}" data-notification-name="IssueTransition"
+                           {if $config['MATCHER:ISSUE_TRANSITIONED']}checked="checked"{/if} autocomplete="off"/>
+                    <label for="issuetransition-{$configurationGroupId}">{getText('jira.plugins.slack.channelmapping.edit.issue.transitioned')}</label>
+                    <ul class="transition-criteria">
+                        <li class="slack-criteria" data-id="status" data-value="{if $config['MATCHER:ISSUE_TRANSITIONED']}{$config['MATCHER:ISSUE_TRANSITIONED'].value}{/if}"/>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="slack-notification-config-column">
+            <!-- verbosity: {$config['VERBOSITY'] ? $config['VERBOSITY'].value : 'not set'} -->
+            <h6>Verbosity</h6>
+            {let $isActive: ($config['VERBOSITY'] ? $config['VERBOSITY'].value : 'EXTENDED') == 'BASIC' /}
+            <input type="radio" id="option-{$configurationGroupId}-verbosity-basic" data-option-name="VERBOSITY"
+                   name="option-{$configurationGroupId}-verbosity" class="notification-option-radio" value="BASIC"
+                   {if $isActive}checked{/if}>
+            <label for="option-{$configurationGroupId}-verbosity-basic" class="notification-option-label">
+                Basic
+            </label>
+            {let $isActive: ($config['VERBOSITY'] ? $config['VERBOSITY'].value : 'EXTENDED') != 'BASIC' /}
+            <input type="radio" id="option-{$configurationGroupId}-verbosity-extended" data-option-name="VERBOSITY"
+                   name="option-{$configurationGroupId}-verbosity" class="notification-option-radio" value="EXTENDED"
+                   {if $isActive}checked{/if}>
+            <label for="option-{$configurationGroupId}-verbosity-extended" class="notification-option-label">
+                Extended
+            </label>
+        </div>
+        <div class="slack-notification-config-column options">
+            <h6>Options</h6>
+            <!-- track restricted comments  : {$config['SKIP_RESTRICTED_COMMENTS'] ? $config['SKIP_RESTRICTED_COMMENTS'].value : 'not set'} -->
+            {let $isActive: $config['SKIP_RESTRICTED_COMMENTS'] != null and $config['SKIP_RESTRICTED_COMMENTS'].value == 'true' /}
+            <input type="checkbox" class="notification-option-checkbox" id="option-{$configurationGroupId}-skip-restricted-comments"
+                   data-option-name="SkipRestrictedComments" value="true" {if $isActive}checked{/if}>
+            <label for="option-{$configurationGroupId}-skip-restricted-comments">
+                Don't notify on restricted comments
+            </label>
+        </div>
+    </div>
+{/template}
+
+/**
+ */
+{template .errors}
+    <div class="aui-message aui-message-error error">
+        {getText('jira.plugins.slack.channelmapping.errors.title')|noAutoescape}
+    </div>
+{/template}
+
+
+/**
+ * @param triedName
+ * @param errorMessage
+ */
+{template .channelCreateError}
+    <div class="slack-error-banner">
+        <strong>{getText('jira.plugins.slack.channelmapping.errors.create', $triedName)|noAutoescape}</strong>
+        {if $errorMessage}
+            {if strContains($errorMessage, 'invalid_name')}
+                <p>{getText('jira.plugins.slack.channelmapping.errors.create.reason.invalid.name')|noAutoescape}</p>
+            {else}
+                <p>
+                    {getText('jira.plugins.slack.channelmapping.errors.create.reason.generic')|noAutoescape}:
+                    <pre>{$errorMessage}</pre>
+                </p>
+            {/if}
+        {/if}
+    </div>
+{/template}

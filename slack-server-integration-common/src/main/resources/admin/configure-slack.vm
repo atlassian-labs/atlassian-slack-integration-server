@@ -1,0 +1,33 @@
+#* @vtlvariable name="webResourceManager" type="com.atlassian.plugin.webresource.WebResourceManager" *#
+#* @vtlvariable name="pageBuilderService" type="com.atlassian.webresource.api.assembler.PageBuilderService" *#
+#* @vtlvariable name="webInterfaceManager" type="com.atlassian.plugin.web.WebInterfaceManager" *#
+#* @vtlvariable name="i18n" type="com.atlassian.sal.api.message.I18nResolver" *#
+#* @vtlvariable name="recentInstall" type="java.lang.String" *#
+#* @vtlvariable name="link" type="com.atlassian.plugins.slack.api.SlackLink" *#
+#* @vtlvariable name="slackPluginResourceProvider" type="com.atlassian.plugins.slack.spi.SlackPluginResourceProvider" *#
+<html>
+<head>
+    <title>$i18n.getText("plugins.slack.admin.title")</title>
+    <meta name="activeTab" content="bitbucket-slack-menu-item">
+    <meta name="decorator" content="atl.admin"/>
+    <content tag="selectedWebItem">slack-conf-menu-item</content>
+    $webResourceManager.requireResource("${slackPluginResourceProvider.pluginKey}:slack-base-link-resources")
+</head>
+<body>
+    <div class="slack-configuration-page">
+        #if ($link)
+            #set ($context = {
+                "recentInstall": $recentInstall,
+                "link": $link
+            })
+        #else
+            #set ($context = {
+                "recentInstall": $recentInstall
+            })
+        #end
+        #foreach ($webPanel in $webInterfaceManager.getDisplayableWebPanels("plugins.slack.configure", $context))
+            $!webPanel.getHtml($context)
+        #end
+    </div>
+</body>
+</html>

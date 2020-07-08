@@ -1,0 +1,116 @@
+{namespace Slack.Templates.Profile}
+
+/**
+ * Show a list (initially only one) of OAuth sessions to Slack servers
+ * @param isNotConfluence
+ * @param sessions
+ */
+{template .viewOauthSessionsPage}
+    {call aui.page.document}
+        {param windowTitle: getText('slack.oauth2.view.oauth.sessions.page.title') /}
+        {param headContent}
+            <meta name="decorator" content="atl.userprofile"/>
+            <meta name="tab" content="slack-oauth-profile-page">
+            <meta name="activeTab" content="slack-oauth-profile-page">
+        {/param}
+        {param content}
+            <section id="slack-content" role="main">
+              {if $isNotConfluence}
+                  {call aui.page.pageHeader}
+                    {param content}
+                        {call aui.page.pageHeaderMain}
+                            {param content}
+                                <h1>{getText('slack.oauth2.view.oauth.sessions.page.title')}</h1>
+                            {/param}
+                        {/call}
+                    {/param}
+                  {/call}
+              {/if}
+              {call aui.page.pagePanel}
+                {param content}
+                    {call aui.page.pagePanelContent}
+                        {param content}
+                            <p>{getProductText('slack.oauth2.view.oauth.sessions.page.text')}</p>
+
+                            {if length($sessions) > 0}
+                            <table class="aui">
+                                <thead>
+                                    <tr>
+                                        <th>{getText('slack.oauth2.view.oauth.sessions.table.team')}</th>
+                                        <th>{getText('slack.oauth2.view.oauth.sessions.table.user')}</th>
+                                        <th>{getText('slack.oauth2.view.oauth.sessions.table.status')}</th>
+                                        /*<th>&nbsp</th>*/
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foreach $session in $sessions}
+                                    <tr>
+                                        <td>
+                                            <a href="#" class="slack-team-link-url" data-team-id="{$session.teamId}">
+                                                {$session.teamName}
+                                            <a/>
+                                        </td>
+                                        <td>
+                                            {if $session.slackUserId}
+                                            <a href="#" class="slack-user-link-url"
+                                                data-team-id="{$session.teamId}"
+                                                data-user-id="{$session.slackUserId}"
+                                                >
+                                                {$session.slackUserName}
+                                            <a/>
+                                            {else}
+                                                -
+                                            {/if}
+                                        </td>
+                                        <td>
+                                            {if $session.tokenStatus == 'CONNECTED'}
+                                                <span class="aui-lozenge aui-lozenge-success">
+                                                    {getText('slack.oauth2.view.oauth.sessions.status.connected')}
+                                                </span>
+                                            {elseif $session.tokenStatus == 'NO_CONNECTION'}
+                                                <span class="aui-lozenge aui-lozenge-error"
+                                                        title="{getText('slack.oauth2.view.oauth.sessions.status.connection.error.description')}">
+                                                    {getText('slack.oauth2.view.oauth.sessions.status.connection.error')}
+                                                </span>
+                                            {elseif $session.tokenStatus}
+                                                <span class="aui-lozenge aui-lozenge-error"
+                                                        title="{getText('slack.oauth2.view.oauth.sessions.status.failure.description', $session.tokenStatus)}">
+                                                    {getText('slack.oauth2.view.oauth.sessions.status.failure')}
+                                                </span>
+                                            {else}
+                                                <span class="aui-lozenge aui-lozenge-default">
+                                                    {getText('slack.oauth2.view.oauth.sessions.status.disconnected')}
+                                                </span>
+                                            {/if}
+                                        </td>
+                                        <td>
+                                            {if $session.slackUserId}
+                                            <a href="#" class="aui-button aui-button-subtle slack-user-unlink" data-slack-team-id="{$session.teamId}">
+                                                {getText('slack.oauth2.view.oauth.sessions.page.session.remove')}
+                                            </a>
+                                            {/if}
+                                            {if not $session.slackUserId or $session.tokenStatus}
+                                            <a href="#" class="aui-button aui-button-subtle slack-user-link" data-slack-team-id="{$session.teamId}">
+                                                {if not $session.slackUserId}
+                                                {getText('slack.oauth2.view.oauth.sessions.page.confirm')}
+                                                {else}
+                                                {getText('slack.oauth2.view.oauth.sessions.page.reauthorize')}
+                                                {/if}
+                                            </a>
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                    {/foreach}
+                                </tbody>
+                            </table>
+                            {else}
+                            <p>{getText('slack.oauth2.view.oauth.sessions.page.empty')}</p>
+                            {/if}
+                        {/param}
+                    {/call}
+                {/param}
+              {/call}
+            </section><!-- #content -->
+        {/param}
+    {/call}
+{/template}

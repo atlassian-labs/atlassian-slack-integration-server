@@ -1,0 +1,43 @@
+@import "../../../slack-less/global";
+
+#slack-project-to-workspace-add-select-suggestions {
+  .aui-list-item-li-filler {
+    display: none;
+  }
+
+  .aui-lozenge {
+    float: right;
+    margin-top: 2px;
+  }
+
+  .aui-list-item-link {
+    padding-left: 32px;
+    background: no-repeat 10px center;
+  }
+
+  .active {
+    .aui-list-item-link {
+      background-color: #3b73af;
+    }
+  }
+
+}
+
+.aui-list {
+  .slack-login-dropdown-footer {
+
+    border-left: 5px solid @cheetoOrangeColor;
+    padding-left: 10px;
+    margin: 10px;
+
+    &.error {
+      border-left-color: @warmRedColor;
+    }
+
+    a, a:hover {
+      text-decoration: none;
+      color: #3572b0;
+    }
+
+  }
+}

@@ -1,0 +1,72 @@
+{namespace bitbucket.page.slack.repo.config}
+
+/**
+ * @param repository
+ * @param link
+ * @param links
+ * @param recentInstall
+ * @param routes
+ * @param configsPage
+ * @param? slackUserName
+ */
+{template .RepoSettings}
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta name="decorator" content="bitbucket.repository.settings">
+            <meta name="projectKey" content="{$repository.project.key}">
+            <meta name="repositorySlug" content="{$repository.slug}">
+            <meta name="activeTab" content="repository-slack-settings">
+            <title>{getText('bitbucket.plugins.slack.repo.config.title')}</title>
+        </head>
+        <body>
+            <div class="slack-configuration-page" id="slack-channel-configuration" class="slack-channel-mappings"
+                    {if $slackUserName}data-slack-user-name="{$slackUserName}"{/if}
+                    {if $link}data-slack-team-id="{$link.teamId}"{/if}
+                    {if $link}data-slack-team-name="{$link.teamName}"{/if}>
+                {call bitbucket.slack.feature.configHeader.configHeader}
+                    {param link: $link /}
+                    {param links: $links /}
+                    {param routes: $routes /}
+                    {param configsPage: $configsPage /}
+                {/call}
+                {call widget.aui.pageHeader}
+                    {param content}
+                        {call aui.page.pageHeaderMain}
+                            {param extraClasses: 'slack-config-header' /}
+                            {param content}<h2>{getText('bitbucket.plugins.slack.repo.config.header')}</h2>{/param}
+                        {/call}
+                    {/param}
+                {/call}
+                {if $link}
+                    {call Slack.Templates.Configuration.Steps.integrationStepsChoose}
+                        {param link: $link /}
+                        {param recentInstall: $recentInstall /}
+                        {param slackUserName: $slackUserName /}
+                        {param slackLinkImageUrl: pluginResourceUrl('com.atlassian.bitbucket.plugins.bitbucket-slack-server-integration-plugin:slack-bitbucket-image-resources','bitbucket-slack-not-connected.svg') /}
+                        {param hasConfig: $configsPage.size > 0 /}
+                    {/call}
+                    {if $slackUserName}
+                        <div class="slack-repo-mappings">
+                            {call bitbucket.slack.feature.configHeader.createMapping}
+                                {param repository: $repository /}
+                            {/call}
+                            {call bitbucket.slack.feature.repoChannelTable.channelMappingTable}
+                                {param configsPage: $configsPage /}
+                                {param extraClasses: $slackUserName ? '' : 'hidden' /}
+                            {/call}
+                        </div>
+                    {/if}
+
+                {else}
+                    <div class="slack-needs-link">
+                        <img class="slack-landing-image" alt="Slack landing image"
+                             src="{pluginResourceUrl('com.atlassian.bitbucket.plugins.bitbucket-slack-server-integration-plugin:slack-bitbucket-image-resources','repo-slack-not-connected.svg')}" />
+                         <h2>{getText('bitbucket.plugins.slack.repo.config.not-connected.title')}</h2>
+                         <p>{getText('bitbucket.plugins.slack.repo.config.not-connected.subtitle')}</p>
+                     </div>
+                {/if}
+            </div>
+        </body>
+    </html>
+{/template}

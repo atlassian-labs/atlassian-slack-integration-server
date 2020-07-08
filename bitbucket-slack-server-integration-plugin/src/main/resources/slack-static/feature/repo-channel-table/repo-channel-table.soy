@@ -1,0 +1,364 @@
+{namespace bitbucket.slack.feature.repoChannelTable}
+
+/**
+ * @param configsPage
+ */
+{template .channelMappingTable}
+<table class="aui slack-channel-mapping-list">
+    <thead>
+    <tr>
+        <th id="repository" class="header has-arrow"><h5>{getText('bitbucket.plugins.slack.channelmapping.repository.header')}</h5></th>
+        <th id="team" class="header"><h5>{getText('plugins.slack.channelmapping.team.header')}</h5></th>
+        <th id="channel" class="header"><h5>{getText('plugins.slack.channelmapping.channel.header')}</h5></th>
+        <th id="actions" class="header"></th>
+    </tr>
+    </thead>
+    {foreach $config in $configsPage.values}
+        {foreach $channelConfig in $config.channelConfigurations}
+            {if $config.repository}
+                {call .renderSingleChannelMapping}
+                    {param repository: $config.repository /}
+                    {param channelConfig: $channelConfig /}
+                {/call}
+            {/if}
+        {/foreach}
+    {/foreach}
+</table>
+{/template}
+
+/**
+ * Render a channel mapping
+ *
+ * @param repository
+ * @param channelConfig
+ */
+{template .renderSingleChannelMapping}
+    {let $channel: $channelConfig.channelDetails /}
+    <tbody class="slack-channel-config"
+            data-channel-id="{$channel.channelId}"
+            data-channel-name="{$channel.channelName}"
+            data-team-id="{$channel.teamId}"
+            data-team-name="{$channel.teamName}"
+            data-channel-private="{$channel.private}"
+            data-repository-id="{$repository.id}"
+            data-project-key="{$repository.project.key}"
+            data-repository-slug="{$repository.slug}">
+        <tr class="summary">
+            <td headers="repository" class="repository-name">
+                <div class="slack-channel-mapping-field has-arrow">
+                    <a href="{contextPath() + '/projects/' + $repository.project.key + '/repos/' + $repository.slug + '/browse'}">
+                        <span class="mapping-origin-label" title="{$repository.project.name} / {$repository.name}">{$repository.project.name} / {$repository.name}</span>
+                    </a>
+                    <span class="aui-icon aui-icon-small aui-iconfont-devtools-arrow-right mapping-arrow">linked to</span>
+                </div>
+            </td>
+            <td headers="team" class="team-name">
+                <span class="slack-channel-mapping-field">
+                    <a href="#" class="slack-team-link-url" data-team-id="{$channel.teamId}">{$channel.teamName}</a>
+                </span>
+            </td>
+            <td headers="channel" class="channel-name">
+                <span class="slack-channel-mapping-field">
+                    <a href="#" class="slack-channel-link-url" data-team-id="{$channel.teamId}" data-channel-id="{$channel.channelId}">
+                        #{$channel.channelName}
+                    </a>
+                </span>
+                {if $channel.muted}
+                    <span class="aui-lozenge aui-lozenge-current slack-channel-muted-label">{getText('slack2-repository-configuration.muted')}</span>
+                {/if}
+            </td>
+            <td headers="actions" class="inline-toolbar">
+                <div class="wrap">
+                    <ul class="menu summary-menu">
+                        <li><a href="#" class="edit-notification">{getText('slack2-repository-configuration.edit')}</a></li>
+                        <li><a href="#" class="trash-channel-mapping"><span class="aui-icon aui-icon-small aui-iconfont-remove">{getText('slack2-repository-configuration.delete')}</span></a></li>
+                    </ul>
+                    <ul class="menu edit-menu">
+                        <li><a href="#" class="close-edit-notification">{getText('slack2-repository-configuration.close')}</a></li>
+                        <li><a href="#" class="trash-channel-mapping"><span class="aui-icon aui-icon-small aui-iconfont-remove">{getText('slack2-repository-configuration.delete')}</span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="edit" colspan="4">
+                <div class="notifications-heading">{getText('bitbucket.plugins.slack.table.notifications.header')}</div>
+                {let $groupId}notification-{$repository.id}-{$channelConfig.channelDetails.channelId}{/let}
+                <ul id="{$groupId}" class="slack-notification-types notifications">
+                    {call .renderCategoryItemList}
+                         {param channelConfig: $channelConfig /}
+                         {param repository: $repository /}
+                    {/call}
+                </ul>
+
+            </td>
+        </tr>
+    </li>
+{/template}
+
+/**
+ * @param channelConfig
+ * @param repository
+ */
+{template .renderCategoryItemList}
+    <li>
+        <span class="notification-group-title">{getText('bitbucket.plugins.slack.category.pullrequest')}</span>
+        <ul class='notification-group'>
+            {call .renderItem}
+                {param notificationKey: 'PRCreated'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRCreated')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRParticipantUpdated'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRUpdated')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRReviewersUpdated'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRReviewersUpdated')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            <hr/>
+            {call .renderItem}
+                {param notificationKey: 'PRMerged'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRMerged')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRDeclined'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRDeclined')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRReopened'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRReopened')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRDeleted'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRDeleted')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            <hr/>
+            {call .renderItem}
+                {param notificationKey: 'PRParticipantApproved'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRApproved')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRParticipantUnapproved'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRUnapproved')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRParticipantReviewed'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRReviewed')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            <hr/>
+            {call .renderItem}
+                {param notificationKey: 'PRComment'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRComment')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRCommentEdited'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRCommentEdited')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRCommentReplied'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRCommentReplied')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRCommentDeleted'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRCommentDeleted')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            <hr/>
+            {call .renderItem}
+                {param notificationKey: 'TaskCreated'/}
+                {param label: getText('bitbucket.plugins.slack.notification.TaskCreated')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'TaskUpdated'/}
+                {param label: getText('bitbucket.plugins.slack.notification.TaskUpdated')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'TaskResolved'/}
+                {param label: getText('bitbucket.plugins.slack.notification.TaskResolved')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'TaskReopened'/}
+                {param label: getText('bitbucket.plugins.slack.notification.TaskReopened')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'TaskDeleted'/}
+                {param label: getText('bitbucket.plugins.slack.notification.TaskDeleted')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            <hr/>
+            {call .renderItem}
+                {param notificationKey: 'PRAutoMergeFailed'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRAutoMergeFailed')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+            {call .renderItem}
+                {param notificationKey: 'PRAutoMergeResolved'/}
+                {param label: getText('bitbucket.plugins.slack.notification.PRAutoMergeResolved')/}
+                {param channelConfig: $channelConfig /}
+                {param repository: $repository/}
+            {/call}
+        </ul>
+    </li>
+    <li>
+        <div class="notification-group-wrapper">
+            <span class="notification-group-title">{getText('bitbucket.plugins.slack.category.commit')}</span>
+            <ul class='notification-group'>
+                {call .renderItem}
+                    {param notificationKey: 'CommitPushed'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.CommitPushed')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                {call .renderItem}
+                    {param notificationKey: 'CommitComment'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.CommitCommentAdded')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                {call .renderItem}
+                    {param notificationKey: 'CommitCommentEdited'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.CommitCommentEdited')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                {call .renderItem}
+                    {param notificationKey: 'CommitCommentReplied'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.CommitCommentReplied')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                {call .renderItem}
+                    {param notificationKey: 'CommitCommentDeleted'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.CommitCommentDeleted')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+            </ul>
+        </div>
+        <div class="notification-group-wrapper">
+            <span class="notification-group-title">{getText('bitbucket.plugins.slack.category.repository')}</span>
+            <ul class='notification-group'>
+                {call .renderItem}
+                    {param notificationKey: 'Forked'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.Forked')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                <hr/>
+                {call .renderItem}
+                    {param notificationKey: 'TagCreated'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.TagCreated')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                {call .renderItem}
+                    {param notificationKey: 'TagDeleted'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.TagDeleted')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                <hr/>
+                {call .renderItem}
+                    {param notificationKey: 'BranchCreated'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.BranchCreated')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                {call .renderItem}
+                    {param notificationKey: 'BranchDeleted'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.BranchDeleted')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+            </ul>
+        </div>
+        <div class="option-group-wrapper">
+            <span class="option-group-title">{getText('bitbucket.plugins.slack.option.verbosity')}</span>
+            <div class="option-group">
+                <!-- verbosity: {$channelConfig.channelDetails.verbosity} -->
+                {let $optionsId}option-{$repository.id}-{$channelConfig.channelDetails.channelId}-verbosity-basic{/let}
+                {let $optionName}option-{$repository.id}-{$channelConfig.channelDetails.channelId}-verbosity{/let}
+                {let $isActive: $channelConfig.channelDetails.verbosity == 'BASIC' /}
+                <input type="radio" name="{$optionName}" data-option-name="verbosity" id="{$optionsId}" value="BASIC"
+                       class="notification-option" {if $isActive}checked{/if}/>
+                <label for="{$optionsId}" class="notification-option-label">
+                    {getText('bitbucket.plugins.slack.option.verbosity.basic')}
+                </label>
+                {let $optionsId}option-{$repository.id}-{$channelConfig.channelDetails.channelId}-verbosity-extended{/let}
+                {let $isActive: $channelConfig.channelDetails.verbosity != 'BASIC' /}
+                <input type="radio" name="{$optionName}" data-option-name="verbosity" id="{$optionsId}" value="EXTENDED"
+                       class="notification-option" {if $isActive}checked{/if}/>
+                <label for="{$optionsId}" class="notification-option-label">
+                    {getText('bitbucket.plugins.slack.option.verbosity.extended')}
+                </label>
+                <span class="aui-icon aui-icon-small aui-iconfont-help slack-tooltip"
+                      title="{getText('bitbucket.plugins.slack.option.verbosity.extended.help')}">
+                </span>
+            </div>
+        </div>
+    </li>
+{/template}
+
+/**
+ * @param notificationKey
+ * @param label
+ * @param channelConfig
+ * @param repository
+ */
+{template .renderItem}
+    <li>
+        {let $isActive: $channelConfig.activateByDefault or isSlackNotificationEnabled($notificationKey, $channelConfig) /}
+
+        {let $checkId}notification-{$repository.id}-{$channelConfig.channelDetails.channelId}-{$notificationKey}{/let}
+        <input class="notification-item notification-type" type="checkbox"
+                data-notification-name="{$notificationKey}"
+                id="{$checkId}"
+                {if $isActive}checked{/if}>
+        <label for="{$checkId}">{$label}</label>
+    </li>
+{/template}
+
+/**
+ *
+ */
+{template .allMessagesFetched}
+    <p class="no-more-results">{getText('bitbucket.plugins.slack.table.allrowsshown')}</p>
+{/template}

@@ -1,0 +1,9 @@
+.slack-notification-editor-toolbar {
+    border: 1px solid #ccc;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom: none;
+    padding: 10px;
+    max-width: 478px;
+    background: #efefef;
+}

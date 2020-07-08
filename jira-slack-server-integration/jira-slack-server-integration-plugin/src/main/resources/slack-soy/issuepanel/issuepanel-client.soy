@@ -1,0 +1,108 @@
+{namespace JIRA.Templates.Slack.Project.IssuePanel}
+
+/**
+ * @param channelCount
+ * @param mentionCount
+ * @param issueKey
+ * @param userLoggedIntoSlack
+ */
+{template .mentionedChannelsDescription}
+    {if $mentionCount > 0}
+    <a id="slack-issue-mentions-list"
+        href="{contextPath() + '/secure/SlackMentionedChannels.jspa?issueKey=' + $issueKey }"
+        class="{if $userLoggedIntoSlack}trigger-dialog-large{else}trigger-dialog{/if}"
+    >
+        {getText('jira.plugins.slack.viewissue.panel.mentions.channel.text', $mentionCount, $channelCount)|noAutoescape}
+    </a>
+    {else}
+    <span>
+        <strong>{getText('jira.plugins.slack.viewissue.panel.mentions.channel.text.empty')}</strong>
+    </span>
+    {/if}
+{/template}
+
+/**
+ * @param dedicatedChannel
+ * @param? justLinked
+ * @param? hideUnlink
+ */
+{template .dedicatedChannelDetails}
+    <div class="slack-dedicated-channel">
+        <div class="slack-dedicated-channel-icon {if $justLinked}success{/if}">
+            <span class="aui-icon aui-icon-small aui-iconfont-approve">{sp}</span>
+            {if $dedicatedChannel.privateChannel}
+                <span class="aui-icon private-channel">{sp}</span>
+            {else}
+                <span class="aui-icon public-channel">{sp}</span>
+            {/if}
+        </div>
+        <a href="#" class="slack-dedicated-channel-name public-channel slack-channel-link-url"
+            data-team-id="{$dedicatedChannel.teamId}"
+            data-channel-id="{$dedicatedChannel.channelId}"
+            data-issue-id="{$dedicatedChannel.issueId}"
+            data-channel="{$dedicatedChannel.channelId}">
+            #{$dedicatedChannel.name}
+        </a>
+        {if not $hideUnlink}
+            <a class="trash-dedicated-channel" href="#" title="{getText('jira.plugins.slack.viewissue.panel.dedicated.channel.delete.tooltip')}">
+                <span class="aui-icon aui-icon-small aui-iconfont-remove-label">Delete</span>
+            </a>
+        {/if}
+        <div class="slack-button-spinner"></div>
+    </div>
+{/template}
+
+/**
+ * @param canAssignChannel
+ * @param issueKey
+ */
+{template .dedicatedChannelForm}
+    <div class="slack-no-dedicated-channel">
+        {if $canAssignChannel}
+            <div id="slack-dedicated-channel-buttons" class="buttons-container">
+                <a id="slack-select-dedicated-channel"
+                        href="{contextPath() + '/secure/SlackSelectChannel.jspa?issueKey=' + $issueKey}"
+                        class="slack-issue-panel-button slack-select-dedicated-channel trigger-dialog-select-channel">
+                    {getText('jira.plugins.slack.viewissue.panel.dedicated.channel.select.button.label')}
+                </a>
+
+                <div class="slack-button-spinner"></div>
+            </div>
+        {else}
+            <div>{getText('jira.plugins.slack.viewissue.panel.no.dedicated.channel.description')}</div>
+        {/if}
+    </div>
+{/template}
+
+/**
+*/
+{template .oauthNoLongerValidMessageDedicatedChannel}
+    <div class="aui-help aui-help-text slack-dedicated-channel-not-logged-in">
+        <div class="aui-help-content">
+            <p>{getText('jira.plugins.slack.viewissue.panel.dedicated.channel.oauth.not.valid')|noAutoescape}</p>
+        </div>
+    </div>
+{/template}
+
+/**
+*/
+{template .oauthNoLongerValidMessage}
+    <div class="aui-help aui-help-text slack-dedicated-channel-not-logged-in">
+        <div class="aui-help-content">
+            <p>{getText('jira.plugins.slack.viewissue.panel.oauth.not.valid')|noAutoescape}</p>
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param user
+ */
+{template .invitee}
+    {call Slack.Templates.Configuration.invitee}
+        {param userName: $user.userKey /}
+        {param avatarUrl: $user.avatarUrl /}
+        {param fullname: $user.displayName /}
+        {param email: $user.emailAddress /}
+        {param emailDomain: $user.emailDomain /}
+    {/call}
+{/template}

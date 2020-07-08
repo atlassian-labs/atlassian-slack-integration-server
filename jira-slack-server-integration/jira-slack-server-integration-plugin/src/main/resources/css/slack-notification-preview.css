@@ -1,0 +1,90 @@
+.slack-notification-preview .systemMessage {
+    background-color: #FFFBE8;
+    border-top: 1px solid #ECDCBD;
+    border-bottom: 1px solid #ECDCBD;
+    font-family: "Lucida Grande",arial,sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.slack-notification-preview .chatBlock {
+    border-collapse: collapse;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+.slack-notification-preview .chatBlock td {
+    padding: 3px 0;
+}
+
+.slack-notification-preview .systemMessage table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.slack-notification-preview .systemMessage .nameBlock {
+    color: #75510F;
+    background-color: #FDECC6;
+    border-top: 1px solid #FFFAEA;
+    border-right: 1px solid #FFFAEA;
+    width: 110px;
+    vertical-align: top;
+    font-weight: bold;
+    text-align: right;
+}
+
+.slack-notification-preview .systemMessage .messageBlock {
+    margin-bottom: 4px;
+    border-left: 1px solid #E6D0AA;
+}
+
+.slack-notification-preview .systemMessage .messageBlock img {
+    vertical-align: middle;
+}
+
+.slack-notification-preview .chatBlock p {
+    margin: 0 10px;
+    line-height: 20px;
+}
+
+.slack-notification-preview .slack-message {
+    margin: 0 10px;
+    white-space: normal;
+}
+
+.slack-notification-preview .timeBlock {
+    white-space: nowrap;
+    color: #999;
+    text-align: right;
+    vertical-align: top;
+    float: right;
+    margin-top: 0;
+    font-size: 11px;
+}
+
+.slack-notification-preview .slack-user {
+    color: #0576b9;
+    background: #eaf5fc;
+    padding: 2px;
+    border-radius: 3px;
+}
+.slack-notification-preview .slack-user::before {
+    content: '@';
+}
+.slack-notification-preview .slack-channel {
+    color: #0576b9;
+}
+.slack-notification-preview .slack-channel::before {
+    content: '#';
+}
+.slack-notification-preview .slack-cmd {
+    font-weight: 700;
+    background: #fff6d1;
+    padding: 2px;
+    border-radius: 3px;
+}
+.slack-notification-preview .slack-cmd::before {
+    content: '@';
+}

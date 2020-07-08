@@ -1,0 +1,111 @@
+{namespace JIRA.Templates.Slack.Project.Admin}
+
+/**
+ * @param projectKey the project's key
+ * @param projectName the project's name
+ * @param projectId the project's id
+ * @param projectConfiguration
+ * @param links
+ * @param routes
+ * @param? link
+ * @param? recentInstall
+ * @param projectsField
+ * @param slackUserName
+ * @param jqlHelpUrl
+ */
+{template .configurePage}
+    {call .projectAdminPage}
+        {param projectKey : $projectKey /}
+        {param title : getText('jira.plugins.slack.channelmapping.title') /}
+        {param showTabs : true /}
+        {param content}
+
+            {call JIRA.Templates.Slack.Project.ChannelMapping.projectToChannelConfiguration}
+                {param projectKey: $projectKey /}
+                {param projectId: $projectId /}
+                {param projectName: $projectName /}
+                {param projectConfigurations: [$projectConfiguration] /}
+                {param projectsField: $projectsField /}
+                {param slackUserName: $slackUserName /}
+                {param jqlHelpUrl: $jqlHelpUrl /}
+                {param link: $link /}
+                {param recentInstall: $recentInstall /}
+                {param links: $links /}
+                {param routes: $routes /}
+            {/call}
+
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param projectKey the project's key
+ * @param errors errors
+ */
+{template .errorPage}
+    {call .projectAdminPage}
+        {param projectKey : $projectKey /}
+        {param title : getText('jira.plugins.slack.channelmapping.title') /}
+        {param showTabs : false /}
+        {param content}
+
+            {call aui.message.error}
+                {param titleContent: getText('jira.plugins.slack.channelmapping.error.header') /}
+                {param content}
+                    <ul>
+                        {foreach $error in $errors}
+                            <li>{$error}</li>
+                        {/foreach}
+                    </ul>
+                {/param}
+            {/call}
+
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * @param projectKey the project's key
+ */
+{template .installPage}
+    {let $context: [
+        'projectKey': $projectKey
+    ] /}
+    {call .projectAdminPage}
+        {param projectKey : $projectKey /}
+        {param title : getText('jira.plugins.slack.channelmapping.title') /}
+        {param showTabs : true /}
+        {param content}
+
+            {foreach $panel in getWebPanelsSlack('plugins.slack.configure', $context)}
+                {$panel|noAutoescape}
+            {/foreach}
+
+        {/param}
+    {/call}
+{/template}
+
+/**
+ * This template wraps content around with necessary project admin related meta so that appropriate decorators would be added.
+ *
+ * @param content the actual admin page content
+ * @param projectKey the project's key
+ * @param showTabs whether to show the left hand side tabs
+ * @param title the title of the page
+ */
+{template .projectAdminPage}
+<html>
+<head>
+    <title>{$title}</title>
+    <meta name="decorator" content="atl.admin" />
+    {if $showTabs}
+        <meta name="admin.active.section" content="atl.jira.proj.config"/>
+        <meta name="admin.active.tab" content="slack-project-admin-page-link"/>
+    {/if}
+    <meta name="projectKey" content="{$projectKey}"/>
+</head>
+<body>
+    {$content |noAutoescape}
+</body>
+</html>
+{/template}
