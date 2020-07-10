@@ -103,6 +103,15 @@ Run integration tests for Bitbucket plugin:
 bin/build/run-bitbucket-its.sh
 ```
 
+# CI/CD
+## Tests
+Unit and integration tests are run on each commit by Github Actions. See [test.yml](.github/workflows/test.yml) for more details.
+A specific test job may be run manually on any branch from **"Actions"** tab on the repo page.
+
+## Releasing
+Release workflow allows to publish new releases to [Atlassian Artifactory](https://packages.atlassian.com/). 
+This action should be usually be run by repo maintainer only. See workflow configuration in [release.yml](.github/workflows/release.yml).
+
 # Contributions
 
 Contributions to Atlassian Server Integrations for Slack project are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.

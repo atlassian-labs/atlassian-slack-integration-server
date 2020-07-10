@@ -1,0 +1,63 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch/tag/hash to use (defaults to master)
+        required: false
+        default: master
+      product:
+        description: Product for which the plugin will be released (jira/confluence/bitbucket)
+        required: true
+      artifactory-user:
+        description: Artifactory user
+        required: true
+      artifactory-password:
+        description: Artifactory password
+        required: true
+      release-version:
+        description: Version to release (defaults to next micro version)
+      next-development-version:
+        description: Next development version (default to next snapshot micro version)
+
+jobs:
+  log-params:
+    name: Log Params
+    runs-on: ubuntu-latest
+    steps:
+      # don't log password as part of the a whole inputs object
+      - run: |
+          echo 'Ref [${{ github.event.inputs.ref }}].'
+          echo 'Product [${{ github.event.inputs.product }}].'
+          echo 'Artifactory user [${{ github.event.inputs.artifactory-user }}].'
+          echo 'Release version [${{ github.event.inputs.release-version }}].'
+          echo 'Next development version [${{ github.event.inputs.next-development-version }}].'
+
+  release-plugin:
+    name: Release Plugin
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # make credentials accessible during the release by copying them to environment variables
+      ARTIFACTORY_USER: ${{ github.event.inputs.artifactory-user }}
+      ARTIFACTORY_PASSWORD: ${{ github.event.inputs.artifactory-password }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      # fail job fast in case of invalid product
+      - run: bin/build/populate-plugin-by-product.sh ${{ github.event.inputs.product }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/configure-maven-for-release.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-release
+          restore-keys: |
+            maven-
+      - run: bin/build/install-common-modules.sh
+      - run: bin/build/release-single-plugin.sh
+
