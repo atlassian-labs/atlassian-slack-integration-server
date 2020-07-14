@@ -9,21 +9,16 @@ on:
       product:
         description: Product for which the plugin will be released (jira/confluence/bitbucket)
         required: true
-      artifactory-user:
-        description: Artifactory user
-        required: true
-      artifactory-password:
-        description: Artifactory password
-        required: true
       release-version:
         description: Version to release (defaults to next micro version)
       next-development-version:
         description: Next development version (default to next snapshot micro version)
 
 jobs:
-  log-params:
-    name: Log Params
+  release-plugin:
+    name: Release Plugin
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       # don't log password as part of the a whole inputs object
       - run: |
@@ -32,19 +27,16 @@ jobs:
           echo 'Artifactory user [${{ github.event.inputs.artifactory-user }}].'
           echo 'Release version [${{ github.event.inputs.release-version }}].'
           echo 'Next development version [${{ github.event.inputs.next-development-version }}].'
-
-  release-plugin:
-    name: Release Plugin
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      # make credentials accessible during the release by copying them to environment variables
-      ARTIFACTORY_USER: ${{ github.event.inputs.artifactory-user }}
-      ARTIFACTORY_PASSWORD: ${{ github.event.inputs.artifactory-password }}
-    steps:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.ref }}
+      - name: Configure git for operations performed during the release
+        run: |
+          # needed for release plugin to be able to push tags and commits
+          git config user.name $GITHUB_ACTOR
+          git config user.email "$GITHUB_ACTOR@github-actions.com"
+          # check the config is correct
+          cat .git/config
       # fail job fast in case of invalid product
       - run: bin/build/populate-plugin-by-product.sh ${{ github.event.inputs.product }}
       - uses: actions/setup-java@v1
@@ -57,7 +49,11 @@ jobs:
           path: ~/.m2/repository
           key: maven-release
           restore-keys: |
+            maven-unit
             maven-
       - run: bin/build/install-common-modules.sh
-      - run: bin/build/release-single-plugin.sh
-
+      - run: |
+          ARTIFACTORY_USER=${{ secrets.ARTIFACTORY_USER }} \
+          ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }} \
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
+          bin/build/release-single-plugin.sh
