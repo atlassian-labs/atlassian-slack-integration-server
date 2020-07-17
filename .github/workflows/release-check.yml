@@ -1,0 +1,32 @@
+name: Release Check
+on:
+  schedule:
+    # "At 04:05 on Thursday" according to https://crontab.guru/#5_4_*_*_4
+    - cron: '5 4 * * 4'
+  workflow_dispatch:
+
+jobs:
+  release-check:
+    name: Release Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - working-directory: bin/release-check
+        run: |
+          PRODUCT="jira" \
+          GH_USER=${{ secrets.GH_USER }} \
+          GH_TOKEN=${{ secrets.GH_TOKEN }} \
+          ./run-product-release-check.sh
+      - working-directory: bin/release-check
+        run: |
+          PRODUCT="confluence" \
+          GH_USER=${{ secrets.GH_USER }} \
+          GH_TOKEN=${{ secrets.GH_TOKEN }} \
+          ./run-product-release-check.sh
+      - working-directory: bin/release-check
+        run: |
+          PRODUCT="bitbucket" \
+          GH_USER=${{ secrets.GH_USER }} \
+          GH_TOKEN=${{ secrets.GH_TOKEN }} \
+          ./run-product-release-check.sh

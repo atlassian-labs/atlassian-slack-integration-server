@@ -16,4 +16,4 @@ fi
 latest_version=$(echo "$latest_releases" | jq -r '. | first')
 
 # RUN CHECK FOR LATEST VERSION
-VERSION="$latest_version" . ./check-release.sh
+PRODUCT_VERSION="$latest_version" . ./check-release.sh

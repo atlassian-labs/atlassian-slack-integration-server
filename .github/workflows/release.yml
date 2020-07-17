@@ -56,4 +56,6 @@ jobs:
           ARTIFACTORY_USER=${{ secrets.ARTIFACTORY_USER }} \
           ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }} \
           GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
+          RELEASE_VERSION=${{ github.event.inputs.release-version }} \
+          DEVELOPMENT_VERSION=${{ github.event.inputs.next-development-version }} \
           bin/build/release-single-plugin.sh

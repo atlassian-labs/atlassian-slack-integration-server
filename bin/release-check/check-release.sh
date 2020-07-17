@@ -1,54 +1,64 @@
 #!/usr/bin/env bash
 
-start_pipeline () {
-  local PIPELINE_NAME=${1}
-  local pipeline_link
-  pipeline_link=$(. ./start-pipeline.sh)
-  echo "Pipeline '$PIPELINE_NAME' --> $pipeline_link"
+start_workflow () {
+  local workflow_name=${1}
+  local java_version=${2}
+  local product_version=${3}
+  local workflow_link
+
+  workflow_link=$(WORKFLOW_NAME=$workflow_name JAVA_VERSION=$java_version PRODUCT_VERSION=$product_version . ./start-workflow.sh)
+  echo $workflow_link
 }
 
 # INPUT ENV VARS
-jira_base_url="${JIRA_BASE_URL:?Please set JIRA_BASE_URL. Example: 'https://pi-dev-sandbox.atlassian.net'}"
-jira_project="${JIRA_PROJECT:?Please set JIRA_PROJECT. Examples: 'JSS', 'CSS', 'BBSS'}"
 product_type="${PRODUCT:?Please set PRODUCT. Examples: 'jira', 'confluence', or 'bitbucket'}"
-version="${VERSION:?Please set VERSION.}"
+product_version="${PRODUCT_VERSION:?Please set PRODUCT_VERSION.}"
 
 # CHECK AN ISSUE LABELED WITH VERSION ALREADY EXISTS
-release_label="$product_type-$version-release"
-echo "Checking release for $product_type $version... checking if we have a ticket labeled $release_label for it in ${jira_base_url}/browse/${jira_project}"
+release_label="$product_type-$product_version-release"
+echo "Checking release for $product_type $product_version... checking if we have a ticket labeled $release_label for it in https://github.com/atlassian-labs/atlassian-slack-integration-server"
 
-issue_key=$(RELEASE_LABEL="$release_label" . ./fetch-release-issue.sh)
+issue_url=$(RELEASE_LABEL="$release_label" . ./fetch-release-issue.sh)
 
-if [ ! "$issue_key" = "" ] ; then
-  echo "Ticket already exists --> ${jira_base_url}/browse/${issue_key}"
+if [ ! "$issue_url" = "" ] ; then
+  echo "Issue already exists -> ${issue_url}."
   return
+else
+  echo "No issue found for label $release_label. Running test workflows..."
 fi
 
-# CREATE NEW ISSUE FOR RELEASE
-echo "No ticket found... creating a new one"
-
-new_issue_key=$(RELEASE_LABEL="$release_label" . ./create-issue.sh)
-
-echo "New ticket created --> ${jira_base_url}/browse/${new_issue_key}"
-
-# RUN TESTS AGAINST SPECIFIC VERSIONS
+# DETERMINE WORKFLOW NAME
 case $product_type in
   jira)
-    start_pipeline "Jira IT JDK 8"
-    start_pipeline "Jira IT JDK 11"
+    workflow_name=jira-int-tests.yml
     ;;
-
   confluence)
-    start_pipeline "Confluence IT JDK 8"
+    workflow_name=confluence-int-tests.yml
     ;;
-
   bitbucket)
-    start_pipeline "Bitbucket IT JDK 8"
-    start_pipeline "Bitbucket IT JDK 11"
+    workflow_name=bitbucket-int-tests.yml
     ;;
-
   *)
     echo "Invalid product"
     exit 1
     ;;
 esac
+
+echo "Determined workflow name: $workflow_name"
+
+# RUN TESTS AGAINST SPECIFIC VERSIONS
+echo "Running workflow with params: workflow-name=$workflow_name java-version=8.0.52 product-version=$product_version"
+first_workflow_link=$(start_workflow $workflow_name 8.0.252 $product_version)
+echo "Pipeline URL: $first_workflow_link"
+
+echo "Running workflow with params: workflow-name=$workflow_name java-version=11 product-version=$product_version"
+second_workflow_link=$(start_workflow $workflow_name 11 $product_version)
+echo "Pipeline URL: $second_workflow_link"
+
+workflow_links="$first_workflow_link, $second_workflow_link"
+
+# CREATE NEW ISSUE FOR RELEASE
+echo "Creating a new issue"
+new_issue_url=$(RELEASE_LABEL="$release_label" WORKFLOW_LINKS=$workflow_links. ./create-issue.sh)
+
+echo "New ticket created: $new_issue_url"

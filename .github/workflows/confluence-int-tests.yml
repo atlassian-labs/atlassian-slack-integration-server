@@ -1,0 +1,47 @@
+name: Confluence Integration Tests
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch/tag/hash to use (defaults to master)
+        required: false
+        default: master
+      java-version:
+        description: JDK version to use
+        required: true
+      product-version:
+        description: Confluence version to run tests against
+        required: true
+
+jobs:
+  integration-tests-confluence:
+    name: Confluence Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ github.event.inputs.java-version }}
+      - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/install-int-test-libs.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-unit
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository/com/atlassian/confluence
+          key: maven-integration-confluence-${{ github.event.inputs.product-version }}
+      - run: bin/build/install-common-modules.sh
+      - run: |
+          VERSION=${{ github.event.inputs.product-version }} \
+          bin/build/run-confluence-its.sh
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: webdriver-screenshots-confluence-${{ github.event.inputs.product-version }}-java-${{ matrix.java-version }}
+          path: confluence-slack-server-integration-plugin/target/webdriverTests/**

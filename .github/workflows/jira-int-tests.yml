@@ -1,0 +1,51 @@
+name: Jira Integration Tests
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch/tag/hash to use (defaults to master)
+        required: false
+        default: master
+      java-version:
+        description: JDK version to use
+        required: true
+      product-version:
+        description: Jira version to run tests against
+        required: true
+      testkit-version:
+        description: Testkit version to run tests against
+        required: false
+
+jobs:
+  integration-tests-jira:
+    name: Jira Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ github.event.inputs.java-version }}
+      - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/install-int-test-libs.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-unit
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository/com/atlassian/jira
+          key: maven-integration-jira-${{ github.event.inputs.product-version }}
+      - run: bin/build/install-common-modules.sh
+      - run: |
+          VERSION=${{ github.event.inputs.product-version }} \
+          TESTKIT_VERSION=${{ github.event.inputs.testkit-version }} \
+          bin/build/run-jira-its.sh
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: webdriver-screenshots-jira-${{ github.event.inputs.product-version }}-java-${{ matrix.java-version }}
+          path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**

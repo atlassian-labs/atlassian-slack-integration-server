@@ -6,7 +6,7 @@ TOMCAT_VERSION=${TOMCAT_VERSION:-tomcat8x}
 
 # Support Jira 8
 if [[ ${VERSION} == 8* ]] ; then
-    TESTKIT_VERSION=${TESTKIT_VERSION:-8.1.8}
+    TESTKIT_VERSION=${TESTKIT_VERSION:-8.1.20}
 fi
 
 VERSION_ARG=$([[ -z ${VERSION} ]] && echo "" || echo "-Djira.version=${VERSION} -Dproduct.version=${VERSION}")
