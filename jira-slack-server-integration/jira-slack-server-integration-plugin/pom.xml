@@ -10,7 +10,7 @@
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>2.0.12-SNAPSHOT</version>
+    <version>2.0.13-SNAPSHOT</version>
 
     <name>Slack for Jira Server</name>
     <description>This is the Slack plugin for Jira Server</description>
@@ -653,4 +653,34 @@
             </build>
         </profile>
     </profiles>
+
+    <scm>
+        <connection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</connection>
+        <developerConnection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</developerConnection>
+        <url>https://github.com/atlassian-labs/atlassian-slack-integration-server.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Luiz Silva</name>
+            <email>lsilva@atlassian.com</email>
+            <organization>Atlassian</organization>
+            <organizationUrl>https://atlassian.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mykhailo Vlasov</name>
+            <email>mvlasov@atlassian.com</email>
+            <organization>Atlassian</organization>
+            <organizationUrl>https://atlassian.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 </project>

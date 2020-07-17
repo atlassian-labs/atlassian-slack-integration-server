@@ -501,9 +501,9 @@
     </profiles>
 
     <scm>
-        <connection>scm:git:ssh://git@bitbucket.org:atlassianlabs/atlassian-slack-integration-server.git</connection>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/atlassianlabs/atlassian-slack-integration-server.git</developerConnection>
-        <url>https://bitbucket.org/atlassianlabs/atlassian-slack-integration-server/src</url>
+        <connection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</connection>
+        <developerConnection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</developerConnection>
+        <url>https://github.com/atlassian-labs/atlassian-slack-integration-server.git</url>
         <tag>HEAD</tag>
     </scm>
 

@@ -200,34 +200,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <scm>
-        <connection>scm:git:ssh://git@bitbucket.org:atlassianlabs/atlassian-slack-integration-server.git</connection>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/atlassianlabs/atlassian-slack-integration-server.git</developerConnection>
-        <url>https://bitbucket.org/atlassianlabs/atlassian-slack-integration-server/src</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <developers>
-        <developer>
-            <name>Luiz Silva</name>
-            <email>lsilva@atlassian.com</email>
-            <organization>Atlassian</organization>
-            <organizationUrl>https://atlassian.com</organizationUrl>
-        </developer>
-        <developer>
-            <name>Mykhailo Vlasov</name>
-            <email>mvlasov@atlassian.com</email>
-            <organization>Atlassian</organization>
-            <organizationUrl>https://atlassian.com</organizationUrl>
-        </developer>
-    </developers>
-
-    <licenses>
-        <license>
-            <name>Apache License 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 </project>
