@@ -11,7 +11,6 @@ import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.AttachmentHelper;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.plugins.slack.util.JiraVelocityHelperHolder;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogItem;
 import com.atlassian.jira.user.ApplicationUser;
@@ -42,8 +41,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 public class JiraIssueEventRendererTest {
-    @Mock
-    private JiraVelocityHelperHolder jiraVelocityHelperHolder;
     @Mock
     private I18nResolver i18nResolver;
     @Mock

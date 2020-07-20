@@ -1,10 +1,8 @@
 package com.atlassian.jira.plugins.slack.util.changelog;
 
 import com.atlassian.jira.event.issue.IssueEvent;
-import com.atlassian.jira.plugins.slack.util.JiraVelocityHelperHolder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.I18nHelper;
-import com.atlassian.jira.util.JiraVelocityHelper;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.core.entity.GenericEntityException;
@@ -34,13 +32,10 @@ public class ChangeLogExtractor {
     private static final String OLD_VALUE = "oldvalue";
     private static final String FIELD_KEY = "field";
 
-    private final JiraVelocityHelper velocityHelper;
     private final I18nHelper i18nHelper;
 
     @Autowired
-    public ChangeLogExtractor(final JiraVelocityHelperHolder velocityHelperHolder,
-                              final JiraAuthenticationContext jiraAuthenticationContext) {
-        this.velocityHelper = velocityHelperHolder.getVelocityHelper();
+    public ChangeLogExtractor(final JiraAuthenticationContext jiraAuthenticationContext) {
         this.i18nHelper = jiraAuthenticationContext.getI18nHelper();
     }
 
@@ -58,18 +53,11 @@ public class ChangeLogExtractor {
                 for (GenericValue changeItem : changeItems) {
                     final String field = changeItem.getString(FIELD_KEY);
                     String newStringKey = COMMENT_FIELD_NAME.equals(field) ? STRING_KEY_FOR_COMMENT : STRING_KEY;
-                    String fieldName = velocityHelper.getFieldName(changeItem, i18nHelper);
-                    String newText = velocityHelper.getPrettyFieldString(field,
-                            changeItem.getString(newStringKey),
-                            i18nHelper,
-                            "");
+                    String newText = StringUtils.defaultString(changeItem.getString(newStringKey));
                     String newValue = changeItem.getString(NEW_VALUE);
 
                     String oldStringKey = COMMENT_FIELD_NAME.equals(field) ? OLD_STRING_KEY_FOR_COMMENT : OLD_STRING_KEY;
-                    String oldText = velocityHelper.getPrettyFieldString(field,
-                            changeItem.getString(oldStringKey),
-                            i18nHelper,
-                            "");
+                    String oldText = StringUtils.defaultString(changeItem.getString(oldStringKey));
                     String oldValue = changeItem.getString(OLD_VALUE);
 
                     if (Strings.isNullOrEmpty(newText) && field.equals(ASSIGNEE_FIELD_NAME)) {
@@ -80,7 +68,7 @@ public class ChangeLogExtractor {
                         if (maxValueLength != -1) {
                             newText = StringUtils.abbreviate(newText, maxValueLength);
                         }
-                        changeLogItems.add(new ChangeLogItem(field, fieldName, newText, newValue, oldText, oldValue));
+                        changeLogItems.add(new ChangeLogItem(field, field, newText, newValue, oldText, oldValue));
                     }
                 }
 
