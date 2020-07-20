@@ -128,7 +128,8 @@ jobs:
           ref: ${{ github.event.inputs.ref }}
       - uses: actions/setup-java@v1
         with:
-          java-version: 8
+          # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
+          java-version: '<8.0.255'
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/install-int-test-libs.sh
       - uses: actions/cache@v2
