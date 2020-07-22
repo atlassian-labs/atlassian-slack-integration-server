@@ -80,7 +80,7 @@ jobs:
           path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-jira8:
-    name: Integration Tests - Jira 8.3.0
+    name: Integration Tests - Jira 8.11.0
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira8')
@@ -106,7 +106,7 @@ jobs:
             maven-integration-
             maven-
       - run: bin/build/install-common-modules.sh
-      - run: VERSION=8.3.0 TESTKIT_VERSION=8.1.8 bin/build/run-jira-its.sh
+      - run: VERSION=8.11.0 TESTKIT_VERSION=8.1.20 bin/build/run-jira-its.sh
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -128,7 +128,8 @@ jobs:
           ref: ${{ github.event.inputs.ref }}
       - uses: actions/setup-java@v1
         with:
-          java-version: 8
+          # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
+          java-version: '<8.0.255'
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/install-int-test-libs.sh
       - uses: actions/cache@v2

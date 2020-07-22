@@ -10,7 +10,6 @@ import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.AttachmentHelper;
 import com.atlassian.jira.plugins.slack.service.notification.MessageRendererException;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.plugins.slack.util.JiraVelocityHelperHolder;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogItem;
 import com.atlassian.jira.user.util.UserManager;
@@ -48,8 +47,7 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
     private final UserManager userManager;
 
     @Autowired
-    public JiraIssueEventRenderer(JiraVelocityHelperHolder jiraVelocityHelperHolder,
-                                  I18nResolver i18nResolver,
+    public JiraIssueEventRenderer(I18nResolver i18nResolver,
                                   ChangeLogExtractor changeLogExtractor,
                                   AttachmentHelper attachmentHelper,
                                   @Qualifier("jiraUserManager") UserManager userManager) {
