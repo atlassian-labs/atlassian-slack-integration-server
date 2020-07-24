@@ -12,7 +12,7 @@ BB_NGROK="$(curl -s "http://127.0.0.1:4040/api/tunnels" | \
 
     # set env var BB_NGROK to enable HTTPS
 
-    mvn bitbucket:debug \
+    atlas-mvn bitbucket:debug \
         -Datlassian.dev.mode=true \
         -Dmaven.test.skip=true \
         -Dlogging.level.com.atlassian.bitbucket.plugins.slack=TRACE \

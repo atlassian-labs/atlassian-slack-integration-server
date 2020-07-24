@@ -2,7 +2,7 @@
 
 (
     cd "$( dirname "${BASH_SOURCE[0]}")/.." ;
-    mvn package --batch-mode \
+    atlas-mvn package --batch-mode \
         -Dmaven.test.skip=true \
         --activate-profiles include-common \
         "$@" \

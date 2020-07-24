@@ -57,8 +57,8 @@ export PLUGIN="jira-slack-server-integration/jira-slack-server-integration-plugi
 (
     cd "$( dirname "${BASH_SOURCE[0]}")" ;
     [[ "$help" == "yes" ]] && echo "${HELP_TEXT}" ;
-    ([[ "$clean" != "yes" ]] || mvn clean) && \
-    ([[ "$purge" != "yes" ]] || (rm -rf ${PLUGIN}/target && mvn clean)) && \
+    ([[ "$clean" != "yes" ]] || atlas-mvn clean) && \
+    ([[ "$purge" != "yes" ]] || (rm -rf ${PLUGIN}/target && atlas-mvn clean)) && \
     ([[ "$common" != "yes" ]] || ./bin/pack-common.sh) && \
     ([[ "$compat" != "yes" ]] || ./bin/pack-compat-jira.sh) && \
     ([[ "$deps" != "yes" ]] || (rm -f ${PLUGIN}/target/dependency-maven-plugin-markers/*.marker && rm -rf ${PLUGIN}/target/classes)) && \

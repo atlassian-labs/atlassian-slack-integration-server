@@ -2,7 +2,7 @@
 
 (
     cd "$( dirname "${BASH_SOURCE[0]}")/.." ;
-    mvn jira:debug \
+    atlas-mvn jira:debug \
         -Datlassian.dev.mode=true \
         -Dmaven.test.skip=true \
         "$@" \
