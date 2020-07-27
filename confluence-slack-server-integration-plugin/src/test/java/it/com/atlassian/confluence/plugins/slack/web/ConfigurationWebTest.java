@@ -90,7 +90,8 @@ public class ConfigurationWebTest extends SlackWebTestBase {
 
         mapping.get().clickTrashButton();
 
-        Poller.waitUntilFalse(Conditions.forSupplier(() ->
+        int twoSecondsTimeout = 2 * 1000;
+        Poller.waitUntilFalse(Conditions.forSupplier(twoSecondsTimeout, () ->
                 findMappingRow(configurationSection.getMappingTable(), PUBLIC.getId()).isPresent()));
     }
 
