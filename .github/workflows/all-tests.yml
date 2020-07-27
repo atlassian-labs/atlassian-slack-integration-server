@@ -8,7 +8,7 @@ on:
         required: false
         default: master
       jobs:
-        description: Jobs to run (defaults to all)
+        description: Jobs to run (comma-separated, defaults to all)
         required: false
 
 jobs:
