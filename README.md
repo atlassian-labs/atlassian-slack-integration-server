@@ -65,7 +65,8 @@ Use tool `./bitbucket.sh` for all dev cycle. It has a similar set of commands to
 
 # Documentation
 
-Links to the official documentation are specified on plugin Marketplace pages (see **Usage** section).
+Links to the official documentation are specified on plugin Marketplace pages (see **Usage** section). 
+This is [the same link](https://confluence.atlassian.com/slack/atlassian-for-slack-integrations-967327515.html).
 
 ## Development References
 
@@ -110,8 +111,16 @@ bin/build/run-bitbucket-its.sh
 
 # CI/CD
 ## Tests
-Unit and integration tests are run on each commit by Github Actions. See [test.yml](.github/workflows/test.yml) for more details.
-A specific test job may be run manually on any branch from **"Actions"** tab on the repo page.
+Unit and integration tests against the oldest and newest supported product versions are run on each commit by Github Actions.
+See [all-tests.yml](.github/workflows/all-tests.yml) for more details. A specific test job may be run manually on any branch from 
+**"Actions"** tab on the repo page by specifying `ref` and `jobs` arguments.
+
+Note: all integration test jobs in default workflow (`all-tests.yml`) are dependent on unit tests, so to run integration tests
+for specific product pass the respective job's name along with `unit-test` to `jobs` parameter. For example: `unit-tests,integration-tests-jira-8`.
+
+Integration tests for arbitrary verions of the the product and JVM may be run manually using 
+[jira-int-tests.yml](.github/workflows/jira-int-tests.yml), [confluence-int-tests.yml](.github/workflows/confluence-int-tests.yml)
+and [bitbucket-int-tests.yml](.github/workflows/bitbucket-int-tests.yml).
 
 ## Releasing
 Release workflow allows to publish new releases to [Atlassian Artifactory](https://packages.atlassian.com/). 

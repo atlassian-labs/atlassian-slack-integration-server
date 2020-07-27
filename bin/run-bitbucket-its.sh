@@ -6,7 +6,7 @@ BASE_URL="http://127.0.0.1:7990/bitbucket"
 (
     cd "$( dirname "${BASH_SOURCE[0]}")/.." ;
 
-    mvn --batch-mode verify \
+    atlas-mvn --batch-mode verify \
       -Dut.test.skip=true \
       -Dit.test.skip=false \
       -Dapp.startup.skip=true \

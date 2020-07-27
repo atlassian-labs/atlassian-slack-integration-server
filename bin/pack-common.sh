@@ -2,7 +2,7 @@
 
 (
     cd "$( dirname "${BASH_SOURCE[0]}")/.." ;
-    mvn install --batch-mode -Dmaven.test.skip=true \
+    atlas-mvn install --batch-mode -Dmaven.test.skip=true \
         "$@" \
         -pl com.atlassian.plugins:atlassian-slack-server-integration-parent,jira-slack-server-integration,slack-server-integration-common,slack-server-integration-test-common && \
     rm -rf jira-slack-server-integration/jira-slack-server-integration-plugin/target/classes/com/atlassian/plugins/slack && \

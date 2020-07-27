@@ -54,8 +54,8 @@ export PLUGIN="bitbucket-slack-server-integration-plugin"
 (
     cd "$( dirname "${BASH_SOURCE[0]}")" ;
     [[ "$help" == "yes" ]] && echo "${HELP_TEXT}" ;
-    ([[ "$clean" != "yes" ]] || mvn clean) && \
-    ([[ "$purge" != "yes" ]] || (rm -rf ${PLUGIN}/target && mvn clean)) && \
+    ([[ "$clean" != "yes" ]] || atlas-mvn clean) && \
+    ([[ "$purge" != "yes" ]] || (rm -rf ${PLUGIN}/target && atlas-mvn clean)) && \
     ([[ "$common" != "yes" ]] || ./bin/pack-common.sh) && \
     ([[ "$deps" != "yes" ]] || (rm -f ${PLUGIN}/target/dependency-maven-plugin-markers/*.marker && rm -rf ${PLUGIN}/target/classes)) && \
     ([[ "$pack" != "yes" ]] || ./bin/pack-plugin.sh) && \
