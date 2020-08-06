@@ -110,7 +110,7 @@ require([
                         window.open("https://slack.com/apps/" + AJS.I18n.getText('slack.blueprint.app.id'));
                     } else {
                         var appId = goToSlackButton.data('app-id') || "";
-                        window.open("https://api.slack.com/apps" + (appId ? "/" + appId : "?new_app=1"));
+                        window.open("https://api.slack.com/apps" + (appId ? "/" + appId : "?new_classic_app=1"));
                     }
                 });
 
