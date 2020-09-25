@@ -60,7 +60,7 @@ public class PersonalNotificationManager {
         // assignee
         final ApplicationUser assignee = issue.getAssignee();
         final boolean isAssigneeActor = Objects.equals(assignee, actor);
-        if (assignee != null && !isAssigneeActor) {
+        if (assignee != null && assignee.isActive() && !isAssigneeActor) {
             final boolean isAssigneeToBeNotified = slackUserSettingsService.isPersonalNotificationTypeEnabled(
                     new UserKey(assignee.getKey()), ASSIGNED);
             // if an assignee doesn't have access to the comment, they should not get a notification
@@ -73,8 +73,9 @@ public class PersonalNotificationManager {
 
         // watchers
         watcherManager.getWatchersUnsorted(issue).stream()
-                .filter(watcher -> !Objects.equals(watcher, actor))
+                .filter(watcher -> Objects.nonNull(watcher))
                 .filter(watcher -> watcher.isActive())
+                .filter(watcher -> !Objects.equals(watcher, actor))
                 .filter(watcher -> slackUserSettingsService.isPersonalNotificationTypeEnabled(new UserKey(watcher.getKey()), WATCHER))
                 // if a watcher doesn't have access to the comment, they should not get a notification
                 .filter(watcher -> !(isRestrictedCommentAdded && !userHasAccessToComment(issue, comment, watcher)))
