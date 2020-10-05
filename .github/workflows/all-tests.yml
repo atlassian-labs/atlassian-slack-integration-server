@@ -1,6 +1,8 @@
 name: All Unit and Integration Tests
 on:
   push:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened, edited]
   workflow_dispatch:
     inputs:
       ref:
