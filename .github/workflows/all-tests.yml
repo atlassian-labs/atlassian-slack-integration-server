@@ -81,7 +81,7 @@ jobs:
           path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-jira-8:
-    name: Integration Tests - Jira 8.11.0
+    name: Integration Tests - Jira 8.12.2
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira-8')
@@ -106,13 +106,13 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ~/.m2/repository/com/atlassian/jira
-          key: maven-integration-jira-8.11.0
+          key: maven-integration-jira-8.12.2
       - run: bin/build/install-common-modules.sh
-      - run: VERSION=8.11.0 TESTKIT_VERSION=8.1.20 bin/build/run-jira-its.sh
+      - run: VERSION=8.12.2 TESTKIT_VERSION=8.1.20 bin/build/run-jira-its.sh
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: webdriver-screenshots-jira-8.11.0-java-${{ matrix.java-version }}
+          name: webdriver-screenshots-jira-8.12.2-java-${{ matrix.java-version }}
           path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-confluence-6:
