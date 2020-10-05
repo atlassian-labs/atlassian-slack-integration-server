@@ -15,7 +15,7 @@ Links to the official documentation are specified on Marketplace pages.
 Supported products (on 22 Jul, 2020). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
 * Jira: 7.12.3 (EOL 27 Aug, 2020) JDK 8 - 8.11.0 (EOL 15 Jul 2022) on JDK 8, 11.
 * Confluence: 6.11.2 (EOL Aug 14, 2020) JDK 8 - 7.6.1 (EOL 30 Jun 2020) JDK 8, 11.
-* Bitbucket: 6.7.1 (EOL 1 Oct, 2021) on JDK 8, 11 - 7.4.0 (EOL 9 Jul, 2022) on JDK 8, 11.
+* Bitbucket: 6.7.1 (EOL 1 Oct, 2021) on JDK 8, 11 - 7.6.0 (EOL 15 Sep, 2022) on JDK 8, 11.
 
 # Installation
 
