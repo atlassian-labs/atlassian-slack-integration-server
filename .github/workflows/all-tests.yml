@@ -148,7 +148,7 @@ jobs:
           path: confluence-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-confluence-7:
-    name: Integration Tests - Confluence 7.6.1
+    name: Integration Tests - Confluence 7.8.0
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence-6')
@@ -174,13 +174,13 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ~/.m2/repository/com/atlassian/confluence
-          key: maven-integration-confluence-7.6.1
+          key: maven-integration-confluence-7.8.0
       - run: bin/build/install-common-modules.sh
-      - run: VERSION=7.6.1 bin/build/run-confluence-its.sh
+      - run: VERSION=7.8.0 bin/build/run-confluence-its.sh
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: webdriver-screenshots-confluence-7.6.1-java-${{ matrix.java-version }}
+          name: webdriver-screenshots-confluence-7.8.0-java-${{ matrix.java-version }}
           path: confluence-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-bitbucket:
