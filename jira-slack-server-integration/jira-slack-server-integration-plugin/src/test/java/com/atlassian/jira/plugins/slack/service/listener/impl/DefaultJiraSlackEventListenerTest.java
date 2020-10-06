@@ -23,6 +23,7 @@ import com.atlassian.jira.task.TaskDescriptor;
 import com.atlassian.jira.task.TaskManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.test.util.CommonTestUtil;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.google.common.collect.ImmutableMap;
@@ -37,10 +38,13 @@ import org.mockito.junit.MockitoRule;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -193,5 +197,17 @@ public class DefaultJiraSlackEventListenerTest {
 
         verify(sendNotificationTask).call();
         verify(taskBuilder, times(1)).newSendNotificationTask(any(PluginEvent.class), anyList(), eq(taskExecutorService));
+    }
+
+    @Test
+    public void dedupNotificationsByChannel_shouldNotSkipPnNotifications() {
+        List<NotificationInfo> notifications = Arrays.asList(
+                new NotificationInfo(null, null, "user1", null, null, "", "", "", "", true, false, Verbosity.EXTENDED),
+                new NotificationInfo(null, null, "user2", null, null, "", "", "", "", true, false, Verbosity.EXTENDED)
+        );
+
+        List<NotificationInfo> dedupped = target.dedupNotificationsByChannel(Optional.empty(), emptyList(), notifications);
+
+        assertThat(new HashSet<>(dedupped), equalTo(new HashSet<>(notifications)));
     }
 }

@@ -1,5 +1,6 @@
 package com.atlassian.jira.plugins.slack.service.listener.impl;
 
+import com.atlassian.annotations.VisibleForTesting;
 import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.jira.bulkedit.operation.BulkEditTaskContext;
@@ -156,15 +157,22 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
         }
     }
 
-    private List<NotificationInfo> dedupNotificationsByChannel(final Optional<NotificationInfo> dedicatedChannelNotification,
-                                                               final Collection<NotificationInfo> projectNotifications,
-                                                               final List<NotificationInfo> personalNotifications) {
+    @VisibleForTesting
+    List<NotificationInfo> dedupNotificationsByChannel(final Optional<NotificationInfo> dedicatedChannelNotification,
+                                                       final Collection<NotificationInfo> projectNotifications,
+                                                       final List<NotificationInfo> personalNotifications) {
         final Map<String, NotificationInfo> notificationByChannel = new HashMap<>();
 
         Consumer<NotificationInfo> putByChannelId = info -> notificationByChannel.putIfAbsent(info.getChannelId(), info);
         projectNotifications.forEach(putByChannelId);
-        personalNotifications.forEach(putByChannelId);
         dedicatedChannelNotification.ifPresent(putByChannelId);
+        personalNotifications.forEach(notificationInfo -> {
+            // channel ID for personal notifications is not known at this point,
+            // it will be retrieved from Slack using conversations.open method in Slack client;
+            // so dedup by user ID instead
+            String channelIdStub = "dm-" + notificationInfo.getUserId();
+            notificationByChannel.putIfAbsent(channelIdStub, notificationInfo);
+        });
 
         return new ArrayList<>(notificationByChannel.values());
     }
