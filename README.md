@@ -4,6 +4,7 @@
 
 Official plugins for Jira Server, Confluence Server, and Bitbucket Server that integrate with [Slack](https://slack.com/).
 
+
 # Usage
 
 Jira, Confluence or Bitbucket administrator can install Slack plugin to their system via embedded Marketplace (**\<Configuration gear\>** -> **Find new apps/plugins**)
@@ -16,6 +17,12 @@ Supported products (on 22 Jul, 2020). See [EOL policy](https://confluence.atlass
 * Jira: 7.12.3 (EOL 27 Aug, 2020) JDK 8 - 8.12.2 (EOL 26 Aug 2022) on JDK 8, 11.
 * Confluence: 6.11.2 (EOL Aug 14, 2020) JDK 8 - 7.6.1 (EOL 30 Jun 2020) JDK 8, 11.
 * Bitbucket: 6.7.1 (EOL 1 Oct, 2021) on JDK 8, 11 - 7.6.0 (EOL 15 Sep, 2022) on JDK 8, 11.
+
+## A note on future development plans
+
+In order to [accelerate our journey to the cloud, together](https://www.atlassian.com/blog/announcements/journey-to-cloud), Atlassian will continue to maintain these apps' _compatibility_ with our Server products. However, we will not be creating new features or matching feature parity with our Cloud integrations. If you would like to add your own customizations/features to the integration, we encourage you to fork this repository and customize it as you wish like we’ve seen many customers do.
+
+When Jira, Confluence, or Bitbucket Server release new versions, we will validate the compatibility of these apps and release new versions within four weeks of their public release.
 
 # Installation
 
