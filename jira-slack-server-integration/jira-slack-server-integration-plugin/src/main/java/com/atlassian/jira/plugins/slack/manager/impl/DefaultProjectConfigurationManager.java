@@ -258,6 +258,7 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
                 .stream()
                 .filter(config -> CONFIGURATION_OWNER.equals(config.getName()))
                 .map(ProjectConfiguration::getValue)
+                .filter(Objects::nonNull)
                 .findAny();
     }
 
