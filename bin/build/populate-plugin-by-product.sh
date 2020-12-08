@@ -4,13 +4,13 @@ trap 'set +ex' EXIT
 
 case "$1" in
   jira)
-    echo "::set-env name=PLUGIN::jira-slack-server-integration/jira-slack-server-integration-plugin"
+    echo "PLUGIN=jira-slack-server-integration/jira-slack-server-integration-plugin" >> $GITHUB_ENV
     ;;
   confluence)
-    echo "::set-env name=PLUGIN::confluence-slack-server-integration-plugin"
+    echo "PLUGIN=confluence-slack-server-integration-plugin" >> $GITHUB_ENV
     ;;
   bitbucket)
-    echo "::set-env name=PLUGIN::bitbucket-slack-server-integration-plugin"
+    echo "PLUGIN=bitbucket-slack-server-integration-plugin" >> $GITHUB_ENV
     ;;
   *)
     echo "No plugin found for product [$1]"
