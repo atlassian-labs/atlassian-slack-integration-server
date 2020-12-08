@@ -93,6 +93,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
             for (JiraIssueEvent event : eventBundle.getEvents()) {
                 if (!(event instanceof DelegatingJiraIssueEvent)) {
                     // We can get the IssueEvent only from a DelegatingJiraIssueEvent.
+                    log.debug("Skipping processing event {} since it's not a DelegatingJiraIssueEvent", event);
                     continue;
                 }
                 final IssueEvent issueEvent = ((DelegatingJiraIssueEvent) event).asIssueEvent();
@@ -100,7 +101,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
                 // check if it's bulk edit event and user selected to skip sending notifications
                 final String userKey = issueEvent.getUser().getKey();
                 if (jiraSettingsService.areBulkNotificationsMutedForUser(new UserKey(userKey)) && isBulkEdit(issueEvent)) {
-                    log.debug("Skipping handling of the event {} for user {} because he chose to suppress notifications from bulk operations",
+                    log.debug("Skipping handling of the event of typeId={} for user key={} because he chose to suppress notifications from bulk operations",
                             issueEvent.getEventTypeId(), userKey);
                     return;
                 }
@@ -122,11 +123,17 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
 
     private void processProjectNotifications(final IssueEvent issueEvent, final Set<EventMatcherType> eventsSeen) {
         final Collection<EventMatcherType> eventMatcherTypes = issueEventToEventMatcherTypeConverter.match(issueEvent);
+        final Issue issue = issueEvent.getIssue();
+
+        log.debug("Event matcher types for issue key={}, eventTypeId={}: {}", issue.getKey(),
+                issueEvent.getEventTypeId(), eventMatcherTypes);
 
         // Multiple events can be fired for a given {@link IssueEvent}, multiple notifications
         // can be sent as a result so they are filtered below
         for (EventMatcherType eventMatcherType : eventMatcherTypes) {
             if (eventsSeen.contains(eventMatcherType)) {
+                log.debug("Skipping processing matcher {} since it has been already processed for issue key={}, eventTypeId={}",
+                        issue.getKey(), issueEvent.getEventTypeId(), eventMatcherType);
                 break;
             }
 
@@ -141,6 +148,8 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
 
             final List<NotificationInfo> uniqueNotifications = dedupNotificationsByChannel(dedicatedChannelNotification,
                     projectNotifications, personalNotifications);
+            log.debug("Unique notifications to send for issue key={}, eventTypeId={}: {}", issue.getKey(), issueEvent.getEventTypeId(),
+                    uniqueNotifications.size());
 
             if (!uniqueNotifications.isEmpty()) {
                 dedicatedChannelNotification.ifPresent(notification ->

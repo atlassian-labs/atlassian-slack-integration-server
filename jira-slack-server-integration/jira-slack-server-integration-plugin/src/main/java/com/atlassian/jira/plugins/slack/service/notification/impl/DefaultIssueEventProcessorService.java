@@ -75,9 +75,10 @@ public class DefaultIssueEventProcessorService implements IssueEventProcessorSer
         final Comment comment = issueEvent.getComment();
         final List<ProjectConfiguration> configurations = getConfigurationFor(project.getId(), issue, comment, eventMatcher);
 
-        log.debug("Finding Configurations for event [{}] : {}", eventMatcher.name(), size(configurations));
+        log.debug("Found configurations for issue key={}, eventTypeId={}, matcher={}: {}", issue.getKey(),
+                issueEvent.getEventTypeId(), eventMatcher.name(), size(configurations));
 
-        return configurations.stream()
+        List<NotificationInfo> notifications = configurations.stream()
                 .filter(Objects::nonNull)
                 .map(projectConfiguration -> new ProjectConfigurationGroupSelectorDTO(
                         projectConfiguration.getProjectId(),
@@ -88,6 +89,11 @@ public class DefaultIssueEventProcessorService implements IssueEventProcessorSer
                 })
                 .flatMap(selector -> getNotificationInfos(selector).stream())
                 .collect(Collectors.toList());
+
+        log.debug("Built project notifications for issue key={}, eventTypeId={}, matcher={}: {}", issue.getKey(),
+                issueEvent.getEventTypeId(), eventMatcher.name(), size(notifications));
+
+        return notifications;
     }
 
     /**
