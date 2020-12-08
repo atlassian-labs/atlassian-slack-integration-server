@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class AsyncExecutor implements InitializingBean, DisposableBean {
@@ -21,6 +24,7 @@ public class AsyncExecutor implements InitializingBean, DisposableBean {
     private final ThreadLocalDelegateExecutorFactory threadLocalDelegateExecutorFactory;
 
     private ExecutorService executorService;
+    private ScheduledExecutorService delayingExecutor;
 
     @Autowired
     public AsyncExecutor(final ExecutorServiceHelper executorServiceHelper,
@@ -32,6 +36,8 @@ public class AsyncExecutor implements InitializingBean, DisposableBean {
     }
 
     public void run(final Runnable runnable) {
+        log.debug("Submitting Slack job: {}", runnable);
+
         executorService.submit(() -> {
             try {
                 transactionTemplate.execute(() -> {
@@ -42,6 +48,21 @@ public class AsyncExecutor implements InitializingBean, DisposableBean {
                 log.error("Failed to perform async task: " + e.getMessage(), e);
             }
         });
+    }
+
+    public void runDelayed(final Runnable runnable, final long delay, final TimeUnit timeUnit) {
+        log.debug("Scheduling Slack job with delay {}ms: {}", delay, runnable);
+
+        getDelayingExecutor().schedule(() -> this.run(runnable), delay, timeUnit);
+    }
+
+    // create a delaying executor lazily to save some resources for Confluence and Bitbucket plugins that don't use it
+    private ScheduledExecutorService getDelayingExecutor() {
+        if (delayingExecutor == null) {
+            delayingExecutor = Executors.newSingleThreadScheduledExecutor();
+        }
+
+        return delayingExecutor;
     }
 
     @Override
@@ -55,6 +76,9 @@ public class AsyncExecutor implements InitializingBean, DisposableBean {
         if (executorService != null) {
             try {
                 executorService.shutdown();
+                if (delayingExecutor != null) {
+                    delayingExecutor.shutdown();
+                }
             } catch (Exception e) {
                 // nothing
             }

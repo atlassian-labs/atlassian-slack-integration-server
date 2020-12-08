@@ -136,7 +136,7 @@ public class DefaultJiraSlackEventListenerTest {
         when(notificationInfo3.getChannelId()).thenReturn("C2");
         when(taskBuilder.newSendNotificationTask(eventCaptor3.capture(), notInfoCaptor.capture(), same(taskExecutorService)))
                 .thenReturn(sendNotificationTask);
-        CommonTestUtil.bypass(asyncExecutor);
+        CommonTestUtil.bypassDelayed(asyncExecutor);
 
         target.issueEvent(issueEventBundle);
 
@@ -191,7 +191,7 @@ public class DefaultJiraSlackEventListenerTest {
                 .thenReturn(Collections.singleton(notificationInfo1));
         when(taskBuilder.newSendNotificationTask(any(PluginEvent.class), anyList(), eq(taskExecutorService)))
                 .thenReturn(sendNotificationTask);
-        CommonTestUtil.bypass(asyncExecutor);
+        CommonTestUtil.bypassDelayed(asyncExecutor);
 
         target.issueEvent(issueEventBundle);
 

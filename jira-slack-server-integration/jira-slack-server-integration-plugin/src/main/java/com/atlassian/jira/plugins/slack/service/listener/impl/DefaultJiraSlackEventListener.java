@@ -44,12 +44,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener implements JiraSlackEventListener {
+    public static final String EVENTS_PROCESSING_DELAY_SYSTEM_PROPERTY = "slack.events.processing.delay";
+    public static final int DEFAULT_EVENTS_PROCESSING_DELAY_MS = 1000; // 1 second in ms
+
     private final TaskExecutorService taskExecutorService;
     private final TaskBuilder taskBuilder;
     private final IssueEventToEventMatcherTypeConverter issueEventToEventMatcherTypeConverter;
@@ -60,6 +64,8 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
     private final PersonalNotificationManager personalNotificationManager;
     private final AnalyticsContextProvider analyticsContextProvider;
     private final AsyncExecutor asyncExecutor;
+
+    private final int eventsProcessingDelayMs;
 
     @Autowired
     public DefaultJiraSlackEventListener(final EventPublisher eventPublisher,
@@ -84,6 +90,8 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
         this.personalNotificationManager = personalNotificationManager;
         this.analyticsContextProvider = analyticsContextProvider;
         this.asyncExecutor = asyncExecutor;
+
+        this.eventsProcessingDelayMs = Integer.getInteger(EVENTS_PROCESSING_DELAY_SYSTEM_PROPERTY, DEFAULT_EVENTS_PROCESSING_DELAY_MS);
     }
 
     @EventListener
@@ -100,21 +108,23 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
 
                 // check if it's bulk edit event and user selected to skip sending notifications
                 final String userKey = issueEvent.getUser().getKey();
+                final Long eventTypeId = issueEvent.getEventTypeId();
                 if (jiraSettingsService.areBulkNotificationsMutedForUser(new UserKey(userKey)) && isBulkEdit(issueEvent)) {
                     log.debug("Skipping handling of the event of typeId={} for user key={} because he chose to suppress notifications from bulk operations",
-                            issueEvent.getEventTypeId(), userKey);
+                            eventTypeId, userKey);
                     return;
                 }
 
-                // Running processing in main thread because it has some user context attached that is used
-                // when matching an issue against JQL;
-                // running this operation in background thread causes missing notifications on JSD tickets operations
-                asyncExecutor.run(() -> {
+                // Delay handling of events a bit to work around a concurrency issue with getting changelog
+                // for transitions with custom events fired. Without this delay ChangeLogExtractor fails to load
+                // updated fields, fails to find 'status' there, that results in missing transition notification on user side
+                asyncExecutor.runDelayed(() -> {
                     Issue issue = issueEvent.getIssue();
-                    log.debug("Processing event id={} for issue key={}, id={}", issueEvent.getEventTypeId(),
+                    log.debug("Processing eventTypeId={} for issue key={}, id={}", eventTypeId,
                             issue.getKey(), issue.getId());
+
                     processProjectNotifications(issueEvent, eventsSeen);
-                });
+                }, eventsProcessingDelayMs, TimeUnit.MILLISECONDS);
             }
         } catch (Exception e) {
             log.error("Error processing event", e);
