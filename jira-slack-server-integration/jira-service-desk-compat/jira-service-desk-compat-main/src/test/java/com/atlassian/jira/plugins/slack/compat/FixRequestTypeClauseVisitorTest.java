@@ -1,6 +1,5 @@
 package com.atlassian.jira.plugins.slack.compat;
 
-import com.atlassian.fugue.Option;
 import com.atlassian.query.clause.AndClause;
 import com.atlassian.query.clause.Clause;
 import com.atlassian.query.clause.TerminalClause;
@@ -8,6 +7,7 @@ import com.atlassian.query.clause.TerminalClauseImpl;
 import com.atlassian.query.operand.Operand;
 import com.atlassian.query.operand.SingleValueOperand;
 import com.atlassian.query.operator.Operator;
+import io.atlassian.fugue.Option;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

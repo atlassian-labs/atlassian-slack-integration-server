@@ -13,7 +13,6 @@ import com.atlassian.jira.plugins.slack.compat.FixRequestTypeClauseVisitor;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.ImportUtils;
-import com.atlassian.plugin.slack.jira.compat.Jira8JqlIndexSearcher;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
 import org.slf4j.Logger;
@@ -22,9 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
-
-import static com.atlassian.plugin.slack.jira.compat.WithJira8.withJira8;
 
 /**
  * This jql index searcher commits the issue to the FS and runs the query.
