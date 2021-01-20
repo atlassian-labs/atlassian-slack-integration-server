@@ -115,6 +115,16 @@ public class JiraPostFunctionEventRenderer extends AbstractEventRenderer<JiraPos
     }
 
     private ChatPostMessageRequestBuilder renderCustomNotification(final JiraPostFunctionEvent event) throws Exception {
+        String customMessageFormat = event.getCustomMessageFormat();
+
+        // prevent attempts to access arbitrary classes by names to execute arbitrary code withing template
+        // Samples of forbidden code:
+        // - "".getClass().forName("com.MyClass")
+        // - "".getClass().getClassLoader().loadClass("com.MyClass")
+        if (customMessageFormat.contains(".forName(") || customMessageFormat.contains(".loadClass(")) {
+            throw new IllegalArgumentException("Dynamic class loading isn't allowed");
+        }
+
         final Issue issue = event.getIssue();
 
         Map<String, Object> context = new HashMap<>();
@@ -145,7 +155,7 @@ public class JiraPostFunctionEventRenderer extends AbstractEventRenderer<JiraPos
         vc.attachEventCartridge(ec);
 
         StringWriter sw = new StringWriter();
-        if (velocityEngine.evaluate(vc, sw, "renderCustomNotification", event.getCustomMessageFormat())) {
+        if (velocityEngine.evaluate(vc, sw, "renderCustomNotification", customMessageFormat)) {
             return ChatPostMessageRequest.builder()
                     .mrkdwn(true)
                     .text(sw.toString())

@@ -21,6 +21,7 @@ import com.github.seratch.jslack.api.model.Attachment;
 import io.atlassian.fugue.Either;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -128,6 +129,24 @@ public class JiraPostFunctionEventRendererTest {
         assertThat(notif.getMessageRequest().getText(), is("UN"));
         assertThat(notif.getMessageRequest().getAttachments(), hasSize(1));
         assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
+    }
+
+    @Test
+    public void doRender_preventsDynamicClassLoading() {
+        when(event.isHavingErrors()).thenReturn(false);
+        when(event.getCustomMessageFormat()).thenReturn("#set($s='') $s.class.forName('java.lang.Runtime').getRuntime.availableProcessors()");
+        when(event.getIssue()).thenReturn(issue);
+        when(issue.getProjectObject()).thenReturn(project);
+        when(project.getKey()).thenReturn("P");
+        when(event.getActor()).thenReturn(applicationUser);
+        when(applicationUser.getDisplayName()).thenReturn("UN");
+        when(attachmentHelper.projectUrl("P")).thenReturn("purl");
+        when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
+        when(i18nResolver.getText("slack.notification.configerror", "purl")).thenReturn("error-desc");
+
+        SlackNotification notif = testRender();
+
+        assertThat(notif.getMessageRequest().getAttachments().get(0).getText(), is("error-desc"));
     }
 
     private SlackNotification testRender() {
