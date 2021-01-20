@@ -115,16 +115,6 @@ public class JiraPostFunctionEventRenderer extends AbstractEventRenderer<JiraPos
     }
 
     private ChatPostMessageRequestBuilder renderCustomNotification(final JiraPostFunctionEvent event) throws Exception {
-        String customMessageFormat = event.getCustomMessageFormat();
-
-        // prevent attempts to access arbitrary classes by names to execute arbitrary code withing template
-        // Samples of forbidden code:
-        // - "".getClass().forName("com.MyClass")
-        // - "".getClass().getClassLoader().loadClass("com.MyClass")
-        if (customMessageFormat.contains(".forName(") || customMessageFormat.contains(".loadClass(")) {
-            throw new IllegalArgumentException("Dynamic class loading isn't allowed");
-        }
-
         final Issue issue = event.getIssue();
 
         Map<String, Object> context = new HashMap<>();
@@ -148,6 +138,13 @@ public class JiraPostFunctionEventRenderer extends AbstractEventRenderer<JiraPos
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogChute");
 
+        // prevent attempts to access system classes via reflection
+        // Samples of forbidden code:
+        // - "".getClass().forName("com.MyClass")
+        // - "".getClass().getClassLoader().loadClass("com.MyClass")
+        velocityEngine.setProperty("runtime.introspector.uberspect",
+                "org.apache.velocity.util.introspection.SecureUberspector");
+
         EventCartridge ec = new EventCartridge();
         ec.addEventHandler(new JsonPrimitiveReferenceInsertionEventHandler());
 
@@ -155,7 +152,7 @@ public class JiraPostFunctionEventRenderer extends AbstractEventRenderer<JiraPos
         vc.attachEventCartridge(ec);
 
         StringWriter sw = new StringWriter();
-        if (velocityEngine.evaluate(vc, sw, "renderCustomNotification", customMessageFormat)) {
+        if (velocityEngine.evaluate(vc, sw, "renderCustomNotification", event.getCustomMessageFormat())) {
             return ChatPostMessageRequest.builder()
                     .mrkdwn(true)
                     .text(sw.toString())

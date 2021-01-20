@@ -134,7 +134,7 @@ public class JiraPostFunctionEventRendererTest {
     @Test
     public void doRender_preventsDynamicClassLoading() {
         when(event.isHavingErrors()).thenReturn(false);
-        when(event.getCustomMessageFormat()).thenReturn("#set($s='') $s.class.forName('java.lang.Runtime').getRuntime.availableProcessors()");
+        when(event.getCustomMessageFormat()).thenReturn("#set($s='') $s.getClass().forName('java.lang.Runtime').getRuntime().availableProcessors()");
         when(event.getIssue()).thenReturn(issue);
         when(issue.getProjectObject()).thenReturn(project);
         when(project.getKey()).thenReturn("P");
@@ -142,11 +142,12 @@ public class JiraPostFunctionEventRendererTest {
         when(applicationUser.getDisplayName()).thenReturn("UN");
         when(attachmentHelper.projectUrl("P")).thenReturn("purl");
         when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
-        when(i18nResolver.getText("slack.notification.configerror", "purl")).thenReturn("error-desc");
 
         SlackNotification notif = testRender();
 
-        assertThat(notif.getMessageRequest().getAttachments().get(0).getText(), is("error-desc"));
+        assertThat(notif.getMessageRequest().getText(), is(" $s.getClass().forName('java.lang.Runtime').getRuntime().availableProcessors()"));
+        assertThat(notif.getMessageRequest().getAttachments(), hasSize(1));
+        assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
     }
 
     private SlackNotification testRender() {
