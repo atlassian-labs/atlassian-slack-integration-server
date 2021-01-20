@@ -115,10 +115,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.atlassian.fugue</groupId>
-            <artifactId>fugue</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.atlassian.annotations</groupId>
             <artifactId>atlassian-annotations</artifactId>
             <scope>provided</scope>
