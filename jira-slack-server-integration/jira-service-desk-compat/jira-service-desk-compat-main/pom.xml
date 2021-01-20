@@ -31,12 +31,6 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
-            <artifactId>jira-service-desk-3-compat</artifactId>
-            <scope>compile</scope>
-            <version>${slack.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
             <artifactId>jira-service-desk-4-compat</artifactId>
             <scope>compile</scope>
             <version>${slack.common.version}</version>
