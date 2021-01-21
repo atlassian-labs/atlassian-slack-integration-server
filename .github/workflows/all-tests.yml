@@ -108,7 +108,7 @@ jobs:
           path: ~/.m2/repository/com/atlassian/jira
           key: maven-integration-jira-8.14.1
       - run: bin/build/install-common-modules.sh
-      - run: VERSION=8.14.1 TESTKIT_VERSION=8.1.20 bin/build/run-jira-its.sh
+      - run: VERSION=8.14.1 TESTKIT_VERSION=8.1.25 bin/build/run-jira-its.sh
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
