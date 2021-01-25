@@ -21,6 +21,7 @@ import com.github.seratch.jslack.api.model.Attachment;
 import io.atlassian.fugue.Either;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -126,6 +127,25 @@ public class JiraPostFunctionEventRendererTest {
         SlackNotification notif = testRender();
 
         assertThat(notif.getMessageRequest().getText(), is("UN"));
+        assertThat(notif.getMessageRequest().getAttachments(), hasSize(1));
+        assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
+    }
+
+    @Test
+    public void doRender_preventsDynamicClassLoading() {
+        when(event.isHavingErrors()).thenReturn(false);
+        when(event.getCustomMessageFormat()).thenReturn("#set($s='') $s.getClass().forName('java.lang.Runtime').getRuntime().availableProcessors()");
+        when(event.getIssue()).thenReturn(issue);
+        when(issue.getProjectObject()).thenReturn(project);
+        when(project.getKey()).thenReturn("P");
+        when(event.getActor()).thenReturn(applicationUser);
+        when(applicationUser.getDisplayName()).thenReturn("UN");
+        when(attachmentHelper.projectUrl("P")).thenReturn("purl");
+        when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
+
+        SlackNotification notif = testRender();
+
+        assertThat(notif.getMessageRequest().getText(), is(" $s.getClass().forName('java.lang.Runtime').getRuntime().availableProcessors()"));
         assertThat(notif.getMessageRequest().getAttachments(), hasSize(1));
         assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
     }

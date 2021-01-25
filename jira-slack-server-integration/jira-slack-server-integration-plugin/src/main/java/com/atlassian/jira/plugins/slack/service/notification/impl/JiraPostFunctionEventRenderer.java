@@ -138,6 +138,13 @@ public class JiraPostFunctionEventRenderer extends AbstractEventRenderer<JiraPos
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogChute");
 
+        // prevent attempts to access system classes via reflection
+        // Samples of forbidden code:
+        // - "".getClass().forName("com.MyClass")
+        // - "".getClass().getClassLoader().loadClass("com.MyClass")
+        velocityEngine.setProperty("runtime.introspector.uberspect",
+                "org.apache.velocity.util.introspection.SecureUberspector");
+
         EventCartridge ec = new EventCartridge();
         ec.addEventHandler(new JsonPrimitiveReferenceInsertionEventHandler());
 
