@@ -863,6 +863,21 @@ public class SlackMessageResource {
             }
 
             @Override
+            public ApplicationUser getArchivedByUser() {
+                return null;
+            }
+
+            @Override
+            public String getArchivedById() {
+                return null;
+            }
+
+            @Override
+            public Timestamp getArchivedDate() {
+                return null;
+            }
+
+            @Override
             public GenericValue getGenericValue() {
                 return null;
             }

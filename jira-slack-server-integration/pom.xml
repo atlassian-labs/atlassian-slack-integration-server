@@ -22,8 +22,8 @@
         <aui.version>5.1.3</aui.version>
 
         <!-- this is the version we will run integration tests against -->
-        <jira.version>8.0.0</jira.version>
-        <testkit.version>8.0.0</testkit.version>
+        <jira.version>8.1.0</jira.version>
+        <testkit.version>8.1.0</testkit.version>
         <jira.test.unit.version>${jira.version}</jira.test.unit.version>
 
         <jira.webdriver.version>${jira.version}</jira.webdriver.version>
@@ -31,7 +31,7 @@
         <reactive.extension.version>1.0.0</reactive.extension.version>
 
         <!-- This is the version the plugin is compiled against -->
-        <jira.compile.version>8.0.0</jira.compile.version>
+        <jira.compile.version>8.1.0</jira.compile.version>
 
         <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
 
