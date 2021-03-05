@@ -23,4 +23,8 @@ public abstract class SlackWebTestBase extends SlackFunctionalTestBase {
     static RuleAdaptorExtension sessionCleanupRule = new RuleAdaptorExtension(new SessionCleanupRule());
     @RegisterExtension
     static RuleAdaptorExtension webDriverScreenshotRule = new RuleAdaptorExtension(new WebDriverScreenshotRule());
+
+    protected void closeAuiFlags() {
+        confluence.get().getTester().getDriver().executeScript("AJS.$('.aui-flag').each(function(it) { this.close(); } );");
+    }
 }

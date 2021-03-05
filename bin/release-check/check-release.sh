@@ -47,7 +47,7 @@ esac
 echo "Determined workflow name: $workflow_name"
 
 # RUN TESTS AGAINST SPECIFIC VERSIONS
-echo "Running workflow with params: workflow-name=$workflow_name java-version=8.0.52 product-version=$product_version"
+echo "Running workflow with params: workflow-name=$workflow_name java-version=8.0.252 product-version=$product_version"
 first_workflow_link=$(start_workflow $workflow_name 8.0.252 $product_version)
 echo "Pipeline URL: $first_workflow_link"
 
