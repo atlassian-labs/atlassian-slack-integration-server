@@ -268,6 +268,11 @@ public class SlackMessageResource {
                     public String getOriginalKey() {
                         return null;
                     }
+
+                    @Override
+                    public boolean isArchived() {
+                        return false;
+                    }
                 };
             }
 
@@ -850,6 +855,26 @@ public class SlackMessageResource {
             @Override
             public Set<Label> getLabels() {
                 return Collections.emptySet();
+            }
+
+            @Override
+            public boolean isArchived() {
+                return false;
+            }
+
+            @Override
+            public ApplicationUser getArchivedByUser() {
+                return null;
+            }
+
+            @Override
+            public String getArchivedById() {
+                return null;
+            }
+
+            @Override
+            public Timestamp getArchivedDate() {
+                return null;
             }
 
             @Override

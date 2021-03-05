@@ -12,7 +12,6 @@
 
     <modules>
         <module>jira-service-desk-compat-common</module>
-        <module>jira-service-desk-3-compat</module>
         <module>jira-service-desk-4-compat</module>
         <module>jira-service-desk-compat-main</module>
     </modules>

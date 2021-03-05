@@ -43,6 +43,7 @@
         <dependency>
             <groupId>io.atlassian.fugue</groupId>
             <artifactId>fugue</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -358,7 +359,7 @@
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>jira-maven-plugin</artifactId>
-                <version>${amps.version}</version>
+                <version>${jira.amps.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instanceId>jira</instanceId>
@@ -630,6 +631,7 @@
     </build>
 
     <properties>
+        <jira.amps.version>8.2.2</jira.amps.version>
         <project.root.directory>${project.basedir}/../..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>

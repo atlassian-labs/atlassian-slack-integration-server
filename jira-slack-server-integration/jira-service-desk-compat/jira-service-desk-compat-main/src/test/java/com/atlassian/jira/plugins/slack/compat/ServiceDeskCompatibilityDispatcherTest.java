@@ -22,6 +22,6 @@ public class ServiceDeskCompatibilityDispatcherTest {
 
     @Test
     public void getHelperReturnsNonEmptyHelper() {
-        assertThat(target.getHelper().get(), sameInstance(ServiceDesk3CompatibilityHelper.getInstance()));
+        assertThat(target.getHelper().get(), sameInstance(ServiceDesk4CompatibilityHelper.getInstance()));
     }
 }

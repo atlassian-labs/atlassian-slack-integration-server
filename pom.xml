@@ -67,7 +67,6 @@
         <spring-beans.version>4.2.5.RELEASE</spring-beans.version>
         <atlassian-plugins-core.version>3.0.15</atlassian-plugins-core.version>
         <atlassian-plugins-webfragment.version>3.0.1</atlassian-plugins-webfragment.version>
-        <amps.version>8.0.2</amps.version>
         <atlassian-user.version>3.0</atlassian-user.version>
         <template.renderer.version>2.1.0</template.renderer.version>
         <hamcrest-core.version>1.3</hamcrest-core.version>
@@ -90,11 +89,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>properties-maven-plugin</artifactId>
                     <version>1.0-alpha-2</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.atlassian.maven.plugins</groupId>
-                    <artifactId>maven-amps-plugin</artifactId>
-                    <version>${amps.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.surefire</groupId>

@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Slf4j
 public class ServiceDeskCompatibilityDispatcher {
-    private static final String OLD_FUGUE_EITHER_CLASS_NAME = "com.atlassian.fugue.Either";
     private static final String SERVICE_DESK_MANAGER_CLASS_NAME = "com.atlassian.servicedesk.api.ServiceDeskManager";
 
     private static final ServiceDeskCompatibilityDispatcher INSTANCE = new ServiceDeskCompatibilityDispatcher();
@@ -48,9 +47,7 @@ public class ServiceDeskCompatibilityDispatcher {
             Method getServiceDeskForProjectMethod = MethodUtils.getAccessibleMethod(sdClass, methodName, Project.class);
             String returnedClassName = getServiceDeskForProjectMethod.getReturnType().getName();
 
-            if (OLD_FUGUE_EITHER_CLASS_NAME.equals(returnedClassName)) {
-                helper = ServiceDesk3CompatibilityHelper.getInstance();
-            } else if ("com.atlassian.servicedesk.api.ServiceDesk".equals(returnedClassName)) {
+            if ("com.atlassian.servicedesk.api.ServiceDesk".equals(returnedClassName)) {
                 helper = ServiceDesk4CompatibilityHelper.getInstance();
             } else {
                 log.error("Failed to create a ServiceDeskCompatibilityHelper because of unexpected method signature [{}]",

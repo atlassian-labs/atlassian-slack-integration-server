@@ -3,7 +3,6 @@ package com.atlassian.jira.plugins.slack.service.listener.impl;
 import com.atlassian.annotations.VisibleForTesting;
 import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
-import com.atlassian.jira.bulkedit.operation.BulkEditTaskContext;
 import com.atlassian.jira.event.issue.DelegatingJiraIssueEvent;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.event.issue.IssueEventBundle;
@@ -22,11 +21,7 @@ import com.atlassian.jira.plugins.slack.service.notification.PersonalNotificatio
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.settings.JiraSettingsService;
-import com.atlassian.jira.task.TaskContext;
-import com.atlassian.jira.task.TaskDescriptor;
 import com.atlassian.jira.task.TaskManager;
-import com.atlassian.plugin.slack.jira.compat.Jira8IssueEventWrapper;
-import com.atlassian.plugin.slack.jira.compat.WithJira8;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
@@ -45,7 +40,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -56,7 +50,6 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
     private final DedicatedChannelManager dedicatedChannelManager;
     private final IssueEventProcessorService issueEventProcessorService;
     private final JiraSettingsService jiraSettingsService;
-    private final TaskManager taskManager;
     private final PersonalNotificationManager personalNotificationManager;
     private final AnalyticsContextProvider analyticsContextProvider;
     private final AsyncExecutor asyncExecutor;
@@ -69,7 +62,6 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
                                          final DedicatedChannelManager dedicatedChannelManager,
                                          final IssueEventProcessorService issueEventProcessorService,
                                          final JiraSettingsService jiraSettingsService,
-                                         final TaskManager taskManager,
                                          final PersonalNotificationManager personalNotificationManager,
                                          final AnalyticsContextProvider analyticsContextProvider,
                                          final AsyncExecutor asyncExecutor) {
@@ -80,7 +72,6 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
         this.dedicatedChannelManager = dedicatedChannelManager;
         this.issueEventProcessorService = issueEventProcessorService;
         this.jiraSettingsService = jiraSettingsService;
-        this.taskManager = taskManager;
         this.personalNotificationManager = personalNotificationManager;
         this.analyticsContextProvider = analyticsContextProvider;
         this.asyncExecutor = asyncExecutor;
@@ -185,26 +176,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
     }
 
     private boolean isBulkEdit(final IssueEvent issueEvent) {
-        boolean isBulkEdit = false;
-        if (WithJira8.isJira8OrGreater()) {
-            try {
-                Optional<Boolean> isSpanningOperation = WithJira8.withJira8(
-                        () -> Jira8IssueEventWrapper.isSpanningOperation(issueEvent));
-                isBulkEdit = isSpanningOperation.orElse(false);
-            } catch (Exception e) {
-                log.warn("Failed to detect spanning operation", e);
-            }
-        } else {
-            Collection<TaskDescriptor<?>> liveTasks = taskManager.getLiveTasks();
-            List<TaskContext> contexts = liveTasks.stream()
-                    .map(TaskDescriptor::getTaskContext)
-                    .collect(Collectors.toList());
-            log.trace("Live tasks contexts: {}", contexts);
-            if (contexts.stream().anyMatch(context -> context instanceof BulkEditTaskContext)) {
-                isBulkEdit = true;
-            }
-        }
-
+        boolean isBulkEdit = issueEvent.getSpanningOperation().isPresent();;
         if (isBulkEdit) {
             log.trace("Bulk operation detected");
         }

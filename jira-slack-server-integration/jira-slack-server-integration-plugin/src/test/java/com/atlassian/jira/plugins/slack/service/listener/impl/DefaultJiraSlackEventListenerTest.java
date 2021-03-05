@@ -5,6 +5,7 @@ import com.atlassian.jira.bulkedit.operation.BulkEditTaskContext;
 import com.atlassian.jira.event.issue.DelegatingJiraIssueEvent;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.event.issue.IssueEventBundle;
+import com.atlassian.jira.event.operation.SpanningOperation;
 import com.atlassian.jira.event.type.EventType;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.manager.DedicatedChannelManager;
@@ -71,8 +72,6 @@ public class DefaultJiraSlackEventListenerTest {
     @Mock
     private JiraSettingsService jiraSettingsService;
     @Mock
-    private TaskManager taskManager;
-    @Mock
     private PersonalNotificationManager personalNotificationManager;
     @Mock
     private EventPublisher eventPublisher;
@@ -100,9 +99,7 @@ public class DefaultJiraSlackEventListenerTest {
     @Mock
     private SendNotificationTask sendNotificationTask;
     @Mock
-    private TaskDescriptor taskDescriptor;
-    @Mock
-    private BulkEditTaskContext taskContext;
+    private SpanningOperation spanningOperation;
 
     @Captor
     private ArgumentCaptor<DefaultJiraIssueEvent> eventCaptor1;
@@ -156,15 +153,14 @@ public class DefaultJiraSlackEventListenerTest {
 
     @Test
     public void issueEvent_shouldSkipProcessingForBulkEditIfConfigured() {
-        IssueEvent issueEvent = new IssueEvent(issue, Collections.emptyMap(), applicationUser, 0L);
+        IssueEvent issueEvent = new IssueEvent(issue, applicationUser, null, null, null, Collections.emptyMap(), 0L,
+                true, false, spanningOperation);
         String userKey = "someUserKey";
         when(applicationUser.getKey()).thenReturn(userKey);
         when(issueEventBundle.getEvents()).thenReturn(Collections.singletonList(jiraIssueEvent));
         when(jiraIssueEvent.asIssueEvent()).thenReturn(issueEvent);
         when(jiraSettingsService.areBulkNotificationsMutedForUser(argThat(arg -> arg.getStringValue().equals(userKey))))
             .thenReturn(true);
-        when(taskManager.getLiveTasks()).thenReturn(Collections.singletonList(taskDescriptor));
-        when(taskDescriptor.getTaskContext()).thenReturn(taskContext);
 
         target.issueEvent(issueEventBundle);
 

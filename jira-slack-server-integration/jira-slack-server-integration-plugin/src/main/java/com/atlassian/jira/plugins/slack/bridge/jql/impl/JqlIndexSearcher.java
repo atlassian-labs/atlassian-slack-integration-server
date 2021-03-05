@@ -3,15 +3,16 @@ package com.atlassian.jira.plugins.slack.bridge.jql.impl;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.index.IndexException;
 import com.atlassian.jira.issue.index.IssueIndexingService;
+import com.atlassian.jira.issue.index.ThreadLocalSearcherCache;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchProvider;
+import com.atlassian.jira.issue.search.SearchQuery;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.plugins.slack.bridge.jql.JqlSearcher;
 import com.atlassian.jira.plugins.slack.compat.FixRequestTypeClauseVisitor;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.ImportUtils;
-import com.atlassian.plugin.slack.jira.compat.Jira8JqlIndexSearcher;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
 import org.slf4j.Logger;
@@ -20,9 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
-
-import static com.atlassian.plugin.slack.jira.compat.WithJira8.withJira8;
 
 /**
  * This jql index searcher commits the issue to the FS and runs the query.
@@ -48,23 +46,23 @@ public class JqlIndexSearcher implements JqlSearcher {
         reIndexIssue(issue);
 
         try {
-            Query fixedQuery = fixRequestTypeInQuery(query, issue.getProjectObject());
-            final Optional<Long> searchCountOptional = withJira8(() -> Jira8JqlIndexSearcher.searchCount(searchProvider, caller, fixedQuery));
-
+            ThreadLocalSearcherCache.startSearcherContext();
             long searchCount;
-            if (searchCountOptional.isPresent()) {
-                searchCount = searchCountOptional.get();
-            } else if (caller != null) {
-                searchCount = searchProvider.searchCount(fixedQuery, caller);
-            } else {
-                searchCount = searchProvider.searchCountOverrideSecurity(fixedQuery, null);
+
+            Query fixedQuery = fixRequestTypeInQuery(query, issue.getProjectObject());
+            SearchQuery searchQuery = SearchQuery.create(fixedQuery, caller);
+            if (caller == null) {
+                searchQuery.overrideSecurity(true);
             }
+            searchCount = searchProvider.getHitCount(searchQuery);
 
             return searchCount > 0;
         } catch (SearchException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            ThreadLocalSearcherCache.stopAndCloseSearcherContext();
         }
     }
 
