@@ -2,6 +2,7 @@ package com.atlassian.jira.plugins.slack.service.issuefilter;
 
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.plugins.slack.model.EventFilterType;
+import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,7 +19,7 @@ public interface IssueFilter {
      * @param value the value to match
      * @return true if it applies a filter , false if not
      */
-    boolean apply(final IssueEvent event, @NotNull final String value);
+    boolean apply(final JiraIssueEvent event, @NotNull final String value);
 
     /**
      * Returns the map of the filter type

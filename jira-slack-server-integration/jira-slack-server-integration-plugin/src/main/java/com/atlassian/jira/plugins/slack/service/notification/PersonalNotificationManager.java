@@ -46,11 +46,10 @@ public class PersonalNotificationManager {
             return Collections.emptyList();
         }
 
-        final IssueEvent issueEvent = event.getIssueEvent();
-        final Issue issue = issueEvent.getIssue();
-        final ApplicationUser actor = issueEvent.getUser();
+        final Issue issue = event.getIssue();
+        final ApplicationUser actor = event.getEventAuthor().orElse(null);
         final EventMatcherType eventMatcher = event.getEventMatcher();
-        final Comment comment = issueEvent.getComment();
+        final Comment comment = event.getComment().orElse(null);
         final boolean isRestrictedCommentAdded = eventMatcher == EventMatcherType.ISSUE_COMMENTED
                 && CommentUtil.isRestricted(comment);
 

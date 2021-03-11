@@ -1,5 +1,6 @@
 package com.atlassian.jira.plugins.slack.service.listener;
 
+import com.atlassian.jira.event.issue.IssueChangedEvent;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
 
@@ -14,4 +15,6 @@ public interface IssueEventToEventMatcherTypeConverter {
      * on the updated fields
      */
     Collection<EventMatcherType> match(IssueEvent issueEvent);
+
+    Collection<EventMatcherType> match(IssueChangedEvent issueChangedEvent);
 }

@@ -69,10 +69,9 @@ public class DefaultIssueEventProcessorService implements IssueEventProcessorSer
             return Collections.emptyList();
         }
 
-        final IssueEvent issueEvent = event.getIssueEvent();
-        final Project project = issueEvent.getProject();
-        final Issue issue = issueEvent.getIssue();
-        final Comment comment = issueEvent.getComment();
+        final Issue issue = event.getIssue();
+        final Project project = issue.getProjectObject();
+        final Comment comment = event.getComment().orElse(null);
         final List<ProjectConfiguration> configurations = getConfigurationFor(project.getId(), issue, comment, eventMatcher);
 
         log.debug("Finding Configurations for event [{}] : {}", eventMatcher.name(), size(configurations));
@@ -84,7 +83,7 @@ public class DefaultIssueEventProcessorService implements IssueEventProcessorSer
                         projectConfiguration.getConfigurationGroupId()))
                 .filter(selector -> {
                     final List<ProjectConfiguration> filterConfigs = getConfigurationFiltersFor(selector);
-                    return CollectionUtils.isEmpty(filterConfigs) || filterService.apply(issueEvent, filterConfigs);
+                    return CollectionUtils.isEmpty(filterConfigs) || filterService.apply(event, filterConfigs);
                 })
                 .flatMap(selector -> getNotificationInfos(selector).stream())
                 .collect(Collectors.toList());

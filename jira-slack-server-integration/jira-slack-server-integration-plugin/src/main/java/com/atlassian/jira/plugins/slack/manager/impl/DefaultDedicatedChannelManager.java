@@ -95,9 +95,8 @@ public class DefaultDedicatedChannelManager extends AutoSubscribingEventListener
         }
 
         // restricted comments notification should not be sent to dedicated channels
-        final IssueEvent issueEvent = event.getIssueEvent();
-        final Comment comment = issueEvent.getComment();
-        final Issue issue = issueEvent.getIssue();
+        final Comment comment = event.getComment().orElse(null);
+        final Issue issue = event.getIssue();
         final boolean isRestrictedComment = eventMatcher == EventMatcherType.ISSUE_COMMENTED && CommentUtil.isRestricted(comment);
         if (isRestrictedComment && !projectConfigurationManager.shouldSendRestrictedCommentsToDedicatedChannels(issue.getProjectObject())) {
             return Optional.empty();

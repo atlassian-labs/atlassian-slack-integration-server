@@ -1,7 +1,7 @@
 package com.atlassian.jira.plugins.slack.service.issuefilter;
 
-import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
+import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 
 import java.util.Collection;
 
@@ -17,5 +17,5 @@ public interface IssueFilterService {
      * @param configurations the filters we are going to run
      * @return true if the issue applies, false if not
      */
-    boolean apply(final IssueEvent event, final Collection<ProjectConfiguration> configurations);
+    boolean apply(final JiraIssueEvent event, final Collection<ProjectConfiguration> configurations);
 }

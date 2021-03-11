@@ -3,6 +3,7 @@ package com.atlassian.jira.plugins.slack.service.issuefilter.impl;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.plugins.slack.model.EventFilterType;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
+import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.service.issuefilter.IssueFilter;
 import com.atlassian.jira.plugins.slack.service.issuefilter.IssueFilterService;
 import com.google.common.collect.ImmutableList;
@@ -37,7 +38,7 @@ public class DefaultIssueFilterService implements IssueFilterService {
      * Returns true if all filters match.
      */
     @Override
-    public boolean apply(final IssueEvent event, Collection<ProjectConfiguration> configurations) {
+    public boolean apply(final JiraIssueEvent event, Collection<ProjectConfiguration> configurations) {
         final List<IssueFilterConfiguration> filtersToRun = getFiltersToRunFor(configurations);
         return filtersToRun.stream().allMatch(issueFilter ->
                 issueFilter != null && issueFilter.getFilter().apply(event, issueFilter.getConfiguration().getValue()));

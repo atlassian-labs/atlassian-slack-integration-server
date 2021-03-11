@@ -140,9 +140,7 @@ public class DefaultJiraSlackEventListenerTest {
         verify(sendNotificationTask).call();
 
         DefaultJiraIssueEvent defaultJiraIssueEvent = eventCaptor3.getValue();
-        assertThat(defaultJiraIssueEvent.getActor(), sameInstance(applicationUser));
         assertThat(defaultJiraIssueEvent.getEventMatcher(), sameInstance(EventMatcherType.ISSUE_UPDATED));
-        assertThat(defaultJiraIssueEvent.getIssue(), sameInstance(issue));
         assertThat(defaultJiraIssueEvent.getIssueEvent(), sameInstance(issueEvent));
 
         assertThat(notInfoCaptor.getValue(), containsInAnyOrder(notificationInfo1, notificationInfo2));
@@ -164,7 +162,7 @@ public class DefaultJiraSlackEventListenerTest {
 
         target.issueEvent(issueEventBundle);
 
-        verify(issueEventToEventMatcherTypeConverter, never()).match(any());
+        verify(issueEventToEventMatcherTypeConverter, never()).match(any(IssueEvent.class));
         verify(taskBuilder, never()).newSendNotificationTask(any(), anyList(), any());
     }
 

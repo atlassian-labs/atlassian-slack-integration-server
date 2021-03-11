@@ -4,9 +4,11 @@ import com.atlassian.annotations.VisibleForTesting;
 import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.jira.event.issue.DelegatingJiraIssueEvent;
+import com.atlassian.jira.event.issue.IssueChangedEvent;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.event.issue.IssueEventBundle;
 import com.atlassian.jira.event.issue.JiraIssueEvent;
+import com.atlassian.jira.event.operation.SpanningOperation;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.manager.DedicatedChannelManager;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
@@ -21,7 +23,9 @@ import com.atlassian.jira.plugins.slack.service.notification.PersonalNotificatio
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.settings.JiraSettingsService;
-import com.atlassian.jira.task.TaskManager;
+import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
+import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogItem;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
@@ -53,6 +57,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
     private final PersonalNotificationManager personalNotificationManager;
     private final AnalyticsContextProvider analyticsContextProvider;
     private final AsyncExecutor asyncExecutor;
+    private final ChangeLogExtractor changeLogExtractor;
 
     @Autowired
     public DefaultJiraSlackEventListener(final EventPublisher eventPublisher,
@@ -64,7 +69,8 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
                                          final JiraSettingsService jiraSettingsService,
                                          final PersonalNotificationManager personalNotificationManager,
                                          final AnalyticsContextProvider analyticsContextProvider,
-                                         final AsyncExecutor asyncExecutor) {
+                                         final AsyncExecutor asyncExecutor,
+                                         final ChangeLogExtractor changeLogExtractor) {
         super(eventPublisher);
         this.taskExecutorService = taskExecutorService;
         this.taskBuilder = taskBuilder;
@@ -75,6 +81,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
         this.personalNotificationManager = personalNotificationManager;
         this.analyticsContextProvider = analyticsContextProvider;
         this.asyncExecutor = asyncExecutor;
+        this.changeLogExtractor = changeLogExtractor;
     }
 
     @EventListener
@@ -90,7 +97,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
 
                 // check if it's bulk edit event and user selected to skip sending notifications
                 final String userKey = issueEvent.getUser().getKey();
-                if (jiraSettingsService.areBulkNotificationsMutedForUser(new UserKey(userKey)) && isBulkEdit(issueEvent)) {
+                if (jiraSettingsService.areBulkNotificationsMutedForUser(new UserKey(userKey)) && isBulkEdit(issueEvent.getSpanningOperation())) {
                     log.debug("Skipping handling of the event {} for user {} because he chose to suppress notifications from bulk operations",
                             issueEvent.getEventTypeId(), userKey);
                     return;
@@ -103,7 +110,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
                     Issue issue = issueEvent.getIssue();
                     log.debug("Processing event id={} for issue key={}, id={}", issueEvent.getEventTypeId(),
                             issue.getKey(), issue.getId());
-                    processProjectNotifications(issueEvent, eventsSeen);
+                    processIssueEvent(issueEvent, eventsSeen);
                 });
             }
         } catch (Exception e) {
@@ -111,7 +118,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
         }
     }
 
-    private void processProjectNotifications(final IssueEvent issueEvent, final Set<EventMatcherType> eventsSeen) {
+    private void processIssueEvent(final IssueEvent issueEvent, final Set<EventMatcherType> eventsSeen) {
         final Collection<EventMatcherType> eventMatcherTypes = issueEventToEventMatcherTypeConverter.match(issueEvent);
 
         // Multiple events can be fired for a given {@link IssueEvent}, multiple notifications
@@ -122,29 +129,35 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
             }
 
             eventsSeen.add(eventMatcherType);
-            final DefaultJiraIssueEvent ourEventToProcess = buildIssueEvent(eventMatcherType, issueEvent);
-            final Optional<NotificationInfo> dedicatedChannelNotification = dedicatedChannelManager
-                    .getNotificationsFor(ourEventToProcess);
-            final Collection<NotificationInfo> projectNotifications = issueEventProcessorService
-                    .getNotificationsFor(ourEventToProcess);
-            final List<NotificationInfo> personalNotifications = personalNotificationManager
-                    .getNotificationsFor(ourEventToProcess);
+            List<ChangeLogItem> changeLog = changeLogExtractor.getChanges(issueEvent);
+            final DefaultJiraIssueEvent internalEventWrapper = DefaultJiraIssueEvent.of(eventMatcherType, issueEvent, changeLog);
+            sendNotifications(internalEventWrapper);
+        }
+    }
 
-            final List<NotificationInfo> uniqueNotifications = dedupNotificationsByChannel(dedicatedChannelNotification,
-                    projectNotifications, personalNotifications);
+    private void sendNotifications(final DefaultJiraIssueEvent internalIssueEvent) {
+        final Optional<NotificationInfo> dedicatedChannelNotification = dedicatedChannelManager
+                .getNotificationsFor(internalIssueEvent);
+        final Collection<NotificationInfo> projectNotifications = issueEventProcessorService
+                .getNotificationsFor(internalIssueEvent);
+        final List<NotificationInfo> personalNotifications = personalNotificationManager
+                .getNotificationsFor(internalIssueEvent);
 
-            if (!uniqueNotifications.isEmpty()) {
-                dedicatedChannelNotification.ifPresent(notification ->
-                        eventPublisher.publish(new JiraNotificationSentEvent(analyticsContextProvider.bySlackLink(
-                                notification.getLink()), eventMatcherType.getDbKey(), Type.DEDICATED)));
-                projectNotifications.forEach(notification ->
-                        eventPublisher.publish(new JiraNotificationSentEvent(analyticsContextProvider.bySlackLink(
-                                notification.getLink()), eventMatcherType.getDbKey(), Type.REGULAR)));
-                personalNotifications.forEach(notification ->
-                        eventPublisher.publish(new JiraNotificationSentEvent(analyticsContextProvider.bySlackLink(
-                                notification.getLink()), eventMatcherType.getDbKey(), Type.PERSONAL)));
-                taskBuilder.newSendNotificationTask(ourEventToProcess, uniqueNotifications, taskExecutorService).call();
-            }
+        final List<NotificationInfo> uniqueNotifications = dedupNotificationsByChannel(dedicatedChannelNotification,
+                projectNotifications, personalNotifications);
+
+        if (!uniqueNotifications.isEmpty()) {
+            String notificationKey = internalIssueEvent.getEventMatcher().getDbKey();
+            dedicatedChannelNotification.ifPresent(notification ->
+                    eventPublisher.publish(new JiraNotificationSentEvent(analyticsContextProvider.bySlackLink(
+                            notification.getLink()), notificationKey, Type.DEDICATED)));
+            projectNotifications.forEach(notification ->
+                    eventPublisher.publish(new JiraNotificationSentEvent(analyticsContextProvider.bySlackLink(
+                            notification.getLink()), notificationKey, Type.REGULAR)));
+            personalNotifications.forEach(notification ->
+                    eventPublisher.publish(new JiraNotificationSentEvent(analyticsContextProvider.bySlackLink(
+                            notification.getLink()), notificationKey, Type.PERSONAL)));
+            taskBuilder.newSendNotificationTask(internalIssueEvent, uniqueNotifications, taskExecutorService).call();
         }
     }
 
@@ -168,19 +181,36 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
         return new ArrayList<>(notificationByChannel.values());
     }
 
-    private DefaultJiraIssueEvent buildIssueEvent(EventMatcherType eventMatcherType, IssueEvent event) {
-        return new DefaultJiraIssueEvent.Builder()
-                .setEventMatcher(eventMatcherType)
-                .setIssueEvent(event)
-                .build();
-    }
-
-    private boolean isBulkEdit(final IssueEvent issueEvent) {
-        boolean isBulkEdit = issueEvent.getSpanningOperation().isPresent();;
+    private boolean isBulkEdit(Optional<SpanningOperation> spanningOperation) {
+        boolean isBulkEdit = spanningOperation.isPresent();
         if (isBulkEdit) {
             log.trace("Bulk operation detected");
         }
 
         return isBulkEdit;
+    }
+
+    @EventListener
+    public void onIssueChangeEvent(IssueChangedEvent issueChangedEvent) {
+        // check if it's bulk edit event and user selected to skip sending notifications
+        final String userKey = issueChangedEvent.getAuthor().map(ApplicationUser::getKey).orElse(null);
+        if (userKey != null
+                && jiraSettingsService.areBulkNotificationsMutedForUser(new UserKey(userKey))
+                && isBulkEdit(issueChangedEvent.getSpanningOperation())) {
+            log.debug("Skipping handling of the IssueChangedEvent for user {} because he chose to suppress notifications from bulk operations",
+                    userKey);
+            return;
+        }
+
+        asyncExecutor.run(() -> {
+            Issue issue = issueChangedEvent.getIssue();
+            log.debug("Processing IssueChangedEvent for issue key={}, id={}", issue.getKey(), issue.getId());
+
+            Collection<EventMatcherType> matchers = issueEventToEventMatcherTypeConverter.match(issueChangedEvent);
+            for (EventMatcherType matcher : matchers) {
+                DefaultJiraIssueEvent internalEventWrapper = DefaultJiraIssueEvent.of(matcher, issueChangedEvent);
+                sendNotifications(internalEventWrapper);
+            }
+        });
     }
 }
