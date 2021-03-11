@@ -122,7 +122,6 @@ public class JiraIssueEventRendererTest {
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_UPDATED);
         when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getNewText()).thenReturn("N");
-        when(changeLogItem.getFieldName()).thenReturn("F");
         when(changeLogItem.getField()).thenReturn("F");
 
         SlackNotification notif = testRender(Verbosity.EXTENDED);
@@ -307,7 +306,7 @@ public class JiraIssueEventRendererTest {
 
     private SlackNotification testRender(final Verbosity verbosity) {
         IssueEvent issueEvent = new IssueEvent(issue, applicationUser, comment, null, null, Collections.emptyMap(), 1L);
-        when(jiraIssueEvent.getIssueEvent()).thenReturn(issueEvent);
+        when(jiraIssueEvent.getIssue()).thenReturn(issue);
         when(notificationInfo.getLink()).thenReturn(link);
         when(notificationInfo.getChannelId()).thenReturn("C");
         when(notificationInfo.getResponseUrl()).thenReturn("url");

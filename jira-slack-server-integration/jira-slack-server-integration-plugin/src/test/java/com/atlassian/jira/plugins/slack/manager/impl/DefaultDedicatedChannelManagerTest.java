@@ -113,7 +113,7 @@ public class DefaultDedicatedChannelManagerTest {
     public void getNotificationsFor() {
         IssueEvent issueEvent = new IssueEvent(issue, Collections.emptyMap(), null, 1L);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_COMMENTED);
-        when(jiraIssueEvent.getIssueEvent()).thenReturn(issueEvent);
+        when(jiraIssueEvent.getIssue()).thenReturn(issue);
         when(issue.getId()).thenReturn(7L);
         when(dedicatedChannelDAO.getDedicatedChannel(7L)).thenReturn(Optional.of(dedicatedChannel));
         when(dedicatedChannel.getTeamId()).thenReturn("T");
@@ -144,7 +144,7 @@ public class DefaultDedicatedChannelManagerTest {
         Comment comment = mock(Comment.class);
         Project project = mock(Project.class);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_COMMENTED);
-        when(jiraIssueEvent.getIssueEvent()).thenReturn(issueEvent);
+        when(jiraIssueEvent.getIssue()).thenReturn(issue);
         when(issueEvent.getIssue()).thenReturn(issue);
         when(issueEvent.getComment()).thenReturn(comment);
         when(issue.getProjectObject()).thenReturn(project);
@@ -161,7 +161,7 @@ public class DefaultDedicatedChannelManagerTest {
         Comment comment = mock(Comment.class);
         Project project = mock(Project.class);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_COMMENTED);
-        when(jiraIssueEvent.getIssueEvent()).thenReturn(issueEvent);
+        when(jiraIssueEvent.getIssue()).thenReturn(issue);
         when(issueEvent.getIssue()).thenReturn(issue);
         when(issueEvent.getComment()).thenReturn(comment);
         when(issue.getProjectObject()).thenReturn(project);

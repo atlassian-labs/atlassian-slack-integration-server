@@ -3,7 +3,9 @@ package com.atlassian.jira.plugins.slack.service.issuefilter.impl;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.model.EventFilterType;
+import com.atlassian.jira.plugins.slack.model.EventMatcherType;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
+import com.atlassian.jira.plugins.slack.model.event.DefaultJiraIssueEvent;
 import com.atlassian.jira.plugins.slack.service.issuefilter.IssueFilter;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -47,12 +50,13 @@ public class DefaultIssueFilterServiceTest {
         when(projectConfiguration2.getValue()).thenReturn("V2");
 
         IssueEvent issueEvent = new IssueEvent(issue, Collections.emptyMap(), null, 0L);
+        DefaultJiraIssueEvent jiraIssueEvent = DefaultJiraIssueEvent.of(EventMatcherType.ISSUE_CREATED, issueEvent, emptyList());
 
-        when(issueFilter1.apply(issueEvent, "V1")).thenReturn(true);
-        when(issueFilter2.apply(issueEvent, "V2")).thenReturn(true);
+        when(issueFilter1.apply(jiraIssueEvent, "V1")).thenReturn(true);
+        when(issueFilter2.apply(jiraIssueEvent, "V2")).thenReturn(true);
 
         DefaultIssueFilterService target = new DefaultIssueFilterService(filters);
-        boolean result = target.apply(issueEvent, configs);
+        boolean result = target.apply(jiraIssueEvent, configs);
 
         assertThat(result, is(true));
     }
@@ -70,12 +74,13 @@ public class DefaultIssueFilterServiceTest {
         when(projectConfiguration2.getValue()).thenReturn("V2");
 
         IssueEvent issueEvent = new IssueEvent(issue, Collections.emptyMap(), null, 0L);
+        DefaultJiraIssueEvent jiraIssueEvent = DefaultJiraIssueEvent.of(EventMatcherType.ISSUE_CREATED, issueEvent, emptyList());
 
-        when(issueFilter1.apply(issueEvent, "V1")).thenReturn(true);
-        when(issueFilter2.apply(issueEvent, "V2")).thenReturn(false);
+        when(issueFilter1.apply(jiraIssueEvent, "V1")).thenReturn(true);
+        when(issueFilter2.apply(jiraIssueEvent, "V2")).thenReturn(false);
 
         DefaultIssueFilterService target = new DefaultIssueFilterService(filters);
-        boolean result = target.apply(issueEvent, configs);
+        boolean result = target.apply(jiraIssueEvent, configs);
 
         assertThat(result, is(false));
     }

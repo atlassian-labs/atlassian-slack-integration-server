@@ -1,6 +1,5 @@
 package com.atlassian.jira.plugins.slack.service.issuefilter;
 
-import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.plugins.slack.model.EventFilterType;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 

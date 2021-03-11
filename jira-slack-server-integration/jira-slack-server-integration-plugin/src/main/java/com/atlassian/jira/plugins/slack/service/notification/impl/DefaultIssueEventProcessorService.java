@@ -1,6 +1,5 @@
 package com.atlassian.jira.plugins.slack.service.notification.impl;
 
-import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.comments.Comment;
 import com.atlassian.jira.plugins.slack.dao.ConfigurationDAO;
