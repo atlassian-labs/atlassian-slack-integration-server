@@ -9,7 +9,6 @@ import com.atlassian.jira.plugins.slack.manager.impl.DefaultProjectConfiguration
 import com.atlassian.jira.plugins.slack.model.EventFilterType;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
-import com.atlassian.jira.plugins.slack.model.event.DefaultJiraIssueEvent;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.service.issuefilter.IssueFilterService;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
@@ -30,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -77,9 +75,6 @@ public class DefaultIssueEventProcessorServiceTest {
 
     @Test
     public void getNotificationsFor_shouldReturnNotifications_whenIssueIsCreated() {
-        IssueEvent issueEvent = new IssueEvent(issue, Collections.emptyMap(), null, 1L);
-        DefaultJiraIssueEvent jiraIssueEvent = DefaultJiraIssueEvent.of(EventMatcherType.ISSUE_CREATED, issueEvent, emptyList());
-
         when(issue.getProjectObject()).thenReturn(project);
         when(project.getId()).thenReturn(7L);
         when(event.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_CREATED);
@@ -106,7 +101,7 @@ public class DefaultIssueEventProcessorServiceTest {
                 .thenReturn(Arrays.asList(projectConfiguration1, projectConfiguration2));
         when(configurationDAO.findByProjectConfigurationGroupId(7L, "G2"))
                 .thenReturn(Arrays.asList(projectConfiguration3, projectConfiguration4));
-        when(filterService.apply(jiraIssueEvent, Collections.singletonList(projectConfiguration4))).thenReturn(true);
+        when(filterService.apply(event, Collections.singletonList(projectConfiguration4))).thenReturn(true);
         when(projectConfigurationManager.getOwner(projectConfiguration1)).thenReturn(Optional.of("O1"));
         when(projectConfigurationManager.getOwner(projectConfiguration3)).thenReturn(Optional.of("O2"));
         when(projectConfigurationManager.getVerbosity(projectConfiguration1)).thenReturn(Optional.of(Verbosity.BASIC));
@@ -131,13 +126,12 @@ public class DefaultIssueEventProcessorServiceTest {
         long projectId = 7L;
         String groupId = "G";
 
-        when(issueEvent.getIssue()).thenReturn(issue);
-        when(issueEvent.getProject()).thenReturn(project);
-        when(issueEvent.getComment()).thenReturn(comment);
-        when(project.getId()).thenReturn(projectId);
-        when(comment.getGroupLevel()).thenReturn("someGroupLevel");
         when(event.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_COMMENTED);
         when(event.getIssue()).thenReturn(issue);
+        when(event.getComment()).thenReturn(Optional.of(comment));
+        when(issue.getProjectObject()).thenReturn(project);
+        when(project.getId()).thenReturn(projectId);
+        when(comment.getGroupLevel()).thenReturn("someGroupLevel");
         when(configurationDAO.findByProjectId(projectId)).thenReturn(Arrays.asList(projectConfiguration1,
                 projectConfiguration2));
         when(projectConfiguration1.getConfigurationGroupId()).thenReturn(groupId);

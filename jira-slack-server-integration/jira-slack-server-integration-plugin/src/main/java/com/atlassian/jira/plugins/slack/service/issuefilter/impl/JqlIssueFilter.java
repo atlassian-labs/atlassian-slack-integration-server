@@ -40,10 +40,16 @@ public class JqlIssueFilter implements IssueFilter {
 
     @Override
     public boolean apply(final JiraIssueEvent event, final @NotNull String value) {
+        Issue issue = event.getIssue();
         try {
-            return matchesJql(value, event.getIssue(), event.getEventAuthor());
+            boolean isIssueMatched = matchesJql(value, issue, event.getEventAuthor());
+            log.debug("JQL matching result for issue key={}, id={}, source={}: {}", issue.getKey(), issue.getId(),
+                    event.getSource(), isIssueMatched);
+
+            return isIssueMatched;
         } catch (SearchException e) {
-            log.warn(" Search exception trying to match jql [{}] over issue []", value, event.getIssue().getId());
+            log.warn(" Search exception trying to match jql [{}] over issue key={}, id={}, source={}", value, issue.getKey(),
+                    issue.getId(), event.getSource());
         }
         return false;
     }

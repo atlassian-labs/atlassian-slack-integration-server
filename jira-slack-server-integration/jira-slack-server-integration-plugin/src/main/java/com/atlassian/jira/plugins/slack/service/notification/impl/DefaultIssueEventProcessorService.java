@@ -17,8 +17,10 @@ import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.util.CommentUtil;
 import com.atlassian.jira.plugins.slack.util.PluginConstants;
 import com.atlassian.jira.project.Project;
+import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import io.atlassian.fugue.Either;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +75,10 @@ public class DefaultIssueEventProcessorService implements IssueEventProcessorSer
         final Comment comment = event.getComment().orElse(null);
         final List<ProjectConfiguration> configurations = getConfigurationFor(project.getId(), issue, comment, eventMatcher);
 
-        log.debug("Finding Configurations for event [{}] : {}", eventMatcher.name(), size(configurations));
+        log.debug("Found configurations for issue key={}, matcher={}, source={}: {}", issue.getKey(),
+                eventMatcher.name(), event.getSource(), size(configurations));
 
-        return configurations.stream()
+        List<NotificationInfo> notifications = configurations.stream()
                 .filter(Objects::nonNull)
                 .map(projectConfiguration -> new ProjectConfigurationGroupSelectorDTO(
                         projectConfiguration.getProjectId(),
@@ -86,6 +89,11 @@ public class DefaultIssueEventProcessorService implements IssueEventProcessorSer
                 })
                 .flatMap(selector -> getNotificationInfos(selector).stream())
                 .collect(Collectors.toList());
+
+        log.debug("Built project notifications for issue key={}, matcher={}, source={}: {}", issue.getKey(),
+                eventMatcher.name(), event.getSource(), size(notifications));
+
+        return notifications;
     }
 
     /**
@@ -170,14 +178,15 @@ public class DefaultIssueEventProcessorService implements IssueEventProcessorSer
             final String channelId = config.getChannelId();
             final NotificationInfo notificationInfo = map.get(channelId);
             if (notificationInfo == null) {
-                slackLinkManager.getLinkByTeamId(config.getTeamId()).forEach(
-                        link -> map.put(channelId, new NotificationInfo(
-                                link,
-                                channelId,
-                                null,
-                                null,
-                                projectConfigurationManager.getOwner(config).orElse(null),
-                                projectConfigurationManager.getVerbosity(config).orElse(Verbosity.EXTENDED))));
+                String teamId = config.getTeamId();
+                Either<Throwable, SlackLink> slackLink = slackLinkManager.getLinkByTeamId(teamId);
+                slackLink.forEach(
+                        link -> {
+                            String owner = projectConfigurationManager.getOwner(config).orElse(null);
+                            Verbosity verbosity = projectConfigurationManager.getVerbosity(config).orElse(Verbosity.EXTENDED);
+                            NotificationInfo notification = new NotificationInfo(link, channelId, null, null, owner, verbosity);
+                            map.put(channelId, notification);
+                        });
             }
         }
 

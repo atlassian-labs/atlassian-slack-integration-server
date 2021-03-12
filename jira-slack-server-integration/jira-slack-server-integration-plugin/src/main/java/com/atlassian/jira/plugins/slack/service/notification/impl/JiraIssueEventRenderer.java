@@ -42,17 +42,14 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
     private static final int FIELD_VALUE_MAX_LENGTH = 1000;
 
     private final I18nResolver i18nResolver;
-    private final ChangeLogExtractor changeLogExtractor;
     private final AttachmentHelper attachmentHelper;
     private final UserManager userManager;
 
     @Autowired
     public JiraIssueEventRenderer(I18nResolver i18nResolver,
-                                  ChangeLogExtractor changeLogExtractor,
                                   AttachmentHelper attachmentHelper,
                                   @Qualifier("jiraUserManager") UserManager userManager) {
         this.i18nResolver = i18nResolver;
-        this.changeLogExtractor = changeLogExtractor;
         this.attachmentHelper = attachmentHelper;
         this.userManager = userManager;
     }
@@ -130,16 +127,18 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
                                 .text(text)
                                 .mrkdwn(true)
                                 .attachments(buildAttachments(isExtendedVerbosity,
-                                        () -> attachmentHelper.buildIssueAttachment(null, issue, createUpdateFields(jiraIssueEvent))));
+                                        () -> {
+                                            List<Field> updateFields = createUpdateFields(jiraIssueEvent);
+                                            return attachmentHelper.buildIssueAttachment(null, issue, updateFields);
+                                        }));
                     }
 
                     @Override
                     public ChatPostMessageRequestBuilder visitTransitioned() {
+                        final List<ChangeLogItem> changes = getChanges(jiraIssueEvent.getChangeLog(), Collections.singleton(
+                                ChangeLogExtractor.STATUS_FIELD_NAME));
                         final Optional<String> oldStatusOptional =
-                                getChanges(
-                                        jiraIssueEvent.getChangeLog(),
-                                        Collections.singleton(ChangeLogExtractor.STATUS_FIELD_NAME)
-                                ).stream()
+                                changes.stream()
                                         .map(change -> change.getOldTextTruncated(FIELD_VALUE_MAX_LENGTH))
                                         .filter(StringUtils::isNotBlank)
                                         .findFirst();
@@ -273,7 +272,8 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
     }
 
     private List<Field> createUpdateFields(final JiraIssueEvent jiraIssueEvent) {
-        return getChanges(jiraIssueEvent.getChangeLog(), Collections.emptySet()).stream()
+        List<ChangeLogItem> changes = getChanges(jiraIssueEvent.getChangeLog(), Collections.emptySet());
+        List<Field> fields = changes.stream()
                 .filter(c -> !c.getField().equals(ChangeLogExtractor.ASSIGNEE_FIELD_NAME))
                 .map(change -> Field.builder()
                         .title(change.getField())
@@ -281,13 +281,15 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
                         .valueShortEnough(change.getNewText().length() <= 15)
                         .build())
                 .collect(Collectors.toList());
+        return fields;
     }
 
     private List<ChangeLogItem> getChanges(final List<ChangeLogItem> changeLog, final Set<String> fields) {
-        return changeLog.stream()
+        List<ChangeLogItem> filteredChanges = changeLog.stream()
                 .filter(changeLogItem -> !Strings.isNullOrEmpty(changeLogItem.getNewText()) &&
                         (fields.isEmpty() || fields.contains(changeLogItem.getField())))
                 .collect(Collectors.toList());
+        return filteredChanges;
     }
 
     private List<Attachment> buildAttachments(final boolean isExtendedVerbosity,

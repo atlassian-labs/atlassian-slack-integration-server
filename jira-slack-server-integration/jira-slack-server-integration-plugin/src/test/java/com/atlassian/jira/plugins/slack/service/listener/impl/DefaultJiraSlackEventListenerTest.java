@@ -19,6 +19,7 @@ import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.plugins.slack.settings.JiraSettingsService;
+import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
@@ -76,6 +77,8 @@ public class DefaultJiraSlackEventListenerTest {
     private AnalyticsContextProvider analyticsContextProvider;
     @Mock
     private AsyncExecutor asyncExecutor;
+    @Mock
+    private ChangeLogExtractor changeLogExtractor;
 
     @Mock
     private ApplicationUser applicationUser;

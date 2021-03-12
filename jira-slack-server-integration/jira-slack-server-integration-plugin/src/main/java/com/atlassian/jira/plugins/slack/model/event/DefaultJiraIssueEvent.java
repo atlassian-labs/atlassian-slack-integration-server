@@ -25,12 +25,14 @@ public class DefaultJiraIssueEvent implements JiraIssueEvent {
     private final Issue issue;
     private final Optional<Comment> comment;
     private final List<ChangeLogItem> changeLog;
+    private final String source;
 
     public static DefaultJiraIssueEvent of(final EventMatcherType eventMatcher,
                                            final IssueEvent issueEvent,
                                            final List<ChangeLogItem> changeLog) {
+        String source = String.format("IssueEvent[type=%d]", issueEvent.getEventTypeId());
         return new DefaultJiraIssueEvent(eventMatcher, Optional.ofNullable(issueEvent.getUser()), issueEvent.getIssue(),
-                Optional.ofNullable(issueEvent.getComment()), changeLog);
+                Optional.ofNullable(issueEvent.getComment()), changeLog, source);
     }
 
     public static DefaultJiraIssueEvent of(final EventMatcherType eventMatcher,
@@ -42,6 +44,6 @@ public class DefaultJiraIssueEvent implements JiraIssueEvent {
                 .collect(Collectors.toCollection(() -> new ArrayList<>(changeItems.size())));
 
         return new DefaultJiraIssueEvent(eventMatcher, issueChangedEvent.getAuthor(), issueChangedEvent.getIssue(),
-                issueChangedEvent.getComment(), changeLog);
+                issueChangedEvent.getComment(), changeLog, "IssueChangedEvent");
     }
 }

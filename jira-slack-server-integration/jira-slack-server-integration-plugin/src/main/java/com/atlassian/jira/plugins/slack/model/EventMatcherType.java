@@ -36,10 +36,6 @@ public enum EventMatcherType {
         }
     },
 
-    /**
-     * We need to add multiple events to the issue transitioned cause Jira classic workflow send specific event types
-     * for each transition.
-     */
     ISSUE_TRANSITIONED("MATCHER:ISSUE_TRANSITIONED", new WorkflowStatusMatcher()) {
         @Override
         public <T, E extends Throwable> T accept(Visitor<T, E> visitor) throws E {

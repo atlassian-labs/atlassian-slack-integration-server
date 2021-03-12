@@ -7,15 +7,18 @@ import com.atlassian.jira.plugins.slack.model.EventMatcherType;
 import com.atlassian.jira.plugins.slack.service.listener.IssueEventToEventMatcherTypeConverter;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogItem;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class DefaultIssueEventToEventMatcherTypeConverter implements IssueEventToEventMatcherTypeConverter {
     private final ChangeLogExtractor changeLogExtractor;
@@ -45,31 +48,31 @@ public class DefaultIssueEventToEventMatcherTypeConverter implements IssueEventT
         return eventMatcherTypes;
     }
 
-    private Collection<EventMatcherType> matchUpdatesEvent(IssueEvent issueEvent) {
-
-        Collection<EventMatcherType> eventMatcherTypes = new ArrayList<>();
-
+    private Collection<EventMatcherType> matchUpdatesEvent(final IssueEvent issueEvent) {
         final List<ChangeLogItem> changes = changeLogExtractor.getChanges(issueEvent);
-        for (ChangeLogItem change : changes) {
-            String field = change.getField();
-            if (ChangeLogExtractor.ASSIGNEE_FIELD_NAME.equals(field)) {
-                eventMatcherTypes.add(EventMatcherType.ISSUE_ASSIGNMENT_CHANGED);
-            }
+        final Set<String> updatedFields = changes.stream().map(ChangeLogItem::getField).collect(Collectors.toSet());
+
+        log.debug("Updated fields detected for IssueEvent on issue key={}, eventTypeId={}: {}", issueEvent.getIssue().getKey(),
+                issueEvent.getEventTypeId(), updatedFields);
+
+        Collection<EventMatcherType> detectedMatchers = Collections.emptyList();
+        if (updatedFields.contains(ChangeLogExtractor.ASSIGNEE_FIELD_NAME)) {
+            detectedMatchers = Collections.singletonList(EventMatcherType.ISSUE_ASSIGNMENT_CHANGED);
         }
 
-        return eventMatcherTypes;
+        return detectedMatchers;
     }
 
     @Override
-    public Collection<EventMatcherType> match(IssueChangedEvent event) {
-        Collection<ChangeItemBean> changeItems = event.getChangeItems();
-        Collection<EventMatcherType> detectedMatchers = Collections.emptyList();
+    public Collection<EventMatcherType> match(final IssueChangedEvent event) {
+        final Collection<ChangeItemBean> changeItems = event.getChangeItems();
+        final Set<String> updatedFields = changeItems.stream().map(ChangeItemBean::getField).collect(Collectors.toSet());
 
-        for (ChangeItemBean changeItem : changeItems) {
-            if (ChangeLogExtractor.STATUS_FIELD_NAME.equals(changeItem.getField())) {
-                detectedMatchers = Collections.singletonList(EventMatcherType.ISSUE_TRANSITIONED);
-                break;
-            }
+        log.debug("Updated fields detected for IssueChangedEvent on issue key={}: {}", event.getIssue().getKey(), updatedFields);
+
+        Collection<EventMatcherType> detectedMatchers = Collections.emptyList();
+        if (updatedFields.contains(ChangeLogExtractor.STATUS_FIELD_NAME)) {
+            detectedMatchers = Collections.singletonList(EventMatcherType.ISSUE_TRANSITIONED);
         }
 
         return detectedMatchers;

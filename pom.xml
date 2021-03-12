@@ -50,8 +50,8 @@
         <slf4j.version>1.7.25</slf4j.version>
         <sal.api.version>3.1.0</sal.api.version>
         <mockito-core.version>2.25.0</mockito-core.version>
-        <junit.version>4.13.1</junit.version>
-        <junit.jupiter.version>5.5.1</junit.jupiter.version>
+        <junit.version>4.13.2</junit.version>
+        <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <rest.version>2.9.2</rest.version>
         <joda-time.version>2.3</joda-time.version>
         <io.fugue.version>4.7.2</io.fugue.version>
