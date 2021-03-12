@@ -68,7 +68,7 @@ public class ChangeLogExtractor {
                         if (maxValueLength != -1) {
                             newText = StringUtils.abbreviate(newText, maxValueLength);
                         }
-                        changeLogItems.add(new ChangeLogItem(field, field, newText, newValue, oldText, oldValue));
+                        changeLogItems.add(new ChangeLogItem(field, newText, newValue, oldText, oldValue));
                     }
                 }
 

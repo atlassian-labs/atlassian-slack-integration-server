@@ -1,61 +1,47 @@
 package com.atlassian.jira.plugins.slack.model.event;
 
+import com.atlassian.jira.event.issue.IssueChangedEvent;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.comments.Comment;
+import com.atlassian.jira.issue.history.ChangeItemBean;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
+import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogItem;
 import com.atlassian.jira.user.ApplicationUser;
-import com.google.common.annotations.VisibleForTesting;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-/**
- * Default implementation of {@link com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent}
- */
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@Getter
 public class DefaultJiraIssueEvent implements JiraIssueEvent {
     private final EventMatcherType eventMatcher;
-    private final IssueEvent issueEvent;
+    private final Optional<ApplicationUser> eventAuthor;
+    private final Issue issue;
+    private final Optional<Comment> comment;
+    private final List<ChangeLogItem> changeLog;
 
-    @VisibleForTesting
-    public DefaultJiraIssueEvent(final EventMatcherType eventMatcher, final IssueEvent issueEvent) {
-        this.eventMatcher = eventMatcher;
-        this.issueEvent = issueEvent;
+    public static DefaultJiraIssueEvent of(final EventMatcherType eventMatcher,
+                                           final IssueEvent issueEvent,
+                                           final List<ChangeLogItem> changeLog) {
+        return new DefaultJiraIssueEvent(eventMatcher, Optional.ofNullable(issueEvent.getUser()), issueEvent.getIssue(),
+                Optional.ofNullable(issueEvent.getComment()), changeLog);
     }
 
-    @Override
-    public IssueEvent getIssueEvent() {
-        return issueEvent;
-    }
+    public static DefaultJiraIssueEvent of(final EventMatcherType eventMatcher,
+                                           final IssueChangedEvent issueChangedEvent) {
+        Collection<ChangeItemBean> changeItems = issueChangedEvent.getChangeItems();
+        List<ChangeLogItem> changeLog = changeItems.stream()
+                .map(changeItem -> new ChangeLogItem(changeItem.getField(), changeItem.getToString(), changeItem.getTo(),
+                        changeItem.getFromString(), changeItem.getFrom()))
+                .collect(Collectors.toCollection(() -> new ArrayList<>(changeItems.size())));
 
-    @Override
-    public EventMatcherType getEventMatcher() {
-        return eventMatcher;
-    }
-
-    public Issue getIssue() {
-        return issueEvent.getIssue();
-    }
-
-    public ApplicationUser getActor() {
-        return issueEvent.getUser();
-    }
-
-    public static class Builder {
-        private EventMatcherType eventMatcher;
-        private IssueEvent issueEvent;
-
-        public Builder() {
-        }
-
-        public Builder setEventMatcher(EventMatcherType eventMatcher) {
-            this.eventMatcher = eventMatcher;
-            return this;
-        }
-
-        public Builder setIssueEvent(IssueEvent issueEvent) {
-            this.issueEvent = issueEvent;
-            return this;
-        }
-
-        public DefaultJiraIssueEvent build() {
-            return new DefaultJiraIssueEvent(eventMatcher, issueEvent);
-        }
+        return new DefaultJiraIssueEvent(eventMatcher, issueChangedEvent.getAuthor(), issueChangedEvent.getIssue(),
+                issueChangedEvent.getComment(), changeLog);
     }
 }

@@ -1,12 +1,12 @@
 package com.atlassian.jira.plugins.slack.service.issuefilter.impl;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
-import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.plugins.slack.bridge.jql.JqlSearcher;
 import com.atlassian.jira.plugins.slack.model.EventFilterType;
+import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.service.issuefilter.IssueFilter;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.query.Query;
@@ -39,9 +39,9 @@ public class JqlIssueFilter implements IssueFilter {
     }
 
     @Override
-    public boolean apply(final IssueEvent event, final @NotNull String value) {
+    public boolean apply(final JiraIssueEvent event, final @NotNull String value) {
         try {
-            return matchesJql(value, event.getIssue(), Optional.ofNullable(event.getUser()));
+            return matchesJql(value, event.getIssue(), event.getEventAuthor());
         } catch (SearchException e) {
             log.warn(" Search exception trying to match jql [{}] over issue []", value, event.getIssue().getId());
         }

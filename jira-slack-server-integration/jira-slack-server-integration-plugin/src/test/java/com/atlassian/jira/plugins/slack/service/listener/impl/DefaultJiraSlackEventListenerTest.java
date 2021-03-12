@@ -1,7 +1,6 @@
 package com.atlassian.jira.plugins.slack.service.listener.impl;
 
 import com.atlassian.event.api.EventPublisher;
-import com.atlassian.jira.bulkedit.operation.BulkEditTaskContext;
 import com.atlassian.jira.event.issue.DelegatingJiraIssueEvent;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.event.issue.IssueEventBundle;
@@ -20,8 +19,6 @@ import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.plugins.slack.settings.JiraSettingsService;
-import com.atlassian.jira.task.TaskDescriptor;
-import com.atlassian.jira.task.TaskManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
@@ -140,10 +137,9 @@ public class DefaultJiraSlackEventListenerTest {
         verify(sendNotificationTask).call();
 
         DefaultJiraIssueEvent defaultJiraIssueEvent = eventCaptor3.getValue();
-        assertThat(defaultJiraIssueEvent.getActor(), sameInstance(applicationUser));
         assertThat(defaultJiraIssueEvent.getEventMatcher(), sameInstance(EventMatcherType.ISSUE_UPDATED));
         assertThat(defaultJiraIssueEvent.getIssue(), sameInstance(issue));
-        assertThat(defaultJiraIssueEvent.getIssueEvent(), sameInstance(issueEvent));
+        assertThat(defaultJiraIssueEvent.getEventAuthor().get(), sameInstance(applicationUser));
 
         assertThat(notInfoCaptor.getValue(), containsInAnyOrder(notificationInfo1, notificationInfo2));
 
@@ -164,7 +160,7 @@ public class DefaultJiraSlackEventListenerTest {
 
         target.issueEvent(issueEventBundle);
 
-        verify(issueEventToEventMatcherTypeConverter, never()).match(any());
+        verify(issueEventToEventMatcherTypeConverter, never()).match(any(IssueEvent.class));
         verify(taskBuilder, never()).newSendNotificationTask(any(), anyList(), any());
     }
 

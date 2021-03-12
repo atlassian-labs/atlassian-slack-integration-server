@@ -1,6 +1,5 @@
 package com.atlassian.jira.plugins.slack.service.notification.impl;
 
-import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.comments.Comment;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
@@ -25,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
@@ -90,8 +90,8 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
             final JiraIssueEvent jiraIssueEvent,
             final NotificationInfo notificationInfo
     ) throws IOException {
-        final Issue issue = jiraIssueEvent.getIssueEvent().getIssue();
-        final String userLink = attachmentHelper.userLink(jiraIssueEvent.getIssueEvent().getUser());
+        final Issue issue = jiraIssueEvent.getIssue();
+        final String userLink = attachmentHelper.userLink(jiraIssueEvent.getEventAuthor().orElse(null));
         final String issueType = Objects.requireNonNull(issue.getIssueType()).getName();
         final String issueTypeArticle = issueType.toLowerCase().matches("[aeiou].*")
                 ? i18nResolver.getText("jira.slack.card.notification.issue.type.article.an")
@@ -137,10 +137,10 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
                     public ChatPostMessageRequestBuilder visitTransitioned() {
                         final Optional<String> oldStatusOptional =
                                 getChanges(
-                                        jiraIssueEvent.getIssueEvent(),
+                                        jiraIssueEvent.getChangeLog(),
                                         Collections.singleton(ChangeLogExtractor.STATUS_FIELD_NAME)
                                 ).stream()
-                                        .map(ChangeLogItem::getOldText)
+                                        .map(change -> change.getOldTextTruncated(FIELD_VALUE_MAX_LENGTH))
                                         .filter(StringUtils::isNotBlank)
                                         .findFirst();
 
@@ -169,7 +169,7 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
 
                     @Override
                     public ChatPostMessageRequestBuilder visitCommented() {
-                        final Comment comment = jiraIssueEvent.getIssueEvent().getComment();
+                        final Comment comment = jiraIssueEvent.getComment().orElse(null);
                         String text = i18nResolver.getText(
                                 isCommentUpdated(comment)
                                         ? "jira.slack.card.notification.event.comment.updated"
@@ -179,8 +179,9 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
                                 issueType,
                                 isExtendedVerbosity ? "" : attachmentHelper.issueLink(issue)
                         );
+                        String commentBody = comment != null ? comment.getBody() : "";
                         return ChatPostMessageRequest.builder()
-                                .text(isExtendedVerbosity ? text : text + String.format(": _%s_", comment.getBody()))
+                                .text(isExtendedVerbosity ? text : text + String.format(": _%s_", commentBody))
                                 .mrkdwn(true)
                                 .attachments(buildAttachments(isExtendedVerbosity,
                                         () -> attachmentHelper.buildCommentAttachment(null, issue, comment)));
@@ -190,7 +191,7 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
                     public ChatPostMessageRequestBuilder visitAssignmentChanged() {
                         final Optional<ChangeLogItem> changes =
                                 getChanges(
-                                        jiraIssueEvent.getIssueEvent(),
+                                        jiraIssueEvent.getChangeLog(),
                                         Collections.singleton(ChangeLogExtractor.ASSIGNEE_FIELD_NAME)
                                 ).stream().findAny();
                         if (!changes.isPresent()) {
@@ -260,7 +261,11 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
         }
     }
 
-    private boolean isCommentUpdated(final Comment comment) {
+    private boolean isCommentUpdated(final @Nullable Comment comment) {
+        if (comment == null) {
+            return false;
+        }
+
         Date commentCreated = comment.getCreated();
         Date commentUpdated = comment.getUpdated();
         // This is the best thing we have to tell a new comment from an update to an existing one.
@@ -268,18 +273,18 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
     }
 
     private List<Field> createUpdateFields(final JiraIssueEvent jiraIssueEvent) {
-        return getChanges(jiraIssueEvent.getIssueEvent(), Collections.emptySet()).stream()
+        return getChanges(jiraIssueEvent.getChangeLog(), Collections.emptySet()).stream()
                 .filter(c -> !c.getField().equals(ChangeLogExtractor.ASSIGNEE_FIELD_NAME))
-                .map(c -> Field.builder()
-                        .title(c.getFieldName())
-                        .value(c.getNewText())
-                        .valueShortEnough(c.getNewText().length() <= 15)
+                .map(change -> Field.builder()
+                        .title(change.getField())
+                        .value(change.getNewTextTruncated(FIELD_VALUE_MAX_LENGTH))
+                        .valueShortEnough(change.getNewText().length() <= 15)
                         .build())
                 .collect(Collectors.toList());
     }
 
-    private List<ChangeLogItem> getChanges(final IssueEvent issueEvent, final Set<String> fields) {
-        return changeLogExtractor.getChanges(issueEvent, FIELD_VALUE_MAX_LENGTH).stream()
+    private List<ChangeLogItem> getChanges(final List<ChangeLogItem> changeLog, final Set<String> fields) {
+        return changeLog.stream()
                 .filter(changeLogItem -> !Strings.isNullOrEmpty(changeLogItem.getNewText()) &&
                         (fields.isEmpty() || fields.contains(changeLogItem.getField())))
                 .collect(Collectors.toList());

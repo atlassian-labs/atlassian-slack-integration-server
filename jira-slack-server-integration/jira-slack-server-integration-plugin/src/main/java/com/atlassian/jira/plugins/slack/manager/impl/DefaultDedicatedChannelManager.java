@@ -2,7 +2,6 @@ package com.atlassian.jira.plugins.slack.manager.impl;
 
 import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
-import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.comments.Comment;
 import com.atlassian.jira.permission.ProjectPermissions;
@@ -95,9 +94,8 @@ public class DefaultDedicatedChannelManager extends AutoSubscribingEventListener
         }
 
         // restricted comments notification should not be sent to dedicated channels
-        final IssueEvent issueEvent = event.getIssueEvent();
-        final Comment comment = issueEvent.getComment();
-        final Issue issue = issueEvent.getIssue();
+        final Comment comment = event.getComment().orElse(null);
+        final Issue issue = event.getIssue();
         final boolean isRestrictedComment = eventMatcher == EventMatcherType.ISSUE_COMMENTED && CommentUtil.isRestricted(comment);
         if (isRestrictedComment && !projectConfigurationManager.shouldSendRestrictedCommentsToDedicatedChannels(issue.getProjectObject())) {
             return Optional.empty();
