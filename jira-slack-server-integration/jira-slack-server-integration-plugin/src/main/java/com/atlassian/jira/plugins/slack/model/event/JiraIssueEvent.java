@@ -18,4 +18,5 @@ public interface JiraIssueEvent extends PluginEvent {
     Issue getIssue();
     Optional<Comment> getComment();
     List<ChangeLogItem> getChangeLog();
+    String getSource();
 }

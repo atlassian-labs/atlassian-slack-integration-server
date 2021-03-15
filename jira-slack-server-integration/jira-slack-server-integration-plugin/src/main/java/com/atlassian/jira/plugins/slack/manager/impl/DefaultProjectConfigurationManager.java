@@ -258,6 +258,9 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
                 .stream()
                 .filter(config -> CONFIGURATION_OWNER.equals(config.getName()))
                 .map(ProjectConfiguration::getValue)
+                // users report that sometimes project configurations don't have an owner; it caused an exception here
+                // using a null check here leads to an empty Optional being returned, that allows to handle that case gracefully
+                .filter(Objects::nonNull)
                 .findAny();
     }
 

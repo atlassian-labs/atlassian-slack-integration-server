@@ -1,6 +1,5 @@
 package com.atlassian.jira.plugins.slack.service.notification.impl;
 
-import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.MutableIssue;
 import com.atlassian.jira.issue.comments.Comment;
 import com.atlassian.jira.issue.issuetype.IssueType;
@@ -31,20 +30,20 @@ import org.mockito.junit.MockitoRule;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 public class JiraIssueEventRendererTest {
     @Mock
     private I18nResolver i18nResolver;
-    @Mock
-    private ChangeLogExtractor changeLogExtractor;
     @Mock
     private AttachmentHelper attachmentHelper;
     @Mock
@@ -120,8 +119,9 @@ public class JiraIssueEventRendererTest {
         when(i18nResolver.getText("jira.slack.card.notification.event.updated", "ulink", "a", "Bug", "")).thenReturn("txt");
         when(attachmentHelper.buildIssueAttachment(null, issue, Collections.singletonList(f))).thenReturn(attachment);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_UPDATED);
-        when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
+        when(jiraIssueEvent.getChangeLog()).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getNewText()).thenReturn("N");
+        when(changeLogItem.getNewTextTruncated(anyInt())).thenReturn("N");
         when(changeLogItem.getField()).thenReturn("F");
 
         SlackNotification notif = testRender(Verbosity.EXTENDED);
@@ -139,9 +139,11 @@ public class JiraIssueEventRendererTest {
                 "", "OLD", "S")).thenReturn("txt");
         when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_TRANSITIONED);
-        when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
+        when(jiraIssueEvent.getChangeLog()).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getOldText()).thenReturn("OLD");
+        when(changeLogItem.getOldTextTruncated(anyInt())).thenReturn("OLD");
         when(changeLogItem.getNewText()).thenReturn("N");
+        when(changeLogItem.getNewTextTruncated(anyInt())).thenReturn("N");
         when(changeLogItem.getField()).thenReturn(ChangeLogExtractor.STATUS_FIELD_NAME);
 
         SlackNotification notif = testRender(Verbosity.EXTENDED);
@@ -159,7 +161,7 @@ public class JiraIssueEventRendererTest {
                 .thenReturn("txt");
         when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_TRANSITIONED);
-        when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
+        when(jiraIssueEvent.getChangeLog()).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getOldText()).thenReturn("");
         when(changeLogItem.getNewText()).thenReturn("N");
         when(changeLogItem.getField()).thenReturn(ChangeLogExtractor.STATUS_FIELD_NAME);
@@ -226,7 +228,7 @@ public class JiraIssueEventRendererTest {
                 "olink", "nlink")).thenReturn("txt");
         when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_ASSIGNMENT_CHANGED);
-        when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
+        when(jiraIssueEvent.getChangeLog()).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getField()).thenReturn(ChangeLogExtractor.ASSIGNEE_FIELD_NAME);
         when(changeLogItem.getOldValue()).thenReturn("OLDV");
         when(changeLogItem.getNewValue()).thenReturn("NEWV");
@@ -249,7 +251,7 @@ public class JiraIssueEventRendererTest {
                 .thenReturn("txt");
         when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_ASSIGNMENT_CHANGED);
-        when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
+        when(jiraIssueEvent.getChangeLog()).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getField()).thenReturn(ChangeLogExtractor.ASSIGNEE_FIELD_NAME);
         when(changeLogItem.getOldValue()).thenReturn("");
         when(changeLogItem.getNewValue()).thenReturn("NEWV");
@@ -270,7 +272,7 @@ public class JiraIssueEventRendererTest {
                 .thenReturn("txt");
         when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_ASSIGNMENT_CHANGED);
-        when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
+        when(jiraIssueEvent.getChangeLog()).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getField()).thenReturn(ChangeLogExtractor.ASSIGNEE_FIELD_NAME);
         when(changeLogItem.getOldValue()).thenReturn("OLDV");
         when(changeLogItem.getNewValue()).thenReturn(null);
@@ -291,7 +293,7 @@ public class JiraIssueEventRendererTest {
                 .thenReturn("txt");
         when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
         when(jiraIssueEvent.getEventMatcher()).thenReturn(EventMatcherType.ISSUE_ASSIGNMENT_CHANGED);
-        when(changeLogExtractor.getChanges(ArgumentMatchers.any(), eq(1000))).thenReturn(Collections.singletonList(changeLogItem));
+        when(jiraIssueEvent.getChangeLog()).thenReturn(Collections.singletonList(changeLogItem));
         when(changeLogItem.getField()).thenReturn(ChangeLogExtractor.ASSIGNEE_FIELD_NAME);
         when(changeLogItem.getOldValue()).thenReturn(null);
         when(changeLogItem.getNewValue()).thenReturn(null);
@@ -305,8 +307,9 @@ public class JiraIssueEventRendererTest {
     }
 
     private SlackNotification testRender(final Verbosity verbosity) {
-        IssueEvent issueEvent = new IssueEvent(issue, applicationUser, comment, null, null, Collections.emptyMap(), 1L);
         when(jiraIssueEvent.getIssue()).thenReturn(issue);
+        when(jiraIssueEvent.getComment()).thenReturn(Optional.of(comment));
+        when(jiraIssueEvent.getEventAuthor()).thenReturn(Optional.of(applicationUser));
         when(notificationInfo.getLink()).thenReturn(link);
         when(notificationInfo.getChannelId()).thenReturn("C");
         when(notificationInfo.getResponseUrl()).thenReturn("url");
