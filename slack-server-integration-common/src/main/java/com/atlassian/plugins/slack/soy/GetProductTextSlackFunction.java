@@ -6,12 +6,13 @@ import com.atlassian.soy.renderer.JsExpression;
 import com.atlassian.soy.renderer.SoyClientFunction;
 import com.atlassian.soy.renderer.SoyServerFunction;
 import com.atlassian.templaterenderer.JavaScriptEscaper;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Text function that sends the display name of the app as a first parameter
@@ -43,7 +44,7 @@ public class GetProductTextSlackFunction implements SoyClientFunction, SoyServer
 
     @Override
     public String getName() {
-        return "getProductText";
+        return "getProductTextSlack";
     }
 
     @Override
@@ -97,17 +98,16 @@ public class GetProductTextSlackFunction implements SoyClientFunction, SoyServer
     }
 
     private String getI18NText(final Object... args) {
-        final String key = String.valueOf(args[0]);
+        final String messageKey = String.valueOf(args[0]);
         final String displayName = applicationProperties.getDisplayName();
-        final int argCount = args.length;
-        if (argCount > 1) {
-            Serializable[] augmentedArgs = new Serializable[argCount];
-            System.arraycopy(args, 0, augmentedArgs, 0, argCount);
-            augmentedArgs[0] = displayName;
-            return i18nResolver.getText(key, augmentedArgs);
-        } else {
-            return i18nResolver.getText(key, displayName);
-        }
-    }
 
+        String[] resolverArgs = Stream.of(args)
+                .map(String::valueOf)
+                .map(StringEscapeUtils::escapeHtml4)
+                .toArray(String[]::new);
+        // 0th parameter is message key; override it with product name in arguments list
+        resolverArgs[0] = StringEscapeUtils.escapeHtml4(displayName);
+
+        return i18nResolver.getText(messageKey, resolverArgs);
+    }
 }
