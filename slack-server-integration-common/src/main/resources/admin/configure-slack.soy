@@ -55,7 +55,7 @@
     {param type:'error' /}
     {param title: getText('plugins.slack.admin.error') /}
     {param content}
-        {getProductText('plugins.slack.admin.error.message') }
+        {getProductTextSlack('plugins.slack.admin.error.message') }
         <p>{getText('plugins.slack.admin.error.message.workaround')}</p>
     {/param}
 {/call}
@@ -68,7 +68,7 @@
     {param type:'error' /}
     {param title: getText('plugins.slack.admin.uninstallError') /}
     {param content}
-        {getProductText('plugins.slack.admin.uninstallError.message.connection') }
+        {getProductTextSlack('plugins.slack.admin.uninstallError.message.connection') }
     {/param}
 {/call}
 {/template}
@@ -120,7 +120,7 @@
  */
 {template .removeLinkMessage}
     <div class='remove-link-message'>
-        {getProductText('plugins.slack.admin.disconnect.team.message.html')|noAutoescape}
+        {getProductTextSlack('plugins.slack.admin.disconnect.team.message.html')|noAutoescape}
     </div>
 {/template}
 
@@ -136,7 +136,7 @@
                 <span class="aui-icon aui-icon-small aui-iconfont-warning slack-failure-marker"></span> {getText('plugins.slack.admin.server.not.visible')}
             </p>
             <p class="details">
-                {getProductText('plugins.slack.admin.server.not.visible.detail')}
+                {getProductTextSlack('plugins.slack.admin.server.not.visible.detail')}
             </p>
         </div>
     </div>

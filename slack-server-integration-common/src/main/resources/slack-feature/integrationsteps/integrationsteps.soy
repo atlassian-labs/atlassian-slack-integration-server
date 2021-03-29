@@ -99,7 +99,7 @@
             {call Slack.Templates.Configuration.ConnectionStatus.status}
                 {param label: getText('plugins.slack.admin.connection.status.short.title') /}
             {/call}
-            {getProductText('plugins.slack.admin.installed.detail.html', $link.teamName, $link.teamId)|noAutoescape}
+            {getProductTextSlack('plugins.slack.admin.installed.detail.html', $link.teamName, $link.teamId)|noAutoescape}
         </div>
     </li>
 {/template}
