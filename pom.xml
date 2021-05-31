@@ -130,12 +130,6 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.6</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.github.seratch</groupId>
                 <artifactId>jslack</artifactId>
                 <version>${jslack.version}</version>
