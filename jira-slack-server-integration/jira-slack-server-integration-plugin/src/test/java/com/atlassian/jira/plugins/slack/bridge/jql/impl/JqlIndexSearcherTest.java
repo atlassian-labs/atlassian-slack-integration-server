@@ -1,6 +1,7 @@
 package com.atlassian.jira.plugins.slack.bridge.jql.impl;
 
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.index.IssueIndexingParams;
 import com.atlassian.jira.issue.index.IssueIndexingService;
 import com.atlassian.jira.issue.search.SearchProvider;
 import com.atlassian.jira.issue.search.SearchQuery;
@@ -51,7 +52,7 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, applicationUser, query);
 
         assertThat(result, is(true));
-        verify(indexingService).reIndex(issue);
+        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 
     @Test
@@ -61,7 +62,7 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, applicationUser, query);
 
         assertThat(result, is(false));
-        verify(indexingService).reIndex(issue);
+        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 
     @Test
@@ -71,7 +72,7 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, null, query);
 
         assertThat(result, is(true));
-        verify(indexingService).reIndex(issue);
+        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 
     @Test
@@ -81,6 +82,6 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, null, query);
 
         assertThat(result, is(false));
-        verify(indexingService).reIndex(issue);
+        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 }

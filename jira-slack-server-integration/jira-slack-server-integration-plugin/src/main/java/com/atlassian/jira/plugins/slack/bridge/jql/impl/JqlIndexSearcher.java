@@ -2,6 +2,7 @@ package com.atlassian.jira.plugins.slack.bridge.jql.impl;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.index.IndexException;
+import com.atlassian.jira.issue.index.IssueIndexingParams;
 import com.atlassian.jira.issue.index.IssueIndexingService;
 import com.atlassian.jira.issue.index.ThreadLocalSearcherCache;
 import com.atlassian.jira.issue.search.SearchException;
@@ -71,7 +72,7 @@ public class JqlIndexSearcher implements JqlSearcher {
         ImportUtils.setIndexIssues(true);
 
         try {
-            indexingService.reIndex(issue);
+            indexingService.reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
         } catch (IndexException e) {
             log.error("An error occurred during the issue {} reindex", issue.getId(), e);
         } finally {
