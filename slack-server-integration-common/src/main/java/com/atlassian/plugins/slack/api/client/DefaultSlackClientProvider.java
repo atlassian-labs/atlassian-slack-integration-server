@@ -42,6 +42,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
     // if timeout is less than the time during which Slack tries to load an image, exception is thrown,
     // BackoffRetryInterceptor performs the request again, with the same result causing up to 8 duplicates
     private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = 15 * 1000;
+    private static final int DEFAULT_WRITE_TIMEOUT_MILLISECONDS = 120 * 1000;
 
     private final SlackLinkManager slackLinkManager;
     private final SlackUserManager slackUserManager;
@@ -51,6 +52,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
     private final boolean retryOnConnectionFailure;
     private final Integer connectionTimeout;
     private final Integer readTimeout;
+    private final Integer writeTimeout;
     private final Integer pingInterval;
     private final boolean forceHttp1;
     private final ExecutorServiceHelper executorServiceHelper;
@@ -81,6 +83,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
         retryOnConnectionFailure = Boolean.valueOf(System.getProperty("slack.client.retry.on.connection.failure", "true"));
         connectionTimeout = Integer.getInteger("slack.client.connect.timeout", DEFAULT_CONNECT_TIMEOUT_MILLISECONDS);
         readTimeout = Integer.getInteger("slack.client.read.timeout", DEFAULT_READ_TIMEOUT_MILLISECONDS);
+        writeTimeout = Integer.getInteger("slack.client.write.timeout", DEFAULT_WRITE_TIMEOUT_MILLISECONDS);
         pingInterval = Integer.getInteger("slack.client.ping.interval", 0);
         forceHttp1 = Boolean.valueOf(System.getProperty("slack.client.force.http1", "false"));
     }
@@ -165,6 +168,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
                     .retryOnConnectionFailure(retryOnConnectionFailure)
                     .connectTimeout(connectionTimeout, TimeUnit.MILLISECONDS)
                     .readTimeout(readTimeout, TimeUnit.MILLISECONDS)
+                    .writeTimeout(writeTimeout, TimeUnit.MILLISECONDS)
                     .proxyAuthenticator(createProxyAuthenticator())
                     // https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/-builder/ping-interval/
                     .pingInterval(pingInterval, TimeUnit.MILLISECONDS);
