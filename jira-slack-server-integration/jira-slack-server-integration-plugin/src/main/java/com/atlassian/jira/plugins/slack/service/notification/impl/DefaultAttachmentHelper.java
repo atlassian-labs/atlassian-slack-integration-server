@@ -7,6 +7,7 @@ import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.IssueConstant;
 import com.atlassian.jira.issue.comments.Comment;
 import com.atlassian.jira.plugins.slack.service.notification.AttachmentHelper;
+import com.atlassian.jira.plugins.slack.util.CommentUtil;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
@@ -37,6 +38,7 @@ public class DefaultAttachmentHelper implements AttachmentHelper {
     private final I18nResolver i18nResolver;
     private final AvatarService avatarService;
     private final I18nHelper i18nHelper;
+  //  private CommentUtil commentUtil;
 
     private final SlackSettingService slackSettingService;
 
@@ -103,6 +105,7 @@ public class DefaultAttachmentHelper implements AttachmentHelper {
 
     @Override
     public Attachment buildCommentAttachment(final String pretext, final Issue issue, final Comment comment) {
+        String cleanCommentBody = CommentUtil.removeJiraTags(comment.getBody());
         return Attachment.builder()
                 .pretext(pretext)
                 .title(i18nResolver.getText("jira.slack.card.notification.issue.title", issue.getKey(), issue.getSummary()))
@@ -112,7 +115,7 @@ public class DefaultAttachmentHelper implements AttachmentHelper {
                         .build()
                         .toString(), "comment"))
                 .fallback(issue.getKey() + ": " + defaultString(pretext))
-                .text(comment.getBody())
+                .text(cleanCommentBody)
                 .footer(footerText(issue.getProjectObject()))
                 .footerIcon(projectIcon(issue.getProjectObject()))
                 .color("#2684FF")
