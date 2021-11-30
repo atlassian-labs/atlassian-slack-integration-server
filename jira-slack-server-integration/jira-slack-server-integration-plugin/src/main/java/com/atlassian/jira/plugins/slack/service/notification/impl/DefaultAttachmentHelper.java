@@ -38,7 +38,6 @@ public class DefaultAttachmentHelper implements AttachmentHelper {
     private final I18nResolver i18nResolver;
     private final AvatarService avatarService;
     private final I18nHelper i18nHelper;
-  //  private CommentUtil commentUtil;
 
     private final SlackSettingService slackSettingService;
 

@@ -13,7 +13,7 @@ public class CommentUtil {
     }
 
     public static String removeJiraTags(final @Nullable String commentBody) {
-        if(commentBody==null) {
+        if (commentBody == null) {
             return "";
         }
         return commentBody
