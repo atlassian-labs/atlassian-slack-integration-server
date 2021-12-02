@@ -9,6 +9,7 @@ import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.AttachmentHelper;
 import com.atlassian.jira.plugins.slack.service.notification.MessageRendererException;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
+import com.atlassian.jira.plugins.slack.util.CommentUtil;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogItem;
 import com.atlassian.jira.user.util.UserManager;
@@ -179,8 +180,9 @@ public class JiraIssueEventRenderer extends AbstractEventRenderer<JiraIssueEvent
                                 isExtendedVerbosity ? "" : attachmentHelper.issueLink(issue)
                         );
                         String commentBody = comment != null ? comment.getBody() : "";
+                        String cleanCommentBody = CommentUtil.removeJiraTags(commentBody);
                         return ChatPostMessageRequest.builder()
-                                .text(isExtendedVerbosity ? text : text + String.format(": _%s_", commentBody))
+                                .text(isExtendedVerbosity ? text : text + String.format(": _%s_", cleanCommentBody))
                                 .mrkdwn(true)
                                 .attachments(buildAttachments(isExtendedVerbosity,
                                         () -> attachmentHelper.buildCommentAttachment(null, issue, comment)));

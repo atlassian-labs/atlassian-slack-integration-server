@@ -1,42 +1,51 @@
 package com.atlassian.jira.plugins.slack.util;
 
-
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertEquals;
 
 class CommentUtilTest {
-
-    @Test
-    void testRemoveJiraTagsRemovesValidTags() {
-        assertEquals("Some text with a title",
-                CommentUtil.removeJiraTags("{panel:title=My Title}Some text with a title{panel}"));
-        assertEquals("look ma, red text!",
-                CommentUtil.removeJiraTags("{color:red}look ma, red text!{color}"));
-        assertEquals("here is quotable content to be quoted",
-                CommentUtil.removeJiraTags("{quote}here is quotable content to be quoted{quote}"));
-        assertEquals("preformatted piece",
-                CommentUtil.removeJiraTags("{noformat}preformatted piece{noformat}"));
-        assertEquals("some text",
-                CommentUtil.removeJiraTags("{code:title=Bar.java|borderStyle=solid}some text{code}"));
+    @ParameterizedTest
+    @MethodSource("validTagsProvider")
+    void testRemoveJiraTagsRemovesValidTags(String argument) {
+        assertEquals("some text", CommentUtil.removeJiraTags(argument));
     }
 
+    static Stream<String> validTagsProvider() {
+        return Stream.of("{panel:title=My Title}some text{panel}",
+                "{color:red}some text{color}",
+                "{quote}some text{quote}",
+                "{noformat}some text{noformat}",
+                "{code:title=Bar.java|borderStyle=solid}some text{code}");
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidTagsProvider")
+    void testRemoveJiraTagsDoesNotRemoveInvalidTags(String argument) {
+        assertEquals(argument, CommentUtil.removeJiraTags(argument));
+    }
+
+    static Stream<String> invalidTagsProvider() {
+        return Stream.of("{panell:title=My Title}some text{panell}",
+                "{colr:red}some text{colrr}",
+                "{quote }some text{quotee}",
+                "{noformat:}some text{noformat:}",
+                "{code :title=Bar.java|borderStyle=solid}some text{cod}");
+    }
 
     @Test
-    void testRemoveJiraTagsDoesNotRemoveInvalidTags() {
-        assertEquals("{panell:title=My Title}Some text with a title",
-                CommentUtil.removeJiraTags("{panell:title=My Title}Some text with a title{panel}"));
-        assertEquals("{color }look ma, red text!",
-                CommentUtil.removeJiraTags("{color }look ma, red text!{color}"));
-        assertEquals("here is quotable content to be quoted{q1uote}",
-                CommentUtil.removeJiraTags("{quote}here is quotable content to be quoted{q1uote}"));
-        assertEquals("{noformat:}preformatted piece",
-                CommentUtil.removeJiraTags("{noformat:}preformatted piece{noformat}"));
-        assertEquals("some text{coode}",
-                CommentUtil.removeJiraTags("{code:title=Bar.java|borderStyle=solid}some text{coode}"));
-        assertEquals("{notsupperted}message{notsupported}",
-                CommentUtil.removeJiraTags("{notsupperted}message{notsupported}"));
-        assertEquals("", CommentUtil.removeJiraTags(null));
+    @Timeout(value = 1, unit = TimeUnit.SECONDS)
+    void test_this() {
+        assertEquals("{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}text",
+                CommentUtil.removeJiraTags("{{{{{{{{{{{{{{{{{{{{{{{{color}}}}}}}}}}}}}}}}}}}}}}}}}text"));
+        assertEquals("{quote{quote{quote{quote{quote{quote{quote{quote}}}}}text",
+                CommentUtil.removeJiraTags("{quote{quote{quote{quote{quote{quote{quote{quote{quote}}}}}}text{quote}"));
     }
 
 }
