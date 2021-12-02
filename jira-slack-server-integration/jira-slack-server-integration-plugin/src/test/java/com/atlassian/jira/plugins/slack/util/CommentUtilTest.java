@@ -41,7 +41,7 @@ class CommentUtilTest {
 
     @Test
     @Timeout(value = 1, unit = TimeUnit.SECONDS)
-    void test_this() {
+    void testRemoveJiraTagsMatchesComplexInputFastEnough() {
         assertEquals("{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}text",
                 CommentUtil.removeJiraTags("{{{{{{{{{{{{{{{{{{{{{{{{color}}}}}}}}}}}}}}}}}}}}}}}}}text"));
         assertEquals("{quote{quote{quote{quote{quote{quote{quote{quote}}}}}text",
