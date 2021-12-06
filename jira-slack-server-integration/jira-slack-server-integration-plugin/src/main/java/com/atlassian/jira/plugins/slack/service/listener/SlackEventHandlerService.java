@@ -185,13 +185,15 @@ public class SlackEventHandlerService {
                 log.debug("Skipping link unfurling for issue {}", key);
                 continue;
             }
-
+            final boolean isProjectAutoConvertEnabled = projectConfigurationManager.isProjectAutoConvertEnabled(issue.getProjectObject());
             // user will get just one invite even if there are multiple issue references in the message
             boolean isUserAllowedToSeeIssue = true;
             if (!isSenderAllowedToSeeIssue(message.getChannelId(), slackUser, issue)) {
                 if (!isInvitationToUserSent && !slackUser.isPresent()) {
-                    inviteUserToConnectToSlack(message, issue);
-                    isInvitationToUserSent = true;
+                    if (isProjectAutoConvertEnabled) {
+                        inviteUserToConnectToSlack(message, issue);
+                        isInvitationToUserSent = true;
+                    }
                 }
                 isUserAllowedToSeeIssue = false;
             }
@@ -215,7 +217,7 @@ public class SlackEventHandlerService {
             if (!message.isMessageEdit() || !previousIssueKeys.contains(key)) {
                 final Optional<DedicatedChannel> dedicatedChannel = dedicatedChannelManager.getDedicatedChannel(issue);
 
-                final boolean isProjectAutoConvertEnabled = projectConfigurationManager.isProjectAutoConvertEnabled(issue.getProjectObject());
+
                 if (isProjectAutoConvertEnabled && !isMutedExternallyShared && isUserAllowedToSeeIssue) {
                     hasFoundAnyIssue = true;
 

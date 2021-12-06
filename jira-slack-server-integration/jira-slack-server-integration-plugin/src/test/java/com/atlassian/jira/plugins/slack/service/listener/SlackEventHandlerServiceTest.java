@@ -352,6 +352,7 @@ public class SlackEventHandlerServiceTest {
         when(issueManager.getIssueByCurrentKey("ISS-1")).thenReturn(issue1);
         when(issue1.getProjectId()).thenReturn(7L);
         when(issue1.getKey()).thenReturn("K");
+        when(issue1.getProjectObject()).thenReturn(project);
 
         when(taskBuilder.newDirectMessageTask(unauthorizedUnfurlEventArgumentCaptor.capture(), notificationInfoCaptor.capture()))
                 .thenReturn(directMessageTask);
@@ -360,6 +361,7 @@ public class SlackEventHandlerServiceTest {
         when(taskBuilder.newProcessIssueMentionTask(issue1, message)).thenReturn(processIssueMentionTask);
         when(analyticsContextProvider.byTeamIdAndSlackUserId("T", "U")).thenReturn(context);
         when(context.getTeamId()).thenReturn("T");
+        when(projectConfigurationManager.isProjectAutoConvertEnabled(project)).thenReturn(true);
 
         boolean result = target.handleMessage(message);
 
