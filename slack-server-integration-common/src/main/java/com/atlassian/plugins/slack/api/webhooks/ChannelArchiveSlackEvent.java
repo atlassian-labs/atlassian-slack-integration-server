@@ -8,42 +8,61 @@ import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 /*
 https://api.slack.com/events/channel_archive
 {
-    "token": "XXXXXXXXXXXXXYYYYYYYYYYY",
-    "team_id": "TXXXXXXXX",
-    "api_app_id": "AXXXXXXXX",
+    "api_app_id": "A00T0R11P66",
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "is_bot": true,
+            "is_enterprise_install": false,
+            "team_id": "TT0EEPP4R",
+            "user_id": "U11PIPLPPSM"
+        }
+    ],
     "event": {
-        "type": "channel_archive",
-        "channel": "CGLHJQR8F",
-        "user": "UFXXXXXXX",
-        "is_moved": 0,
-        "event_ts": "1551444460.022100"
+        "channel": "C10P0P00303",
+        "channel_type": "group",
+        "event_ts": "1020050100.110110",
+        "subtype": "channel_archive",
+        "text": "archived the channel",
+        "ts": "1080020003.110010",
+        "type": "message",
+        "user": "U00TPRPIPPA"
     },
-    "type": "event_callback",
-    "event_id": "EvGL0NLP97",
-    "event_time": 1551444460,
-    "authed_users": [
-        "UFXXXXXXX"
-    ]
+    "event_context": "4-tePlwKR8Ne4dy7XjS7QhOSG7dRVkZgVEBsREJDFMDOJcSYDhfGHrIgKDGHTGDbs2KSf4HdKdVxMqQGD4GkVaAgt4KQEtMSGsDn0",
+    "event_id": "Es36PQNZWHSP",
+    "event_time": 1642567283,
+    "is_ext_shared_channel": false,
+    "team_id": "TR6SHGD8R",
+    "token": "dr2FDH3al54fFGWEJHsNdo0u",
+    "type": "event_callback"
 }
 
 https://api.slack.com/events/group_archive
 {
-    "token": "XXXXXXXXXXXXXYYYYYYYYYYY",
-    "team_id": "TXXXXXXXX",
-    "api_app_id": "AXXXXXXXX",
+    "api_app_id": "A55V2K00B66",
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "is_bot": false,
+            "is_enterprise_install": false,
+            "team_id": "TT0EEPP4R",
+            "user_id": "U44GFKJSDPA"
+        }
+    ],
     "event": {
-        "type": "group_archive",
-        "channel": "GXXXXXXXX",
+        "channel": "C43J4N22303",
+        "event_ts": "1626448873.040100",
         "is_moved": 0,
-        "actor_id": "UFXXXXXXX",
-        "event_ts": "1551444358.000100"
+        "type": "group_archive",
+        "user": "U44GFKJSDPA"
     },
-    "type": "event_callback",
-    "event_id": "EvGLHJCFBL",
-    "event_time": 1551444358,
-    "authed_users": [
-        "UFXXXXXXX"
-    ]
+    "event_context": "4-fdXsgVC3Mv3kl2DsK8GaBNV4aKLxOiSDFcKLFDBMNSFkSDFhhEWcOgKGNBMVHss6VKs5LsVaRrCqJKH3DfNmAdf6KLJaBNCsHa0",
+    "event_id": "Ed56SD99KLJB",
+    "event_time": 1638955773,
+    "is_ext_shared_channel": false,
+    "team_id": "TT0EEPP4R",
+    "token": "dk2JJK2vb87dKLDFGHaTcc7u",
+    "type": "event_callback"
 }
 */
 @JsonIgnoreProperties(ignoreUnknown = true)

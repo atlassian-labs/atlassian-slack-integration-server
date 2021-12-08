@@ -9,37 +9,51 @@ import java.util.List;
 /*
 https://api.slack.com/events/link_shared
 {
-    "token": "XXYYZZ",
-    "team_id": "TXXXXXXXX",
-    "api_app_id": "AXXXXXXXXX",
-    "event": {
-        "type": "link_shared",
-        "channel": "Cxxxxxx",
-        "user": "Uxxxxxxx",
-        "message_ts": "123456789.9875",
-        "thread_ts": "123456621.1855",
-        "links": [
-            {
-                "domain": "example.com",
-                "url": "https://example.com/12345"
-            },
-            {
-                "domain": "example.com",
-                "url": "https://example.com/67890"
-            },
-            {
-                "domain": "another-example.com",
-                "url": "https://yet.another-example.com/v/abcde"
-            }
-        ]
-    },
-    "type": "event_callback",
-    "authed_users": [
-        "UXXXXXXX1",
-        "UXXXXXXX2"
+    "api_app_id": "A00T0R11P66",
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "is_bot": true,
+            "is_enterprise_install": false,
+            "team_id": "TT0EEPP4R",
+            "user_id": "U11PIPLPPSM"
+        }
     ],
-    "event_id": "Ev08MFMKH6",
-    "event_time": 123456789
+    "event": {
+        "blocks": [
+            {
+                "block_id": "+sY",
+                "elements": [
+                    {
+                        "elements": [
+                            {
+                                "type": "link",
+                                "url": "https://www.youtube.com/watch?v=xIOjqTRYZwg"
+                            }
+                        ],
+                        "type": "rich_text_section"
+                    }
+                ],
+                "type": "rich_text"
+            }
+        ],
+        "channel": "C10P0P00303",
+        "channel_type": "group",
+        "client_msg_id": "fkj3b7s5-2w33-6n78-d33a-b7782s3v62s0",
+        "event_ts": "1637673397.000700",
+        "team": "TT0EEPP4R",
+        "text": "<https://www.youtube.com/watch?v=xIOjqTRYZwg>",
+        "ts": "1988231397.000700",
+        "type": "message",
+        "user": "U00TPRPIPPA"
+    },
+    "event_context": "4-tePlwKR8Ne4dy7XjS7QhWQL7dRVkZgVEBsREJNBMDOJcSYDhfGHrIgKDGHTGDbs2KSf4HdKdVxMqQGD4GkVaAgt4KQEtMSGsDn0",
+    "event_id": "Es36PQNZWHSP",
+    "event_time": 1465987397,
+    "is_ext_shared_channel": false,
+    "team_id": "TT0EEPP4R",
+    "token": "dr2FDH3al54fFGWEJHsNdo0u",
+    "type": "event_callback"
 }
 */
 @Data

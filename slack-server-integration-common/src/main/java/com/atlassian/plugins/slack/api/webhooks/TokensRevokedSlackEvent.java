@@ -12,23 +12,24 @@ import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 /*
 https://api.slack.com/events/tokens_revoked
 {
-    "token": "XXYYZZ",
-    "team_id": "TXXXXXXXX",
-    "api_app_id": "AXXXXXXXXX",
+    "api_app_id": "A00T0R11P66",
     "event": {
-        "type": "tokens_revoked",
+        "event_ts": "1633245770.103223",
         "tokens": {
-            "oauth": [
-                "UXXXXXXXX"
-            ],
             "bot": [
-                "UXXXXXXXX"
+                "U77KMNSACCM"
+            ],
+            "oauth": [
+                "U22JHNBLDNF"
             ]
-        }
+        },
+        "type": "tokens_revoked"
     },
-    "type": "event_callback",
-    "event_id": "EvXXXXXXXX",
-    "event_time": 1234567890
+    "event_id": "Es36PQNZWHSP",
+    "event_time": 1238349970,
+    "team_id": "TT0EEPP4R",
+    "token": "dr2FDH3al54fFGWEJHsNdo0u",
+    "type": "event_callback"
 }
 */
 @JsonIgnoreProperties(ignoreUnknown = true)

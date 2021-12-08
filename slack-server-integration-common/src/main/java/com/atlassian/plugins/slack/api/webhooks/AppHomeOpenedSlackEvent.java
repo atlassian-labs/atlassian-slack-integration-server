@@ -9,17 +9,32 @@ import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 /*
 https://api.slack.com/events/app_home_opened
 {
-  "token": "XXYYZZ",
-  "team_id": "TXXXXXXXX",
-  "api_app_id": "AXXXXXXXXX",
-  "event": {
     "type": "app_home_opened",
-    "user": "UFXXXXXXX",
-    "channel": "DLX1Z611B"
-  },
-  "type": "event_callback",
-  "event_id": "EvLX1P57NC",
-  "event_time": 1564526855
+    "user": "U061F7AUR",
+    "channel": "D0LAN2Q65",
+    "event_ts": "1515449522000016",
+    "tab": "home",
+    "view": {
+        "id": "VPASKP233",
+        "team_id": "T21312902",
+        "type": "home",
+        "blocks": [
+           ...
+        ],
+        "private_metadata": "",
+        "callback_id": "",
+        "state":{
+            ...
+        },
+        "hash":"1231232323.12321312",
+        "clear_on_close": false,
+        "notify_on_close": false,
+        "root_view_id": "VPASKP233",
+        "app_id": "A21SDS90",
+        "external_id": "",
+        "app_installed_team_id": "T21312902",
+        "bot_id": "BSDKSAO2"
+    }
 }
 */
 @Data

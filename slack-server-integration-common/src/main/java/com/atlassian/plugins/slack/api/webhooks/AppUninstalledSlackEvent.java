@@ -8,15 +8,16 @@ import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 /*
 https://api.slack.com/events/app_uninstalled
 {
-    "token": "XXYYZZ",
-    "team_id": "TXXXXXXXX",
-    "api_app_id": "AXXXXXXXXX",
+    "api_app_id": "A00T0R11P66",
     "event": {
+        "event_ts": "1633245770.103223",
         "type": "app_uninstalled"
     },
-    "type": "event_callback",
-    "event_id": "EvXXXXXXXX",
-    "event_time": 1234567890
+    "event_id": "Es36PQNZWHSP",
+    "event_time": 1238349970,
+    "team_id": "TT0EEPP4R",
+    "token": "dr2FDH3al54fFGWEJHsNdo0u",
+    "type": "event_callback"
 }
 */
 @JsonIgnoreProperties(ignoreUnknown = true)
