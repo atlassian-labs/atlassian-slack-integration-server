@@ -13,45 +13,33 @@ https://api.slack.com/events/link_shared
     "authorizations": [
         {
             "enterprise_id": null,
-            "is_bot": true,
+            "is_bot": false,
             "is_enterprise_install": false,
             "team_id": "TT0EEPP4R",
             "user_id": "U11PIPLPPSM"
         }
     ],
     "event": {
-        "blocks": [
+        "channel": "C10P0P00303",
+        "event_ts": "1638793296.000200",
+        "is_bot_user_member": false,
+        "links": [
             {
-                "block_id": "+sY",
-                "elements": [
-                    {
-                        "elements": [
-                            {
-                                "type": "link",
-                                "url": "https://www.youtube.com/watch?v=xIOjqTRYZwg"
-                            }
-                        ],
-                        "type": "rich_text_section"
-                    }
-                ],
-                "type": "rich_text"
+                "domain": "domain.com",
+                "url": "https://domain.com"
             }
         ],
-        "channel": "C10P0P00303",
-        "channel_type": "group",
-        "client_msg_id": "fkj3b7s5-2w33-6n78-d33a-b7782s3v62s0",
-        "event_ts": "1637673397.000700",
-        "team": "TT0EEPP4R",
-        "text": "<https://www.youtube.com/watch?v=xIOjqTRYZwg>",
-        "ts": "1988231397.000700",
-        "type": "message",
+        "message_ts": "U77HGNBMCLD-fgvh99ae-f8sd-899c-21bv-3kjlmn44l67g2-9nb33d7kjm0cd3e8796f324jhh4f37f7898796432klj1c324561234d73c6563f",
+        "source": "source",
+        "type": "link_shared",
+        "unfurl_id": "U77HGNBMCLD-fgvh99ae-f8sd-899c-21bv-3kjlmn44l67g2-9nb33d7kjm0cd3e8796f324jhh4f37f7898796432klj1c324561234d73c653f",
         "user": "U00TPRPIPPA"
     },
     "event_context": "4-tePlwKR8Ne4dy7XjS7QhWQL7dRVkZgVEBsREJNBMDOJcSYDhfGHrIgKDGHTGDbs2KSf4HdKdVxMqQGD4GkVaAgt4KQEtMSGsDn0",
     "event_id": "Es36PQNZWHSP",
-    "event_time": 1465987397,
+    "event_time": 1639051134,
     "is_ext_shared_channel": false,
-    "team_id": "TT0EEPP4R",
+     "team_id": "TT0EEPP4R",
     "token": "dr2FDH3al54fFGWEJHsNdo0u",
     "type": "event_callback"
 }
