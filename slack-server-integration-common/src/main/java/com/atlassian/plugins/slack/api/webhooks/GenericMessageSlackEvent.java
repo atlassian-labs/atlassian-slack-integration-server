@@ -16,142 +16,51 @@ https://api.slack.com/events/message.im
 https://api.slack.com/events/message.groups
 https://api.slack.com/events/message.channels
 {
-  "token": "XXXXXXXXXXXXYYYYYYYYYYYY",
-  "team_id": "TXXXXXXXX",
-  "api_app_id": "AXXXXXXXX",
-  "event": {
-    "client_msg_id": "853ce7b3-b7ff-4096-b202-c3bbf65c1e4a",
-    "type": "message",
-    "text": "Any message",
-    "user": "UC7LU9ZGS",
-    "ts": "1547500911.010000",
-    "channel": "CF49QEJF4",
-    "event_ts": "1547500911.010000",
-    "channel_type": "channel"
-  },
-  "type": "event_callback",
-  "event_id": "EvFDLP0K7F",
-  "event_time": 1547500911,
-  "authed_users": [
-    "UF36K27BR"
-  ]
-}
-
-{
-  "token": "XXXXXXXXXXXXYYYYYYYYYYYY",
-  "team_id": "TXXXXXXXX",
-  "api_app_id": "AXXXXXXXX",
-  "event": {
-    "type": "message",
-    "deleted_ts": "1547500911.010000",
-    "subtype": "message_deleted",
-    "hidden": true,
-    "channel": "CF49QEJF4",
-    "previous_message": {
-      "type": "message",
-      "user": "UC7LU9ZGS",
-      "text": "Any message",
-      "client_msg_id": "853ce7b3-b7ff-4096-b202-c3bbf65c1e4a",
-      "ts": "1547500911.010000"
+    "api_app_id": "A00T0R11P66",
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "is_bot": true,
+            "is_enterprise_install": false,
+            "team_id": "TT0EEPP4R",
+            "user_id": "U11PIPLPPSM"
+        }
+    ],
+    "event": {
+        "blocks": [
+            {
+                "block_id": "HeN",
+                "elements": [
+                    {
+                        "elements": [
+                            {
+                                "text": "hello",
+                                "type": "text"
+                            }
+                        ],
+                        "type": "rich_text_section"
+                    }
+                ],
+                "type": "rich_text"
+            }
+        ],
+        "channel": "C10P0P00303",
+        "channel_type": "group",
+        "client_msg_id": "fkj3b7s5-2w33-6n78-d33a-b7782s3v62s0",
+        "event_ts": "1638793296.000200",
+        "team": "TT0EEPP4R",
+        "text": "hello",
+        "ts": "1548324796.000200",
+        "type": "message",
+        "user": "U00TPRPIPPA"
     },
-    "event_ts": "1547500951.010100",
-    "ts": "1547500951.010100",
-    "channel_type": "channel"
-  },
-  "type": "event_callback",
-  "event_id": "EvFDLPHL69",
-  "event_time": 1547500951,
-  "authed_users": [
-    "UF36K27BR"
-  ]
-}
-
-{
-  "token": "XXXXXXXXXXXXYYYYYYYYYYYY",
-  "team_id": "TXXXXXXXX",
-  "api_app_id": "AXXXXXXXX",
-  "event": {
-    "type": "message",
-    "message": {
-      "type": "message",
-      "user": "UC7SRSBH7",
-      "text": "PT-2 hahahahahaha db dfvbdffvdfvdfva ad asd",
-      "client_msg_id": "dad77307-b142-462b-85b6-e9f0b0a6dc34",
-      "edited": {
-        "user": "UC7SRSBH7",
-        "ts": "1546645882.000000"
-      },
-      "ts": "1546645707.005000"
-    },
-    "subtype": "message_changed",
-    "hidden": true,
-    "channel": "CF62ZFGFM",
-    "previous_message": {
-      "type": "message",
-      "user": "UC7SRSBH7",
-      "text": "PT-2 hahahahahaha db dfvbdffvdfvdfv",
-      "client_msg_id": "dad77307-b142-462b-85b6-e9f0b0a6dc34",
-      "edited": {
-        "user": "UC7SRSBH7",
-        "ts": "1546645740.000000"
-      },
-      "ts": "1546645707.005000"
-    },
-    "event_ts": "1546645882.005600",
-    "ts": "1546645882.005600",
-    "channel_type": "channel"
-  },
-  "type": "event_callback",
-  "event_id": "EvF6E3KFKK",
-  "event_time": 1546645882,
-  "authed_users": [
-    "UF62SGQP6"
-  ]
-}
-
-
-{
-  "token": "XXXXXXXXXXXXYYYYYYYYYYYY",
-  "team_id": "TXXXXXXXX",
-  "api_app_id": "AXXXXXXXX",
-  "event": {
-    "type": "message",
-    "text": "You have been removed from #testcreate2 by <@UC7SRSBH7>",
-    "user": "USLACKBOT",
-    "ts": "1547268549.000100",
-    "channel": "DF6DMV4KX",
-    "event_ts": "1547268549.000100",
-    "channel_type": "im"
-  },
-  "type": "event_callback",
-  "event_id": "EvFBDY20JC",
-  "event_time": 1547268549,
-  "authed_users": [
-    "UF62SGQP6"
-  ]
-}
-
-{
-  "token": "XXXXXXXXXXXXYYYYYYYYYYYY",
-  "team_id": "TXXXXXXXX",
-  "api_app_id": "AXXXXXXXX",
-  "event": {
-    "user": "UF62SGQP6",
-    "type": "message",
-    "subtype": "channel_join",
-    "ts": "1547268640.003100",
-    "text": "<@UF62SGQP6> has joined the channel",
-    "inviter": "UC7SRSBH7",
-    "channel": "CF662G3JN",
-    "event_ts": "1547268640.003100",
-    "channel_type": "channel"
-  },
-  "type": "event_callback",
-  "event_id": "EvFCC4SBGV",
-  "event_time": 1547268640,
-  "authed_users": [
-    "UF62SGQP6"
-  ]
+    "event_context": "4-tePlwKR8Ne4dy7XjS7QhWQL7dRVkZgVEBsREJNBMDOJcSYDhfGHrIgKDGHTGDbs2KSf4HdKdVxMqQGD4GkVaAgt4KQEtMSGsDn0",
+    "event_id": "Es36PQNZWHSP",
+    "event_time": 1634653566,
+    "is_ext_shared_channel": false,
+    "team_id": "TT0EEPP4R",
+    "token": "dr2FDH3al54fFGWEJHsNdo0u",
+    "type": "event_callback"
 }
 */
 @JsonIgnoreProperties(ignoreUnknown = true)
