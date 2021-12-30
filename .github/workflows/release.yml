@@ -25,7 +25,7 @@ jobs:
       # don't log password as part of the a whole inputs object
       - name: Log job parameters
         run: |
-          echo "Actor: $GITHUB_ACTOR"
+          echo "Actor: [$GITHUB_ACTOR]"
           echo 'Ref [${{ github.event.inputs.ref }}].'
           echo 'Product [${{ github.event.inputs.product }}].'
           echo 'Release version [${{ github.event.inputs.release-version }}].'

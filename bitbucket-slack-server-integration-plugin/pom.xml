@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.atlassian.pom</groupId>
-        <artifactId>public-pom</artifactId>
-        <version>5.0.26</version>
-    </parent>
 
     <groupId>com.atlassian.bitbucket.plugins</groupId>
     <artifactId>bitbucket-slack-server-integration-plugin</artifactId>
@@ -29,6 +24,9 @@
         <xvfb.enable>false</xvfb.enable>
         <functional.test.pattern>it/**</functional.test.pattern>
         <maven.javadoc.skip>true</maven.javadoc.skip>
+
+        <!-- Use credentials of 'github' server from settings.xml during the release -->
+        <project.scm.id>github</project.scm.id>
 
         <!-- dependency versions -->
         <atlassian.spring.scanner.version>2.1.7</atlassian.spring.scanner.version>
@@ -560,6 +558,14 @@
         <url>https://github.com/atlassian-labs/atlassian-slack-integration-server.git</url>
         <tag>HEAD</tag>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub</name>
+            <url>https://maven.pkg.github.com/atlassian-labs/atlassian-slack-integration-server</url>
+        </repository>
+    </distributionManagement>
 
     <developers>
         <developer>
