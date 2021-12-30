@@ -49,7 +49,6 @@ jobs:
         with:
           java-version: 8
           distribution: temurin
-          server-id: github # value of the distributionManagement/repository/id field of the pom.xml
       - name: Log Maven settings.xml
         run: cat $HOME/.m2/settings.xml
       - name: Install Atlassian Plugin SDK
