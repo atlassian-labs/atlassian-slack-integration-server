@@ -359,7 +359,8 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
             }
 
             final String channelId = projectConfiguration.getChannelId();
-            final Optional<Conversation> conversation = conversationsAndLinks.conversation(channelId);
+            final ConversationKey conversationKey = new ConversationKey(teamId, channelId);
+            final Optional<Conversation> conversation = conversationsAndLinks.conversation(conversationKey);
             final String channelName = conversation.map(Conversation::getName).orElseGet(() -> "id:" + channelId);
 
             final ProjectConfigurationDTO.Builder configBuilder =

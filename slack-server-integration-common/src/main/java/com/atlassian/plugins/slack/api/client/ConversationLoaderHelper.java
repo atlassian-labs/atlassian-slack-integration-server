@@ -7,6 +7,8 @@ import com.atlassian.sal.api.executor.ThreadLocalDelegateExecutorFactory;
 import com.github.seratch.jslack.api.model.Conversation;
 import io.atlassian.fugue.Either;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,23 +95,24 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
         }
 
         // starts loading conversations
-        final List<Future<Optional<Conversation>>> futures = channels.stream()
+        final List<Future<Optional<Pair<ConversationKey, Conversation>>>> futures = channels.stream()
                 .limit(maxChannelsToLoad)
                 .map(channel -> loadConversationFromList(channel, linksByChannelId, loader))
                 .collect(toList());
 
         // collects results
-        final Map<String, Conversation> conversationsById = futures.stream()
-                .map(future -> {
+        final Map<ConversationKey, Conversation> conversationsById = futures.stream()
+                .map((Future<Optional<Pair<ConversationKey, Conversation>>> future) -> {
                     try {
-                        return future.get();
+                        Optional<Pair<ConversationKey, Conversation>> result = future.get();
+                        return result;
                     } catch (Exception e) {
-                        return Optional.<Conversation>empty();
+                        return Optional.<Pair<ConversationKey, Conversation>>empty();
                     }
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(toMap(Conversation::getId, Function.identity()));
+                .collect(toMap(Pair<ConversationKey, Conversation>::getLeft, Pair<ConversationKey, Conversation>::getRight));
 
         return new ConversationsAndLinks(conversationsById, linksByTeamId, linksByChannelId);
     }
@@ -117,14 +120,15 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
     /**
      * Load conversation using the provided values and loader but only for the first provided item.
      */
-    private <T> Future<Optional<Conversation>> loadConversationFromList(
-            final ConversationKey channel,
+    private Future<Optional<Pair<ConversationKey, Conversation>>> loadConversationFromList(
+            final ConversationKey conversationKey,
             final Map<String, SlackLink> linksByChannelId,
             final BiFunction<SlackClient, ConversationKey, Optional<Conversation>> loader) {
         return executorService.submit(() -> Optional
-                .ofNullable(linksByChannelId.get(channel.getChannelId()))
+                .ofNullable(linksByChannelId.get(conversationKey.getChannelId()))
                 .map(slackClientProvider::withLink)
-                .flatMap(client -> loader.apply(client, channel)));
+                .flatMap(client -> loader.apply(client, conversationKey))
+                .map(conv -> new ImmutablePair<>(conversationKey, conv)));
     }
 
     @Override

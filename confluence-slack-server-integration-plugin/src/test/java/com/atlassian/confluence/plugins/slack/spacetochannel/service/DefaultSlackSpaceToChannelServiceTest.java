@@ -111,7 +111,7 @@ public class DefaultSlackSpaceToChannelServiceTest {
     public void getAllSpaceToChannelLinks_shouldReturnExpectedValue() {
         List<AOEntityToChannelMapping> mappings = Arrays.asList(entity1, entity2);
         ConversationsAndLinks conversationsAndLinks = new ConversationsAndLinks(
-                ImmutableMap.of(CHANNEL_ID, conversation),
+                ImmutableMap.of(new ConversationKey(TEAM_ID, CHANNEL_ID), conversation),
                 ImmutableMap.of(TEAM_ID, slackLink),
                 ImmutableMap.of(CHANNEL_ID, slackLink, CHANNEL_ID2, slackLink));
 
@@ -150,7 +150,7 @@ public class DefaultSlackSpaceToChannelServiceTest {
     public void getSpaceToChannelConfiguration_shouldReturnExpectedValue() {
         List<AOEntityToChannelMapping> mappings = Arrays.asList(entity1, entity2);
         ConversationsAndLinks conversationsAndLinks = new ConversationsAndLinks(
-                ImmutableMap.of(CHANNEL_ID, conversation),
+                ImmutableMap.of(new ConversationKey(TEAM_ID, CHANNEL_ID), conversation),
                 ImmutableMap.of(TEAM_ID, slackLink),
                 ImmutableMap.of(CHANNEL_ID, slackLink, CHANNEL_ID2, slackLink));
 

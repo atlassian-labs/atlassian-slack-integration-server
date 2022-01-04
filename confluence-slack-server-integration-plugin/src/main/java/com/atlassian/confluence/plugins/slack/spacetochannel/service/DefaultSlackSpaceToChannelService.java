@@ -77,7 +77,7 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
                         .flatMap(client -> client.getConversationsInfo(channel.getChannelId()).toOptional())));
 
         return channelId -> conversationsAndLinks.linkByChannelId(channelId)
-                .map(link -> conversationsAndLinks.conversation(channelId)
+                .map(link -> conversationsAndLinks.conversation(new ConversationKey(mappings.iterator().next().getTeamId(), channelId))
                         .map(conversation -> new SlackChannelDefinition(
                                 link.getTeamName(),
                                 link.getTeamId(),

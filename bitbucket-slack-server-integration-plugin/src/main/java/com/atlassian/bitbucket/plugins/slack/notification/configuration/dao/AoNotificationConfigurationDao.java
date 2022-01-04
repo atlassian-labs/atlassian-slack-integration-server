@@ -206,7 +206,7 @@ public class AoNotificationConfigurationDao extends AbstractAoDao implements Not
                     DefaultRepositoryConfiguration.Builder builder = new DefaultRepositoryConfiguration.Builder(repo);
                     entry.getValue()
                             .forEach(aoConfig -> {
-                                final Optional<Conversation> conversation = conversationsAndLinks.conversation(aoConfig.getChannelId());
+                                final Optional<Conversation> conversation = conversationsAndLinks.conversation(new ConversationKey(aoConfig.getTeamId(), aoConfig.getChannelId()));
                                 final Optional<SlackLink> slackLink = conversationsAndLinks.link(aoConfig.getTeamId());
                                 Verbosity verbosity = bitbucketSlackSettingsService.getVerbosity(repo.getId(),
                                         aoConfig.getTeamId(), aoConfig.getChannelId());

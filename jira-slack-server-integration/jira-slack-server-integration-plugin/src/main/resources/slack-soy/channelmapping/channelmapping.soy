@@ -135,17 +135,20 @@
                     </tr>
                   </thead>
                 {foreach $projectConfiguration in $projectConfigurations}
-                    {foreach $channelId in $projectConfiguration.orderedChannelIds}
-                        {foreach $configTeam in $projectConfiguration.configuration[$channelId]}
-                            {call JIRA.Templates.Slack.Project.ChannelMapping.channelMapping}
-                                {param teamId: $projectConfiguration.channels[$channelId].teamId /}
-                                {param teamName: $projectConfiguration.channels[$channelId].teamName /}
-                                {param channelId: $channelId /}
-                                {param channelName: $projectConfiguration.channels[$channelId].channelName /}
+                    {foreach $conversationKey in $projectConfiguration.orderedChannelIds} // ConversationKey
+                    {let $convKey: $conversationKey.teamId + ':' + $conversationKey.channelId /}
+                        {foreach $configTeam in $projectConfiguration.configuration[$convKey]} //  List<ConfigurationGroupDTO>
+                        <!-- settings $configTeam.settings  -->
+                        <!-- config group id $configTeam.configurationGroupId -->
+                            {call JIRA.Templates.Slack.Project.ChannelMapping.channelMapping} //
+                                {param teamId: $conversationKey.teamId /}
+                                {param teamName: $projectConfiguration.channels[$convKey].teamName /}
+                                {param channelId: $conversationKey.channelId /}
+                                {param channelName: $projectConfiguration.channels[$convKey].channelName /}
                                 {param projectName: $projectConfiguration.projectName /}
                                 {param projectKey: $projectConfiguration.projectKey /}
                                 {param projectId: $projectConfiguration.projectId /}
-                                {param config: $configTeam.settings /}
+                                {param config: $configTeam.settings /} //
                                 {param configurationGroupId: $configTeam.configurationGroupId /}
                             {/call}
                         {/foreach}

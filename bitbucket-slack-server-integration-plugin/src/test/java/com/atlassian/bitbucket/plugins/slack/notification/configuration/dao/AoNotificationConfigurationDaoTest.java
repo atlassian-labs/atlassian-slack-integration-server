@@ -15,6 +15,7 @@ import com.atlassian.bitbucket.project.Project;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.util.PageRequestImpl;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.ConversationLoaderHelper;
 import com.atlassian.plugins.slack.api.client.ConversationsAndLinks;
@@ -223,7 +224,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
                 AoNotificationConfiguration.CHANNEL_ID_COLUMN, CHANNEL_ID
         ));
         when(conversationLoaderHelper.conversationsAndLinksById(any(), any(), any())).thenReturn(conversationsAndLinks);
-        when(conversationsAndLinks.conversation(CHANNEL_ID)).thenReturn(Optional.of(conversation));
+        when(conversationsAndLinks.conversation(new ConversationKey(TEAM_ID, CHANNEL_ID))).thenReturn(Optional.of(conversation));
         when(conversation.getName()).thenReturn("someConversationName");
         when(conversationsAndLinks.link(TEAM_ID)).thenReturn(Optional.of(slackLink));
         when(repositoryService.getById(REPO_ID)).thenReturn(repository);
