@@ -14,6 +14,7 @@ import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.plugins.slack.analytics.AnalyticsContext;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.ChannelToNotify;
 import com.atlassian.plugins.slack.settings.SlackSettingService;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +83,7 @@ public class DefaultNotificationConfigurationService implements NotificationConf
     public Set<ChannelToNotify> getChannelsToNotify(@Nonnull NotificationSearchRequest request) {
         Set<ChannelToNotify> channels = dao.getChannelsToNotify(request);
         Set<ChannelToNotify> unmutedChannels = channels.stream()
-                .filter(channel -> !settingService.isChannelMuted(channel.getChannelId()))
+                .filter(channel -> !settingService.isChannelMuted(new ConversationKey(channel.getTeamId(), channel.getChannelId())))
                 .collect(Collectors.toSet());
         return unmutedChannels;
     }

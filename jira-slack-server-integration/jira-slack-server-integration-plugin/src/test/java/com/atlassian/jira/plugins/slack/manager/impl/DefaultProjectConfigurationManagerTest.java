@@ -183,7 +183,8 @@ public class DefaultProjectConfigurationManagerTest {
                 ImmutableMap.of(new ConversationKey("T", "C"), conversation,
                         new ConversationKey("T", "C2"), conversation2),
                 ImmutableMap.of("T", slackLink),
-                ImmutableMap.of("C", slackLink, "C2", slackLink));
+                ImmutableMap.of(new ConversationKey("T", "C"), slackLink,
+                        new ConversationKey("T", "C2"), slackLink));
 
         when(projectConfiguration.getTeamId()).thenReturn("T");
         when(projectConfiguration.getChannelId()).thenReturn("C");
@@ -267,9 +268,11 @@ public class DefaultProjectConfigurationManagerTest {
                 projectConfigurationMissingLink);
 
         ConversationsAndLinks conversationsAndLinks = new ConversationsAndLinks(
-                ImmutableMap.of(new ConversationKey("T", "C"), conversation, new ConversationKey("T", "C2"), conversation2),
+                ImmutableMap.of(new ConversationKey("T", "C"), conversation, new ConversationKey("T",
+                        "C2"), conversation2),
                 ImmutableMap.of("T", slackLink),
-                ImmutableMap.of("C", slackLink, "C2", slackLink));
+                ImmutableMap.of(new ConversationKey("T", "C"), slackLink, new ConversationKey("T",
+                        "C2"), slackLink));
 
         when(projectConfiguration.getTeamId()).thenReturn("T");
         when(projectConfiguration.getChannelId()).thenReturn("C");

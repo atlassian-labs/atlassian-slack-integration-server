@@ -135,12 +135,12 @@
                     </tr>
                   </thead>
                 {foreach $projectConfiguration in $projectConfigurations}
-                    {foreach $conversationKey in $projectConfiguration.orderedChannelIds} // ConversationKey
+                    {foreach $conversationKey in $projectConfiguration.orderedChannelIds} //ConversationKey
                     {let $convKey: $conversationKey.teamId + ':' + $conversationKey.channelId /}
-                        {foreach $configTeam in $projectConfiguration.configuration[$convKey]} //  List<ConfigurationGroupDTO>
+                        {foreach $configTeam in $projectConfiguration.configuration[$convKey]} //List<ConfigurationGroupDTO>
                         <!-- settings $configTeam.settings  -->
                         <!-- config group id $configTeam.configurationGroupId -->
-                            {call JIRA.Templates.Slack.Project.ChannelMapping.channelMapping} //
+                            {call JIRA.Templates.Slack.Project.ChannelMapping.channelMapping}
                                 {param teamId: $conversationKey.teamId /}
                                 {param teamName: $projectConfiguration.channels[$convKey].teamName /}
                                 {param channelId: $conversationKey.channelId /}
@@ -148,7 +148,7 @@
                                 {param projectName: $projectConfiguration.projectName /}
                                 {param projectKey: $projectConfiguration.projectKey /}
                                 {param projectId: $projectConfiguration.projectId /}
-                                {param config: $configTeam.settings /} //
+                                {param config: $configTeam.settings /}
                                 {param configurationGroupId: $configTeam.configurationGroupId /}
                             {/call}
                         {/foreach}

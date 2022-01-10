@@ -1,5 +1,6 @@
 package com.atlassian.plugins.slack.settings;
 
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
@@ -29,11 +30,11 @@ public class DefaultSlackSettingsService implements SlackSettingService {
     private final TransactionTemplate transactionTemplate;
 
     @Override
-    public boolean isChannelMuted(final String channelId) {
+    public boolean isChannelMuted(final ConversationKey conversationKey) {
         boolean isMuted = false;
-        if (StringUtils.isNotBlank(channelId)) {
+        if (StringUtils.isNotBlank(conversationKey.toString())) {
             List<String> mutedChannelIds = getMutedChannelIds();
-            isMuted = mutedChannelIds.contains(channelId);
+            isMuted = mutedChannelIds.contains(conversationKey);
         }
         return isMuted;
     }

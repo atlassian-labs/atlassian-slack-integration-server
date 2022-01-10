@@ -1,5 +1,6 @@
 package com.atlassian.plugins.slack.settings;
 
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.transaction.TransactionCallback;
@@ -75,10 +76,10 @@ public class DefaultSlackSettingsServiceTest {
 
     @Test
     public void isChannelMuted_shouldReturnExpectedValue() {
-        List<String> list = Collections.singletonList("C");
+        List<ConversationKey> list = Collections.singletonList(new ConversationKey("T", "C"));
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
-        boolean result = target.isChannelMuted("C");
+        boolean result = target.isChannelMuted(new ConversationKey("T", "C"));
 
         assertThat(result, is(true));
     }
@@ -86,17 +87,17 @@ public class DefaultSlackSettingsServiceTest {
 
     @Test
     public void isChannelMuted_shouldReturnFalseWhenChannelIsNotMted() {
-        List<String> list = Collections.singletonList("C");
+        List<ConversationKey> list = Collections.singletonList(new ConversationKey("T", "C"));
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
-        boolean result = target.isChannelMuted("C2");
+        boolean result = target.isChannelMuted(new ConversationKey("T", "C2"));
 
         assertThat(result, is(false));
     }
 
     @Test
     public void isChannelMuted_shouldReturnFalseWhenChannelIdIsEmpty() {
-        boolean result = target.isChannelMuted("");
+        boolean result = target.isChannelMuted(new ConversationKey("T", ""));
 
         assertThat(result, is(false));
     }

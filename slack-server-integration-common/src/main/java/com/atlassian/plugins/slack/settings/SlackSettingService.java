@@ -1,9 +1,11 @@
 package com.atlassian.plugins.slack.settings;
 
+import com.atlassian.plugins.slack.api.ConversationKey;
+
 import java.util.List;
 
 public interface SlackSettingService {
-    boolean isChannelMuted(String channelId);
+    boolean isChannelMuted(ConversationKey conversationKey);
 
     void muteChannel(String channelId);
 

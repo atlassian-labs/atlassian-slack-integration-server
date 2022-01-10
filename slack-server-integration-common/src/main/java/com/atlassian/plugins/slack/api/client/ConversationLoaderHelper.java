@@ -81,10 +81,10 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
                 .collect(Collectors.toMap(SlackLink::getTeamId, Function.identity()));
 
         // index links by channel
-        final Map<String, SlackLink> linksByChannelId = channels.stream()
+        final Map<ConversationKey, SlackLink> linksByChannelId = channels.stream()
                 .filter(key -> linksByTeamId.containsKey(key.getTeamId()))
                 .collect(toMap(
-                        ConversationKey::getChannelId,
+                        Function.identity(),
                         key -> linksByTeamId.get(key.getTeamId()),
                         (k1, k2) -> k1));
 
@@ -122,7 +122,7 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
      */
     private Future<Optional<Pair<ConversationKey, Conversation>>> loadConversationFromList(
             final ConversationKey conversationKey,
-            final Map<String, SlackLink> linksByChannelId,
+            final Map<ConversationKey, SlackLink> linksByChannelId,
             final BiFunction<SlackClient, ConversationKey, Optional<Conversation>> loader) {
         return executorService.submit(() -> Optional
                 .ofNullable(linksByChannelId.get(conversationKey.getChannelId()))

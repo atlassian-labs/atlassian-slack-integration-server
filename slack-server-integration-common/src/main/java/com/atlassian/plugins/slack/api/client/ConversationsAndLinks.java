@@ -10,14 +10,14 @@ import java.util.Optional;
 public class ConversationsAndLinks {
     private final Map<ConversationKey, Conversation> conversations;
     private final Map<String, SlackLink> links;
-    private final Map<String, SlackLink> linksByChannelId;
+    private final Map<ConversationKey, SlackLink> linksByConversationKey;
 
     public ConversationsAndLinks(final Map<ConversationKey, Conversation> conversations,
                                  final Map<String, SlackLink> links,
-                                 final Map<String, SlackLink> linksByChannelId) {
+                                 final Map<ConversationKey, SlackLink> linksByConversationKey) {
         this.conversations = conversations;
         this.links = links;
-        this.linksByChannelId = linksByChannelId;
+        this.linksByConversationKey = linksByConversationKey;
     }
 
     public Optional<Conversation> conversation(final ConversationKey conversationKey) {
@@ -28,7 +28,7 @@ public class ConversationsAndLinks {
         return Optional.ofNullable(links.get(teamId));
     }
 
-    public Optional<SlackLink> linkByChannelId(final String channelId) {
-        return Optional.ofNullable(linksByChannelId.get(channelId));
+    public Optional<SlackLink> linkByConversationKey(final ConversationKey conversationKey) {
+        return Optional.ofNullable(linksByConversationKey.get(conversationKey));
     }
 }
