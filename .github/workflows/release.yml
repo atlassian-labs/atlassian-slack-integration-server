@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Branch/tag/hash to use (defaults to master)
+        description: Branch/tag/hash to release from (defaults to master)
         required: false
         default: master
       product:
@@ -11,8 +11,10 @@ on:
         required: true
       release-version:
         description: Version to release (defaults to next micro version)
+        required: false
       next-development-version:
         description: Next development version (default to next snapshot micro version)
+        required: false
 
 jobs:
   release-plugin:
@@ -21,13 +23,15 @@ jobs:
     timeout-minutes: 30
     steps:
       # don't log password as part of the a whole inputs object
-      - run: |
+      - name: Log job parameters
+        run: |
+          echo "Actor: [$GITHUB_ACTOR]"
           echo 'Ref [${{ github.event.inputs.ref }}].'
           echo 'Product [${{ github.event.inputs.product }}].'
-          echo 'Artifactory user [${{ github.event.inputs.artifactory-user }}].'
           echo 'Release version [${{ github.event.inputs.release-version }}].'
           echo 'Next development version [${{ github.event.inputs.next-development-version }}].'
-      - uses: actions/checkout@v2
+      - name: Check out the code from selected branch
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.ref }}
       - name: Configure git for operations performed during the release
@@ -38,24 +42,30 @@ jobs:
           # check the config is correct
           cat .git/config
       # fail job fast in case of invalid product
-      - run: bin/build/populate-plugin-by-product.sh ${{ github.event.inputs.product }}
-      - uses: actions/setup-java@v1
+      - name: Populate plugin module by selected product
+        run: bin/build/populate-plugin-by-product.sh ${{ github.event.inputs.product }}
+      - name: Install JDK
+        uses: actions/setup-java@v2
         with:
           java-version: 8
-      - run: bin/build/install-plugin-sdk.sh
-      - run: bin/build/configure-maven-for-release.sh
-      - uses: actions/cache@v2
+          distribution: temurin
+      - name: Log Maven settings.xml
+        run: cat $HOME/.m2/settings.xml
+      - name: Install Atlassian Plugin SDK
+        run: bin/build/install-plugin-sdk.sh
+      - name: Unpack cached Maven dependencies
+        uses: actions/cache@v2
         with:
           path: ~/.m2/repository
           key: maven-release
           restore-keys: |
             maven-unit
             maven-
-      - run: bin/build/install-common-modules.sh
-      - run: |
-          ARTIFACTORY_USER=${{ secrets.ARTIFACTORY_USER }} \
-          ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }} \
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
-          RELEASE_VERSION=${{ github.event.inputs.release-version }} \
-          DEVELOPMENT_VERSION=${{ github.event.inputs.next-development-version }} \
-          bin/build/release-single-plugin.sh
+      - name: Install common modules to local Maven repository
+        run: bin/build/install-common-modules.sh
+      - name: Trigger the release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ github.event.inputs.release-version }}
+          DEVELOPMENT_VERSION: ${{ github.event.inputs.next-development-version }}
+        run: bin/build/release-single-plugin.sh

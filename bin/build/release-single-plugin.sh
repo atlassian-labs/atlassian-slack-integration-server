@@ -14,7 +14,5 @@ $MAVEN_HOME/bin/mvn -gs ${MAVEN_HOME}/conf/settings.xml release:prepare release:
     -Dmaven.test.skip=true \
     -Darguments="-Dmaven.test.skip=true --activate-profiles include-common" \
     -DscmCommentPrefix="[skip ci] " \
-    -Dusername=$GITHUB_ACTOR \
-    -Dpassword=$GITHUB_TOKEN \
     --activate-profiles include-common \
     --projects "${PLUGIN}" ${RELEASE_VERSION_ARG} ${DEVELOPMENT_VERSION_ARG}
