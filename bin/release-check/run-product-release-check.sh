@@ -4,7 +4,7 @@
 latest_releases=$(. ./find-latest-releases.sh)
 echo "========================"
 echo "LATEST RELEASES"
-echo "$latest_releases" | tr '\n' ',' | awk '{print substr( $0, 1, length($0)-1)}'
+echo "$latest_releases" | sed -z 's/\n/, /g' | awk '{print substr( $0, 1, length($0)-2)}'
 echo "========================"
 
 if [ "$latest_releases" = "" ]; then
