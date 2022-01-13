@@ -6,6 +6,7 @@ import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.cache.SlackResponseCache;
 import com.atlassian.plugins.slack.api.client.interceptor.BackoffRetryInterceptor;
 import com.atlassian.plugins.slack.api.client.interceptor.RateLimitRetryInterceptor;
+import com.atlassian.plugins.slack.api.client.interceptor.RequestIdInterceptor;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserManager;
@@ -13,6 +14,7 @@ import com.atlassian.util.concurrent.LazyReference;
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.common.http.SlackHttpClient;
 import io.atlassian.fugue.Either;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Authenticator;
 import okhttp3.Challenge;
 import okhttp3.Credentials;
@@ -26,11 +28,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Slf4j
 @Component
 public class DefaultSlackClientProvider implements SlackClientProvider, DisposableBean {
     private static final int DEFAULT_CONNECT_TIMEOUT_MILLISECONDS = 3 * 1000;
@@ -56,6 +62,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
     private final Integer pingInterval;
     private final boolean forceHttp1;
     private final ExecutorServiceHelper executorServiceHelper;
+    private final RequestIdInterceptor requestIdInterceptor;
     private final BackoffRetryInterceptor backoffRetryInterceptor;
     private final RateLimitRetryInterceptor rateLimitRetryInterceptor;
     private final SlackResponseCache slackResponseCache;
@@ -68,6 +75,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
                                       @Qualifier("salUserManager") final UserManager userManager,
                                       final EventPublisher eventPublisher,
                                       final ExecutorServiceHelper executorServiceHelper,
+                                      final RequestIdInterceptor requestIdInterceptor,
                                       final BackoffRetryInterceptor backoffRetryInterceptor,
                                       final RateLimitRetryInterceptor rateLimitRetryInterceptor,
                                       final SlackResponseCache slackResponseCache) {
@@ -76,6 +84,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
         this.userManager = userManager;
         this.eventPublisher = eventPublisher;
         this.executorServiceHelper = executorServiceHelper;
+        this.requestIdInterceptor = requestIdInterceptor;
         this.backoffRetryInterceptor = backoffRetryInterceptor;
         this.rateLimitRetryInterceptor = rateLimitRetryInterceptor;
         this.slackResponseCache = slackResponseCache;
@@ -134,6 +143,17 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
                     ? Credentials.basic(httpsProxyUser, httpsProxyPassword)
                     : null;
 
+            if (log.isDebugEnabled()) {
+                Map<String, String> map = new HashMap<>();
+                map.put("httpProxyUser", httpProxyUser);
+                map.put("httpProxyPassword", Boolean.toString(httpProxyPassword != null && httpProxyPassword.length() > 0));
+                map.put("httpCredentials", Boolean.toString(httpCredentials != null && httpCredentials.length() > 0));
+                map.put("httpsProxyUser", httpsProxyUser);
+                map.put("httpsProxyPassword", Boolean.toString(httpsProxyPassword != null && httpsProxyPassword.length() > 0));
+                map.put("httpsCredentials", Boolean.toString(httpsCredentials != null && httpsCredentials.length() > 0));
+                log.debug("OkHttpClientLazyReference instantiated with options {}", map);
+            }
+
             return (route, response) -> {
                 final String credentials = "https".equals(route.address().url().scheme()) ? httpsCredentials : httpCredentials;
                 if (credentials == null) {
@@ -163,6 +183,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
         protected OkHttpClient create() {
             final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                     .dispatcher(new Dispatcher(executorServiceHelper.createBoundedExecutorService()))
+                    .addInterceptor(requestIdInterceptor)
                     .addInterceptor(backoffRetryInterceptor)
                     .addInterceptor(rateLimitRetryInterceptor)
                     .retryOnConnectionFailure(retryOnConnectionFailure)
@@ -175,7 +196,21 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
             if (forceHttp1) {
                 builder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
             }
-            return builder.build();
+
+
+            final OkHttpClient client = builder.build();
+            if (log.isDebugEnabled()) {
+                Map<String, String> map = new HashMap<>();
+                map.put("forceHttp1", Boolean.toString(forceHttp1));
+                map.put("retryOnConnectionFailure", Boolean.toString(retryOnConnectionFailure));
+                map.put("connectionTimeout", Integer.toString(connectionTimeout));
+                map.put("readTimeout", Integer.toString(readTimeout));
+                map.put("writeTimeout", Integer.toString(writeTimeout));
+                map.put("pingInterval", Integer.toString(pingInterval));
+                log.debug("OkHttpClient instantiated with options {}", map);
+            }
+
+            return client;
         }
     }
 }

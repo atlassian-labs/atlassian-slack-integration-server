@@ -8,6 +8,8 @@ import org.codehaus.jackson.map.PropertyNamingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ResponseMapper {
@@ -30,7 +32,12 @@ public class ResponseMapper {
                 if ("already_in_channel".equals(error)) {
                     log.debug("Slack returned an unsuccessful response to {}: {}", id, error);
                 } else {
-                    log.warn("Slack returned an unsuccessful response to {}: {}", id, error);
+                    final Map<String, String> errorMap = new HashMap<>();
+                    errorMap.put("error", error);
+                    errorMap.put("needed", resp.getNeeded());
+                    errorMap.put("provided", resp.getProvided());
+                    errorMap.put("warning", resp.getWarning());
+                    log.warn("Slack returned an unsuccessful response to {}: {}", id, errorMap);
                 }
                 return Either.left(new ErrorResponse(resp));
             }

@@ -44,14 +44,35 @@ public class RateLimitRetryInterceptor implements Interceptor {
             }
 
             response = chain.proceed(request);
+            final int code = response.code();
             if (response.isSuccessful()) {
+                if (tryCount > 0) {
+                    log.debug("Rate-limit recover req_id={} {} {} -> {} - attempt {}/{}",
+                            request.header(RequestIdInterceptor.REQ_ID_HEADER),
+                            request.method(),
+                            request.url(),
+                            code,
+                            tryCount + 1,
+                            retryCount + 1);
+                }
+
                 break;
             }
 
-            // check if rate limit was reached
             final String retryAfterStr = response.header("Retry-After");
-            log.warn("Retry-After {}", retryAfterStr);
-            final boolean isRateLimitActive = response.code() == 429 && retryAfterStr != null;
+
+            if (code == 429) {
+                log.debug("Rate-limited request req_id={} {} {} - retrying in {} - attempt {}/{}",
+                        request.header(RequestIdInterceptor.REQ_ID_HEADER),
+                        request.method(),
+                        request.url(),
+                        retryAfterStr == null ? "not retrying" : "retrying in " + retryAfterStr + "s",
+                        tryCount + 1,
+                        retryCount + 1);
+            }
+
+            // check if rate limit was reached
+            final boolean isRateLimitActive = code == 429 && retryAfterStr != null;
             if (!isRateLimitActive) {
                 break;
             }
@@ -59,8 +80,6 @@ public class RateLimitRetryInterceptor implements Interceptor {
             // wait according to retry-after
             final boolean lastAttempt = tryCount == retryCount - 1;
             if (!lastAttempt) {
-                log.debug("Rate-limited request {} {} - will retry after {}s", request.method(), request.url(), retryAfterStr);
-
                 if (!waitRetryAfterTime(retryAfterStr)) {
                     // fail fast if an interruption occurred or another error
                     break;
@@ -73,10 +92,10 @@ public class RateLimitRetryInterceptor implements Interceptor {
 
     private boolean waitRetryAfterTime(final String secondsStr) {
         try {
-            Thread.sleep(Integer.valueOf(secondsStr) * 1000);
+            Thread.sleep(Long.parseLong(secondsStr) * 1000);
             return true;
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            log.warn("Error awaiting for Retry-After: {}", e.getMessage(), e);
             return false;
         }
     }

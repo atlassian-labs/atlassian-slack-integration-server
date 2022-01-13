@@ -453,12 +453,16 @@ public class DefaultSlackClient implements SlackClient {
 
     private void handleMessageError(final ErrorResponse error,
                                     @Nullable final List<LayoutBlock> blocks,
-                                    @Nullable final String channelId) {
+                                    @Nullable final String channelId,
+                                    @Nullable final Object payload) {
         if (channelId != null && "is_archived".equals(error.getMessage())) {
             triggerChannelArchivedEvent(channelId);
         }
         if (blocks != null && "invalid_blocks".equals(error.getMessage())) {
             log.info("Slack rejected the following blocks: {}", blocks);
+        }
+        if (payload != null) {
+            log.debug("Failed to post payload {}", gson.toJson(payload));
         }
     }
 
@@ -492,7 +496,7 @@ public class DefaultSlackClient implements SlackClient {
                 () -> slackMethods.chatPostMessage(tokenizedMessageRequest)
         ).map(ChatPostMessageResponse::getMessage)
                 .leftMap(error -> {
-                    handleMessageError(error, messageRequest.getBlocks(), channelId);
+                    handleMessageError(error, messageRequest.getBlocks(), channelId, tokenizedMessageRequest);
                     return error;
                 });
     }
@@ -520,7 +524,7 @@ public class DefaultSlackClient implements SlackClient {
                 () -> slackMethods.chatPostEphemeral(tokenizedMessageRequest)
         )
                 .leftMap(error -> {
-                    handleMessageError(error, messageRequest.getBlocks(), channelId);
+                    handleMessageError(error, messageRequest.getBlocks(), channelId, tokenizedMessageRequest);
                     return error;
                 })
                 .map(ChatPostEphemeralResponse::getMessageTs);
@@ -546,7 +550,7 @@ public class DefaultSlackClient implements SlackClient {
                 () -> slackHttpClient.postJsonPostRequest(responseUrl, delayedSlackMessage)
         )
                 .leftMap(error -> {
-                    handleMessageError(error, messageRequest.getBlocks(), null);
+                    handleMessageError(error, messageRequest.getBlocks(), null, delayedSlackMessage);
                     return error;
                 })
                 .map(code -> true);
@@ -600,7 +604,7 @@ public class DefaultSlackClient implements SlackClient {
                     () -> slackMethods.chatPostMessage(tokenizedMessageRequest)
             )
                     .leftMap(error -> {
-                        handleMessageError(error, messageRequest.getBlocks(), userChannelId);
+                        handleMessageError(error, messageRequest.getBlocks(), userChannelId, tokenizedMessageRequest);
                         return error;
                     })
                     .map(ChatPostMessageResponse::getMessage);

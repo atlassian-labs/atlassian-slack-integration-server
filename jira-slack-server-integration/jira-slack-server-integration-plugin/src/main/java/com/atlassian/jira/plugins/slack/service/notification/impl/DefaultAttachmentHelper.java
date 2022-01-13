@@ -17,7 +17,6 @@ import com.atlassian.sal.api.UrlMode;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.model.Attachment;
 import com.github.seratch.jslack.api.model.Field;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -31,7 +30,6 @@ import static com.atlassian.plugins.slack.util.SlackHelper.escapeSignsForSlackLi
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
-@Slf4j
 @Component
 public class DefaultAttachmentHelper implements AttachmentHelper {
     private final ApplicationProperties applicationProperties;
@@ -89,12 +87,8 @@ public class DefaultAttachmentHelper implements AttachmentHelper {
         // Slack tries to load the image for 10 seconds before posing a message;
         // for BTF instances image loading always fails, but user still have to wait for 10 seconds for every message
         // before a message appears in a Slack channel; so just remove image from the message for private instances
-        boolean isInstancePublic = slackSettingService.isInstancePublic();
-        if (includeImages && isInstancePublic) {
+        if (includeImages && slackSettingService.isInstancePublic()) {
             attachment.setFooterIcon(projectIcon(project));
-        } else {
-            log.debug("Skipping adding project avatar to the attachment. includeImages={}, isInstancePublic={}",
-                    includeImages, isInstancePublic);
         }
 
         return attachment;
