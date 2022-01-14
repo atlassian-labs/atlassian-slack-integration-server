@@ -49,7 +49,7 @@ public class BackoffRetryInterceptor implements Interceptor {
                 response = chain.proceed(request);
                 final int code = response.code();
                 if (response.isSuccessful()) {
-                    if (tryCount > 0) {
+                    if (tryCount > 0 && log.isDebugEnabled()) {
                         log.debug("Backoff recover req_id={} {} {} -> {} - attempt {}/{}",
                                 request.header(RequestIdInterceptor.REQ_ID_HEADER),
                                 request.method(),
@@ -67,24 +67,28 @@ public class BackoffRetryInterceptor implements Interceptor {
                     break;
                 }
 
-                log.debug("Backoff retry req_id={} {} {} -> {} - retrying in {}s - attempt {}/{}",
-                        request.header(RequestIdInterceptor.REQ_ID_HEADER),
-                        request.method(),
-                        request.url(),
-                        code,
-                        retryDelay(tryCount),
-                        tryCount + 1,
-                        retryCount + 1);
+                if (log.isDebugEnabled()) {
+                    log.debug("Backoff retry req_id={} {} {} -> {} - retrying in {}s - attempt {}/{}",
+                            request.header(RequestIdInterceptor.REQ_ID_HEADER),
+                            request.method(),
+                            request.url(),
+                            code,
+                            retryDelay(tryCount),
+                            tryCount + 1,
+                            retryCount + 1);
+                }
             } catch (Exception e) {
-                log.debug("Backoff retry error req_id={} {} {} - retrying in {}s - attempt {}/{} - {}",
-                        request.header(RequestIdInterceptor.REQ_ID_HEADER),
-                        request.method(),
-                        request.url(),
-                        retryDelay(tryCount),
-                        tryCount + 1,
-                        retryCount + 1,
-                        e.getMessage(),
-                        e);
+                if (log.isDebugEnabled()) {
+                    log.debug("Backoff retry error req_id={} {} {} - retrying in {}s - attempt {}/{} - {}",
+                            request.header(RequestIdInterceptor.REQ_ID_HEADER),
+                            request.method(),
+                            request.url(),
+                            retryDelay(tryCount),
+                            tryCount + 1,
+                            retryCount + 1,
+                            e.getMessage(),
+                            e);
+                }
 
                 if ("canceled".equalsIgnoreCase(e.getMessage())) {
                     throw e;
