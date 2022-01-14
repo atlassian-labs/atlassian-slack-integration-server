@@ -103,7 +103,7 @@ public class DefaultAttachmentHelper implements AttachmentHelper {
 
     @Override
     public Attachment buildCommentAttachment(final String pretext, final Issue issue, final Comment comment) {
-        return Attachment.builder()
+        final Attachment.AttachmentBuilder builder = Attachment.builder()
                 .pretext(pretext)
                 .title(i18nResolver.getText("jira.slack.card.notification.issue.title", issue.getKey(), issue.getSummary()))
                 .titleLink(decorateWithOrigin(UriBuilder.fromUri(issueUrl(issue.getKey()))
@@ -114,10 +114,14 @@ public class DefaultAttachmentHelper implements AttachmentHelper {
                 .fallback(issue.getKey() + ": " + defaultString(pretext))
                 .text(comment.getBody())
                 .footer(footerText(issue.getProjectObject()))
-                .footerIcon(projectIcon(issue.getProjectObject()))
                 .color("#2684FF")
-                .mrkdwnIn(Arrays.asList("text", "pretext"))
-                .build();
+                .mrkdwnIn(Arrays.asList("text", "pretext"));
+
+        if (includeImages && slackSettingService.isInstancePublic()) {
+            builder.footerIcon(projectIcon(issue.getProjectObject()));
+        }
+
+        return builder.build();
     }
 
     private String footerText(final Project project) {
