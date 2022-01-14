@@ -61,7 +61,7 @@ public class RateLimitRetryInterceptor implements Interceptor {
 
             final String retryAfterStr = response.header("Retry-After");
 
-            if (code == 429) {
+            if (code == 429 && log.isDebugEnabled()) {
                 log.debug("Rate-limited request req_id={} {} {} - retrying in {} - attempt {}/{}",
                         request.header(RequestIdInterceptor.REQ_ID_HEADER),
                         request.method(),

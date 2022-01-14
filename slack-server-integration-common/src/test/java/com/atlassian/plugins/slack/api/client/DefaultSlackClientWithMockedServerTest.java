@@ -15,6 +15,7 @@ import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.methods.response.chat.ChatPostMessageResponse;
+import com.github.seratch.jslack.api.model.Attachment;
 import com.github.seratch.jslack.api.model.Message;
 import com.github.seratch.jslack.common.http.SlackHttpClient;
 import com.github.seratch.jslack.common.json.GsonFactory;
@@ -37,6 +38,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.Callable;
 
 import static org.junit.Assert.assertEquals;
@@ -191,9 +194,10 @@ public class DefaultSlackClientWithMockedServerTest {
     }
 
     private Pair<ChatPostMessageRequest, ChatPostMessageResponse> getMessageAndResponse() {
-        ChatPostMessageRequest req = ChatPostMessageRequest.builder()
+        final ChatPostMessageRequest req = ChatPostMessageRequest.builder()
                 .channel("someChannelId")
                 .text("someText")
+                .attachments(Collections.singletonList(Attachment.builder().text("attch").build()))
                 .mrkdwn(true)
                 .build();
 

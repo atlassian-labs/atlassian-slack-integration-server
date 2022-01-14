@@ -23,15 +23,19 @@ public class ResponseMapper {
     public static <T extends SlackApiResponse> Either<ErrorResponse, T> toEither(String id, ResponseSupplier<T> supplier) {
         try {
             T resp = supplier.get();
+
+            if (log.isTraceEnabled()) {
+                log.trace("Slack response to {}: {}", id, resp);
+            }
+
             if (resp.isOk()) {
                 log.info("Successful request to Slack: {}", id);
                 return Either.right(resp);
             } else {
                 final String error = resp.getError();
                 // handle gracefully errors that are not really a problem
-                if ("already_in_channel".equals(error)) {
-                    log.debug("Slack returned an unsuccessful response to {}: {}", id, error);
-                } else {
+                final boolean isExpectedError = "already_in_channel".equals(error);
+                if (!isExpectedError) {
                     final Map<String, String> errorMap = new HashMap<>();
                     errorMap.put("error", error);
                     errorMap.put("needed", resp.getNeeded());
