@@ -45,7 +45,7 @@ public class RateLimitRetryInterceptor implements Interceptor {
 
             response = chain.proceed(request);
             final int code = response.code();
-            if (response.isSuccessful()) {
+            if (response.isSuccessful() && log.isDebugEnabled()) {
                 if (tryCount > 0) {
                     log.debug("Rate-limit recover req_id={} {} {} -> {} - attempt {}/{}",
                             request.header(RequestIdInterceptor.REQ_ID_HEADER),

@@ -1,13 +1,10 @@
 package com.atlassian.plugins.slack.api.client.interceptor;
 
-import com.github.seratch.jslack.common.json.GsonFactory;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 import okio.Buffer;
-import okio.BufferedSink;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
