@@ -11,12 +11,12 @@ import com.atlassian.plugins.slack.api.webhooks.ChannelDeletedSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.ChannelUnarchiveSlackEvent;
 import com.atlassian.plugins.slack.settings.SlackSettingService;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
-import com.github.seratch.jslack.api.model.Conversation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,7 +61,7 @@ public class SlackChannelEventListener extends AutoSubscribingEventListener {
         asyncExecutor.run(() -> {
             LOGGER.debug("Removing notification mapping for channel {} because the channel was deleted", channelId);
             spaceToChannelService.removeNotificationsForChannel(channelId);
-            settingService.unmuteChannel(new ConversationKey(teamId,channelId));
+            settingService.unmuteChannel(new ConversationKey(teamId, channelId));
         });
     }
 
@@ -72,8 +72,12 @@ public class SlackChannelEventListener extends AutoSubscribingEventListener {
         asyncExecutor.run(() -> {
             final List<ConversationKey> mutedChannelIds = settingService.getMutedChannelIds();
             if (!mutedChannelIds.isEmpty()) {
-                Set<String> activeConversationIds = event.getConversations().stream()
-                        .map(Conversation::getId)
+                Set<ConversationKey> activeConversationIds = event.getConversations().stream()
+                        .flatMap(c -> {
+                            List<ConversationKey> list = new ArrayList<>();
+                            c.getSharedTeamIds().forEach(t -> list.add(new ConversationKey(t, c.getId())));
+                            return list.stream();
+                        })
                         .collect(Collectors.toSet());
                 mutedChannelIds.stream()
                         .filter(activeConversationIds::contains)
