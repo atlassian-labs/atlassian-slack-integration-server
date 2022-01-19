@@ -81,7 +81,7 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
                 .collect(Collectors.toMap(SlackLink::getTeamId, Function.identity()));
 
         // index links by channel
-        final Map<ConversationKey, SlackLink> linksByChannelId = channels.stream()
+        final Map<ConversationKey, SlackLink> linksByConversationKey = channels.stream()
                 .filter(key -> linksByTeamId.containsKey(key.getTeamId()))
                 .collect(toMap(
                         Function.identity(),
@@ -97,7 +97,7 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
         // starts loading conversations
         final List<Future<Optional<Pair<ConversationKey, Conversation>>>> futures = channels.stream()
                 .limit(maxChannelsToLoad)
-                .map(channel -> loadConversationFromList(channel, linksByChannelId, loader))
+                .map(channel -> loadConversationFromList(channel, linksByConversationKey, loader))
                 .collect(toList());
 
         // collects results
@@ -114,7 +114,7 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
                 .map(Optional::get)
                 .collect(toMap(Pair<ConversationKey, Conversation>::getLeft, Pair<ConversationKey, Conversation>::getRight));
 
-        return new ConversationsAndLinks(conversationsById, linksByTeamId, linksByChannelId);
+        return new ConversationsAndLinks(conversationsById, linksByTeamId, linksByConversationKey);
     }
 
     /**
@@ -122,10 +122,10 @@ public class ConversationLoaderHelper implements InitializingBean, DisposableBea
      */
     private Future<Optional<Pair<ConversationKey, Conversation>>> loadConversationFromList(
             final ConversationKey conversationKey,
-            final Map<ConversationKey, SlackLink> linksByChannelId,
+            final Map<ConversationKey, SlackLink> linksByConversationKey,
             final BiFunction<SlackClient, ConversationKey, Optional<Conversation>> loader) {
         return executorService.submit(() -> Optional
-                .ofNullable(linksByChannelId.get(conversationKey.getChannelId()))
+                .ofNullable(linksByConversationKey.get(conversationKey))
                 .map(slackClientProvider::withLink)
                 .flatMap(client -> loader.apply(client, conversationKey))
                 .map(conv -> new ImmutablePair<>(conversationKey, conv)));

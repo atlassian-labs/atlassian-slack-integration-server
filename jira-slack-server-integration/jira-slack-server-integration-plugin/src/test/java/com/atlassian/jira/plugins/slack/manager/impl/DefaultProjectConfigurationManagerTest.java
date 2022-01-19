@@ -221,7 +221,7 @@ public class DefaultProjectConfigurationManagerTest {
         assertThat(result.getProjectId(), is(7L));
         assertThat(result.getProjectName(), is("PN"));
         assertThat(result.getProjectKey(), is("PK"));
-        assertThat(result.getOrderedChannelIds(), contains(new ConversationKey("T", "C"), new ConversationKey("T", "NOTC")));
+        assertThat(result.getOrderedConversationKeys(), contains(new ConversationKey("T", "C"), new ConversationKey("T", "NOTC")));
         assertThat(result.getChannels().keySet(), containsInAnyOrder("T:C", "T:NOTC"));
         assertThat(result.getChannels().get("T:C").getChannelId(), is("C"));
         assertThat(result.getChannels().get("T:C").getTeamId(), is("T"));
@@ -325,7 +325,7 @@ public class DefaultProjectConfigurationManagerTest {
         assertThat(projConfigDTO.getProjectId(), is(7L));
         assertThat(projConfigDTO.getProjectName(), is("PN"));
         assertThat(projConfigDTO.getProjectKey(), is("PK"));
-        assertThat(projConfigDTO.getOrderedChannelIds(), contains(new ConversationKey("T", "C"), new ConversationKey("T", "NOTC")));
+        assertThat(projConfigDTO.getOrderedConversationKeys(), contains(new ConversationKey("T", "C"), new ConversationKey("T", "NOTC")));
         assertThat(projConfigDTO.getChannels().keySet(), containsInAnyOrder("T:C", "T:NOTC"));
         assertThat(projConfigDTO.getChannels().get("T:C").getChannelId(), is("C"));
         assertThat(projConfigDTO.getChannels().get("T:C").getTeamId(), is("T"));
@@ -345,7 +345,7 @@ public class DefaultProjectConfigurationManagerTest {
         assertThat(projConfigDTO2.getProjectId(), is(6L));
         assertThat(projConfigDTO2.getProjectName(), is("PN2"));
         assertThat(projConfigDTO2.getProjectKey(), is("PK2"));
-        assertThat(projConfigDTO2.getOrderedChannelIds(), contains(new ConversationKey("T", "C2")));
+        assertThat(projConfigDTO2.getOrderedConversationKeys(), contains(new ConversationKey("T", "C2")));
         assertThat(projConfigDTO2.getChannels().size(), is(1));
         assertThat(projConfigDTO2.getChannels().keySet(), contains("T:C2"));
         assertThat(projConfigDTO2.getChannels().get("T:C2").getChannelId(), is("C2"));

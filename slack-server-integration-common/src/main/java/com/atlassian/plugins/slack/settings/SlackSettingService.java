@@ -7,11 +7,11 @@ import java.util.List;
 public interface SlackSettingService {
     boolean isChannelMuted(ConversationKey conversationKey);
 
-    void muteChannel(String channelId);
+    void muteChannel(ConversationKey conversationKey);
 
-    void unmuteChannel(String channelId);
+    void unmuteChannel(ConversationKey conversationKey);
 
-    List<String> getMutedChannelIds();
+    List<ConversationKey> getMutedChannelIds();
 
     boolean isInstancePublic();
 

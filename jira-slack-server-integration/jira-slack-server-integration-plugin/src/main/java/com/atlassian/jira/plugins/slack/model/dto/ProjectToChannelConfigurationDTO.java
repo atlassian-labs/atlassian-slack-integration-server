@@ -27,7 +27,7 @@ public class ProjectToChannelConfigurationDTO extends BaseDTO {
     private final String projectKey;
     private final Map<String, SlackChannelDTO> channels; // Map<teamId + : + channelId, ...>
     private final Map<String, List<ConfigurationGroupDTO>> configuration; // Map<teamId + : + channelId, ...>
-    private final List<ConversationKey> orderedChannelIds;
+    private final List<ConversationKey> orderedConversationKeys;
 
     public ProjectToChannelConfigurationDTO(final long projectId,
                                             final String projectKey,
@@ -42,7 +42,7 @@ public class ProjectToChannelConfigurationDTO extends BaseDTO {
 
         this.channels = Maps.uniqueIndex(configuration.keySet(), channel -> channel.getTeamId() + ":" + channel.getChannelId());
 
-        this.orderedChannelIds = configuration.keySet().stream()
+        this.orderedConversationKeys = configuration.keySet().stream()
                 .map(conv -> new ConversationKey(conv.getTeamId(), conv.getChannelId()))
                 .collect(Collectors.toList());
     }
@@ -68,7 +68,7 @@ public class ProjectToChannelConfigurationDTO extends BaseDTO {
     }
 
     @SuppressWarnings("unused")
-    public List<ConversationKey> getOrderedChannelIds() {
-        return orderedChannelIds;
+    public List<ConversationKey> getOrderedConversationKeys() {
+        return orderedConversationKeys;
     }
 }

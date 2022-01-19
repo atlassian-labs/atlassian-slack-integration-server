@@ -135,9 +135,9 @@
                     </tr>
                   </thead>
                 {foreach $projectConfiguration in $projectConfigurations}
-                    {foreach $conversationKey in $projectConfiguration.orderedChannelIds} //ConversationKey
+                    {foreach $conversationKey in $projectConfiguration.orderedConversationKeys}
                     {let $convKey: $conversationKey.teamId + ':' + $conversationKey.channelId /}
-                        {foreach $configTeam in $projectConfiguration.configuration[$convKey]} //List<ConfigurationGroupDTO>
+                        {foreach $configTeam in $projectConfiguration.configuration[$convKey]}
                         <!-- settings $configTeam.settings  -->
                         <!-- config group id $configTeam.configurationGroupId -->
                             {call JIRA.Templates.Slack.Project.ChannelMapping.channelMapping}

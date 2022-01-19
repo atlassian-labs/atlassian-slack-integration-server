@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,10 +24,8 @@ import static com.atlassian.plugins.slack.settings.DefaultSlackSettingsService.S
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
 import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -58,25 +55,25 @@ public class DefaultSlackSettingsServiceTest {
     public void getMutedChannelIds_shouldReturnEmptyWhenStorageIsNull() {
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(null);
 
-        List<String> result = target.getMutedChannelIds();
+        List<ConversationKey> result = target.getMutedChannelIds();
 
         assertThat(result, empty());
     }
 
     @Test
     public void getMutedChannelIds_shouldReturnExpectedValue() {
-        List<String> list = new ArrayList<>();
+        List<String> list = Arrays.asList(new ConversationKey("T", "C").toStringKey());
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
-        List<String> result = target.getMutedChannelIds();
+        List<ConversationKey> result = target.getMutedChannelIds();
 
-        assertThat(result, sameInstance(list));
+        assertThat(result, Matchers.contains(new ConversationKey("T", "C")));
 
     }
 
     @Test
     public void isChannelMuted_shouldReturnExpectedValue() {
-        List<ConversationKey> list = Collections.singletonList(new ConversationKey("T", "C"));
+        List<String> list = Collections.singletonList(new ConversationKey("T", "C").toStringKey());
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
         boolean result = target.isChannelMuted(new ConversationKey("T", "C"));
@@ -104,29 +101,29 @@ public class DefaultSlackSettingsServiceTest {
 
     @Test
     public void muteChannel_shouldAddChannel() {
-        List<String> list = Collections.singletonList("C");
+        List<String> list = Collections.singletonList(new ConversationKey("T", "C").toStringKey());
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
-        target.muteChannel("C2");
+        target.muteChannel(new ConversationKey("T", "C2"));
 
-        verify(pluginSettings).put(eq(MUTED_CHANNEL_IDS_OPTION_NAME), argThat(o -> Matchers.contains("C", "C2").matches(o)));
+        verify(pluginSettings).put(MUTED_CHANNEL_IDS_OPTION_NAME, Arrays.asList("T:C2", "T:C"));
     }
 
     @Test
     public void muteChannel_shouldAddChannelWhenListIsNull() {
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(null);
 
-        target.muteChannel("C");
+        target.muteChannel(new ConversationKey("T", "C"));
 
-        verify(pluginSettings).put(eq(MUTED_CHANNEL_IDS_OPTION_NAME), argThat(o -> Matchers.contains("C").matches(o)));
+        verify(pluginSettings).put(MUTED_CHANNEL_IDS_OPTION_NAME, Arrays.asList("T:C"));
     }
 
     @Test
     public void muteChannel_shouldNotAddChannelWhenAlreadyInTheList() {
-        List<String> list = Collections.singletonList("C");
+        List<String> list = Collections.singletonList(new ConversationKey("T", "C").toStringKey());
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
-        target.muteChannel("C");
+        target.muteChannel(new ConversationKey("T", "C"));
 
         verify(pluginSettings, never()).put(any(), any());
     }
@@ -134,19 +131,19 @@ public class DefaultSlackSettingsServiceTest {
 
     @Test
     public void unmuteChannel_shouldRemoveChannel() {
-        List<String> list = Arrays.asList("C", "C2");
+        List<String> list = Arrays.asList(new ConversationKey("T", "C").toStringKey(), new ConversationKey("T", "C2").toStringKey());
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
-        target.unmuteChannel("C2");
+        target.unmuteChannel(new ConversationKey("T", "C2"));
 
-        verify(pluginSettings).put(eq(MUTED_CHANNEL_IDS_OPTION_NAME), argThat(o -> Matchers.contains("C").matches(o)));
+        verify(pluginSettings).put(MUTED_CHANNEL_IDS_OPTION_NAME, Arrays.asList("T:C"));
     }
 
     @Test
     public void unmuteChannel_shouldDoNothingWhenListIsNull() {
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(null);
 
-        target.unmuteChannel("C");
+        target.unmuteChannel(new ConversationKey("T", "C"));
 
         verify(pluginSettings, never()).put(any(), any());
     }
@@ -157,7 +154,7 @@ public class DefaultSlackSettingsServiceTest {
         when(pluginSettingsFactory.createSettingsForKey(SLACK_SETTINGS_NAMESPACE)).thenReturn(pluginSettings);
         when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(list);
 
-        target.unmuteChannel("C2");
+        target.unmuteChannel(new ConversationKey("T", "C2"));
         verify(pluginSettings, never()).put(any(), any());
     }
 

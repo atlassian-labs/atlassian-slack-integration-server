@@ -115,14 +115,14 @@ public class SpaceToChannelConfiguration {
         /**
          * This will return an existing SpaceToChannelSettings.Builder for the channelId, or create a new one.
          *
-         * @param channelId the channel id the SpaceToChannelSettings.Builder is for
+         * @param conversationKey the channel id the SpaceToChannelSettings.Builder is for
          * @return a SpaceToChannelSettings.Builder
          */
-        public SpaceToChannelSettings.Builder getSettingsBuilder(ConversationKey channelId) {
-            SpaceToChannelSettings.Builder builder = channelSettingBuilders.get(channelId);
+        public SpaceToChannelSettings.Builder getSettingsBuilder(ConversationKey conversationKey) {
+            SpaceToChannelSettings.Builder builder = channelSettingBuilders.get(conversationKey);
             if (builder == null) {
                 builder = new SpaceToChannelSettings.Builder();
-                channelSettingBuilders.put(channelId, builder);
+                channelSettingBuilders.put(conversationKey, builder);
             }
 
             return builder;

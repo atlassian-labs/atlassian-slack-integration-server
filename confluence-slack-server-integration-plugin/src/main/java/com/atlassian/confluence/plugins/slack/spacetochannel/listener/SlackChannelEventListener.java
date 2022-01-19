@@ -1,5 +1,6 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.listener;
 
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.confluence.plugins.slack.spacetochannel.service.SlackSpaceToChannelService;
 import com.atlassian.event.api.EventListener;
@@ -42,22 +43,25 @@ public class SlackChannelEventListener extends AutoSubscribingEventListener {
     @EventListener
     public void onChannelArchivedEvent(final ChannelArchiveSlackEvent event) {
         final String channelId = event.getChannel();
-        asyncExecutor.run(() -> settingService.muteChannel(channelId));
+        final String teamId = event.getSlackEvent().getTeamId();
+        asyncExecutor.run(() -> settingService.muteChannel(new ConversationKey(teamId, channelId)));
     }
 
     @EventListener
     public void onChannelUnarchivedEvent(final ChannelUnarchiveSlackEvent event) {
         final String channelId = event.getChannel();
-        asyncExecutor.run(() -> settingService.unmuteChannel(channelId));
+        final String teamId = event.getSlackEvent().getTeamId();
+        asyncExecutor.run(() -> settingService.unmuteChannel(new ConversationKey(teamId, channelId)));
     }
 
     @EventListener
     public void onChannelDeletedEvent(final ChannelDeletedSlackEvent event) {
         final String channelId = event.getChannel();
+        final String teamId = event.getSlackEvent().getTeamId();
         asyncExecutor.run(() -> {
             LOGGER.debug("Removing notification mapping for channel {} because the channel was deleted", channelId);
             spaceToChannelService.removeNotificationsForChannel(channelId);
-            settingService.unmuteChannel(channelId);
+            settingService.unmuteChannel(new ConversationKey(teamId,channelId));
         });
     }
 
@@ -66,7 +70,7 @@ public class SlackChannelEventListener extends AutoSubscribingEventListener {
         // unmute channel if they are returned in the list of active channels;
         // just in case we missed 'channel_unarchive' event
         asyncExecutor.run(() -> {
-            final List<String> mutedChannelIds = settingService.getMutedChannelIds();
+            final List<ConversationKey> mutedChannelIds = settingService.getMutedChannelIds();
             if (!mutedChannelIds.isEmpty()) {
                 Set<String> activeConversationIds = event.getConversations().stream()
                         .map(Conversation::getId)
