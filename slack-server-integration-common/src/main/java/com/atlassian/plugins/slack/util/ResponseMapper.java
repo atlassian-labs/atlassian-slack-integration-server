@@ -24,9 +24,7 @@ public class ResponseMapper {
         try {
             T resp = supplier.get();
 
-            if (log.isTraceEnabled()) {
-                log.trace("Slack response to {}: {}", id, resp);
-            }
+            log.trace("Slack response to {}: {}", id, resp);
 
             if (resp.isOk()) {
                 log.info("Successful request to Slack: {}", id);

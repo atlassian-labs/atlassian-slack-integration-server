@@ -26,19 +26,15 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.Callable;
 
@@ -80,8 +76,6 @@ public class DefaultSlackClientWithMockedServerTest {
     private SlackResponseCache slackResponseCache;
     @Mock
     private MethodsClient methods;
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     private SlackClient client;
     private MockWebServer server;
