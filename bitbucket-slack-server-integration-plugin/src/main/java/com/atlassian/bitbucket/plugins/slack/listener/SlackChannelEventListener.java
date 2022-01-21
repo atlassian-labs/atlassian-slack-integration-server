@@ -14,11 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class SlackChannelEventListener {
@@ -70,11 +68,7 @@ public class SlackChannelEventListener {
             final List<ConversationKey> mutedChannelIds = settingService.getMutedChannelIds();
             if (!mutedChannelIds.isEmpty()) {
                 Set<ConversationKey> activeConversationIds = event.getConversations().stream()
-                        .flatMap(c -> {
-                            List<ConversationKey> list = new ArrayList<>();
-                            c.getSharedTeamIds().forEach(t -> list.add(new ConversationKey(t, c.getId())));
-                            return list.stream();
-                        })
+                        .map(c -> new ConversationKey(event.getTeamId(), c.getId()))
                         .collect(Collectors.toSet());
                 mutedChannelIds.stream()
                         .filter(activeConversationIds::contains)

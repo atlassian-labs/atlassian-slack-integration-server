@@ -103,8 +103,8 @@ public class SlackChannelEventListenerTest {
         List<Conversation> conversations = Collections.singletonList(conversation);
         List<ConversationKey> mutedConversations = Arrays.asList(new ConversationKey(TEAM_ID, CHANNEL_ID));
         when(conversation.getId()).thenReturn(CHANNEL_ID);
-        when(conversation.getSharedTeamIds()).thenReturn(Arrays.asList(TEAM_ID, "other TEAM_ID"));
         when(settingService.getMutedChannelIds()).thenReturn(mutedConversations);
+        when(slackConversationsLoadedEvent.getTeamId()).thenReturn(TEAM_ID);
         when(slackConversationsLoadedEvent.getConversations()).thenReturn(conversations);
         doAnswer(args -> {
             ((Runnable) args.getArgument(0)).run();

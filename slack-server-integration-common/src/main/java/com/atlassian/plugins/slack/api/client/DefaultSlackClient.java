@@ -343,7 +343,7 @@ public class DefaultSlackClient implements SlackClient {
 
         return result.map(conversations -> {
             // check 'is_archived' flag and unmute mappings
-            eventPublisher.publish(new SlackConversationsLoadedEvent(conversations));
+            eventPublisher.publish(new SlackConversationsLoadedEvent(conversations, slackLink.getTeamId()));
             return conversations;
         });
     }
