@@ -14,6 +14,7 @@ import com.github.seratch.jslack.api.model.Message;
 import com.github.seratch.jslack.api.model.User;
 import com.github.seratch.jslack.api.model.dialog.Dialog;
 import io.atlassian.fugue.Either;
+import okhttp3.Response;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -96,5 +97,7 @@ public interface SlackClient {
     Either<ErrorResponse, String> getPermalink(String conversationId, String messageTimestamp);
 
     Either<ErrorResponse, Boolean> dialogOpen(String triggerId, Dialog dialog);
+
+    Either<ErrorResponse, Response> debugApiCall(String endpoint, Map<String, String> encodedFormValues);
 
 }

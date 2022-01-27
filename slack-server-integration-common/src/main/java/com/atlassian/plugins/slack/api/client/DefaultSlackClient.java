@@ -56,6 +56,8 @@ import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import io.atlassian.fugue.Either;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.FormBody;
+import okhttp3.Response;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -690,5 +692,23 @@ public class DefaultSlackClient implements SlackClient {
         ChannelArchiveSlackEvent event = new ChannelArchiveSlackEvent();
         event.setChannel(channelId);
         eventPublisher.publish(event);
+    }
+
+    @Override
+    public Either<ErrorResponse, Response> debugApiCall(final String endpoint,
+                                                        final Map<String, String> encodedFormValues) {
+        try {
+            final FormBody.Builder builder = new FormBody.Builder();
+            encodedFormValues.forEach((name, value) -> {
+                if (value.startsWith("!!")) {
+                    builder.addEncoded(name, value);
+                } else {
+                    builder.add(name, value);
+                }
+            });
+            return Either.right(slackMethods.runPostFormWithToken(builder, endpoint, currentToken));
+        } catch (Throwable e) {
+            return Either.left(new ErrorResponse(e));
+        }
     }
 }
