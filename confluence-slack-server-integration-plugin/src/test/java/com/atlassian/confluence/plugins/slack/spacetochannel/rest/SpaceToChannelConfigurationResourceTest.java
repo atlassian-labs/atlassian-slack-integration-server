@@ -13,6 +13,7 @@ import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.descriptor.NotificationTypeService;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 import com.atlassian.sal.api.user.UserKey;
@@ -190,7 +191,7 @@ public class SpaceToChannelConfigurationResourceTest {
 
         assertThat(result.getStatus(), is(200));
         verify(slackSpaceToChannelService).removeNotificationForSpaceAndChannel(
-                SPACE_KEY, CHANNEL_ID, notificationType);
+                SPACE_KEY, new ConversationKey(TEAM_ID, CHANNEL_ID), notificationType);
     }
 
     @Test
@@ -224,7 +225,7 @@ public class SpaceToChannelConfigurationResourceTest {
         Response result = target.removeNotificationsForChannel(SPACE_KEY, TEAM_ID, CHANNEL_ID);
 
         assertThat(result.getStatus(), is(200));
-        verify(slackSpaceToChannelService).removeNotificationsForSpaceAndChannel(SPACE_KEY, CHANNEL_ID);
+        verify(slackSpaceToChannelService).removeNotificationsForSpaceAndChannel(SPACE_KEY, new ConversationKey(TEAM_ID, CHANNEL_ID));
         verify(eventPublisher).publish(isA(SpaceToChannelNotificationDisabledAnalyticEvent.class));
     }
 }

@@ -2,6 +2,7 @@ package com.atlassian.confluence.plugins.slack.spacetochannel.service;
 
 import com.atlassian.confluence.plugins.slack.spacetochannel.configuration.SpaceToChannelConfiguration;
 import com.atlassian.confluence.plugins.slack.spacetochannel.configuration.SpaceToChannelSettings;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 
 import java.util.List;
@@ -74,23 +75,23 @@ public interface SlackSpaceToChannelService {
      * This method can be used to disable notifications of a specific type for a given space and channel combination.
      *
      * @param spaceKey         the key of the {@link com.atlassian.confluence.spaces.Space} of interest.
-     * @param channelId        the ID of the channel to stop sending the notifications to.
+     * @param conversationKey        the ID of the channel to stop sending the notifications to.
      * @param notificationType the type of notification that this mapping pertains to.
      */
     void removeNotificationForSpaceAndChannel(
             final String spaceKey,
-            final String channelId,
+            final ConversationKey conversationKey,
             final NotificationType notificationType);
 
     /**
      * This method can be used to disable notifications of all types for a given space and channel combination.
      *
      * @param spaceKey  the key of the {@link com.atlassian.confluence.spaces.Space} of interest.
-     * @param channelId the ID of the channel to stop sending the notifications to.
+     * @param conversationKey the ID of the channel to stop sending the notifications to.
      */
     void removeNotificationsForSpaceAndChannel(
             final String spaceKey,
-            final String channelId);
+            final ConversationKey conversationKey);
 
 
     /**
@@ -118,7 +119,7 @@ public interface SlackSpaceToChannelService {
     /**
      * Remove all the notification mappings for specified channel across all spaces.
      *
-     * @param channelId id of the channel which mappings should be removed
+     * @param conversationKey id of the channel which mappings should be removed
      */
-    void removeNotificationsForChannel(String channelId);
+    void removeNotificationsForChannel(ConversationKey conversationKey);
 }

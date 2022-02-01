@@ -7,6 +7,7 @@ import com.atlassian.jira.plugins.slack.dao.ConfigurationDAO;
 import com.atlassian.jira.plugins.slack.manager.impl.DefaultProjectConfigurationManager;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
 import com.atlassian.jira.plugins.slack.model.ao.ProjectConfigurationAO;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.google.common.collect.ImmutableList;
 import net.java.ao.Query;
 import org.slf4j.Logger;
@@ -77,9 +78,10 @@ public class DefaultConfigurationDao implements ConfigurationDAO {
     }
 
     @Override
-    public List<ProjectConfiguration> findByChannel(final String channelId) {
-        ProjectConfigurationAO[] configs = ao.find(ProjectConfigurationAO.class,
-                ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?", channelId);
+    public List<ProjectConfiguration> findByChannel(final ConversationKey conversationKey) {
+        ProjectConfigurationAO[] configs = ao.find(ProjectConfigurationAO.class, Query.select()
+                .where(ProjectConfigurationAO.COLUMN_TEAM_ID + " = ?", conversationKey.getTeamId())
+                .where(ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?", conversationKey.getChannelId()));
 
         return ImmutableList.copyOf(configs);
     }

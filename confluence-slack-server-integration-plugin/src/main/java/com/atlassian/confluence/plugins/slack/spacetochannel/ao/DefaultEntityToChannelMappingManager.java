@@ -1,6 +1,7 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.ao;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,12 +102,13 @@ public class DefaultEntityToChannelMappingManager implements EntityToChannelMapp
     @Override
     public void removeNotificationsForEntityAndChannel(
             final String entityKey,
-            final String channelId) {
+            final ConversationKey conversationKey) {
         ao.deleteWithSQL(
                 AOEntityToChannelMapping.class,
-                "ENTITY_KEY = ? AND CHANNEL_ID = ?",
+                "ENTITY_KEY = ? AND TEAM_ID = ? AND CHANNEL_ID = ?",
                 entityKey,
-                channelId);
+                conversationKey.getTeamId(),
+                conversationKey.getChannelId());
     }
 
     @Override
@@ -120,21 +122,23 @@ public class DefaultEntityToChannelMappingManager implements EntityToChannelMapp
     @Override
     public void removeNotificationForEntityAndChannel(
             final String entityKey,
-            final String channelId,
+            final ConversationKey conversationKey,
             final NotificationType notificationType) {
         ao.deleteWithSQL(
                 AOEntityToChannelMapping.class,
-                "ENTITY_KEY = ? AND CHANNEL_ID = ? AND MESSAGE_TYPE_KEY = ?",
+                "ENTITY_KEY = ? AND TEAM_ID = ? AND CHANNEL_ID = ? AND MESSAGE_TYPE_KEY = ?",
                 entityKey,
-                channelId,
+                conversationKey.getTeamId(),
+                conversationKey.getChannelId(),
                 notificationType.getKey());
     }
 
     @Override
-    public int removeNotificationsForChannel(final String channelId) {
+    public int removeNotificationsForChannel(final ConversationKey conversationKey) {
         return ao.deleteWithSQL(
                 AOEntityToChannelMapping.class,
-                "CHANNEL_ID = ?",
-                channelId);
+                "TEAM_ID = ? AND CHANNEL_ID = ?",
+                conversationKey.getTeamId(),
+                conversationKey.getChannelId());
     }
 }

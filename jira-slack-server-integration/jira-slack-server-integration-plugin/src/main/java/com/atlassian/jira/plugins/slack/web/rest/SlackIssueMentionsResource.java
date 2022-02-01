@@ -11,6 +11,7 @@ import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.google.common.collect.ImmutableMap;
 import io.atlassian.fugue.Either;
@@ -97,10 +98,11 @@ public class SlackIssueMentionsResource {
     }
 
     @DELETE
-    @Path("{channelId}/{messageTimestamp}")
-    public Response deleteIssueMention(@PathParam("channelId") final String channelId,
+    @Path("{teamId}/{channelId}/{messageTimestamp}")
+    public Response deleteIssueMention(@PathParam("teamId") final String teamId,
+                                       @PathParam("channelId") final String channelId,
                                        @PathParam("messageTimestamp") final String messageTimestamp) {
-        issueMentionService.deleteMessageMention(channelId, messageTimestamp);
+        issueMentionService.deleteMessageMention(new ConversationKey(teamId, channelId), messageTimestamp);
         eventPublisher.publish(new IssueMentionDeletedEvent(analyticsContextProvider.current()));
 
         return Response.ok().build();

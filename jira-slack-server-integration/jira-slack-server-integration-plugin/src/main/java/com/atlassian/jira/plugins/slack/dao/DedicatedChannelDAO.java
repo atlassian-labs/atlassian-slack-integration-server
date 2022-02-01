@@ -1,6 +1,7 @@
 package com.atlassian.jira.plugins.slack.dao;
 
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
+import com.atlassian.plugins.slack.api.ConversationKey;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +28,10 @@ public interface DedicatedChannelDAO {
     /**
      * Find the DedicatedChannel objects for a given channel name
      *
-     * @param channelId the channel id
+     * @param conversationKey the channel id
      * @return a iterable of dedicated channels
      */
-    List<DedicatedChannel> findMappingsForChannel(String channelId);
+    List<DedicatedChannel> findMappingsForChannel(ConversationKey conversationKey);
 
     /**
      * Find the DedicatedChannel objects assiciated with any channel in specified team.

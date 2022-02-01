@@ -378,11 +378,11 @@ public class DefaultProjectConfigurationManagerTest {
 
     @Test
     public void getAllProjectsByChannel() {
-        when(configurationDAO.findByChannel("C")).thenReturn(Collections.singletonList(projectConfiguration));
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.singletonList(projectConfiguration));
         when(projectConfiguration.getProjectId()).thenReturn(7L);
         when(projectManager.getProjectObj(7L)).thenReturn(project);
 
-        Set<Project> result = target.getAllProjectsByChannel("C");
+        Set<Project> result = target.getAllProjectsByChannel(new ConversationKey("T", "C"));
 
         assertThat(result, contains(project));
     }
@@ -452,13 +452,13 @@ public class DefaultProjectConfigurationManagerTest {
     @Test
     public void deleteProjectConfigurationsByChannelId() {
         initializeDeleteMocks();
-        when(configurationDAO.findByChannel("C")).thenReturn(Collections.singletonList(projectConfiguration));
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.singletonList(projectConfiguration));
         when(projectConfiguration.getConfigurationGroupId()).thenReturn("G");
         when(projectConfiguration.getTeamId()).thenReturn("T");
         when(projectConfiguration.getChannelId()).thenReturn("C");
         when(projectConfiguration.getProjectId()).thenReturn(7L);
 
-        target.deleteProjectConfigurationsByChannelId("C");
+        target.deleteProjectConfigurationsByChannelId(new ConversationKey("T", "C"));
 
         assertDeletetion(1);
     }
@@ -737,7 +737,7 @@ public class DefaultProjectConfigurationManagerTest {
 
     @Test
     public void muteProjectConfigurationsByChannelId() {
-        when(configurationDAO.findByChannel("C"))
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C")))
                 .thenReturn(Arrays.asList(projectConfiguration, projectConfiguration2));
         when(projectConfiguration.getName()).thenReturn(IS_MUTED);
         when(projectConfiguration.getConfigurationGroupId()).thenReturn("G");
@@ -747,7 +747,7 @@ public class DefaultProjectConfigurationManagerTest {
         when(projectConfiguration2.getProjectId()).thenReturn(7L);
         when(projectConfiguration2.getConfigurationGroupId()).thenReturn("G2");
 
-        target.muteProjectConfigurationsByChannelId("C");
+        target.muteProjectConfigurationsByChannelId(new ConversationKey("T", "C"));
 
         verify(configurationDAO).insertProjectConfiguration(projectConfigurationArgumentCaptor.capture());
         ProjectConfiguration newConfig = projectConfigurationArgumentCaptor.getValue();
@@ -761,12 +761,12 @@ public class DefaultProjectConfigurationManagerTest {
 
     @Test
     public void unmuteProjectConfigurationsByChannelId() {
-        when(configurationDAO.findByChannel("C"))
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C")))
                 .thenReturn(Arrays.asList(projectConfiguration, projectConfiguration2));
         when(projectConfiguration.getName()).thenReturn(IS_MUTED);
         when(projectConfiguration2.getName()).thenReturn("NOT_IS_MUTED");
 
-        target.unmuteProjectConfigurationsByChannelId("C");
+        target.unmuteProjectConfigurationsByChannelId(new ConversationKey("T", "C"));
 
         verify(configurationDAO).deleteProjectConfiguration(projectConfiguration);
     }

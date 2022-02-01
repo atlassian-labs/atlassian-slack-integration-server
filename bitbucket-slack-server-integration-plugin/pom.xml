@@ -43,8 +43,8 @@
 
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.api.version>6.7.1</bitbucket.api.version>
-        <bitbucket.version>6.7.1</bitbucket.version>
+        <bitbucket.api.version>7.0.0</bitbucket.api.version>
+        <bitbucket.version>7.0.0</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
         <bitbucket.amps.version>8.2.2</bitbucket.amps.version>
         <platform.version>5.0.0</platform.version>

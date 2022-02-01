@@ -42,7 +42,7 @@ public class SlackChannelEventListener extends AutoSubscribingEventListener {
     @EventListener
     public void onChannelArchivedEvent(final ChannelArchiveSlackEvent event) {
         final String channelId = event.getChannel();
-        final String teamId = event.getSlackEvent().getTeamId();
+        final String teamId =event.getSlackEvent().getTeamId();
         asyncExecutor.run(() -> settingService.muteChannel(new ConversationKey(teamId, channelId)));
     }
 
@@ -59,7 +59,7 @@ public class SlackChannelEventListener extends AutoSubscribingEventListener {
         final String teamId = event.getSlackEvent().getTeamId();
         asyncExecutor.run(() -> {
             LOGGER.debug("Removing notification mapping for channel {} because the channel was deleted", channelId);
-            spaceToChannelService.removeNotificationsForChannel(channelId);
+            spaceToChannelService.removeNotificationsForChannel(new ConversationKey(teamId, channelId));
             settingService.unmuteChannel(new ConversationKey(teamId, channelId));
         });
     }

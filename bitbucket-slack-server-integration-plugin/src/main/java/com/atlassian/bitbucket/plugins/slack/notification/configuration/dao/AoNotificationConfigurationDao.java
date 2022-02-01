@@ -146,12 +146,17 @@ public class AoNotificationConfigurationDao extends AbstractAoDao implements Not
     }
 
     @Override
-    public void removeNotificationsForChannel(@Nonnull final String channelId) {
+    public void removeNotificationsForChannel(@Nonnull final ConversationKey conversationKey) {
         StringBuilder query = new StringBuilder();
         ImmutableList.Builder<Object> parameters = ImmutableList.builder();
+        where(AoNotificationConfiguration.TEAM_ID_COLUMN,
+                Optional.of(conversationKey.getTeamId()),
+                parameters,
+                query,
+                value -> value);
 
         where(AoNotificationConfiguration.CHANNEL_ID_COLUMN,
-                Optional.of(channelId),
+                Optional.of(conversationKey.getChannelId()),
                 parameters,
                 query,
                 value -> value);

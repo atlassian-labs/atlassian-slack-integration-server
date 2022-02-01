@@ -21,6 +21,7 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
@@ -112,7 +113,7 @@ public class DefaultDedicatedChannelManager extends AutoSubscribingEventListener
 
     @EventListener
     public void onChannelDeletedEvent(final ChannelDeletedSlackEvent event) {
-        dedicatedChannelDAO.findMappingsForChannel(event.getChannel()).forEach(
+        dedicatedChannelDAO.findMappingsForChannel(new ConversationKey(event.getSlackEvent().getTeamId(), event.getChannel())).forEach(
                 dc -> dedicatedChannelDAO.deleteDedicatedChannel(dc.getIssueId()));
     }
 
@@ -244,7 +245,8 @@ public class DefaultDedicatedChannelManager extends AutoSubscribingEventListener
     }
 
     @Override
-    public boolean isNotSameChannel(final String channelId, final Optional<DedicatedChannel> dedicatedChannel) {
-        return dedicatedChannel.map(input -> !input.getChannelId().equals(channelId)).orElse(false);
+    public boolean isNotSameChannel(final ConversationKey conversationKey, final Optional<DedicatedChannel> dedicatedChannel) {
+        return dedicatedChannel.map(input -> !input.getTeamId().equals(conversationKey.getTeamId())
+                && !input.getChannelId().equals(conversationKey.getChannelId())).orElse(false);
     }
 }

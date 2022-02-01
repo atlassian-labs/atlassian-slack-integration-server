@@ -4,6 +4,7 @@ import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import io.atlassian.fugue.Either;
 
@@ -55,9 +56,9 @@ public interface DedicatedChannelManager {
     /**
      * Return true if the given channel id and the optional dedicated channel (if any) are different channels.
      *
-     * @param channelId        the first channel's id
+     * @param conversationKey        the first channel's id
      * @param dedicatedChannel an option which may contain a second channel
      * @return
      */
-    boolean isNotSameChannel(final String channelId, Optional<DedicatedChannel> dedicatedChannel);
+    boolean isNotSameChannel(final ConversationKey conversationKey, Optional<DedicatedChannel> dedicatedChannel);
 }

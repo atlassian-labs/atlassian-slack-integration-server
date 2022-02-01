@@ -292,25 +292,25 @@ public class DefaultSlackSpaceToChannelServiceTest {
 
     @Test
     public void removeNotificationsForSpaceAndChannel_shouldCallExpectedMethod() {
-        target.removeNotificationsForSpaceAndChannel(SPACE_KEY, CHANNEL_ID);
+        target.removeNotificationsForSpaceAndChannel(SPACE_KEY, new ConversationKey(TEAM_ID, CHANNEL_ID));
 
         verify(entityToChannelMappingManager).removeNotificationsForEntityAndChannel(
-                SPACE_KEY, CHANNEL_ID);
+                SPACE_KEY, new ConversationKey(TEAM_ID, CHANNEL_ID));
     }
 
     @Test
     public void removeNotificationForSpaceAndChannel_shouldCallExpectedMethod() {
-        target.removeNotificationForSpaceAndChannel(SPACE_KEY, CHANNEL_ID, notificationType);
+        target.removeNotificationForSpaceAndChannel(SPACE_KEY, new ConversationKey(TEAM_ID, CHANNEL_ID), notificationType);
 
         verify(entityToChannelMappingManager).removeNotificationForEntityAndChannel(
-                SPACE_KEY, CHANNEL_ID, notificationType);
+                SPACE_KEY, new ConversationKey(TEAM_ID, CHANNEL_ID), notificationType);
     }
 
     @Test
     public void removeNotificationsForChannel_shouldCallExpectedMethod() {
-        target.removeNotificationsForChannel(CHANNEL_ID);
+        target.removeNotificationsForChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
 
-        verify(entityToChannelMappingManager).removeNotificationsForChannel(CHANNEL_ID);
+        verify(entityToChannelMappingManager).removeNotificationsForChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
     }
 
     @Test

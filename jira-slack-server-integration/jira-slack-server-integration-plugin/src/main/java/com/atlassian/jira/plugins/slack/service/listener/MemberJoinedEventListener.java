@@ -9,6 +9,7 @@ import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.api.webhooks.MemberJoinedChannelSlackEvent;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
@@ -45,8 +46,8 @@ public class MemberJoinedEventListener extends AutoSubscribingEventListener {
     public void memberJoined(@Nonnull final MemberJoinedChannelSlackEvent event) {
         logger.debug("Got MemberJoinedChannelSlackEvent event");
         if (event.getSlackEvent().getSlackLink().getBotUserId().equals(event.getUser())) {
-            if (configurationDAO.findByChannel(event.getChannel()).isEmpty()
-                    && dedicatedChannelDAO.findMappingsForChannel(event.getChannel()).isEmpty()) {
+            if (configurationDAO.findByChannel(new ConversationKey(event.getTeam(), event.getChannel())).isEmpty()
+                    && dedicatedChannelDAO.findMappingsForChannel(new ConversationKey(event.getTeam(), event.getChannel())).isEmpty()) {
                 //send initial help message if there are no configurations for this channel
                 final NotificationInfo notificationInfo = new NotificationInfo(
                         event.getSlackEvent().getSlackLink(),

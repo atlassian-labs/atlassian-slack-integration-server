@@ -8,6 +8,9 @@ import net.java.ao.schema.Table;
 @Preload("*")
 @Table(value = "EntitiesToChannels")
 public interface AOEntityToChannelMapping extends Entity {
+
+    String CHANNEL_ID_COLUMN = "CHANNEL_ID";
+
     /**
      * @return the Confluence space key that the entity relates to.
      */

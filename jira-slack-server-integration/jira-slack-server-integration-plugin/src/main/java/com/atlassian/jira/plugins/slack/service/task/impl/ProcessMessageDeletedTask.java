@@ -2,6 +2,7 @@ package com.atlassian.jira.plugins.slack.service.task.impl;
 
 import com.atlassian.jira.plugins.slack.model.SlackDeletedMessage;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
+import com.atlassian.plugins.slack.api.ConversationKey;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Callable;
@@ -23,7 +24,7 @@ public class ProcessMessageDeletedTask implements Callable<Void> {
 
     @Override
     public Void call() {
-        issueMentionService.deleteMessageMention(message.getChannelId(), message.getTs());
+        issueMentionService.deleteMessageMention(new ConversationKey(message.getTeamId(), message.getChannelId()), message.getTs());
         return null;
     }
 }

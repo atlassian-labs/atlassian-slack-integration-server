@@ -24,6 +24,8 @@
         <entity>com.atlassian.confluence.plugins.slack.spacetochannel.ao.AOEntityToChannelMapping</entity>
         <entity>com.atlassian.plugins.slack.ao.AOSlackLink</entity>
         <entity>com.atlassian.plugins.slack.ao.AOSlackUser</entity>
+
+        <upgradeTask>com.atlassian.confluence.plugins.slack.spacetochannel.ao.upgrade.v1.MutedChannelIdUpgradeTask001</upgradeTask>
     </ao>
 
     <!-- Personal notifications -->
@@ -201,6 +203,16 @@
         </condition>
         <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.SpaceSidebarCondition"/>
     </web-item>
+
+    <!-- Active Objects Tables -->
+<!--    <ao key="confluence-slack-ao" namespace="com.atlassian.plugins.slack-integration-plugin">-->
+<!--        <description>AO classes for slack and confluence</description>-->
+<!--        <entity>com.atlassian.confluence.plugins.slack.spacetochannel.ao.AOEntityToChannelMapping</entity>-->
+<!--        <entity>com.atlassian.plugins.slack.ao.AOSlackLink</entity>-->
+<!--        <entity>com.atlassian.plugins.slack.ao.AOSlackUser</entity>-->
+
+<!--        <upgradeTask>com.atlassian.confluence.plugins.slack.spacetochannel.ao.upgrade.v1.MutedChannelIdUpgradeTask001</upgradeTask>-->
+<!--    </ao>-->
 
     <!-- Slack REST endpoints -->
     <rest key="slack-rest" name="Slack Confluence Resources" path="/slack" version="1.0">

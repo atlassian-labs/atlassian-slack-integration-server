@@ -1,6 +1,7 @@
 package com.atlassian.jira.plugins.slack.dao;
 
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
+import com.atlassian.plugins.slack.api.ConversationKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,10 +39,10 @@ public interface ConfigurationDAO {
     /**
      * Searches for all the project configurations that are mapped to a specific channelId
      *
-     * @param channelId the channelId
+     * @param conversationKey the channelId
      * @return a collection of project configurations
      */
-    List<ProjectConfiguration> findByChannel(final String channelId);
+    List<ProjectConfiguration> findByChannel(final ConversationKey conversationKey);
 
     /**
      * Searches for all the project configurations that are mapped to a specific team

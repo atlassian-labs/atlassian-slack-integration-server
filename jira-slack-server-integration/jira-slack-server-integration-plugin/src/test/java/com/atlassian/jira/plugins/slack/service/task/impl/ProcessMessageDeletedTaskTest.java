@@ -2,6 +2,7 @@ package com.atlassian.jira.plugins.slack.service.task.impl;
 
 import com.atlassian.jira.plugins.slack.model.SlackDeletedMessage;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -27,10 +28,11 @@ public class ProcessMessageDeletedTaskTest {
     @Test
     public void call() {
         when(message.getChannelId()).thenReturn("C");
+        when(message.getTeamId()).thenReturn("T");
         when(message.getTs()).thenReturn("ts");
 
         target.call();
 
-        verify(issueMentionService).deleteMessageMention("C", "ts");
+        verify(issueMentionService).deleteMessageMention(new ConversationKey("T", "C"), "ts");
     }
 }

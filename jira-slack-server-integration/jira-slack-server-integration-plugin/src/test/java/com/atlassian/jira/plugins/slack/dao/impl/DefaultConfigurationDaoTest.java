@@ -7,6 +7,7 @@ import com.atlassian.cache.CacheManager;
 import com.atlassian.jira.plugins.slack.manager.impl.DefaultProjectConfigurationManager;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
 import com.atlassian.jira.plugins.slack.model.ao.ProjectConfigurationAO;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import net.java.ao.Query;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,6 +56,8 @@ public class DefaultConfigurationDaoTest {
     private ArgumentCaptor<Query> query;
     @Captor
     private ArgumentCaptor<Map<String, Object>> mapCaptor;
+    @Captor
+    ArgumentCaptor<Query> queryCaptor;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -123,11 +127,14 @@ public class DefaultConfigurationDaoTest {
     @Test
     public void findByChannel() {
         ProjectConfigurationAO[] configurationsList = {projectConfigurationAO, projectConfigurationAO2};
-        when(ao.find(ProjectConfigurationAO.class, ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?", "C"))
+        when(ao.find(eq(ProjectConfigurationAO.class), queryCaptor.capture().select()
+                .where(ProjectConfigurationAO.COLUMN_TEAM_ID + " = ?", "T")
+                .where(ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?", "C")))
                 .thenReturn(configurationsList);
 
         target = new DefaultConfigurationDao(ao, cacheManager);
-        List<ProjectConfiguration> result = target.findByChannel("C");
+        List<ProjectConfiguration> result = target.findByChannel(new ConversationKey("T", "C"));
+
 
         assertThat(result, containsInAnyOrder(projectConfigurationAO, projectConfigurationAO2));
     }

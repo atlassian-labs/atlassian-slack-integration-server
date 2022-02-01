@@ -73,8 +73,8 @@ public class DefaultNotificationConfigurationService implements NotificationConf
     }
 
     @Override
-    public void removeNotificationsForChannel(@Nonnull final String channelId) {
-        dao.removeNotificationsForChannel(channelId);
+    public void removeNotificationsForChannel(@Nonnull final ConversationKey conversationKey) {
+        dao.removeNotificationsForChannel(conversationKey);
     }
 
     @Nonnull
