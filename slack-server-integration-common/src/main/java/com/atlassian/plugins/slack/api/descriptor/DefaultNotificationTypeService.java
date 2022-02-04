@@ -4,6 +4,7 @@ import com.atlassian.event.api.EventPublisher;
 import com.atlassian.ozymandias.SafeAccessViaPluginAccessor;
 import com.atlassian.ozymandias.SafePluginPointAccess;
 import com.atlassian.plugin.PluginAccessor;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.BaseSlackEvent;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 import com.atlassian.plugins.slack.api.notification.SlackNotification;
@@ -110,7 +111,7 @@ public class DefaultNotificationTypeService implements NotificationTypeService {
                     module.getSlackMessage(event).ifPresent(message ->
                             context.get().getChannels(event, notificationType).stream()
                                     // if the channel was archived, skip sending notifications to it
-                                    .filter(channel -> !slackSettingService.isChannelMuted(channel.getChannelId()))
+                                    .filter(channel -> !slackSettingService.isChannelMuted(new ConversationKey(channel.getTeamId(), channel.getChannelId())))
                                     .forEach(channel ->
                                             messages.add(new ChannelNotification(
                                                     channel.getTeamId(),

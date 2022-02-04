@@ -111,16 +111,17 @@ public class DefaultSlackSpaceToChannelServiceTest {
     public void getAllSpaceToChannelLinks_shouldReturnExpectedValue() {
         List<AOEntityToChannelMapping> mappings = Arrays.asList(entity1, entity2);
         ConversationsAndLinks conversationsAndLinks = new ConversationsAndLinks(
-                ImmutableMap.of(CHANNEL_ID, conversation),
+                ImmutableMap.of(new ConversationKey(TEAM_ID, CHANNEL_ID), conversation),
                 ImmutableMap.of(TEAM_ID, slackLink),
-                ImmutableMap.of(CHANNEL_ID, slackLink, CHANNEL_ID2, slackLink));
+                ImmutableMap.of(new ConversationKey(TEAM_ID, CHANNEL_ID),
+                        slackLink, new ConversationKey(TEAM_ID, CHANNEL_ID2), slackLink));
 
         when(slackLinkManager.isAnyLinkDefined()).thenReturn(true);
         when(entityToChannelMappingManager.getAll()).thenReturn(mappings);
         when(userManager.getRemoteUserKey()).thenReturn(userKey);
         when(conversationLoaderHelper.conversationsAndLinksById(same(mappings), entityCaptor.capture(), loaderCaptor.capture()))
                 .thenReturn(conversationsAndLinks);
-        when(slackSettingService.isChannelMuted(CHANNEL_ID)).thenReturn(true);
+        when(slackSettingService.isChannelMuted(new ConversationKey(TEAM_ID, CHANNEL_ID))).thenReturn(true);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(notificationTypeService.getNotificationTypeForKey(NOTIF_TYPE_KEY)).thenReturn(Optional.of(notificationType));
         when(notificationTypeService.getNotificationTypeForKey(NOTIF_TYPE_KEY2)).thenReturn(Optional.of(notificationType2));
@@ -131,6 +132,7 @@ public class DefaultSlackSpaceToChannelServiceTest {
         when(entity1.getChannelId()).thenReturn(CHANNEL_ID);
         when(entity1.getTeamId()).thenReturn(TEAM_ID);
         when(entity2.getMessageTypeKey()).thenReturn(NOTIF_TYPE_KEY2);
+        when(entity2.getTeamId()).thenReturn(TEAM_ID);
         when(entity2.getEntityKey()).thenReturn(SPACE_KEY);
         when(entity2.getChannelId()).thenReturn(CHANNEL_ID2);
         when(slackLink.getTeamName()).thenReturn(TEAM_NAME);
@@ -150,15 +152,16 @@ public class DefaultSlackSpaceToChannelServiceTest {
     public void getSpaceToChannelConfiguration_shouldReturnExpectedValue() {
         List<AOEntityToChannelMapping> mappings = Arrays.asList(entity1, entity2);
         ConversationsAndLinks conversationsAndLinks = new ConversationsAndLinks(
-                ImmutableMap.of(CHANNEL_ID, conversation),
+                ImmutableMap.of(new ConversationKey(TEAM_ID, CHANNEL_ID), conversation),
                 ImmutableMap.of(TEAM_ID, slackLink),
-                ImmutableMap.of(CHANNEL_ID, slackLink, CHANNEL_ID2, slackLink));
+                ImmutableMap.of(new ConversationKey(TEAM_ID, CHANNEL_ID), slackLink,
+                        new ConversationKey(TEAM_ID, CHANNEL_ID2), slackLink));
 
         when(entityToChannelMappingManager.getForEntity(SPACE_KEY)).thenReturn(mappings);
         when(userManager.getRemoteUserKey()).thenReturn(userKey);
         when(conversationLoaderHelper.conversationsAndLinksById(same(mappings), entityCaptor.capture(), loaderCaptor.capture()))
                 .thenReturn(conversationsAndLinks);
-        when(slackSettingService.isChannelMuted(CHANNEL_ID)).thenReturn(true);
+        when(slackSettingService.isChannelMuted(new ConversationKey(TEAM_ID, CHANNEL_ID))).thenReturn(true);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(notificationTypeService.getNotificationTypeForKey(NOTIF_TYPE_KEY)).thenReturn(Optional.of(notificationType));
         when(notificationTypeService.getNotificationTypeForKey(NOTIF_TYPE_KEY2)).thenReturn(Optional.of(notificationType2));
@@ -167,6 +170,7 @@ public class DefaultSlackSpaceToChannelServiceTest {
         when(entity1.getMessageTypeKey()).thenReturn(NOTIF_TYPE_KEY);
         when(entity1.getChannelId()).thenReturn(CHANNEL_ID);
         when(entity1.getTeamId()).thenReturn(TEAM_ID);
+        when(entity2.getTeamId()).thenReturn(TEAM_ID);
         when(entity2.getMessageTypeKey()).thenReturn(NOTIF_TYPE_KEY2);
         when(entity2.getChannelId()).thenReturn(CHANNEL_ID2);
         when(slackLink.getTeamName()).thenReturn(TEAM_NAME);

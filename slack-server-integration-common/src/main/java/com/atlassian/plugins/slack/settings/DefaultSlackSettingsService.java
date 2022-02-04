@@ -1,5 +1,6 @@
 package com.atlassian.plugins.slack.settings;
 
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
@@ -29,58 +30,64 @@ public class DefaultSlackSettingsService implements SlackSettingService {
     private final TransactionTemplate transactionTemplate;
 
     @Override
-    public boolean isChannelMuted(final String channelId) {
+    public boolean isChannelMuted(final ConversationKey conversationKey) {
         boolean isMuted = false;
-        if (StringUtils.isNotBlank(channelId)) {
-            List<String> mutedChannelIds = getMutedChannelIds();
-            isMuted = mutedChannelIds.contains(channelId);
+        if (StringUtils.isNotBlank(conversationKey.toString())) {
+            List<ConversationKey> mutedChannelIds = getMutedChannelIds();
+            isMuted = mutedChannelIds.contains(conversationKey);
         }
         return isMuted;
     }
 
     @Override
-    public void muteChannel(final String channelId) {
-        if (StringUtils.isNotBlank(channelId)) {
+    public void muteChannel(final ConversationKey conversationKey) {
+        if (StringUtils.isNotBlank(conversationKey.toString())) {
             transactionTemplate.execute(() -> {
-                List<String> channelIds = getMutedChannelIds();
-                Set<String> channelIdsWithNewOne = new HashSet<>(channelIds);
-                boolean channelWasntMutedPreviously = channelIdsWithNewOne.add(channelId);
+                List<String> conversationKeys = toStringList();
+                Set<String> conversationKeysWithNewOne = conversationKeys == null ? new HashSet<>() : new HashSet<>(conversationKeys);
+                boolean channelWasntMutedPreviously = conversationKeysWithNewOne.add(conversationKey.toStringKey());
                 if (channelWasntMutedPreviously) {
-                    log.debug("Muting notifications for channel {}", channelId);
-                    getStorage().put(MUTED_CHANNEL_IDS_OPTION_NAME, new ArrayList<>(channelIdsWithNewOne));
+                    log.debug("Muting notifications for channel {}", conversationKey);
+                    getStorage().put(MUTED_CHANNEL_IDS_OPTION_NAME, new ArrayList<>(conversationKeysWithNewOne));
                 }
-
                 return null;
             });
         }
     }
 
     @Override
-    public void unmuteChannel(final String channelId) {
-        if (StringUtils.isNotBlank(channelId)) {
+    public void unmuteChannel(final ConversationKey conversationKey) {
+        if (StringUtils.isNotBlank(conversationKey.toString())) {
             transactionTemplate.execute(() -> {
-                List<String> channelIds = getMutedChannelIds();
-                List<String> channelIdsWithoutSpecified = channelIds != null ? new ArrayList<>(channelIds) : new ArrayList<>();
-                boolean channelWasMutedPreviously = channelIdsWithoutSpecified.remove(channelId);
+                List<String> conversationKeys = toStringList();
+                List<String> conversationKeysWithoutSpecified = conversationKeys != null ? new ArrayList<>(conversationKeys) : new ArrayList<>();
+                boolean channelWasMutedPreviously = conversationKeysWithoutSpecified.remove(conversationKey.toStringKey());
                 if (channelWasMutedPreviously) {
-                    log.debug("Unmuting notifications for channel {}", channelId);
-                    getStorage().put(MUTED_CHANNEL_IDS_OPTION_NAME, channelIdsWithoutSpecified);
+                    log.debug("Unmuting notifications for channel {}", conversationKey);
+                    getStorage().put(MUTED_CHANNEL_IDS_OPTION_NAME, conversationKeysWithoutSpecified);
                 }
-
                 return null;
             });
         }
     }
 
     @Override
-    public List<String> getMutedChannelIds() {
+    public List<ConversationKey> getMutedChannelIds() {
         try {
-            List<String> channelIds = (List<String>) getStorage().get(MUTED_CHANNEL_IDS_OPTION_NAME);
-            return channelIds != null ? channelIds : Collections.emptyList();
+            List<String> conversationKeyStr = toStringList();
+            List<ConversationKey> conversationKeyList = new ArrayList<>();
+            for (String convKey : conversationKeyStr) {
+                conversationKeyList.add(ConversationKey.fromStringKey(convKey));
+            }
+            return conversationKeyList != null ? conversationKeyList : Collections.emptyList();
         } catch (Throwable e) {
             log.debug("Could not get muted channels list", e);
             return Collections.emptyList();
         }
+    }
+
+    private List<String> toStringList() {
+        return (List<String>) getStorage().get(MUTED_CHANNEL_IDS_OPTION_NAME);
     }
 
     private PluginSettings getStorage() {

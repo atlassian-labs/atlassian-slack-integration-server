@@ -1,5 +1,6 @@
 package com.atlassian.jira.plugins.slack.model.dto;
 
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.rest.model.SlackChannelDTO;
 import com.google.common.collect.Maps;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
@@ -24,9 +25,9 @@ public class ProjectToChannelConfigurationDTO extends BaseDTO {
     private final long projectId;
     private final String projectName;
     private final String projectKey;
-    private final Map<String, SlackChannelDTO> channels;
-    private final Map<String, List<ConfigurationGroupDTO>> configuration;
-    private final List<String> orderedChannelIds;
+    private final Map<String, SlackChannelDTO> channels; // Map<teamId + : + channelId, ...>
+    private final Map<String, List<ConfigurationGroupDTO>> configuration; // Map<teamId + : + channelId, ...>
+    private final List<ConversationKey> orderedConversationKeys;
 
     public ProjectToChannelConfigurationDTO(final long projectId,
                                             final String projectKey,
@@ -36,15 +37,13 @@ public class ProjectToChannelConfigurationDTO extends BaseDTO {
         this.projectName = projectName;
         this.projectKey = projectKey;
 
-        this.configuration = configuration.entrySet().stream().collect(Collectors.toMap(
-                e -> e.getKey().getChannelId(),
-                Map.Entry::getValue
-        ));
+        this.configuration = configuration.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().getTeamId() + ":" + e.getKey().getChannelId(), Map.Entry::getValue));
 
-        this.channels = Maps.uniqueIndex(configuration.keySet(), SlackChannelDTO::getChannelId);
+        this.channels = Maps.uniqueIndex(configuration.keySet(), channel -> channel.getTeamId() + ":" + channel.getChannelId());
 
-        this.orderedChannelIds = configuration.keySet().stream()
-                .map(SlackChannelDTO::getChannelId)
+        this.orderedConversationKeys = configuration.keySet().stream()
+                .map(conv -> new ConversationKey(conv.getTeamId(), conv.getChannelId()))
                 .collect(Collectors.toList());
     }
 
@@ -69,7 +68,7 @@ public class ProjectToChannelConfigurationDTO extends BaseDTO {
     }
 
     @SuppressWarnings("unused")
-    public List<String> getOrderedChannelIds() {
-        return orderedChannelIds;
+    public List<ConversationKey> getOrderedConversationKeys() {
+        return orderedConversationKeys;
     }
 }

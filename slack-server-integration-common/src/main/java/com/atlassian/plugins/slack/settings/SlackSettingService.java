@@ -1,15 +1,17 @@
 package com.atlassian.plugins.slack.settings;
 
+import com.atlassian.plugins.slack.api.ConversationKey;
+
 import java.util.List;
 
 public interface SlackSettingService {
-    boolean isChannelMuted(String channelId);
+    boolean isChannelMuted(ConversationKey conversationKey);
 
-    void muteChannel(String channelId);
+    void muteChannel(ConversationKey conversationKey);
 
-    void unmuteChannel(String channelId);
+    void unmuteChannel(ConversationKey conversationKey);
 
-    List<String> getMutedChannelIds();
+    List<ConversationKey> getMutedChannelIds();
 
     boolean isInstancePublic();
 
