@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -29,9 +28,6 @@ import static org.junit.Assert.assertThat;
 
 
 public class MutedChannelIdUpgradeTask001Test {
-
-    private static final String SLACK_SETTINGS_NAMESPACE = "com.atlassian.slack";
-    private static final String MUTED_CHANNEL_IDS_OPTION_NAME = "muted.channel.ids";
     private static final String TEAM_ID = "T";
 
     @Mock
@@ -65,7 +61,7 @@ public class MutedChannelIdUpgradeTask001Test {
     public void getModelReturnsExpectedValue() {
         ModelVersion version = target.getModelVersion();
 
-        assertThat(version.toString(), equalTo("3"));
+        assertThat(version.toString(), equalTo("1"));
     }
 
     @Test
@@ -73,16 +69,16 @@ public class MutedChannelIdUpgradeTask001Test {
         List<String> channelIds = Arrays.asList("C", "C1");
         List<String> conversationKey = Arrays.asList("T:C", "T:C1");
 
-        when(ao.find(eq(AoNotificationConfiguration.class), eq(AoNotificationConfiguration.CHANNEL_ID_COLUMN + " = ?"), eq("C")))
+        when(ao.find(AoNotificationConfiguration.class, AoNotificationConfiguration.CHANNEL_ID_COLUMN + " = ?", "C"))
                 .thenReturn(new AoNotificationConfiguration[]{aoNotificationConfiguration}, new AoNotificationConfiguration[]{});
-        when(ao.find(eq(AoNotificationConfiguration.class), eq(AoNotificationConfiguration.CHANNEL_ID_COLUMN + " = ?"), eq("C1")))
+        when(ao.find(AoNotificationConfiguration.class, AoNotificationConfiguration.CHANNEL_ID_COLUMN + " = ?", "C1"))
                 .thenReturn(new AoNotificationConfiguration[]{aoNotificationConfiguration1}, new AoNotificationConfiguration[]{});
         when(aoNotificationConfiguration.getChannelId()).thenReturn("C");
         when(aoNotificationConfiguration.getTeamId()).thenReturn(TEAM_ID);
         when(aoNotificationConfiguration1.getChannelId()).thenReturn("C1");
         when(aoNotificationConfiguration1.getTeamId()).thenReturn(TEAM_ID);
-        when(pluginSettingsFactory.createSettingsForKey(SLACK_SETTINGS_NAMESPACE)).thenReturn(pluginSettings);
-        when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(channelIds);
+        when(pluginSettingsFactory.createSettingsForKey(DefaultSlackSettingsService.SLACK_SETTINGS_NAMESPACE)).thenReturn(pluginSettings);
+        when(pluginSettings.get(DefaultSlackSettingsService.MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(channelIds);
 
         target.upgrade(version, ao);
 

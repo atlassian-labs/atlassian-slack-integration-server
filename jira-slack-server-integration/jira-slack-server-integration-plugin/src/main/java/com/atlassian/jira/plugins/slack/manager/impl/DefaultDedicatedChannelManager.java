@@ -247,6 +247,6 @@ public class DefaultDedicatedChannelManager extends AutoSubscribingEventListener
     @Override
     public boolean isNotSameChannel(final ConversationKey conversationKey, final Optional<DedicatedChannel> dedicatedChannel) {
         return dedicatedChannel.map(input -> !input.getTeamId().equals(conversationKey.getTeamId())
-                && !input.getChannelId().equals(conversationKey.getChannelId())).orElse(false);
+                || !input.getChannelId().equals(conversationKey.getChannelId())).orElse(false);
     }
 }

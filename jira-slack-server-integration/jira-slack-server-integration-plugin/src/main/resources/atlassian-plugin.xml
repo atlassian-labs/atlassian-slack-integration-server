@@ -79,12 +79,10 @@
 
     <!-- Images -->
     <web-resource name="Image Resources" key="slack-jira-image-resources">
-        <resource name="images/jira-slack-not-connected.svg" type="download"
-                  location="images/jira-slack-not-connected.svg">
+        <resource name="images/jira-slack-not-connected.svg" type="download" location="images/jira-slack-not-connected.svg">
             <param name="content-type" value="image/svg+xml"/>
         </resource>
-        <resource name="images/jira-slack-is-connected.svg" type="download"
-                  location="images/jira-slack-is-connected.svg">
+        <resource name="images/jira-slack-is-connected.svg" type="download" location="images/jira-slack-is-connected.svg">
             <param name="content-type" value="image/svg+xml"/>
         </resource>
         <resource name="images/jira-slack-installing.svg" type="download" location="images/jira-slack-installing.svg">
@@ -96,8 +94,7 @@
         <resource type="download" name="images/big-news.svg" location="images/big-news.svg">
             <param name="content-type" value="image/svg+xml"/>
         </resource>
-        <resource type="download" name="images/new-slack-not-connected.svg"
-                  location="images/new-slack-not-connected.svg">
+        <resource type="download" name="images/new-slack-not-connected.svg" location="images/new-slack-not-connected.svg">
             <param name="content-type" value="image/svg+xml"/>
         </resource>
     </web-resource>
@@ -121,12 +118,9 @@
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources
         </dependency>
 
-        <resource name="slack-configure-project.soy" type="soy"
-                  location="slack-soy/configureproject/configureprojectpage.soy"/>
-        <resource name="feature-channelmapping-channelmapping.soy" type="soy"
-                  location="slack-soy/channelmapping/channelmapping.soy"/>
-        <resource name="feature-channelmapping-channelmapping-client-soy.js" type="soy"
-                  location="slack-soy/channelmapping/channelmapping-client.soy"/>
+        <resource name="slack-configure-project.soy" type="soy" location="slack-soy/configureproject/configureprojectpage.soy"/>
+        <resource name="feature-channelmapping-channelmapping.soy" type="soy" location="slack-soy/channelmapping/channelmapping.soy"/>
+        <resource name="feature-channelmapping-channelmapping-client-soy.js" type="soy" location="slack-soy/channelmapping/channelmapping-client.soy"/>
         <resource name="slack-settings.soy" type="soy" location="slack-soy/settings/settings.soy"/>
     </web-resource>
 
@@ -141,39 +135,27 @@
             <transformer key="lessTransformer"/>
         </transformation>
 
-        <resource type="download" name="slack-feature-channelmapping-querymodule.js"
-                  location="js/slack-feature/channelmapping/querymodule.js"/>
-        <resource type="download" name="slack-feature-channelmapping-mapping-setting.js"
-                  location="js/slack-feature/channelmapping/mapping-setting.js"/>
-        <resource type="download" name="slack-feature-channelmapping-mapping.js"
-                  location="js/slack-feature/channelmapping/mapping.js"/>
-        <resource type="download" name="slack-feature-channelmapping-mapping-collection.js"
-                  location="js/slack-feature/channelmapping/mapping-collection.js"/>
-        <resource type="download" name="slack-feature-channelmapping-mapping-view.js"
-                  location="js/slack-feature/channelmapping/mapping-view.js"/>
-        <resource type="download" name="slack-feature-channelmapping-channelmapping-page.js"
-                  location="js/slack-feature/channelmapping/channelmapping-page.js"/>
-        <resource type="download" name="slack-feature-channelmapping-channelmapping-init.js"
-                  location="js/slack-feature/channelmapping/channelmapping-init.js"/>
+        <resource type="download" name="slack-feature-channelmapping-querymodule.js" location="js/slack-feature/channelmapping/querymodule.js"/>
+        <resource type="download" name="slack-feature-channelmapping-mapping-setting.js" location="js/slack-feature/channelmapping/mapping-setting.js"/>
+        <resource type="download" name="slack-feature-channelmapping-mapping.js" location="js/slack-feature/channelmapping/mapping.js"/>
+        <resource type="download" name="slack-feature-channelmapping-mapping-collection.js" location="js/slack-feature/channelmapping/mapping-collection.js"/>
+        <resource type="download" name="slack-feature-channelmapping-mapping-view.js" location="js/slack-feature/channelmapping/mapping-view.js"/>
+        <resource type="download" name="slack-feature-channelmapping-channelmapping-page.js" location="js/slack-feature/channelmapping/channelmapping-page.js"/>
+        <resource type="download" name="slack-feature-channelmapping-channelmapping-init.js" location="js/slack-feature/channelmapping/channelmapping-init.js"/>
 
-        <resource type="download" name="slack-feature-channelmapping-channelmapping-client-soy.js"
-                  location="slack-soy/channelmapping/channelmapping-client.soy"/>
-        <resource type="download" name="slack-feature-channelmapping-channelmapping.css"
-                  location="js/slack-feature/channelmapping/channelmapping.less"/>
+        <resource type="download" name="slack-feature-channelmapping-channelmapping-client-soy.js" location="slack-soy/channelmapping/channelmapping-client.soy"/>
+        <resource type="download" name="slack-feature-channelmapping-channelmapping.css" location="js/slack-feature/channelmapping/channelmapping.less"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:global</dependency>
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-widget-criteria-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-widget-criteria-resources</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:widget-channelselector</dependency>
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
         <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
         <dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
         <dependency>com.atlassian.jira.jira-issue-nav-components:query</dependency>
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:base-slack-common-resources
-        </dependency>
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:base-slack-common-resources</dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
     </web-resource>
 
@@ -188,33 +170,23 @@
             <transformer key="lessTransformer"/>
         </transformation>
 
-        <resource type="download" name="slack-widget-channelselector-channelmapping-service.js"
-                  location="js/slack-widget/channelselector/channelmapping-service.js"/>
-        <resource type="download" name="slack-widget-channelselector-channelselector-view.js"
-                  location="js/slack-widget/channelselector/channelselector-view.js"/>
+        <resource type="download" name="slack-widget-channelselector-channelmapping-service.js" location="js/slack-widget/channelselector/channelmapping-service.js"/>
+        <resource type="download" name="slack-widget-channelselector-channelselector-view.js" location="js/slack-widget/channelselector/channelselector-view.js"/>
 
-        <resource type="download" name="slack-widget-channelselector-channelselector.css"
-                  location="slack-less/widget/channelselector/channelselector.less"/>
-        <resource type="download" name="slack-widget-channelselector-teamselector.less"
-                  location="slack-less/widget/channelselector/teamselector.less"/>
+        <resource type="download" name="slack-widget-channelselector-channelselector.css" location="slack-less/widget/channelselector/channelselector.less"/>
+        <resource type="download" name="slack-widget-channelselector-teamselector.less" location="slack-less/widget/channelselector/teamselector.less"/>
 
-        <resource type="download" name="slack-widget-channelselector-channelselector-client-soy.js"
-                  location="slack-soy/widget/channelselector/channelselector-client.soy"/>
-        <resource name="slack-issuepanel-client-soy.js" type="download"
-                  location="slack-soy/issuepanel/issuepanel-client.soy"/>
+        <resource type="download" name="slack-widget-channelselector-channelselector-client-soy.js" location="slack-soy/widget/channelselector/channelselector-client.soy"/>
+        <resource name="slack-issuepanel-client-soy.js" type="download" location="slack-soy/issuepanel/issuepanel-client.soy"/>
 
         <resource type="download" name="slack-images/public_channel.png" location="images/public_channel.png"/>
         <resource type="download" name="slack-images/public_channel@2x.png" location="images/public_channel@2x.png"/>
         <resource type="download" name="slack-images/private_channel.png" location="images/private_channel.png"/>
         <resource type="download" name="slack-images/private_channel@2x.png" location="images/private_channel@2x.png"/>
-        <resource type="download" name="slack-images/public_channel_active.png"
-                  location="images/public_channel_active.png"/>
-        <resource type="download" name="slack-images/public_channel_active@2x.png"
-                  location="images/public_channel_active@2x.png"/>
-        <resource type="download" name="slack-images/private_channel_active.png"
-                  location="images/private_channel_active.png"/>
-        <resource type="download" name="slack-images/private_channel_active@2x.png"
-                  location="images/private_channel_active@2x.png"/>
+        <resource type="download" name="slack-images/public_channel_active.png" location="images/public_channel_active.png"/>
+        <resource type="download" name="slack-images/public_channel_active@2x.png" location="images/public_channel_active@2x.png"/>
+        <resource type="download" name="slack-images/private_channel_active.png" location="images/private_channel_active.png"/>
+        <resource type="download" name="slack-images/private_channel_active@2x.png" location="images/private_channel_active@2x.png"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:global</dependency>
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
@@ -223,12 +195,10 @@
     </web-resource>
 
     <web-resource key="slack-project-config-resources">
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:feature-channelmapping-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:feature-channelmapping-resources</dependency>
         <resource type="download" name="slack-settings.js" location="js/slack-feature/settings/slack-settings.js"/>
         <resource type="download" name="slack-settings.css" location="css/slack-settings.less"/>
-        <resource type="download" name="images/slack-autoconvert-preview.png"
-                  location="images/slack-autoconvert-preview.png"/>
+        <resource type="download" name="images/slack-autoconvert-preview.png" location="images/slack-autoconvert-preview.png"/>
         <context>jira.plugin.slack.project.configure</context>
     </web-resource>
 
@@ -255,33 +225,20 @@
 
     <webwork1 key="configure-slack-project" name="Configure Slack for Project Action" class="java.lang.Object">
         <actions>
-            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackConfigureProjectAction"
-                    alias="ConfigureSlack">
-                <view name="success" type="soy">
-                    :slack-project-config-soy-templates/JIRA.Templates.Slack.Project.Admin.configurePage
-                </view>
-                <view name="error" type="soy">
-                    :slack-project-config-soy-templates/JIRA.Templates.Slack.Project.Admin.errorPage
-                </view>
+            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackConfigureProjectAction" alias="ConfigureSlack">
+                <view name="success" type="soy">:slack-project-config-soy-templates/JIRA.Templates.Slack.Project.Admin.configurePage</view>
+                <view name="error" type="soy">:slack-project-config-soy-templates/JIRA.Templates.Slack.Project.Admin.errorPage</view>
                 <view name="securitybreach">/secure/views/securitybreach.jsp</view>
                 <view name="install" type="dispatcher">/secure/InstallSlack.jspa</view>
             </action>
             <action name="com.atlassian.jira.plugins.slack.web.actions.SlackInstallProjectAction" alias="InstallSlack">
-                <view name="success" type="soy">
-                    :slack-project-config-soy-templates/JIRA.Templates.Slack.Project.Admin.installPage
-                </view>
+                <view name="success" type="soy">:slack-project-config-soy-templates/JIRA.Templates.Slack.Project.Admin.installPage</view>
             </action>
-            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackEditGlobalSettings"
-                    alias="EditSlackGlobalSettings">
-                <view name="success" type="soy">
-                    :slack-project-config-soy-templates/JIRA.Templates.Slack.Settings.globalConfiguration
-                </view>
+            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackEditGlobalSettings" alias="EditSlackGlobalSettings">
+                <view name="success" type="soy">:slack-project-config-soy-templates/JIRA.Templates.Slack.Settings.globalConfiguration</view>
             </action>
-            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackEditProjectSettings"
-                    alias="EditSlackProjectSettings">
-                <view name="success" type="soy">
-                    :slack-project-config-soy-templates/JIRA.Templates.Slack.Settings.projectConfiguration
-                </view>
+            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackEditProjectSettings" alias="EditSlackProjectSettings">
+                <view name="success" type="soy">:slack-project-config-soy-templates/JIRA.Templates.Slack.Settings.projectConfiguration</view>
             </action>
         </actions>
     </webwork1>
@@ -308,10 +265,8 @@
         <description key="slack-post-function.description">The Slack Post Function Plugin</description>
         <function-class>com.atlassian.jira.plugins.slack.postfunction.SlackPostFunction</function-class>
         <resource type="velocity" name="view" location="templates/postfunctions/slack-post-function.vm"/>
-        <resource type="velocity" name="input-parameters"
-                  location="templates/postfunctions/slack-post-function-input.vm"/>
-        <resource type="velocity" name="edit-parameters"
-                  location="templates/postfunctions/slack-post-function-input.vm"/>
+        <resource type="velocity" name="input-parameters" location="templates/postfunctions/slack-post-function-input.vm"/>
+        <resource type="velocity" name="edit-parameters" location="templates/postfunctions/slack-post-function-input.vm"/>
     </workflow-function>
 
     <web-resource name="Common Resources" key="slack-common-jira-resources">
@@ -326,8 +281,7 @@
         </transformation>
 
         <resource name="jira-slack-status.js" type="download" location="js/jira-slack-status.js"/>
-        <resource name="mute-bulk-edit-notifications-toggle.js" type="download"
-                  location="js/mute-bulk-edit-notifications-toggle.js"/>
+        <resource name="mute-bulk-edit-notifications-toggle.js" type="download" location="js/mute-bulk-edit-notifications-toggle.js"/>
         <resource name="slack-styles.css" type="download" location="css/slack-styles.css"/>
         <resource type="download" name="slack-images/" location="images/"/>
         <resource type="download" name="jira-slack-user-link.soy.js" location="slack-soy/jira-slack-user-link.soy"/>
@@ -366,8 +320,7 @@
     <web-resource name="Slack Notification Preview Resources" key="slack-notification-preview-resources">
         <resource name="slack-notification-preview.js" type="download" location="js/slack-notification-preview.js"/>
         <resource name="slack-notification-preview.css" type="download" location="css/slack-notification-preview.css"/>
-        <resource name="slack-notification-preview-template-soy.js" type="download"
-                  location="slack-soy/notification/slack-notification-preview.soy"/>
+        <resource name="slack-notification-preview-template-soy.js" type="download" location="slack-soy/notification/slack-notification-preview.soy"/>
 
         <resource name="slack-notification-editor.js" type="download" location="js/slack-notification-editor.js"/>
         <resource name="slack-notification-editor.css" type="download" location="css/slack-notification-editor.css"/>
@@ -385,14 +338,11 @@
 
     <web-resource key="slack-soy-server-resources" name="Slack Server-side Soy Resources">
         <resource type="soy" name="slack-common" location="slack-soy/configure/slack-config.soy"/>
-        <resource type="soy" name="slack-feature-channelmapping-channelmapping.soy"
-                  location="slack-soy/channelmapping/channelmapping.soy"/>
-        <resource type="soy" name="slack-feature-channelmapping-channelmapping-client.soy"
-                  location="slack-soy/channelmapping/channelmapping-client.soy"/>
+        <resource type="soy" name="slack-feature-channelmapping-channelmapping.soy" location="slack-soy/channelmapping/channelmapping.soy"/>
+        <resource type="soy" name="slack-feature-channelmapping-channelmapping-client.soy" location="slack-soy/channelmapping/channelmapping-client.soy"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-resources</dependency>
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
     </web-resource>
 
     <!-- Global install -->
@@ -404,27 +354,22 @@
         <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.less"/>
         <resource type="download" name="slack-settings.js" location="js/slack-feature/settings/slack-settings.js"/>
         <resource type="download" name="slack-settings.css" location="css/slack-settings.less"/>
-        <resource type="download" name="images/slack-autoconvert-preview.png"
-                  location="images/slack-autoconvert-preview.png"/>
+        <resource type="download" name="images/slack-autoconvert-preview.png" location="images/slack-autoconvert-preview.png"/>
 
         <context>slack-global-configuration-install</context>
         <context>slack-global-configuration</context>
 
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources
-        </dependency>
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:feature-channelmapping-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:feature-channelmapping-resources</dependency>
     </web-resource>
 
     <web-panel key="slack-jira-global-install" location="slack.integration.configure.install">
-        <resource name="view" type="soy"
-                  location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.configure"/>
+        <resource name="view" type="soy" location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.configure"/>
     </web-panel>
 
     <web-panel key="slack-space-to-channel-global" location="slack.integration.configure.installed">
         <context-provider class="com.atlassian.jira.plugins.slack.web.contextproviders.SlackGlobalAdminDataProvider"/>
-        <resource name="view" type="soy"
-                  location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.renderChannelMapping"/>
+        <resource name="view" type="soy" location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.renderChannelMapping"/>
     </web-panel>
 
     <analytics-whitelist key="jiraSlackIntegrationPluginAnalyticsWhitelist" resource="analytics/whitelist.json"/>
@@ -473,23 +418,16 @@
         <resource name="slack-issuepanel.soy" type="soy" location="slack-soy/issuepanel/issuepanel.soy"/>
         <resource name="slack-issuepanel-client.soy" type="soy" location="slack-soy/issuepanel/issuepanel-client.soy"/>
         <resource name="slack-issuepanel-soy.js" type="download" location="slack-soy/issuepanel/issuepanel.soy"/>
-        <resource name="slack-issuepanel-client-soy.js" type="download"
-                  location="slack-soy/issuepanel/issuepanel-client.soy"/>
+        <resource name="slack-issuepanel-client-soy.js" type="download" location="slack-soy/issuepanel/issuepanel-client.soy"/>
         <resource name="slack-issuepanel.css" type="download" location="slack-less/issuepanel.less"/>
-        <resource name="slack-dedicatedchannel.js" type="download"
-                  location="js/slack-feature/issuepanel/dedicatedchannel.js"/>
-        <resource name="slack-dedicatedchannel-view.js" type="download"
-                  location="js/slack-feature/issuepanel/dedicatedchannel-view.js"/>
+        <resource name="slack-dedicatedchannel.js" type="download" location="js/slack-feature/issuepanel/dedicatedchannel.js"/>
+        <resource name="slack-dedicatedchannel-view.js" type="download" location="js/slack-feature/issuepanel/dedicatedchannel-view.js"/>
         <resource name="slack-issuemention.js" type="download" location="js/slack-feature/issuepanel/issuemention.js"/>
-        <resource name="slack-issuemention-view.js" type="download"
-                  location="js/slack-feature/issuepanel/issuemention-view.js"/>
-        <resource name="slack-issuepanel-view.js" type="download"
-                  location="js/slack-feature/issuepanel/issuepanel-view.js"/>
-        <resource name="slack-issuepanel-init.js" type="download"
-                  location="js/slack-feature/issuepanel/issuepanel-init.js"/>
+        <resource name="slack-issuemention-view.js" type="download" location="js/slack-feature/issuepanel/issuemention-view.js"/>
+        <resource name="slack-issuepanel-view.js" type="download" location="js/slack-feature/issuepanel/issuepanel-view.js"/>
+        <resource name="slack-issuepanel-init.js" type="download" location="js/slack-feature/issuepanel/issuepanel-init.js"/>
 
-        <resource type="download" name="slack-links-settings-dialog-soy.js"
-                  location="slack-soy/configure/slack-link-dialog.soy"/>
+        <resource type="download" name="slack-links-settings-dialog-soy.js" location="slack-soy/configure/slack-link-dialog.soy"/>
 
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
         <dependency>com.atlassian.auiplugin:aui-select</dependency>
@@ -506,23 +444,13 @@
 
     <webwork1 key="slack-issue-panel-actions" name="Slack Issue Panel Action" class="java.lang.Object">
         <actions>
-            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackSelectDedicatedChannelAction"
-                    alias="SlackSelectChannel">
-                <view name="success" type="soy">
-                    :slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.selectChannelDialog
-                </view>
+            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackSelectDedicatedChannelAction" alias="SlackSelectChannel">
+                <view name="success" type="soy">:slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.selectChannelDialog</view>
             </action>
-            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackIssueMentionsAction"
-                    alias="SlackMentionedChannels">
-                <view name="success" type="soy">
-                    :slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.mentionedChannelDialog
-                </view>
-                <view name="error" type="soy">
-                    :slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.errorPage
-                </view>
-                <view name="slackLogin" type="soy">
-                    :slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.loginMentionsDialog
-                </view>
+            <action name="com.atlassian.jira.plugins.slack.web.actions.SlackIssueMentionsAction" alias="SlackMentionedChannels">
+                <view name="success" type="soy">:slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.mentionedChannelDialog</view>
+                <view name="error" type="soy">:slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.errorPage</view>
+                <view name="slackLogin" type="soy">:slack-viewissue-panel-resources/JIRA.Templates.Slack.Project.IssuePanel.loginMentionsDialog</view>
             </action>
         </actions>
     </webwork1>
@@ -546,10 +474,8 @@
         </transformation>
 
         <resource type="download" name="slack-update-banner.css" location="slack-less/banner/update-banner.less"/>
-        <resource type="download" name="slack-update-slack-link-banner.js"
-                  location="js/banner/update-slack-link-banner.js"/>
-        <resource type="download" name="slack-update-slack-link-banner-client-soy.js"
-                  location="slack-soy/banner/update-slack-link-banner.soy"/>
+        <resource type="download" name="slack-update-slack-link-banner.js" location="js/banner/update-slack-link-banner.js"/>
+        <resource type="download" name="slack-update-slack-link-banner-client-soy.js" location="slack-soy/banner/update-slack-link-banner.soy"/>
 
         <context>atl.general</context>
         <context>atl.admin</context>
@@ -586,8 +512,7 @@
             <param name="content-type" value="image/svg+xml"/>
         </resource>
         <resource type="download" name="js/slack-fuse.min.js" location="js/slack-fuse.min.js"/>
-        <resource type="download" name="slack-less/migrate-to-slack.less.css"
-                  location="slack-less/migrate-to-slack.less"/>
+        <resource type="download" name="slack-less/migrate-to-slack.less.css" location="slack-less/migrate-to-slack.less"/>
         <resource type="download" name="js/migrate-to-slack.js" location="js/migrate-to-slack.js"/>
         <resource type="download" name="slack-soy/migrate-to-slack.soy.js" location="slack-soy/migrate-to-slack.soy"/>
 
@@ -599,11 +524,8 @@
 
     <webwork1 key="migrate-to-slack-actions" name="Migrate to Slack Action" class="java.lang.Object">
         <actions>
-            <action name="com.atlassian.jira.plugins.slack.web.actions.MigrateToSlackAction"
-                    alias="MigrateToSlackAction">
-                <view name="success" type="soy">
-                    :migrate-to-slack-resources/Slack.Templates.Migration.selectChannelDialog
-                </view>
+            <action name="com.atlassian.jira.plugins.slack.web.actions.MigrateToSlackAction" alias="MigrateToSlackAction">
+                <view name="success" type="soy">:migrate-to-slack-resources/Slack.Templates.Migration.selectChannelDialog</view>
             </action>
         </actions>
     </webwork1>
@@ -626,15 +548,13 @@
 
     <!-- Below are the resources from the common project -->
 
-    <servlet name="Configure Slack Servlet" key="slack-configure-servlet"
-             class="com.atlassian.plugins.slack.admin.ConfigureServlet">
+    <servlet name="Configure Slack Servlet" key="slack-configure-servlet" class="com.atlassian.plugins.slack.admin.ConfigureServlet">
         <url-pattern>/slack/configure</url-pattern>
     </servlet>
 
     <web-panel key="slack-configurationPanel" location="plugins.slack.configure">
         <context-provider class="com.atlassian.plugins.slack.admin.SlackConfigurationScreenContextProvider"/>
-        <resource name="view" type="soy"
-                  location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-resources/Slack.Templates.Configuration.panel"/>
+        <resource name="view" type="soy" location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-resources/Slack.Templates.Configuration.panel"/>
     </web-panel>
 
     <web-resource key="slack-global">
@@ -681,11 +601,9 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <resource type="download" name="slack-admin/connect/connect-workspace.js"
-                  location="admin/connect/connect-workspace.js"/>
+        <resource type="download" name="slack-admin/connect/connect-workspace.js" location="admin/connect/connect-workspace.js"/>
 
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-base-link-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-base-link-resources</dependency>
     </web-resource>
 
     <web-resource name="Manage Slack Workspaces" key="manage-workspaces-resources">
@@ -693,8 +611,7 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <resource type="download" name="slack-admin/manage/manage-workspaces.js"
-                  location="admin/manage/manage-workspaces.js"/>
+        <resource type="download" name="slack-admin/manage/manage-workspaces.js" location="admin/manage/manage-workspaces.js"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-base-link-resources
         </dependency>
@@ -757,10 +674,8 @@
             <transformer key="less-transformer"/>
         </transformation>
 
-        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css"
-                  location="slack-feature/integrationsteps/integrationsteps.less"/>
-        <resource type="soy" name="slack-feature/integrationsteps/integrationsteps.soy"
-                  location="slack-feature/integrationsteps/integrationsteps.soy"/>
+        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.less"/>
+        <resource type="soy" name="slack-feature/integrationsteps/integrationsteps.soy" location="slack-feature/integrationsteps/integrationsteps.soy"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-global</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-connection-status-resources
@@ -783,15 +698,11 @@
             </transformer>
         </transformation>
 
-        <resource type="download" name="slack-feature/connectionstatus/connectionstatus-soy.js"
-                  location="slack-feature/connectionstatus/connectionstatus.soy"/>
-        <resource type="soy" name="slack-feature/connectionstatus/connectionstatus.soy"
-                  location="slack-feature/connectionstatus/connectionstatus.soy"/>
+        <resource type="download" name="slack-feature/connectionstatus/connectionstatus-soy.js" location="slack-feature/connectionstatus/connectionstatus.soy"/>
+        <resource type="soy" name="slack-feature/connectionstatus/connectionstatus.soy" location="slack-feature/connectionstatus/connectionstatus.soy"/>
 
-        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.js"
-                  location="slack-feature/connectionstatus/connectionstatus.js"/>
-        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css"
-                  location="slack-feature/connectionstatus/connectionstatus.less"/>
+        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.js" location="slack-feature/connectionstatus/connectionstatus.js"/>
+        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.less"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
@@ -812,17 +723,11 @@
         <condition class="com.atlassian.jira.plugins.slack.web.condition.UserLoggedInUrlReadingCondition"/>
     </web-resource>
 
-    <soy-function key="slack-plugin-resource-url" name="Generates a url for a plugin resource"
-                  class="com.atlassian.plugins.slack.soy.PluginResourceUrlSlackFunction"/>
-    <soy-function key="slack-web-panel-soy-function" name="Generates the html for a web panel"
-                  class="com.atlassian.plugins.slack.soy.WebPanelsSlackFunction"/>
-    <soy-function key="slack-require-resource-by-context-function" name="Requires resources for a given context"
-                  class="com.atlassian.plugins.slack.soy.RequireSlackResourceByContextSlackFunction"/>
-    <soy-function key="slack-get-product-text"
-                  name="Generates each text passing the product name as the first parameter"
-                  class="com.atlassian.plugins.slack.soy.GetProductTextSlackFunction"/>
-    <soy-function key="slack-add-query-param" name="Add a query param to an URI"
-                  class="com.atlassian.plugins.slack.soy.AddQueryParamSlackFunction"/>
+    <soy-function key="slack-plugin-resource-url" name="Generates a url for a plugin resource" class="com.atlassian.plugins.slack.soy.PluginResourceUrlSlackFunction"/>
+    <soy-function key="slack-web-panel-soy-function" name="Generates the html for a web panel" class="com.atlassian.plugins.slack.soy.WebPanelsSlackFunction"/>
+    <soy-function key="slack-require-resource-by-context-function" name="Requires resources for a given context" class="com.atlassian.plugins.slack.soy.RequireSlackResourceByContextSlackFunction"/>
+    <soy-function key="slack-get-product-text" name="Generates each text passing the product name as the first parameter" class="com.atlassian.plugins.slack.soy.GetProductTextSlackFunction"/>
+    <soy-function key="slack-add-query-param" name="Add a query param to an URI" class="com.atlassian.plugins.slack.soy.AddQueryParamSlackFunction"/>
 
     <analytics-whitelist key="atlassianSlackIntegrationAnalyticsWhitelist" resource="analytics/whitelist-base.json"/>
 
@@ -834,14 +739,11 @@
             <transformer key="lessTransformer"/>
         </transformation>
 
-        <resource name="oauth2/view-slack-oauth-sessions.soy" type="soy"
-                  location="oauth2/view-slack-oauth-sessions.soy"/>
-        <resource name="oauth2/view-slack-oauth-sessions.less.css" type="download"
-                  location="oauth2/view-slack-oauth-sessions.less"/>
+        <resource name="oauth2/view-slack-oauth-sessions.soy" type="soy" location="oauth2/view-slack-oauth-sessions.soy"/>
+        <resource name="oauth2/view-slack-oauth-sessions.less.css" type="download" location="oauth2/view-slack-oauth-sessions.less"/>
     </web-resource>
 
-    <servlet name="View OAuth Slack Servlet" key="slack-view-oauth-servlet"
-             class="com.atlassian.plugins.slack.oauth2.ViewSlackOauthSessionsServlet">
+    <servlet name="View OAuth Slack Servlet" key="slack-view-oauth-servlet" class="com.atlassian.plugins.slack.oauth2.ViewSlackOauthSessionsServlet">
         <url-pattern>/slack/view-oauth-sessions</url-pattern>
     </servlet>
 

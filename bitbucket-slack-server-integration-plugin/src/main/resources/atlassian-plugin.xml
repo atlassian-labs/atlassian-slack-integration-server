@@ -165,7 +165,6 @@
         <condition class="com.atlassian.plugins.slack.api.condition.IsSlackEnabledUrlReadingCondition"/>
     </web-item>
 
-
     <!-- Admin configuration servlet -->
     <servlet name="Configure Slack Servlet" key="slack-configure-servlet"
              class="com.atlassian.plugins.slack.admin.ConfigureServlet">

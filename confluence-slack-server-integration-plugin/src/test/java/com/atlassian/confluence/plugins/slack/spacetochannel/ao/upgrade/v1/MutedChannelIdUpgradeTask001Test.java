@@ -20,18 +20,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-
 public class MutedChannelIdUpgradeTask001Test {
-
-    private static final String SLACK_SETTINGS_NAMESPACE = "com.atlassian.slack";
-    private static final String MUTED_CHANNEL_IDS_OPTION_NAME = "muted.channel.ids";
     private static final String TEAM_ID = "T";
 
     @Mock
@@ -51,7 +46,6 @@ public class MutedChannelIdUpgradeTask001Test {
     @Captor
     ArgumentCaptor<List<String>> valueCaptor1;
 
-
     private MutedChannelIdUpgradeTask001 target;
 
     private ModelVersion version = ModelVersion.valueOf("0");
@@ -65,7 +59,7 @@ public class MutedChannelIdUpgradeTask001Test {
     public void getModelReturnsExpectedValue() {
         ModelVersion version = target.getModelVersion();
 
-        assertThat(version.toString(), equalTo("5"));
+        assertThat(version.toString(), equalTo("1"));
     }
 
     @Test
@@ -73,16 +67,16 @@ public class MutedChannelIdUpgradeTask001Test {
         List<String> channelIds = Arrays.asList("C", "C1");
         List<String> conversationKey = Arrays.asList("T:C", "T:C1");
 
-        when(ao.find(eq(AOEntityToChannelMapping.class), eq(AOEntityToChannelMapping.CHANNEL_ID_COLUMN + " = ?"), eq("C")))
+        when(ao.find(AOEntityToChannelMapping.class, AOEntityToChannelMapping.CHANNEL_ID_COLUMN + " = ?", "C"))
                 .thenReturn(new AOEntityToChannelMapping[]{aoEntityToChannelMapping}, new AOEntityToChannelMapping[]{});
-        when(ao.find(eq(AOEntityToChannelMapping.class), eq(AOEntityToChannelMapping.CHANNEL_ID_COLUMN + " = ?"), eq("C1")))
+        when(ao.find(AOEntityToChannelMapping.class, AOEntityToChannelMapping.CHANNEL_ID_COLUMN + " = ?", "C1"))
                 .thenReturn(new AOEntityToChannelMapping[]{aoEntityToChannelMapping1}, new AOEntityToChannelMapping[]{});
         when(aoEntityToChannelMapping.getChannelId()).thenReturn("C");
         when(aoEntityToChannelMapping.getTeamId()).thenReturn(TEAM_ID);
         when(aoEntityToChannelMapping1.getChannelId()).thenReturn("C1");
         when(aoEntityToChannelMapping1.getTeamId()).thenReturn(TEAM_ID);
-        when(pluginSettingsFactory.createSettingsForKey(SLACK_SETTINGS_NAMESPACE)).thenReturn(pluginSettings);
-        when(pluginSettings.get(MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(channelIds);
+        when(pluginSettingsFactory.createSettingsForKey(DefaultSlackSettingsService.SLACK_SETTINGS_NAMESPACE)).thenReturn(pluginSettings);
+        when(pluginSettings.get(DefaultSlackSettingsService.MUTED_CHANNEL_IDS_OPTION_NAME)).thenReturn(channelIds);
 
         target.upgrade(version, ao);
 

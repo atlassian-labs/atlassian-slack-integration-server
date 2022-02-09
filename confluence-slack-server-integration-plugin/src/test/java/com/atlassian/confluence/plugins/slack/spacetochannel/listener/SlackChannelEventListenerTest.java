@@ -50,7 +50,6 @@ public class SlackChannelEventListenerTest {
     @Mock
     private SlackEvent slackEvent;
 
-
     @InjectMocks
     private SlackChannelEventListener target;
 

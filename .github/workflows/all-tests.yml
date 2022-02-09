@@ -86,7 +86,7 @@ jobs:
           path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-confluence-7:
-    name: Integration Tests - Confluence 7.8.0
+    name: Integration Tests - Confluence
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence-6')

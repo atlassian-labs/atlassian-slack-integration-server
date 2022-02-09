@@ -24,7 +24,7 @@ public class MutedChannelIdUpgradeTask001 implements ActiveObjectsUpgradeTask {
 
     @Override
     public ModelVersion getModelVersion() {
-        return ModelVersion.valueOf("5");
+        return ModelVersion.valueOf("1");
     }
 
     @Override

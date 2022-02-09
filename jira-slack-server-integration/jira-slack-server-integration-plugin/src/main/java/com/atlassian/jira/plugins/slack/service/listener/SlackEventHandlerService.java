@@ -43,7 +43,6 @@ import com.atlassian.sal.api.UrlMode;
 import com.github.seratch.jslack.api.model.Conversation;
 import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

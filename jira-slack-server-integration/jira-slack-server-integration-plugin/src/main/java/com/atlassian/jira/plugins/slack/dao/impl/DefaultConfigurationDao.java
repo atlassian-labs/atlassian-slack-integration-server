@@ -79,9 +79,9 @@ public class DefaultConfigurationDao implements ConfigurationDAO {
 
     @Override
     public List<ProjectConfiguration> findByChannel(final ConversationKey conversationKey) {
-        ProjectConfigurationAO[] configs = ao.find(ProjectConfigurationAO.class, Query.select()
-                .where(ProjectConfigurationAO.COLUMN_TEAM_ID + " = ?", conversationKey.getTeamId())
-                .where(ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?", conversationKey.getChannelId()));
+        ProjectConfigurationAO[] configs = ao.find(ProjectConfigurationAO.class,
+                ProjectConfigurationAO.COLUMN_TEAM_ID + " = ? AND " + ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?",
+                conversationKey.getTeamId(), conversationKey.getChannelId());
 
         return ImmutableList.copyOf(configs);
     }

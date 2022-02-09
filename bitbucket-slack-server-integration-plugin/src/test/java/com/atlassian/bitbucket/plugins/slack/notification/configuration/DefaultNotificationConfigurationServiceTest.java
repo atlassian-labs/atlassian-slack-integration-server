@@ -46,7 +46,6 @@ public class DefaultNotificationConfigurationServiceTest {
     @Test
     public void disable_shouldPerformExpectedAction() {
         final NotificationDisableRequest request = new NotificationDisableRequest.Builder().repository(repository).build();
-        when(analyticsContextProvider.byTeamId(request.getTeamId().orElse(null))).thenReturn(analyticsContext);
 
         target.disable(request);
 

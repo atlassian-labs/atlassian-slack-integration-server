@@ -75,7 +75,7 @@ public interface SlackSpaceToChannelService {
      * This method can be used to disable notifications of a specific type for a given space and channel combination.
      *
      * @param spaceKey         the key of the {@link com.atlassian.confluence.spaces.Space} of interest.
-     * @param conversationKey        the ID of the channel to stop sending the notifications to.
+     * @param conversationKey  the ID of the channel to stop sending the notifications to.
      * @param notificationType the type of notification that this mapping pertains to.
      */
     void removeNotificationForSpaceAndChannel(
@@ -86,7 +86,7 @@ public interface SlackSpaceToChannelService {
     /**
      * This method can be used to disable notifications of all types for a given space and channel combination.
      *
-     * @param spaceKey  the key of the {@link com.atlassian.confluence.spaces.Space} of interest.
+     * @param spaceKey        the key of the {@link com.atlassian.confluence.spaces.Space} of interest.
      * @param conversationKey the ID of the channel to stop sending the notifications to.
      */
     void removeNotificationsForSpaceAndChannel(

@@ -42,7 +42,7 @@ public class SlackChannelEventListener extends AutoSubscribingEventListener {
     @EventListener
     public void onChannelArchivedEvent(final ChannelArchiveSlackEvent event) {
         final String channelId = event.getChannel();
-        final String teamId =event.getSlackEvent().getTeamId();
+        final String teamId = event.getSlackEvent().getTeamId();
         asyncExecutor.run(() -> settingService.muteChannel(new ConversationKey(teamId, channelId)));
     }
 
