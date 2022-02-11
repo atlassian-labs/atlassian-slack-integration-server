@@ -7,6 +7,7 @@ import com.atlassian.plugins.slack.api.client.cache.SlackResponseCache;
 import com.atlassian.plugins.slack.api.client.interceptor.BackoffRetryInterceptor;
 import com.atlassian.plugins.slack.api.client.interceptor.RateLimitRetryInterceptor;
 import com.atlassian.plugins.slack.api.client.interceptor.RequestIdInterceptor;
+import com.atlassian.plugins.slack.api.client.interceptor.SocketTimeoutRecoveryInterceptor;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserManager;
@@ -17,6 +18,7 @@ import io.atlassian.fugue.Either;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Authenticator;
 import okhttp3.Challenge;
+import okhttp3.ConnectionPool;
 import okhttp3.Credentials;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
@@ -60,6 +62,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
     private final Integer writeTimeout;
     private final Integer pingInterval;
     private final boolean forceHttp1;
+    private final boolean disableConnectionPool;
     private final ExecutorServiceHelper executorServiceHelper;
     private final RequestIdInterceptor requestIdInterceptor;
     private final BackoffRetryInterceptor backoffRetryInterceptor;
@@ -94,6 +97,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
         writeTimeout = Integer.getInteger("slack.client.write.timeout", DEFAULT_WRITE_TIMEOUT_MILLISECONDS);
         pingInterval = Integer.getInteger("slack.client.ping.interval", 0);
         forceHttp1 = Boolean.valueOf(System.getProperty("slack.client.force.http1", "false"));
+        disableConnectionPool = Boolean.valueOf(System.getProperty("slack.client.disable.connection.pool", "false"));
     }
 
     @Override
@@ -195,9 +199,14 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
             if (forceHttp1) {
                 builder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
             }
+            if (disableConnectionPool) {
+                builder.connectionPool(new ConnectionPool(0, 1, TimeUnit.SECONDS));
+            }
 
 
             final OkHttpClient client = builder.build();
+            client.interceptors().add(new SocketTimeoutRecoveryInterceptor(client));
+
             if (log.isDebugEnabled()) {
                 Map<String, String> map = new HashMap<>();
                 map.put("forceHttp1", Boolean.toString(forceHttp1));

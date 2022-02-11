@@ -38,7 +38,7 @@ public abstract class JsonPropertyStoreStorageStrategy<E extends StorableEntity<
     public List<E> getAll(final long issueId) {
         Map<String, Optional<E>> entities = jsonStore.getAllForIssue(issueId);
 
-        log.debug("Getting all enities of type '{}' for issueId={}: {}", getEntityType(), issueId, entities);
+        log.debug("Getting all entities of type '{}' for issueId={}: {}", getEntityType(), issueId, entities);
 
         if (entities == null || entities.isEmpty()) {
             log.debug("No entity of type '{}' found for issueId={}", getEntityType(), issueId);
