@@ -115,8 +115,7 @@
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
         <dependency>com.atlassian.jira.jira-project-config-plugin:project-config-global</dependency>
         <dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
 
         <resource name="slack-configure-project.soy" type="soy" location="slack-soy/configureproject/configureprojectpage.soy"/>
         <resource name="feature-channelmapping-channelmapping.soy" type="soy" location="slack-soy/channelmapping/channelmapping.soy"/>
@@ -216,10 +215,9 @@
         <dependency>com.atlassian.jira.jira-issue-nav-components:query</dependency>
     </web-resource>
 
-    <web-item key="slack-project-notifications" name="Project Slack Notifications Configuration"
-              section="atl.jira.proj.config/projectgroup4"
+    <web-item key="slack-project-notifications" name="Project Slack Notifications Configuration" section="atl.jira.proj.config/projectgroup4"
               i18n-name-key="jira.plugins.slack.project.admin.link" weight="99">
-        <label key="jira.plugins.slack.project.admin.link"/>
+        <label key="jira.plugins.slack.project.admin.link" />
         <link linkId="slack-project-admin-page-link">/secure/ConfigureSlack.jspa?projectKey=$projectKeyEncoded</link>
     </web-item>
 
@@ -265,8 +263,10 @@
         <description key="slack-post-function.description">The Slack Post Function Plugin</description>
         <function-class>com.atlassian.jira.plugins.slack.postfunction.SlackPostFunction</function-class>
         <resource type="velocity" name="view" location="templates/postfunctions/slack-post-function.vm"/>
-        <resource type="velocity" name="input-parameters" location="templates/postfunctions/slack-post-function-input.vm"/>
-        <resource type="velocity" name="edit-parameters" location="templates/postfunctions/slack-post-function-input.vm"/>
+        <resource type="velocity" name="input-parameters"
+                  location="templates/postfunctions/slack-post-function-input.vm"/>
+        <resource type="velocity" name="edit-parameters"
+                  location="templates/postfunctions/slack-post-function-input.vm"/>
     </workflow-function>
 
     <web-resource name="Common Resources" key="slack-common-jira-resources">
@@ -284,7 +284,7 @@
         <resource name="mute-bulk-edit-notifications-toggle.js" type="download" location="js/mute-bulk-edit-notifications-toggle.js"/>
         <resource name="slack-styles.css" type="download" location="css/slack-styles.css"/>
         <resource type="download" name="slack-images/" location="images/"/>
-        <resource type="download" name="jira-slack-user-link.soy.js" location="slack-soy/jira-slack-user-link.soy"/>
+        <resource type="download" name="jira-slack-user-link.soy.js" location="slack-soy/jira-slack-user-link.soy" />
         <condition class="com.atlassian.plugins.slack.api.condition.IsSlackEnabledUrlReadingCondition"/>
     </web-resource>
 
@@ -338,8 +338,8 @@
 
     <web-resource key="slack-soy-server-resources" name="Slack Server-side Soy Resources">
         <resource type="soy" name="slack-common" location="slack-soy/configure/slack-config.soy"/>
-        <resource type="soy" name="slack-feature-channelmapping-channelmapping.soy" location="slack-soy/channelmapping/channelmapping.soy"/>
-        <resource type="soy" name="slack-feature-channelmapping-channelmapping-client.soy" location="slack-soy/channelmapping/channelmapping-client.soy"/>
+        <resource type="soy" name="slack-feature-channelmapping-channelmapping.soy"  location="slack-soy/channelmapping/channelmapping.soy"/>
+        <resource type="soy" name="slack-feature-channelmapping-channelmapping-client.soy"  location="slack-soy/channelmapping/channelmapping-client.soy"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-resources</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
@@ -364,20 +364,21 @@
     </web-resource>
 
     <web-panel key="slack-jira-global-install" location="slack.integration.configure.install">
-        <resource name="view" type="soy" location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.configure"/>
+        <resource name="view" type="soy"
+                  location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.configure"/>
     </web-panel>
 
     <web-panel key="slack-space-to-channel-global" location="slack.integration.configure.installed">
         <context-provider class="com.atlassian.jira.plugins.slack.web.contextproviders.SlackGlobalAdminDataProvider"/>
-        <resource name="view" type="soy" location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.renderChannelMapping"/>
+        <resource name="view" type="soy"
+                  location="com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-soy-server-resources/JIRA.Templates.Slack.Config.renderChannelMapping"/>
     </web-panel>
 
     <analytics-whitelist key="jiraSlackIntegrationPluginAnalyticsWhitelist" resource="analytics/whitelist.json"/>
 
     <!-- Slack web panel on the View Issue page -->
-    <web-panel key="slack-viewissue-panel" location="atl.jira.view.issue.right.context" weight="109"
-               class="com.atlassian.jira.plugins.slack.web.panels.IssueWebPanel">
-        <label key="jira.plugins.slack.viewissue.panel.title"/>
+    <web-panel key="slack-viewissue-panel"  location="atl.jira.view.issue.right.context" weight="109" class="com.atlassian.jira.plugins.slack.web.panels.IssueWebPanel">
+        <label key="jira.plugins.slack.viewissue.panel.title" />
         <!-- Show panel only if: -->
         <!--     1. User is logged in -->
         <!-- AND 2. Panel is not hidden in settings -->
@@ -388,7 +389,7 @@
             <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserLoggedInCondition"/>
             <condition class="com.atlassian.jira.plugins.slack.web.condition.ShowIssuePanelCondition"/>
             <conditions type="OR">
-                <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition"/>
+                <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition" />
                 <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasProjectPermissionCondition">
                     <param name="permission">browse</param>
                 </condition>
@@ -462,7 +463,7 @@
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-links-support</dependency>
 
         <transformation extension="soy">
-            <transformer key="soyTransformer"/>
+            <transformer key="soyTransformer" />
         </transformation>
 
         <transformation extension="js">
@@ -474,8 +475,8 @@
         </transformation>
 
         <resource type="download" name="slack-update-banner.css" location="slack-less/banner/update-banner.less"/>
-        <resource type="download" name="slack-update-slack-link-banner.js" location="js/banner/update-slack-link-banner.js"/>
-        <resource type="download" name="slack-update-slack-link-banner-client-soy.js" location="slack-soy/banner/update-slack-link-banner.soy"/>
+        <resource type="download" name="slack-update-slack-link-banner.js" location="js/banner/update-slack-link-banner.js" />
+        <resource type="download" name="slack-update-slack-link-banner-client-soy.js" location="slack-soy/banner/update-slack-link-banner.soy" />
 
         <context>atl.general</context>
         <context>atl.admin</context>
@@ -513,7 +514,7 @@
         </resource>
         <resource type="download" name="js/slack-fuse.min.js" location="js/slack-fuse.min.js"/>
         <resource type="download" name="slack-less/migrate-to-slack.less.css" location="slack-less/migrate-to-slack.less"/>
-        <resource type="download" name="js/migrate-to-slack.js" location="js/migrate-to-slack.js"/>
+        <resource type="download" name="js/migrate-to-slack.js" location="js/migrate-to-slack.js" />
         <resource type="download" name="slack-soy/migrate-to-slack.soy.js" location="slack-soy/migrate-to-slack.soy"/>
 
         <context>admin</context>
@@ -535,7 +536,7 @@
         <context>atl.general</context>
         <context>atl.admin</context>
 
-        <data key="slack-link-error" class="com.atlassian.plugins.slack.oauth2.LinkErrorDataProvider"/>
+        <data key="slack-link-error" class="com.atlassian.plugins.slack.oauth2.LinkErrorDataProvider" />
 
         <transformation extension="js">
             <transformer key="jsI18n"/>
@@ -548,7 +549,8 @@
 
     <!-- Below are the resources from the common project -->
 
-    <servlet name="Configure Slack Servlet" key="slack-configure-servlet" class="com.atlassian.plugins.slack.admin.ConfigureServlet">
+    <servlet name="Configure Slack Servlet" key="slack-configure-servlet"
+             class="com.atlassian.plugins.slack.admin.ConfigureServlet">
         <url-pattern>/slack/configure</url-pattern>
     </servlet>
 
@@ -613,8 +615,7 @@
 
         <resource type="download" name="slack-admin/manage/manage-workspaces.js" location="admin/manage/manage-workspaces.js"/>
 
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-base-link-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-base-link-resources</dependency>
     </web-resource>
 
     <web-resource key="slack-user-link-support">
@@ -633,8 +634,7 @@
             <transformer key="less-transformer"/>
         </transformation>
 
-        <resource type="download" name="stylesheets/slack-channel-mappings.css"
-                  location="stylesheets/slack-channel-mappings.less"/>
+        <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.less"/>
 
         <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-user-link-support</dependency>
@@ -678,8 +678,7 @@
         <resource type="soy" name="slack-feature/integrationsteps/integrationsteps.soy" location="slack-feature/integrationsteps/integrationsteps.soy"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-global</dependency>
-        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-connection-status-resources
-        </dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-connection-status-resources</dependency>
     </web-resource>
 
     <web-resource name="Slack Connection Status resources" key="slack-connection-status-resources">
@@ -726,8 +725,10 @@
     <soy-function key="slack-plugin-resource-url" name="Generates a url for a plugin resource" class="com.atlassian.plugins.slack.soy.PluginResourceUrlSlackFunction"/>
     <soy-function key="slack-web-panel-soy-function" name="Generates the html for a web panel" class="com.atlassian.plugins.slack.soy.WebPanelsSlackFunction"/>
     <soy-function key="slack-require-resource-by-context-function" name="Requires resources for a given context" class="com.atlassian.plugins.slack.soy.RequireSlackResourceByContextSlackFunction"/>
-    <soy-function key="slack-get-product-text" name="Generates each text passing the product name as the first parameter" class="com.atlassian.plugins.slack.soy.GetProductTextSlackFunction"/>
-    <soy-function key="slack-add-query-param" name="Add a query param to an URI" class="com.atlassian.plugins.slack.soy.AddQueryParamSlackFunction"/>
+    <soy-function key="slack-get-product-text" name="Generates each text passing the product name as the first parameter"
+                  class="com.atlassian.plugins.slack.soy.GetProductTextSlackFunction"/>
+    <soy-function key="slack-add-query-param" name="Add a query param to an URI"
+                  class="com.atlassian.plugins.slack.soy.AddQueryParamSlackFunction"/>
 
     <analytics-whitelist key="atlassianSlackIntegrationAnalyticsWhitelist" resource="analytics/whitelist-base.json"/>
 
@@ -743,7 +744,8 @@
         <resource name="oauth2/view-slack-oauth-sessions.less.css" type="download" location="oauth2/view-slack-oauth-sessions.less"/>
     </web-resource>
 
-    <servlet name="View OAuth Slack Servlet" key="slack-view-oauth-servlet" class="com.atlassian.plugins.slack.oauth2.ViewSlackOauthSessionsServlet">
+    <servlet name="View OAuth Slack Servlet" key="slack-view-oauth-servlet"
+             class="com.atlassian.plugins.slack.oauth2.ViewSlackOauthSessionsServlet">
         <url-pattern>/slack/view-oauth-sessions</url-pattern>
     </servlet>
 
