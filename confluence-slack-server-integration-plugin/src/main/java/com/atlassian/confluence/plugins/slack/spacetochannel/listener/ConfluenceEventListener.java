@@ -102,7 +102,7 @@ public class ConfluenceEventListener extends AutoSubscribingEventListener {
                     event.getComment().getCreator(),
                     spaceContent,
                     () -> buildSimpleCommentNotification(
-                            content.getCreator(),
+                            event.getComment().getCreator(),
                             event.getComment().getBodyAsStringWithoutMarkup(),
                             spaceContent,
                             space));
