@@ -87,7 +87,7 @@ public class SlackChannelEventListenerTest {
 
         target.onChannelDeletedEvent(channelDeletedSlackEvent);
 
-        verify(notificationService).removeNotificationsForChannel(CHANNEL_ID);
+        verify(notificationService).removeNotificationsForChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
         verify(settingService).unmuteChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
     }
 

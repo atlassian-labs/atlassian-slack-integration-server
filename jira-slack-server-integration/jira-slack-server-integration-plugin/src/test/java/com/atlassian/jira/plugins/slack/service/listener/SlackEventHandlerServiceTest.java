@@ -30,6 +30,7 @@ import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.plugins.slack.analytics.AnalyticsContext;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.SlackUser;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
@@ -239,7 +240,7 @@ public class SlackEventHandlerServiceTest {
         when(permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, issueDedicated, applicationUser)).thenReturn(true);
         when(taskBuilder.newProcessIssueMentionTask(issueDedicated, message)).thenReturn(processIssueMentionTask);
         when(projectConfigurationManager.isProjectAutoConvertEnabled(project)).thenReturn(true);
-        when(dedicatedChannelManager.isNotSameChannel("C", Optional.of(dedicatedChannel))).thenReturn(true);
+        when(dedicatedChannelManager.isNotSameChannel(new ConversationKey("T", "C"), Optional.of(dedicatedChannel))).thenReturn(true);
         when(dedicatedChannel.getTeamId()).thenReturn("T2");
         when(dedicatedChannel.getChannelId()).thenReturn("C2");
         when(dedicatedChannel.getCreator()).thenReturn("CR");

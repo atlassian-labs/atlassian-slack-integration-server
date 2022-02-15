@@ -3,6 +3,7 @@ package com.atlassian.jira.plugins.slack.dao.impl;
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.storage.json.JsonStore;
 import com.atlassian.jira.plugins.slack.storage.json.JsonStoreFactory;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -54,6 +55,8 @@ public class DedicatedChannelStoreTest {
         List<DedicatedChannel> list = Arrays.asList(dedicatedChannel1, dedicatedChannel2);
         when(dedicatedChannel1.getChannelId()).thenReturn("C1");
         when(dedicatedChannel2.getChannelId()).thenReturn("C2");
+        when(dedicatedChannel1.getTeamId()).thenReturn("T");
+        when(dedicatedChannel2.getTeamId()).thenReturn("T");
 
         when(jsonStoreFactory.getJsonStore(SLACK_DEDICATED_CHANNEL_ENTITY_NAME, DedicatedChannel.class)).thenReturn(jsonStore);
         when(jsonStore.findByPredicate(any())).thenAnswer(args -> list.stream()
@@ -61,7 +64,7 @@ public class DedicatedChannelStoreTest {
                 .collect(Collectors.toList()));
         target = new DedicatedChannelStore(jsonStoreFactory);
 
-        List<DedicatedChannel> result = target.getAllForChannel("C1");
+        List<DedicatedChannel> result = target.getAllForChannel(new ConversationKey("T", "C1"));
 
         assertThat(result, contains(dedicatedChannel1));
     }

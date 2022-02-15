@@ -2,6 +2,7 @@ package com.atlassian.jira.plugins.slack.dao.impl;
 
 import com.atlassian.jira.plugins.slack.dao.DedicatedChannelDAO;
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +31,8 @@ public class DefaultDedicatedChannelDao implements DedicatedChannelDAO {
     }
 
     @Override
-    public List<DedicatedChannel> findMappingsForChannel(final String channelId) {
-        return dedicatedChannelStore.getAllForChannel(channelId);
+    public List<DedicatedChannel> findMappingsForChannel(final ConversationKey conversationKey) {
+        return dedicatedChannelStore.getAllForChannel(conversationKey);
     }
 
     @Override

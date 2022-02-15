@@ -195,20 +195,20 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
     @Override
     public void removeNotificationForSpaceAndChannel(
             final String spaceKey,
-            final String channelId,
+            final ConversationKey conversationKey,
             final NotificationType notificationType) {
-        entityToChannelMappingManager.removeNotificationForEntityAndChannel(spaceKey, channelId, notificationType);
+        entityToChannelMappingManager.removeNotificationForEntityAndChannel(spaceKey, conversationKey, notificationType);
     }
 
     public void removeNotificationsForSpaceAndChannel(
             final String spaceKey,
-            final String channelId) {
-        entityToChannelMappingManager.removeNotificationsForEntityAndChannel(spaceKey, channelId);
+            final ConversationKey conversationKey) {
+        entityToChannelMappingManager.removeNotificationsForEntityAndChannel(spaceKey, conversationKey);
     }
 
     @Override
-    public void removeNotificationsForChannel(final String channelId) {
-        entityToChannelMappingManager.removeNotificationsForChannel(channelId);
+    public void removeNotificationsForChannel(final ConversationKey conversationKey) {
+        entityToChannelMappingManager.removeNotificationsForChannel(conversationKey);
     }
 
     @Override

@@ -5,9 +5,11 @@ import com.atlassian.jira.plugins.slack.mentions.storage.cache.MentionChannelCac
 import com.atlassian.jira.plugins.slack.mentions.storage.json.IssueMentionStore;
 import com.atlassian.jira.plugins.slack.model.SlackIncomingMessage;
 import com.atlassian.jira.plugins.slack.model.mentions.IssueMention;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.events.SlackUserMappedEvent;
 import com.atlassian.plugins.slack.api.events.SlackUserUnmappedEvent;
 import com.atlassian.plugins.slack.api.webhooks.ChannelDeletedSlackEvent;
+import com.atlassian.plugins.slack.api.webhooks.SlackEvent;
 import com.atlassian.plugins.slack.event.SlackTeamUnlinkedEvent;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import io.atlassian.fugue.Either;
@@ -58,6 +60,8 @@ public class DefaultIssueMentionServiceTest {
     private SlackIncomingMessage message;
     @Mock
     private Issue issue;
+    @Mock
+    private SlackEvent slackEvent;
 
     @Captor
     private ArgumentCaptor<Predicate<IssueMention>> predicateCaptor;
@@ -73,11 +77,12 @@ public class DefaultIssueMentionServiceTest {
     @Test
     public void onChannelDeletedEvent() {
         when(channelDeletedSlackEvent.getChannel()).thenReturn("C");
-
+        when(channelDeletedSlackEvent.getSlackEvent()).thenReturn(slackEvent);
+        when(slackEvent.getTeamId()).thenReturn("T");
         target.onChannelDeletedEvent(channelDeletedSlackEvent);
 
         verify(mentionChannelCacheManager).deleteAll();
-        verify(issueMentionStore).deleteAllByPropertyKey("C");
+        verify(issueMentionStore).deleteAllByPropertyKey("T:C");
     }
 
     @Test
@@ -112,9 +117,9 @@ public class DefaultIssueMentionServiceTest {
 
     @Test
     public void deleteMessageMention() {
-        target.deleteMessageMention("C", "ts");
+        target.deleteMessageMention(new ConversationKey("T", "C"), "ts");
 
-        verify(issueMentionStore).deleteAllByPropertyKey("Cts");
+        verify(issueMentionStore).deleteAllByPropertyKey("T:Cts");
     }
 
     @Test

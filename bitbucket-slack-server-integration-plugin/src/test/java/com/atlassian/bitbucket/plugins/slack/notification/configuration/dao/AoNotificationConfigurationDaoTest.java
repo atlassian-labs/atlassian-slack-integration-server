@@ -148,7 +148,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
                 AoNotificationConfiguration.CHANNEL_ID_COLUMN, CHANNEL_ID,
                 AoNotificationConfiguration.REPO_ID_COLUMN, REPO_ID,
                 AoNotificationConfiguration.NOTIFICATION_TYPE_COLUMN, "someNotificationType"
-                ));
+        ));
         assertThat(entityManager.count(AoNotificationConfiguration.class), is(1));
 
         target.removeNotificationsForTeam(TEAM_ID);
@@ -166,7 +166,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
         ));
         assertThat(entityManager.count(AoNotificationConfiguration.class), is(1));
 
-        target.removeNotificationsForChannel(CHANNEL_ID);
+        target.removeNotificationsForChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
 
         assertThat(entityManager.count(AoNotificationConfiguration.class), is(0));
     }
@@ -237,7 +237,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
         when(bitbucketSlackSettingsService.getVerbosity(anyInt(), eq(TEAM_ID), any())).thenReturn(Verbosity.EXTENDED);
 
         List<RepositoryConfiguration> results = newArrayList(target.search(new NotificationSearchRequest.Builder()
-                        .build(), new PageRequestImpl(0, 5)).getValues());
+                .build(), new PageRequestImpl(0, 5)).getValues());
 
         assertThat(results.size(), is(2));
         assertThat(results.get(0).getRepository(), is(repository));

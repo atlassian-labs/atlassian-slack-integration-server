@@ -5,6 +5,7 @@ import com.atlassian.jira.plugins.slack.model.dto.ProjectConfigurationDTO;
 import com.atlassian.jira.plugins.slack.model.dto.ProjectToChannelConfigurationDTO;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 
 import java.util.List;
@@ -34,10 +35,10 @@ public interface ProjectConfigurationManager {
     /**
      * Returns all the projects that a channel is connected to
      *
-     * @param channelId because you want the keys for the channel
+     * @param conversationKey because you want the keys for the channel
      * @return a set of project keys
      */
-    Set<Project> getAllProjectsByChannel(String channelId);
+    Set<Project> getAllProjectsByChannel(ConversationKey conversationKey);
 
     /**
      * Returns projects connected to any channel in a specified team.
@@ -89,7 +90,7 @@ public interface ProjectConfigurationManager {
      */
     void deleteProjectConfigurationGroup(ProjectConfigurationDTO configurationDTO, ApplicationUser user);
 
-    void deleteProjectConfigurationsByChannelId(String channelId);
+    void deleteProjectConfigurationsByChannelId(ConversationKey conversationKey);
 
     /**
      * Verifies if the project autoconvert is enable
@@ -111,16 +112,16 @@ public interface ProjectConfigurationManager {
     /**
      * Mute notifications coming from channel with specified ID.
      *
-     * @param channelId channel ID to mute
+     * @param conversationKey channel ID to mute
      */
-    void muteProjectConfigurationsByChannelId(String channelId);
+    void muteProjectConfigurationsByChannelId(ConversationKey conversationKey);
 
     /**
-     * Unmute channels which were previously muted by {@link #muteProjectConfigurationsByChannelId(String)}.
+     * Unmute channels which were previously muted by {@link #muteProjectConfigurationsByChannelId(ConversationKey)}.
      *
-     * @param channelId channel ID to unmute
+     * @param conversationKey channel ID to unmute
      */
-    void unmuteProjectConfigurationsByChannelId(String channelId);
+    void unmuteProjectConfigurationsByChannelId(ConversationKey conversationKey);
 
     boolean isIssuePanelHidden(Project project);
 

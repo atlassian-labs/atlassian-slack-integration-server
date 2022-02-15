@@ -196,6 +196,8 @@
         <entity>com.atlassian.plugins.slack.ao.AOSlackLink</entity>
         <entity>com.atlassian.plugins.slack.ao.AOSlackUser</entity>
         <entity>com.atlassian.bitbucket.plugins.slack.notification.configuration.ao.AoNotificationConfiguration</entity>
+
+        <upgradeTask>com.atlassian.bitbucket.plugins.slack.notification.configuration.ao.MutedChannelIdUpgradeTask001</upgradeTask>
     </ao>
 
     <!-- Generic configuration panel. 2nd rendering level. 1st one is in configure-slack.vm -->

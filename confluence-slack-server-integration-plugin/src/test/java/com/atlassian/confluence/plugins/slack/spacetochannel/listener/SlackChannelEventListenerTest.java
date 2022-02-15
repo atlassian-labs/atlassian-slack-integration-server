@@ -2,6 +2,7 @@ package com.atlassian.confluence.plugins.slack.spacetochannel.listener;
 
 import com.atlassian.confluence.plugins.slack.spacetochannel.service.SlackSpaceToChannelService;
 import com.atlassian.plugins.slack.api.ConversationKey;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.events.SlackConversationsLoadedEvent;
 import com.atlassian.plugins.slack.api.webhooks.ChannelArchiveSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.ChannelDeletedSlackEvent;
@@ -94,7 +95,7 @@ public class SlackChannelEventListenerTest {
 
         target.onChannelDeletedEvent(channelDeletedSlackEvent);
 
-        verify(spaceToChannelService).removeNotificationsForChannel(CHANNEL_ID);
+        verify(spaceToChannelService).removeNotificationsForChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
         verify(settingService).unmuteChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
     }
 
@@ -103,6 +104,7 @@ public class SlackChannelEventListenerTest {
         List<Conversation> conversations = Collections.singletonList(conversation);
         List<ConversationKey> mutedConversations = Arrays.asList(new ConversationKey(TEAM_ID, CHANNEL_ID));
         when(conversation.getId()).thenReturn(CHANNEL_ID);
+        when(slackConversationsLoadedEvent.getTeamId()).thenReturn(TEAM_ID);
         when(settingService.getMutedChannelIds()).thenReturn(mutedConversations);
         when(slackConversationsLoadedEvent.getTeamId()).thenReturn(TEAM_ID);
         when(slackConversationsLoadedEvent.getConversations()).thenReturn(conversations);

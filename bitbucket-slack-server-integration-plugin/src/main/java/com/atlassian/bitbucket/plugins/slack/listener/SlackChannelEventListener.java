@@ -55,7 +55,7 @@ public class SlackChannelEventListener {
         final String teamId = event.getSlackEvent().getTeamId();
         asyncExecutor.run(() -> {
             LOGGER.debug("Removing notification mapping for channel {} because the channel was deleted", channelId);
-            notificationService.removeNotificationsForChannel(channelId);
+            notificationService.removeNotificationsForChannel(new ConversationKey(teamId, channelId));
             settingService.unmuteChannel(new ConversationKey(teamId, channelId));
         });
     }

@@ -6,6 +6,7 @@ import com.atlassian.bitbucket.plugins.slack.notification.configuration.Notifica
 import com.atlassian.bitbucket.plugins.slack.notification.configuration.RepositoryConfiguration;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequest;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.ChannelToNotify;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ public interface NotificationConfigurationDao {
 
     void removeNotificationsForTeam(@Nonnull String teamId);
 
-    void removeNotificationsForChannel(@Nonnull String channelId);
+    void removeNotificationsForChannel(@Nonnull ConversationKey conversationKey);
 
     /**
      * Retrieves a {@link Set} of slack channel ID's which match the provided {@link NotificationSearchRequest criteria}

@@ -7,6 +7,7 @@ import com.atlassian.jira.plugins.slack.mentions.storage.cache.MentionChannelCac
 import com.atlassian.jira.plugins.slack.mentions.storage.json.IssueMentionStore;
 import com.atlassian.jira.plugins.slack.model.SlackIncomingMessage;
 import com.atlassian.jira.plugins.slack.model.mentions.IssueMention;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.events.SlackUserMappedEvent;
 import com.atlassian.plugins.slack.api.events.SlackUserUnmappedEvent;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
@@ -56,8 +57,9 @@ public class DefaultIssueMentionService extends AutoSubscribingEventListener imp
     @EventListener
     public void onChannelDeletedEvent(final ChannelDeletedSlackEvent e) {
         final String channelId = e.getChannel();
+        final String teamId = e.getSlackEvent().getTeamId();
         channelCache.deleteAll();
-        issueMentionStore.deleteAllByPropertyKey(channelId);
+        issueMentionStore.deleteAllByPropertyKey(new ConversationKey(teamId, channelId).toStringKey());
     }
 
     @EventListener
@@ -78,11 +80,11 @@ public class DefaultIssueMentionService extends AutoSubscribingEventListener imp
     }
 
     @Override
-    public void deleteMessageMention(@Nonnull final String channelId, final String messageTimestamp) {
-        checkNotNull(channelId, "channelId is null.");
+    public void deleteMessageMention(@Nonnull final ConversationKey conversationKey, final String messageTimestamp) {
+        checkNotNull(conversationKey, "conversationKey is null.");
         checkNotNull(messageTimestamp, "messageTimestamp is null.");
 
-        issueMentionStore.deleteAllByPropertyKey(channelId + messageTimestamp);
+        issueMentionStore.deleteAllByPropertyKey(conversationKey.toStringKey() + messageTimestamp);
     }
 
     @Override
