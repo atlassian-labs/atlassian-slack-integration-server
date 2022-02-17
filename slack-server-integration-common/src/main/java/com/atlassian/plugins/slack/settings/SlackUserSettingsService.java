@@ -4,12 +4,16 @@ import com.atlassian.event.api.EventPublisher;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.events.PersonalNotificationConfiguredEvent;
 import com.atlassian.sal.api.user.UserKey;
+import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.usersettings.UserSettings;
 import com.atlassian.sal.api.usersettings.UserSettingsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -21,6 +25,7 @@ public class SlackUserSettingsService {
     private final UserSettingsService userSettingsService;
     private final EventPublisher eventPublisher;
     private final AnalyticsContextProvider analyticsContextProvider;
+    private final UserManager userManager;
 
     private String prefixedKey(final String key) {
         return SLACK_SETTINGS_NAMESPACE + key;
@@ -31,9 +36,10 @@ public class SlackUserSettingsService {
     }
 
     public boolean getBoolean(final UserKey userKey, final String key) {
-        final UserSettings userSettings = userSettingsService.getUserSettings(userKey);
+        final Optional<UserSettings> userSettings = getUserSettingsByUserKey(userKey);
         final String prefixedKey = prefixedKey(key);
-        return UserSettingsCompatibilityHelper.getBoolean(userSettings, prefixedKey);
+        return userSettings.map(settings -> UserSettingsCompatibilityHelper.getBoolean(settings, prefixedKey))
+                .orElse(false);
     }
 
     public void putString(final UserKey userKey, final String key, final String value) {
@@ -41,9 +47,10 @@ public class SlackUserSettingsService {
     }
 
     public String getString(final UserKey userKey, final String key) {
-        final UserSettings userSettings = userSettingsService.getUserSettings(userKey);
+        final Optional<UserSettings> userSettings = getUserSettingsByUserKey(userKey);
         final String prefixedKey = prefixedKey(key);
-        return UserSettingsCompatibilityHelper.getString(userSettings, prefixedKey, null);
+        return userSettings.map(settings -> UserSettingsCompatibilityHelper.getString(settings, prefixedKey, null))
+                .orElse("");
     }
 
     public void removeOption(final UserKey userKey, final String key) {
@@ -76,5 +83,13 @@ public class SlackUserSettingsService {
         String keyStr = key.name().toLowerCase();
         eventPublisher.publish(new PersonalNotificationConfiguredEvent(analyticsContextProvider.current(), keyStr, false));
         removeOption(userKey, keyStr);
+    }
+
+    private Optional<UserSettings> getUserSettingsByUserKey(UserKey userKey) {
+        if (userManager.resolve(Objects.requireNonNull(userManager.getUserProfile(userKey)).getUsername()) != null) {
+            return Optional.ofNullable(userSettingsService.getUserSettings(userKey));
+        } else {
+            return Optional.empty();
+        }
     }
 }
