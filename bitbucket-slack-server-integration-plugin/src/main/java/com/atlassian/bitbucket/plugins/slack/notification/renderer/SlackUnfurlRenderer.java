@@ -1,6 +1,10 @@
 package com.atlassian.bitbucket.plugins.slack.notification.renderer;
 
 import com.atlassian.bitbucket.comment.Comment;
+import com.atlassian.bitbucket.comment.CommentSearchRequest;
+import com.atlassian.bitbucket.comment.CommentService;
+import com.atlassian.bitbucket.comment.CommentSeverity;
+import com.atlassian.bitbucket.comment.CommentState;
 import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.bitbucket.commit.CommitListMergeFilter;
 import com.atlassian.bitbucket.commit.CommitService;
@@ -14,7 +18,6 @@ import com.atlassian.bitbucket.pull.PullRequestRef;
 import com.atlassian.bitbucket.pull.PullRequestSearchRequest;
 import com.atlassian.bitbucket.pull.PullRequestService;
 import com.atlassian.bitbucket.pull.PullRequestState;
-import com.atlassian.bitbucket.pull.PullRequestTaskSearchRequest;
 import com.atlassian.bitbucket.repository.Branch;
 import com.atlassian.bitbucket.repository.Ref;
 import com.atlassian.bitbucket.repository.RefService;
@@ -23,7 +26,6 @@ import com.atlassian.bitbucket.repository.RepositoryBranchesRequest;
 import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.repository.StandardRefType;
 import com.atlassian.bitbucket.scm.ScmService;
-import com.atlassian.bitbucket.task.TaskState;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.user.Person;
 import com.atlassian.bitbucket.util.Page;
@@ -56,6 +58,7 @@ import static org.apache.commons.lang3.StringUtils.leftPad;
 @Component
 public class SlackUnfurlRenderer {
     private final I18nResolver i18nResolver;
+    private final CommentService commentService;
     private final PullRequestService pullRequestService;
     private final SlackLinkRenderer slackLinkRenderer;
     private final ScmService scmService;
@@ -66,6 +69,7 @@ public class SlackUnfurlRenderer {
 
     @Autowired
     public SlackUnfurlRenderer(final I18nResolver i18nResolver,
+                               final CommentService commentService,
                                final PullRequestService pullRequestService,
                                final SlackLinkRenderer slackLinkRenderer,
                                final ScmService scmService,
@@ -74,6 +78,7 @@ public class SlackUnfurlRenderer {
                                final CommitService commitService,
                                final FileService fileService) {
         this.i18nResolver = i18nResolver;
+        this.commentService = commentService;
         this.pullRequestService = pullRequestService;
         this.slackLinkRenderer = slackLinkRenderer;
         this.scmService = scmService;
@@ -202,9 +207,10 @@ public class SlackUnfurlRenderer {
                 .map(u -> getIconStatus(u.getStatus()) + slackLinkRenderer.userLink(u.getUser()))
                 .collect(Collectors.joining(", "));
 
-        final long taskCount = pullRequestService
-                .countTasks(new PullRequestTaskSearchRequest.Builder(pullRequest).build())
-                .getCount(TaskState.OPEN);
+        final long taskCount = commentService.countComments(new CommentSearchRequest.Builder(pullRequest)
+                .severity(CommentSeverity.BLOCKER)
+                .state(CommentState.OPEN)
+                .build());
 
         if (!reviewers.isEmpty()) {
             fields.add(Field.builder()

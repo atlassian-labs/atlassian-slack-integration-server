@@ -1,15 +1,12 @@
 package com.atlassian.bitbucket.plugins.slack.listener;
 
-import com.atlassian.bitbucket.comment.AbstractCommentableVisitor;
-import com.atlassian.bitbucket.comment.Comment;
-import com.atlassian.bitbucket.comment.CommentService;
-import com.atlassian.bitbucket.comment.CommentThread;
+import com.atlassian.bitbucket.comment.*;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryRefsChangedEvent;
-import com.atlassian.bitbucket.event.task.TaskEvent;
 import com.atlassian.bitbucket.plugins.slack.notification.NotificationPublisher;
 import com.atlassian.bitbucket.plugins.slack.notification.PullRequestNotificationTypes;
 import com.atlassian.bitbucket.plugins.slack.notification.RepositoryNotificationTypes;
@@ -33,6 +30,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static com.atlassian.bitbucket.comment.CommentSeverity.BLOCKER;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
@@ -47,48 +45,28 @@ public class BitbucketNotificationEventListener {
 
     private final SlackNotificationRenderer slackNotificationRenderer;
     private final NotificationPublisher notificationPublisher;
-    private final CommentService commentService;
     private final PersonalNotificationService personalNotificationService;
 
     @Autowired
     public BitbucketNotificationEventListener(final I18nResolver i18nResolver,
                                               final SlackNotificationRenderer slackNotificationRenderer,
                                               final NotificationPublisher notificationPublisher,
-                                              final CommentService commentService,
                                               final PersonalNotificationService personalNotificationService) {
         this.i18nResolver = i18nResolver;
         this.slackNotificationRenderer = slackNotificationRenderer;
         this.notificationPublisher = notificationPublisher;
-        this.commentService = commentService;
         this.personalNotificationService = personalNotificationService;
     }
 
     @EventListener
-    public void onEvent(final TaskEvent event) {
-        final TaskNotificationTypes taskAction = TaskNotificationTypes.from(event);
-        event.getTask().getAnchor().accept(commentStub -> {
-            // need to refresh the comment object since in some cases it tries to lazy load its parent while the underlying session is closed
-            commentService.getComment(commentStub.getId())
-                    .map(Comment::getThread)
-                    .map(CommentThread::getCommentable)
-                    .ifPresent(commentable -> commentable.accept(new AbstractCommentableVisitor<Pair<Repository, Supplier<ChatPostMessageRequestBuilder>>>() {
-                        @Override
-                        public Pair<Repository, Supplier<ChatPostMessageRequestBuilder>> visit(@Nonnull final PullRequest pullRequest) {
-                            notificationPublisher.findChannelsAndPublishNotificationsAsync(
-                                    pullRequest.getToRef().getRepository(),
-                                    taskAction.getKey(),
-                                    () -> personalNotificationService.findNotificationsFor(
-                                            event.getUser(), pullRequest, Collections.emptySet(), false),
-                                    options -> ofNullable(slackNotificationRenderer.getPullRequestTaskMessage(pullRequest, event, taskAction)));
-                            return null;
-                        }
-                    }));
-            return null;
-        });
-    }
-
-    @EventListener
     public void onEvent(final PullRequestEvent event) {
+        if (event instanceof PullRequestCommentEvent) {
+            PullRequestCommentEvent commentEvent = (PullRequestCommentEvent) event;
+            if (commentEvent.getComment().getSeverity() == BLOCKER) {
+                onEvent(commentEvent);
+                return;
+            }
+        }
         PullRequestNotificationTypes.byEvent(event, i18nResolver).ifPresent(notificationType -> {
             final boolean isReviewersUpdate = event instanceof PullRequestReviewersUpdatedEvent;
             final boolean hasUserAddedOrRemovedHimself = isReviewersUpdate && hasUserAddedOrRemovedHimself((PullRequestReviewersUpdatedEvent) event);
@@ -112,6 +90,26 @@ public class BitbucketNotificationEventListener {
                         return ofNullable(slackNotificationRenderer.getPullRequestMessage(event));
                     });
         });
+    }
+
+    private void onEvent(final PullRequestCommentEvent taskEvent) {
+        final TaskNotificationTypes taskAction = TaskNotificationTypes.from(taskEvent);
+        taskEvent.getComment()
+                .getThread()
+                .getCommentable()
+                .accept(new AbstractCommentableVisitor<Pair<Repository, Supplier<ChatPostMessageRequestBuilder>>>() {
+                    @Override
+                    public Pair<Repository, Supplier<ChatPostMessageRequestBuilder>> visit(@Nonnull final PullRequest pullRequest) {
+                        notificationPublisher.findChannelsAndPublishNotificationsAsync(
+                                pullRequest.getToRef().getRepository(),
+                                taskAction.getKey(),
+                                () -> personalNotificationService.findNotificationsFor(
+                                        taskEvent.getUser(), pullRequest, Collections.emptySet(), false),
+                                options -> ofNullable(slackNotificationRenderer.getPullRequestTaskMessage(pullRequest,
+                                        taskAction, taskEvent.getComment(), taskEvent.getUser())));
+                        return null;
+                    }
+                });
     }
 
     private Set<ApplicationUser> getUsersAddedToPullRequest(final PullRequestEvent event) {

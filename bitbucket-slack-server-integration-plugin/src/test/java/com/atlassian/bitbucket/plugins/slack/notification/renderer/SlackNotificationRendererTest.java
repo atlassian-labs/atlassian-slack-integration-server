@@ -2,6 +2,7 @@ package com.atlassian.bitbucket.plugins.slack.notification.renderer;
 
 import com.atlassian.bitbucket.comment.Comment;
 import com.atlassian.bitbucket.comment.CommentAction;
+import com.atlassian.bitbucket.comment.CommentSeverity;
 import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.bitbucket.commit.CommitDiscussion;
 import com.atlassian.bitbucket.commit.CommitRequest;
@@ -20,7 +21,6 @@ import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryRefsChangedEvent;
-import com.atlassian.bitbucket.event.task.TaskEvent;
 import com.atlassian.bitbucket.permission.Permission;
 import com.atlassian.bitbucket.plugins.slack.event.RepositoryLinkedEvent;
 import com.atlassian.bitbucket.plugins.slack.notification.TaskNotificationTypes;
@@ -38,8 +38,6 @@ import com.atlassian.bitbucket.repository.RefService;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.repository.StandardRefType;
 import com.atlassian.bitbucket.server.ApplicationPropertiesService;
-import com.atlassian.bitbucket.task.Task;
-import com.atlassian.bitbucket.task.TaskAnchor;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.user.EscalatedSecurityContext;
 import com.atlassian.bitbucket.user.SecurityService;
@@ -148,8 +146,6 @@ public class SlackNotificationRendererTest {
     @Mock
     PullRequestReviewersUpdatedEvent pullRequestReviewersUpdatedEvent;
     @Mock
-    TaskEvent taskEvent;
-    @Mock
     CommitDiscussion discussion;
     @Mock
     Comment comment;
@@ -183,10 +179,6 @@ public class SlackNotificationRendererTest {
     MinimalRef minimalRef;
     @Mock
     Ref ref;
-    @Mock
-    Task task;
-    @Mock
-    TaskAnchor taskAnchor;
 
     @InjectMocks
     SlackNotificationRenderer renderer;
@@ -591,14 +583,12 @@ public class SlackNotificationRendererTest {
     @Test
     void getTaskMessage_shouldBuildCorrectSlackMessage() {
         String taskText = "Do something";
-        when(taskEvent.getUser()).thenReturn(user);
-        when(taskEvent.getTask()).thenReturn(task);
-        when(task.getAnchor()).thenReturn(taskAnchor);
-        when(task.getText()).thenReturn(taskText);
-        when(taskAnchor.getId()).thenReturn(7L);
         when(slackLinkRenderer.pullRequestCommentUrl(pullRequest, 7L)).thenReturn("/pr-comment");
+        when(comment.getId()).thenReturn(7L);
+        when(comment.getSeverity()).thenReturn(CommentSeverity.BLOCKER);
+        when(comment.getText()).thenReturn(taskText);
 
-        ChatPostMessageRequest result = renderer.getPullRequestTaskMessage(pullRequest, taskEvent, TaskNotificationTypes.CREATED).build();
+        ChatPostMessageRequest result = renderer.getPullRequestTaskMessage(pullRequest, TaskNotificationTypes.CREATED, comment, user).build();
 
         String expectedText = join("slack.activity.pr.task.created.long", USER_SLACK_LINK, "/pr-comment", PR_SLACK_LINK,
                 REPO_SLACK_LINK, PR_FROM_BRANCH_LINK, PR_TO_BRANCH_LINK);
