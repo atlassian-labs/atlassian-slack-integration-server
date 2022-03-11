@@ -1,6 +1,6 @@
 package com.atlassian.bitbucket.plugins.slack.listener;
 
-import com.atlassian.bitbucket.comment.*;
+import com.atlassian.bitbucket.comment.AbstractCommentableVisitor;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestEvent;
@@ -62,7 +62,7 @@ public class BitbucketNotificationEventListener {
     public void onEvent(final PullRequestEvent event) {
         if (event instanceof PullRequestCommentEvent) {
             PullRequestCommentEvent commentEvent = (PullRequestCommentEvent) event;
-            if (commentEvent.getComment().getSeverity() == BLOCKER) {
+            if (commentEvent.getComment().getSeverity() == BLOCKER) { //BLOCKER severity represents a PR task
                 onEvent(commentEvent);
                 return;
             }

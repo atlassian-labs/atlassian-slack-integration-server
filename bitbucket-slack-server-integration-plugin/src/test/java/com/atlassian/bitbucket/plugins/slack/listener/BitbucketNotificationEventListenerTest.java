@@ -51,6 +51,7 @@ import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest.ChatPostMessageRequestBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -62,6 +63,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.atlassian.bitbucket.comment.CommentSeverity.NORMAL;
 import static org.mockito.AdditionalAnswers.answer;
@@ -79,8 +81,6 @@ class BitbucketNotificationEventListenerTest {
     private SlackNotificationRenderer slackNotificationRenderer;
     @Mock
     private NotificationPublisher notificationPublisher;
-    @Mock
-    private CommentService commentService;
     @Mock
     private I18nResolver i18nResolver;
 
@@ -196,13 +196,13 @@ class BitbucketNotificationEventListenerTest {
     }
 
     @Test
-    void onEvent_pullRequestTaskUpdatedEvent_shouldCallExpectedMethods() {
+    void onEvent_pullRequestTaskUpdated_shouldCallExpectedMethods() {
         when(pullRequestCommentEditedEvent.getCommentAction()).thenReturn(CommentAction.EDITED);
         testPullRequestBlockerCommentEvent(pullRequestCommentEditedEvent, TaskNotificationTypes.UPDATED);
     }
 
     @Test
-    void onEvent_pullRequestTaskResolvedEvent_shouldCallExpectedMethods() {
+    void onEvent_pullRequestTaskResolved_shouldCallExpectedMethods() {
         when(pullRequestCommentEditedEvent.getCommentAction()).thenReturn(CommentAction.EDITED);
         when(pullRequestCommentEditedEvent.getPreviousState()).thenReturn(CommentState.OPEN);
         when(comment.getState()).thenReturn(CommentState.RESOLVED);
@@ -210,7 +210,7 @@ class BitbucketNotificationEventListenerTest {
     }
 
     @Test
-    void onEvent_pullRequestTaskReopenedEvent_shouldCallExpectedMethods() {
+    void onEvent_pullRequestTaskReopened_shouldCallExpectedMethods() {
         when(pullRequestCommentEditedEvent.getCommentAction()).thenReturn(CommentAction.EDITED);
         when(pullRequestCommentEditedEvent.getPreviousState()).thenReturn(CommentState.RESOLVED);
         when(comment.getState()).thenReturn(CommentState.OPEN);
@@ -218,7 +218,7 @@ class BitbucketNotificationEventListenerTest {
     }
 
     @Test
-    void onEvent_pullRequestTaskDeletedEvent_shouldCallExpectedMethods() {
+    void onEvent_pullRequestTaskDeleted_shouldCallExpectedMethods() {
         when(pullRequestCommentDeletedEvent.getCommentAction()).thenReturn(CommentAction.DELETED);
         when(pullRequestCommentDeletedEvent.getComment()).thenReturn(comment);
         testPullRequestBlockerCommentEvent(pullRequestCommentDeletedEvent, TaskNotificationTypes.DELETED);
