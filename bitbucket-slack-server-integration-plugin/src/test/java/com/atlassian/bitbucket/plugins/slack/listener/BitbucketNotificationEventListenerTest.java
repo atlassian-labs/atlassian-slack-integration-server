@@ -2,7 +2,6 @@ package com.atlassian.bitbucket.plugins.slack.listener;
 
 import com.atlassian.bitbucket.comment.Comment;
 import com.atlassian.bitbucket.comment.CommentAction;
-import com.atlassian.bitbucket.comment.CommentService;
 import com.atlassian.bitbucket.comment.CommentSeverity;
 import com.atlassian.bitbucket.comment.CommentState;
 import com.atlassian.bitbucket.comment.CommentThread;
@@ -49,11 +48,11 @@ import com.atlassian.bitbucket.repository.MinimalRef;
 import com.atlassian.bitbucket.repository.RefChange;
 import com.atlassian.bitbucket.repository.RefChangeType;
 import com.atlassian.bitbucket.repository.Repository;
+import com.atlassian.bitbucket.repository.StandardRefType;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest.ChatPostMessageRequestBuilder;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -65,7 +64,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static com.atlassian.bitbucket.comment.CommentSeverity.NORMAL;
 import static org.mockito.AdditionalAnswers.answer;
