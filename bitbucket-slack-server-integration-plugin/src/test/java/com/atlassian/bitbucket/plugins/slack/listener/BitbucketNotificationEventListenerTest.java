@@ -45,7 +45,9 @@ import com.atlassian.bitbucket.plugins.slack.notification.TaskNotificationTypes;
 import com.atlassian.bitbucket.plugins.slack.notification.renderer.SlackNotificationRenderer;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestRef;
+import com.atlassian.bitbucket.repository.MinimalRef;
 import com.atlassian.bitbucket.repository.RefChange;
+import com.atlassian.bitbucket.repository.RefChangeType;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
@@ -153,6 +155,8 @@ class BitbucketNotificationEventListenerTest {
     private RefChange refChange;
     @Mock
     private ApplicationUser user;
+    @Mock
+    private MinimalRef minimalRef;
 
     @Captor
     private ArgumentCaptor<Function<NotificationRenderingOptions, Optional<ChatPostMessageRequestBuilder>>> captor;
@@ -409,6 +413,46 @@ class BitbucketNotificationEventListenerTest {
         verify(notificationPublisher).findChannelsAndPublishNotificationsAsync(
                 same(repository),
                 eq(RepositoryNotificationTypes.PUSHED.getKey()),
+                any(),
+                captor.capture());
+
+        captor.getValue().apply(extendedOptions);
+        verify(slackNotificationRenderer).getPushMessage(repositoryPushEvent, refChange, Verbosity.EXTENDED);
+    }
+
+    @Test
+    void onEvent_repositoryPushBranchDeletedEvent_notificationTypeShouldBeFixed() {
+        when(repositoryPushEvent.getRepository()).thenReturn(repository);
+        when(repositoryPushEvent.getRefChanges()).thenReturn(Collections.singleton(refChange));
+        when(refChange.getType()).thenReturn(RefChangeType.DELETE);
+        when(refChange.getRef()).thenReturn(minimalRef);
+        when(minimalRef.getType()).thenReturn(StandardRefType.BRANCH);
+
+        target.onEvent(repositoryPushEvent);
+
+        verify(notificationPublisher).findChannelsAndPublishNotificationsAsync(
+                same(repository),
+                eq(RepositoryNotificationTypes.BRANCH_DELETED.getKey()),
+                any(),
+                captor.capture());
+
+        captor.getValue().apply(extendedOptions);
+        verify(slackNotificationRenderer).getPushMessage(repositoryPushEvent, refChange, Verbosity.EXTENDED);
+    }
+
+    @Test
+    void onEvent_repositoryPushTagDeletedEvent_notificationTypeShouldBeFixed() {
+        when(repositoryPushEvent.getRepository()).thenReturn(repository);
+        when(repositoryPushEvent.getRefChanges()).thenReturn(Collections.singleton(refChange));
+        when(refChange.getType()).thenReturn(RefChangeType.DELETE);
+        when(refChange.getRef()).thenReturn(minimalRef);
+        when(minimalRef.getType()).thenReturn(StandardRefType.TAG);
+
+        target.onEvent(repositoryPushEvent);
+
+        verify(notificationPublisher).findChannelsAndPublishNotificationsAsync(
+                same(repository),
+                eq(RepositoryNotificationTypes.TAG_DELETED.getKey()),
                 any(),
                 captor.capture());
 

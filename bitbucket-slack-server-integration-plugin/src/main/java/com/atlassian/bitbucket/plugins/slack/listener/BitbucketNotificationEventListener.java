@@ -14,7 +14,10 @@ import com.atlassian.bitbucket.plugins.slack.notification.TaskNotificationTypes;
 import com.atlassian.bitbucket.plugins.slack.notification.configuration.PersonalNotificationService;
 import com.atlassian.bitbucket.plugins.slack.notification.renderer.SlackNotificationRenderer;
 import com.atlassian.bitbucket.pull.PullRequest;
+import com.atlassian.bitbucket.repository.RefChange;
+import com.atlassian.bitbucket.repository.RefChangeType;
 import com.atlassian.bitbucket.repository.Repository;
+import com.atlassian.bitbucket.repository.StandardRefType;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.event.api.EventListener;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
@@ -139,13 +142,31 @@ public class BitbucketNotificationEventListener {
     @EventListener
     public void onEvent(final RepositoryRefsChangedEvent event) {
         RepositoryNotificationTypes.byEventClass(event.getClass()).ifPresent(notificationType ->
-                event.getRefChanges().forEach(refChange ->
-                        notificationPublisher.findChannelsAndPublishNotificationsAsync(
-                                event.getRepository(),
-                                notificationType.getKey(),
-                                Collections::emptySet,
-                                options -> ofNullable(slackNotificationRenderer.getPushMessage(
-                                        event, refChange, options.getVerbosity())))));
+                event.getRefChanges().forEach(refChange -> {
+                    // RepositoryRefsChangedEvent event is also triggered when branch/tag is deleted via push
+                    // replacing it here allows to respect 'branch/tag deleted' option in subscription settings
+                    RepositoryNotificationTypes correctedType = correctNotificationType(notificationType, refChange);
+
+                    notificationPublisher.findChannelsAndPublishNotificationsAsync(
+                            event.getRepository(),
+                            correctedType.getKey(),
+                            Collections::emptySet,
+                            options -> ofNullable(slackNotificationRenderer.getPushMessage(
+                                    event, refChange, options.getVerbosity())));
+                }));
+    }
+
+    private RepositoryNotificationTypes correctNotificationType(final RepositoryNotificationTypes currentType,
+                                                                final RefChange refChange) {
+        RepositoryNotificationTypes correctedType = currentType;
+        if (currentType == RepositoryNotificationTypes.PUSHED
+                && refChange.getType() == RefChangeType.DELETE) {
+            correctedType = refChange.getRef().getType() == StandardRefType.BRANCH
+                    ? RepositoryNotificationTypes.BRANCH_DELETED
+                    : RepositoryNotificationTypes.TAG_DELETED;
+        }
+
+        return correctedType;
     }
 
     @EventListener
