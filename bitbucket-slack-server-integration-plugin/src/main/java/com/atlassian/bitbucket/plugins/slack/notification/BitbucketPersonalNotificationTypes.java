@@ -18,7 +18,7 @@ public enum BitbucketPersonalNotificationTypes {
      */
     PR_REVIEWER_CREATED,
     /**
-     * Tell me about all updates in a PR I’m a reviewer
+     * Tell me about all updates in a PR I’m a reviewer of
      */
     PR_REVIEWER_UPDATED
 }

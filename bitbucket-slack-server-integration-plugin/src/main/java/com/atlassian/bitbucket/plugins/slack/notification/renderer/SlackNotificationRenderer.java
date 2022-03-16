@@ -317,17 +317,14 @@ public class SlackNotificationRenderer {
         return standardBlockMessage(text);
     }
 
-    public ChatPostMessageRequestBuilder getReviewersPullRequestMessage(
-            final PullRequestReviewersUpdatedEvent event,
-            final boolean isVerbose) {
-        final PullRequest pullRequest = event.getPullRequest();
+    public ChatPostMessageRequestBuilder getReviewersPullRequestMessage(final PullRequest pullRequest,
+                                                                        final ApplicationUser actor,
+                                                                        final boolean hasUserJoinedPr,
+                                                                        final boolean isVerbose) {
         final PullRequestRef toRef = pullRequest.getToRef();
         final Repository repository = toRef.getRepository();
-        final ApplicationUser actor = event.getUser();
-        final Collection<ApplicationUser> addedReviewers = ObjectUtils.firstNonNull(event.getAddedReviewers(), emptyList());
-        final boolean isOneUserAdded = addedReviewers.size() == 1;
 
-        final String suffix = isOneUserAdded ? "joined" : "removed";
+        final String suffix = hasUserJoinedPr ? "joined" : "removed";
         final String verboseSuffix = isVerbose ? ".long" : ".short";
         final String text = i18nResolver.getText(
                 "slack.activity.pr.reviewers." + suffix + verboseSuffix,
