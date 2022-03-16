@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.atlassian.pom</groupId>
-        <artifactId>public-pom</artifactId>
-        <version>5.0.26</version>
-    </parent>
-
     <groupId>com.atlassian.plugins</groupId>
     <artifactId>atlassian-slack-server-integration-parent</artifactId>
     <version>1.1.13</version>
@@ -41,6 +35,9 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <arguments>-Dmaven.javadoc.skip=true</arguments>
         <atlassian.dev.mode>false</atlassian.dev.mode>
+
+        <!-- Use credentials of 'github' server from settings.xml during the release -->
+        <project.scm.id>github</project.scm.id>
 
         <!-- Dependencies -->
         <jslack.version>1.5.6</jslack.version>
@@ -525,8 +522,13 @@
 
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>3.14.9</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>mockwebserver</artifactId>
-                <version>3.14.1</version>
+                <version>3.14.9</version>
                 <scope>test</scope>
             </dependency>
 
@@ -599,6 +601,14 @@
         <url>https://github.com/atlassian-labs/atlassian-slack-integration-server.git</url>
         <tag>HEAD</tag>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub</name>
+            <url>https://maven.pkg.github.com/atlassian-labs/atlassian-slack-integration-server</url>
+        </repository>
+    </distributionManagement>
 
     <developers>
         <developer>

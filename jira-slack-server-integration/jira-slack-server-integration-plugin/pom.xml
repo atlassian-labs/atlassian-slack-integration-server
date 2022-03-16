@@ -10,7 +10,7 @@
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>2.0.19-SNAPSHOT</version>
+    <version>2.0.22-SNAPSHOT</version>
 
     <name>Slack for Jira Server</name>
     <description>This is the Slack plugin for Jira Server</description>
