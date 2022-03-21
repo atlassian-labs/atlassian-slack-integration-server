@@ -1,6 +1,7 @@
 package com.atlassian.jira.plugins.slack.dao.impl;
 
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -52,9 +53,9 @@ public class DefaultDedicatedChannelDaoTest {
     @Test
     public void findMappingsForChannel() {
         List<DedicatedChannel> list = Collections.singletonList(dedicatedChannel);
-        when(dedicatedChannelStore.getAllForChannel("C")).thenReturn(list);
+        when(dedicatedChannelStore.getAllForChannel(new ConversationKey("T", "C"))).thenReturn(list);
 
-        List<DedicatedChannel> result = target.findMappingsForChannel("C");
+        List<DedicatedChannel> result = target.findMappingsForChannel(new ConversationKey("T", "C"));
 
         assertThat(result, is(list));
     }

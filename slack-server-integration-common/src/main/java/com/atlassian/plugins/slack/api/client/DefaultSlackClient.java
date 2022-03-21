@@ -9,6 +9,7 @@ import com.atlassian.plugins.slack.api.UserNotLinkedException;
 import com.atlassian.plugins.slack.api.client.cache.SlackResponseCache;
 import com.atlassian.plugins.slack.api.events.SlackConversationsLoadedEvent;
 import com.atlassian.plugins.slack.api.webhooks.ChannelArchiveSlackEvent;
+import com.atlassian.plugins.slack.api.webhooks.SlackEvent;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.atlassian.sal.api.user.UserManager;
@@ -343,7 +344,7 @@ public class DefaultSlackClient implements SlackClient {
 
         return result.map(conversations -> {
             // check 'is_archived' flag and unmute mappings
-            eventPublisher.publish(new SlackConversationsLoadedEvent(conversations));
+            eventPublisher.publish(new SlackConversationsLoadedEvent(conversations, slackLink.getTeamId()));
             return conversations;
         });
     }
@@ -689,6 +690,7 @@ public class DefaultSlackClient implements SlackClient {
     private void triggerChannelArchivedEvent(final String channelId) {
         ChannelArchiveSlackEvent event = new ChannelArchiveSlackEvent();
         event.setChannel(channelId);
+        event.setSlackEvent(new SlackEvent(slackLink.getTeamId(), null, 0, slackLink));
         eventPublisher.publish(event);
     }
 }

@@ -9,37 +9,39 @@ import java.util.List;
 /*
 https://api.slack.com/events/link_shared
 {
-    "token": "XXYYZZ",
-    "team_id": "TXXXXXXXX",
-    "api_app_id": "AXXXXXXXXX",
+    "api_app_id": "A00T0R11P66",
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "is_bot": false,
+            "is_enterprise_install": false,
+            "team_id": "TT0EEPP4R",
+            "user_id": "U11PIPLPPSM"
+        }
+    ],
     "event": {
-        "type": "link_shared",
-        "channel": "Cxxxxxx",
-        "user": "Uxxxxxxx",
-        "message_ts": "123456789.9875",
-        "thread_ts": "123456621.1855",
+        "channel": "C10P0P00303",
+        "event_ts": "1638793296.000200",
+        "is_bot_user_member": false,
         "links": [
             {
-                "domain": "example.com",
-                "url": "https://example.com/12345"
-            },
-            {
-                "domain": "example.com",
-                "url": "https://example.com/67890"
-            },
-            {
-                "domain": "another-example.com",
-                "url": "https://yet.another-example.com/v/abcde"
+                "domain": "domain.com",
+                "url": "https://domain.com"
             }
-        ]
+        ],
+        "message_ts": "U77HGNBMCLD-fgvh99ae-f8sd-899c-21bv-3kjlmn44l67g2-9nb33d7kjm0cd3e8796f324jhh4f37f7898796432klj1c324561234d73c6563f",
+        "source": "source",
+        "type": "link_shared",
+        "unfurl_id": "U77HGNBMCLD-fgvh99ae-f8sd-899c-21bv-3kjlmn44l67g2-9nb33d7kjm0cd3e8796f324jhh4f37f7898796432klj1c324561234d73c653f",
+        "user": "U00TPRPIPPA"
     },
-    "type": "event_callback",
-    "authed_users": [
-        "UXXXXXXX1",
-        "UXXXXXXX2"
-    ],
-    "event_id": "Ev08MFMKH6",
-    "event_time": 123456789
+    "event_context": "4-tePlwKR8Ne4dy7XjS7QhWQL7dRVkZgVEBsREJNBMDOJcSYDhfGHrIgKDGHTGDbs2KSf4HdKdVxMqQGD4GkVaAgt4KQEtMSGsDn0",
+    "event_id": "Es36PQNZWHSP",
+    "event_time": 1639051134,
+    "is_ext_shared_channel": false,
+     "team_id": "TT0EEPP4R",
+    "token": "dr2FDH3al54fFGWEJHsNdo0u",
+    "type": "event_callback"
 }
 */
 @Data

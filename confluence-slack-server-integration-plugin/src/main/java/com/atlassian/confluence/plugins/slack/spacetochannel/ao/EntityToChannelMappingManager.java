@@ -1,6 +1,7 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.ao;
 
 import com.atlassian.activeobjects.tx.Transactional;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 
 import java.util.List;
@@ -95,21 +96,21 @@ public interface EntityToChannelMappingManager {
      * This method can be used to disable notifications of a specific type for a given entity and channel combination.
      *
      * @param entityKey        a key identifying the entity that this mapping pertains to.
-     * @param channelId        the ID of the channel.
+     * @param conversationKey  the ID of the channel.
      * @param notificationType the type of notification that this mapping pertains to.
      */
     void removeNotificationForEntityAndChannel(
             String entityKey,
-            String channelId,
+            ConversationKey conversationKey,
             NotificationType notificationType);
 
     /**
      * This method can be used to disable notifications of all types for a given entity and channel combination.
      *
      * @param entityKey a key identifying the entity that this mapping pertains to.
-     * @param channelId the ID of the channel.
+     * @param conversationKey the ID of the channel.
      */
-    void removeNotificationsForEntityAndChannel(String entityKey, String channelId);
+    void removeNotificationsForEntityAndChannel(String entityKey, ConversationKey conversationKey);
 
     /**
      * This method can be used to disable notifications of all types for a given entity.
@@ -122,10 +123,10 @@ public interface EntityToChannelMappingManager {
     /**
      * Remove all the notifications for specified channel in all spaces.
      *
-     * @param channelId id of the channel which mappings should be removed
+     * @param conversationKey id of the channel which mappings should be removed
      * @return number of notifications removed
      */
-    int removeNotificationsForChannel(String channelId);
+    int removeNotificationsForChannel(ConversationKey conversationKey);
 
     /**
      * This method is used to check if a mapping for this combination of entity, channel and notification type already

@@ -13,10 +13,10 @@ or by manually downloading plugin JAR files from Marketplace pages for [Jira](ht
 or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-for-slack-official?hosting=server&tab=overview) plugins.
 Links to the official documentation are specified on Marketplace pages.
 
-Supported products (on 5 Mar, 2021). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
+Supported products (on 3 Feb, 2022). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
 * Jira: 8.1.0 (EOL 11 Feb, 2021) JDK 8, 11 - 8.15.0 (EOL 2 Feb 2023) on JDK 8, 11.
-* Confluence: 6.11.2 (EOL Aug 14, 2020) JDK 8 - 7.8.0 (EOL 29 Sep 2022) JDK 8, 11.
-* Bitbucket: 6.7.1 (EOL 1 Oct, 2021) on JDK 8, 11 - 7.6.0 (EOL 15 Sep, 2022) on JDK 8, 11.
+* Confluence: 7.4.14 (EOL date: Apr 21, 2022) JDK 8, 11 - 7.15.0 (EOL date: Nov 24, 2023) JDK 8, 11.
+* Bitbucket: 7.0.0 (EOL date: 5 March 2022) on JDK 8, 11 - 7.21.0 (EOL date: 2 March 2024) on JDK 8, 11.
 
 ## A note on future development plans
 
@@ -33,7 +33,9 @@ Running `$JAVA_HOME/bin/java -version` should print a JDK version.
 2. Download and install [Atlassian Plugin SDK](https://developer.atlassian.com/server/framework/atlassian-sdk/install-the-atlassian-sdk-on-a-linux-or-mac-system/). 
 After successful installation running `atlas-version` should print SDK version.
 3. (Optional) Install [ngrok](https://ngrok.com/) to enable Slack -> product features (slash commands, unfurling). 
-If you don't have ngrok, the plugin still can send notification to Slack in uni-derectional way.
+If you don't have ngrok, the plugin still can send notification to Slack in uni-directional way. 
+Slack demands HTTPS OAuth redirect URLs, so you also need to add your ngrok host to domain allowlist at
+http://localhost:2990/jira/plugins/servlet/whitelist. 
 4. If you are setting up the project for the first time run `./jira.sh common` from the project root directory to install 
 all common modules to local Maven repository.
 5. Go to **\<product> Plugin Development** section for further steps. 

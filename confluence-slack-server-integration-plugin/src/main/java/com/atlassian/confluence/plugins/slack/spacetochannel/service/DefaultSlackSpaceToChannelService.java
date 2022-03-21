@@ -8,6 +8,7 @@ import com.atlassian.confluence.plugins.slack.spacetochannel.configuration.Space
 import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.plugins.slack.api.ConversationKey;
+import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.ConversationLoaderHelper;
 import com.atlassian.plugins.slack.api.client.ConversationsAndLinks;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
@@ -65,7 +66,7 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
         this.transactionTemplate = transactionTemplate;
     }
 
-    private Function<String, Optional<SlackChannelDefinition>> getChannelProvider(
+    private Function<ConversationKey, Optional<SlackChannelDefinition>> getChannelProvider(
             final List<AOEntityToChannelMapping> mappings) {
         // remote user key is stored here because code below is async and can't access request context
         final String userKey = userManager.getRemoteUserKey().getStringValue();
@@ -76,29 +77,32 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
                 (slackClient, channel) -> transactionTemplate.execute(() -> slackClient.withUserTokenIfAvailable(userKey)
                         .flatMap(client -> client.getConversationsInfo(channel.getChannelId()).toOptional())));
 
-        return channelId -> conversationsAndLinks.linkByChannelId(channelId)
-                .map(link -> conversationsAndLinks.conversation(channelId)
-                        .map(conversation -> new SlackChannelDefinition(
-                                link.getTeamName(),
-                                link.getTeamId(),
-                                conversation.getName(),
-                                conversation.getId(),
-                                conversation.isPrivate(),
-                                slackSettingService.isChannelMuted(channelId)))
-                        .orElseGet(() -> new SlackChannelDefinition(
-                                link.getTeamName(),
-                                link.getTeamId(),
-                                "id:" + channelId,
-                                channelId,
-                                true,
-                                slackSettingService.isChannelMuted(channelId))));
+        return conversationKey -> {
+            Optional<SlackLink> slackLink = conversationsAndLinks.linkByConversationKey(conversationKey);
+            return slackLink
+                    .map(link -> conversationsAndLinks.conversation(conversationKey)
+                            .map(conversation -> new SlackChannelDefinition(
+                                    link.getTeamName(),
+                                    link.getTeamId(),
+                                    conversation.getName(),
+                                    conversation.getId(),
+                                    conversation.isPrivate(),
+                                    slackSettingService.isChannelMuted(conversationKey)))
+                            .orElseGet(() -> new SlackChannelDefinition(
+                                    link.getTeamName(),
+                                    link.getTeamId(),
+                                    "id:" + conversationKey.getChannelId(),
+                                    conversationKey.getChannelId(),
+                                    true,
+                                    slackSettingService.isChannelMuted(conversationKey))));
+        };
     }
 
     @Override
     public List<SpaceToChannelConfiguration> getAllSpaceToChannelLinks() {
         if (slackLinkManager.isAnyLinkDefined()) {
             final List<AOEntityToChannelMapping> mappings = entityToChannelMappingManager.getAll();
-            final Function<String, Optional<SlackChannelDefinition>> channelProvider = getChannelProvider(mappings);
+            final Function<ConversationKey, Optional<SlackChannelDefinition>> channelProvider = getChannelProvider(mappings);
             final Map<String, SpaceToChannelConfiguration.Builder> spaceBuildersBySpaceKey = new HashMap<>();
 
             for (AOEntityToChannelMapping mapping : mappings) {
@@ -112,7 +116,7 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
                     }
                 }
                 if (builder != null) {
-                    addAOEntityChannelMappingsToBuilder(mapping, builder.getSettingsBuilder(mapping.getChannelId()));
+                    addAOEntityChannelMappingsToBuilder(mapping, builder.getSettingsBuilder(new ConversationKey(mapping.getTeamId(), mapping.getChannelId())));
                 }
             }
 
@@ -134,7 +138,7 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
     public SpaceToChannelConfiguration getSpaceToChannelConfiguration(final String spaceKey) {
         Space space = spaceManager.getSpace(spaceKey);
         final List<AOEntityToChannelMapping> mappings = entityToChannelMappingManager.getForEntity(spaceKey);
-        final Function<String, Optional<SlackChannelDefinition>> channelProvider = getChannelProvider(mappings);
+        final Function<ConversationKey, Optional<SlackChannelDefinition>> channelProvider = getChannelProvider(mappings);
 
         SpaceToChannelConfiguration.Builder builder = newConfigBuilder(space, channelProvider);
         addChannelMappingsToBuilder(mappings, builder);
@@ -174,7 +178,7 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
     @VisibleForTesting
     SpaceToChannelConfiguration.Builder newConfigBuilder(
             final Space space,
-            final Function<String, Optional<SlackChannelDefinition>> channelProvider) {
+            final Function<ConversationKey, Optional<SlackChannelDefinition>> channelProvider) {
         return new SpaceToChannelConfiguration.Builder(space, channelProvider);
     }
 
@@ -191,20 +195,20 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
     @Override
     public void removeNotificationForSpaceAndChannel(
             final String spaceKey,
-            final String channelId,
+            final ConversationKey conversationKey,
             final NotificationType notificationType) {
-        entityToChannelMappingManager.removeNotificationForEntityAndChannel(spaceKey, channelId, notificationType);
+        entityToChannelMappingManager.removeNotificationForEntityAndChannel(spaceKey, conversationKey, notificationType);
     }
 
     public void removeNotificationsForSpaceAndChannel(
             final String spaceKey,
-            final String channelId) {
-        entityToChannelMappingManager.removeNotificationsForEntityAndChannel(spaceKey, channelId);
+            final ConversationKey conversationKey) {
+        entityToChannelMappingManager.removeNotificationsForEntityAndChannel(spaceKey, conversationKey);
     }
 
     @Override
-    public void removeNotificationsForChannel(final String channelId) {
-        entityToChannelMappingManager.removeNotificationsForChannel(channelId);
+    public void removeNotificationsForChannel(final ConversationKey conversationKey) {
+        entityToChannelMappingManager.removeNotificationsForChannel(conversationKey);
     }
 
     @Override
@@ -216,7 +220,7 @@ public class DefaultSlackSpaceToChannelService implements SlackSpaceToChannelSer
 
     private void addChannelMappingsToBuilder(List<AOEntityToChannelMapping> mappings, SpaceToChannelConfiguration.Builder builder) {
         for (AOEntityToChannelMapping mapping : mappings) {
-            SpaceToChannelSettings.Builder settingsBuilder = builder.getSettingsBuilder(mapping.getChannelId());
+            SpaceToChannelSettings.Builder settingsBuilder = builder.getSettingsBuilder(new ConversationKey(mapping.getTeamId(), mapping.getChannelId()));
             addAOEntityChannelMappingsToBuilder(mapping, settingsBuilder);
         }
     }

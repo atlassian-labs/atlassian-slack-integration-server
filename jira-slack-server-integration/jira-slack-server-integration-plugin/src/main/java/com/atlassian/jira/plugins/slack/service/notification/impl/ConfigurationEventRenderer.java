@@ -10,7 +10,6 @@ import com.atlassian.jira.plugins.slack.model.event.ProjectMappingConfigurationE
 import com.atlassian.jira.plugins.slack.model.event.UnauthorizedUnfurlEvent;
 import com.atlassian.jira.plugins.slack.service.notification.AttachmentHelper;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest.ChatPostMessageRequestBuilder;
@@ -40,7 +39,6 @@ public class ConfigurationEventRenderer extends AbstractEventRenderer<Configurat
     public ConfigurationEventRenderer(
             final I18nResolver i18nResolver,
             final AttachmentHelper attachmentHelper,
-            final ProjectManager projectManager,
             final IssueManager issueManager) {
         this.i18nResolver = i18nResolver;
         this.attachmentHelper = attachmentHelper;

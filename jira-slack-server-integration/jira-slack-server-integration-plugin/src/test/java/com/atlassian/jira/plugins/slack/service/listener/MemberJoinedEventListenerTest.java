@@ -10,6 +10,7 @@ import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.webhooks.MemberJoinedChannelSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.SlackEvent;
@@ -78,8 +79,8 @@ public class MemberJoinedEventListenerTest {
         when(link.getBotUserId()).thenReturn("B");
 //        when(configurationDAO.findByChannel("C")).thenReturn(Collections.singletonList(projectConfiguration));
 //        when(dedicatedChannelDAO.findMappingsForChannel("C")).thenReturn(Collections.singletonList(dedicatedChannel));
-        when(configurationDAO.findByChannel("C")).thenReturn(Collections.emptyList());
-        when(dedicatedChannelDAO.findMappingsForChannel("C")).thenReturn(Collections.emptyList());
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.emptyList());
+        when(dedicatedChannelDAO.findMappingsForChannel(new ConversationKey("T", "C"))).thenReturn(Collections.emptyList());
 
         when(taskBuilder.newSendNotificationTask(eventCaptor.capture(), notificationInfoCaptor.capture(), same(taskExecutorService)))
                 .thenReturn(sendNotificationTask);
@@ -115,7 +116,7 @@ public class MemberJoinedEventListenerTest {
         when(memberJoinedChannelSlackEvent.getChannel()).thenReturn("C");
         when(slackEvent.getSlackLink()).thenReturn(link);
         when(link.getBotUserId()).thenReturn("B");
-        when(configurationDAO.findByChannel("C")).thenReturn(Collections.singletonList(projectConfiguration));
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.singletonList(projectConfiguration));
 
         target.memberJoined(memberJoinedChannelSlackEvent);
 
@@ -129,8 +130,8 @@ public class MemberJoinedEventListenerTest {
         when(memberJoinedChannelSlackEvent.getChannel()).thenReturn("C");
         when(slackEvent.getSlackLink()).thenReturn(link);
         when(link.getBotUserId()).thenReturn("B");
-        when(configurationDAO.findByChannel("C")).thenReturn(Collections.emptyList());
-        when(dedicatedChannelDAO.findMappingsForChannel("C")).thenReturn(Collections.singletonList(dedicatedChannel));
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.emptyList());
+        when(dedicatedChannelDAO.findMappingsForChannel(new ConversationKey("T", "C"))).thenReturn(Collections.singletonList(dedicatedChannel));
 
         target.memberJoined(memberJoinedChannelSlackEvent);
 

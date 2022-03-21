@@ -153,8 +153,8 @@ public class SlackPostFunctionFactory extends AbstractWorkflowPluginFactory impl
                         if (!link.isPresent()) {
                             return Stream.empty();
                         }
-
-                        final Optional<Conversation> conversation = conversationsAndLinks.conversation(channelId);
+                        final ConversationKey conversationKey = new ConversationKey(teamId, channelId);
+                        final Optional<Conversation> conversation = conversationsAndLinks.conversation(conversationKey);
                         final String conversationName = conversation.map(Conversation::getName).orElseGet(() -> "id:" + channelId);
                         final boolean isPrivate = conversation.map(Conversation::isPrivate).orElse(false);
                         return Stream.of(new SlackChannelDTO(

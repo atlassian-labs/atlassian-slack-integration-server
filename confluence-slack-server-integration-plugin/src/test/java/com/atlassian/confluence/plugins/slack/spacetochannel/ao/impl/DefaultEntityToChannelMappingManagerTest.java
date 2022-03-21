@@ -3,6 +3,7 @@ package com.atlassian.confluence.plugins.slack.spacetochannel.ao.impl;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.confluence.plugins.slack.spacetochannel.ao.AOEntityToChannelMapping;
 import com.atlassian.confluence.plugins.slack.spacetochannel.ao.DefaultEntityToChannelMappingManager;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -155,9 +156,9 @@ public class DefaultEntityToChannelMappingManagerTest {
 
     @Test
     public void removeNotificationsForEntityAndChannel_shouldRemoveEntities() {
-        target.removeNotificationsForEntityAndChannel(ENTITY, CHANNEL);
+        target.removeNotificationsForEntityAndChannel(ENTITY, new ConversationKey(TEAM, CHANNEL));
         verify(activeObjects).deleteWithSQL(
-                AOEntityToChannelMapping.class, "ENTITY_KEY = ? AND CHANNEL_ID = ?", ENTITY, CHANNEL);
+                AOEntityToChannelMapping.class, "ENTITY_KEY = ? AND TEAM_ID = ? AND CHANNEL_ID = ?", ENTITY, TEAM, CHANNEL);
     }
 
     @Test
@@ -170,12 +171,13 @@ public class DefaultEntityToChannelMappingManagerTest {
     public void removeNotificationForEntityAndChannel_shouldRemoveEntities() {
         when(notificationType.getKey()).thenReturn(NOTIFICATION_TYPE_KEY);
 
-        target.removeNotificationForEntityAndChannel(ENTITY, CHANNEL, notificationType);
+        target.removeNotificationForEntityAndChannel(ENTITY, new ConversationKey(TEAM, CHANNEL), notificationType);
 
         verify(activeObjects).deleteWithSQL(
                 AOEntityToChannelMapping.class,
-                "ENTITY_KEY = ? AND CHANNEL_ID = ? AND MESSAGE_TYPE_KEY = ?",
+                "ENTITY_KEY = ? AND TEAM_ID = ? AND CHANNEL_ID = ? AND MESSAGE_TYPE_KEY = ?",
                 ENTITY,
+                TEAM,
                 CHANNEL,
                 NOTIFICATION_TYPE_KEY);
     }
@@ -183,8 +185,9 @@ public class DefaultEntityToChannelMappingManagerTest {
     @Test
     public void removeNotificationsForChannel_shouldRemoveEntities() {
         String channel = "C";
-        target.removeNotificationsForChannel(channel);
-        verify(activeObjects).deleteWithSQL(AOEntityToChannelMapping.class, "CHANNEL_ID = ?", channel);
+        String team = "T";
+        target.removeNotificationsForChannel(new ConversationKey(team, channel));
+        verify(activeObjects).deleteWithSQL(AOEntityToChannelMapping.class, "TEAM_ID = ? AND CHANNEL_ID = ?", team, channel);
     }
 
 }

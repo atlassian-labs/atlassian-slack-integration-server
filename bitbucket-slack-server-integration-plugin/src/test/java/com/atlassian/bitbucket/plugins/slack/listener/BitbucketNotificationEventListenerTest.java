@@ -1,7 +1,9 @@
 package com.atlassian.bitbucket.plugins.slack.listener;
 
 import com.atlassian.bitbucket.comment.Comment;
-import com.atlassian.bitbucket.comment.CommentService;
+import com.atlassian.bitbucket.comment.CommentAction;
+import com.atlassian.bitbucket.comment.CommentSeverity;
+import com.atlassian.bitbucket.comment.CommentState;
 import com.atlassian.bitbucket.comment.CommentThread;
 import com.atlassian.bitbucket.comment.Commentable;
 import com.atlassian.bitbucket.comment.CommentableVisitor;
@@ -16,6 +18,7 @@ import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentRepliedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentAddedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentDeletedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentEditedEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentRepliedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestDeclinedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestDeletedEvent;
@@ -33,10 +36,6 @@ import com.atlassian.bitbucket.event.repository.RepositoryPushEvent;
 import com.atlassian.bitbucket.event.tag.TagChangedEvent;
 import com.atlassian.bitbucket.event.tag.TagCreatedEvent;
 import com.atlassian.bitbucket.event.tag.TagDeletedEvent;
-import com.atlassian.bitbucket.event.task.TaskCreatedEvent;
-import com.atlassian.bitbucket.event.task.TaskDeletedEvent;
-import com.atlassian.bitbucket.event.task.TaskEvent;
-import com.atlassian.bitbucket.event.task.TaskUpdatedEvent;
 import com.atlassian.bitbucket.plugins.slack.model.NotificationRenderingOptions;
 import com.atlassian.bitbucket.plugins.slack.notification.NotificationPublisher;
 import com.atlassian.bitbucket.plugins.slack.notification.PullRequestNotificationTypes;
@@ -45,12 +44,11 @@ import com.atlassian.bitbucket.plugins.slack.notification.TaskNotificationTypes;
 import com.atlassian.bitbucket.plugins.slack.notification.renderer.SlackNotificationRenderer;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestRef;
+import com.atlassian.bitbucket.repository.MinimalRef;
 import com.atlassian.bitbucket.repository.RefChange;
+import com.atlassian.bitbucket.repository.RefChangeType;
 import com.atlassian.bitbucket.repository.Repository;
-import com.atlassian.bitbucket.task.Task;
-import com.atlassian.bitbucket.task.TaskAnchor;
-import com.atlassian.bitbucket.task.TaskAnchorVisitor;
-import com.atlassian.bitbucket.task.TaskState;
+import com.atlassian.bitbucket.repository.StandardRefType;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.sal.api.message.I18nResolver;
@@ -67,6 +65,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.atlassian.bitbucket.comment.CommentSeverity.NORMAL;
 import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -83,17 +82,7 @@ class BitbucketNotificationEventListenerTest {
     @Mock
     private NotificationPublisher notificationPublisher;
     @Mock
-    private CommentService commentService;
-    @Mock
     private I18nResolver i18nResolver;
-
-    // supported task events
-    @Mock
-    private TaskCreatedEvent taskCreatedEvent;
-    @Mock
-    private TaskUpdatedEvent taskUpdatedEvent;
-    @Mock
-    private TaskDeletedEvent taskDeletedEvent;
 
     // supported pull request events
     @Mock
@@ -146,11 +135,6 @@ class BitbucketNotificationEventListenerTest {
     private CommitDiscussionCommentRepliedEvent commitDiscussionCommentRepliedEvent;
     @Mock
     private CommitDiscussionCommentDeletedEvent commitDiscussionCommentDeletedEvent;
-
-    @Mock
-    private Task task;
-    @Mock
-    private TaskAnchor taskAnchor;
     @Mock
     private Comment comment;
     @Mock
@@ -169,6 +153,8 @@ class BitbucketNotificationEventListenerTest {
     private RefChange refChange;
     @Mock
     private ApplicationUser user;
+    @Mock
+    private MinimalRef minimalRef;
 
     @Captor
     private ArgumentCaptor<Function<NotificationRenderingOptions, Optional<ChatPostMessageRequestBuilder>>> captor;
@@ -176,19 +162,16 @@ class BitbucketNotificationEventListenerTest {
     @InjectMocks
     private BitbucketNotificationEventListener target;
 
-    private NotificationRenderingOptions extendedOptions = new NotificationRenderingOptions(Verbosity.EXTENDED, false);
+    private NotificationRenderingOptions extendedOptions = new NotificationRenderingOptions(Verbosity.EXTENDED, false, null);
 
-    private void testPullRequestTaskEvent(TaskEvent event, TaskNotificationTypes type) {
-        when(event.getTask()).thenReturn(task);
-        when(task.getAnchor()).thenReturn(taskAnchor);
-        doAnswer(answer((TaskAnchorVisitor v) -> v.visit(comment))).when(taskAnchor).accept(any());
-        when(comment.getId()).thenReturn(9L);
+    private void testPullRequestBlockerCommentEvent(PullRequestCommentEvent event, TaskNotificationTypes type) {
+        when(event.getComment()).thenReturn(comment);
+        when(comment.getSeverity()).thenReturn(CommentSeverity.BLOCKER);
         when(comment.getThread()).thenReturn(commentThread);
         when(commentThread.getCommentable()).thenReturn(commentable);
         doAnswer(answer((CommentableVisitor v) -> v.visit(pullRequest))).when(commentable).accept(any());
         when(pullRequest.getToRef()).thenReturn(pullRequestRef);
         when(pullRequestRef.getRepository()).thenReturn(repository);
-        when(commentService.getComment(9L)).thenReturn(Optional.of(comment));
 
         target.onEvent(event);
 
@@ -199,36 +182,48 @@ class BitbucketNotificationEventListenerTest {
                 captor.capture());
 
         captor.getValue().apply(extendedOptions);
-        verify(slackNotificationRenderer).getPullRequestTaskMessage(pullRequest, event, type);
+        verify(slackNotificationRenderer).getPullRequestTaskMessage(pullRequest, type, event.getComment(), event.getUser());
     }
 
     @Test
     void onEvent_pullRequestTaskCreated_shouldCallExpectedMethods() {
-        testPullRequestTaskEvent(taskCreatedEvent, TaskNotificationTypes.CREATED);
+        when(pullRequestCommentAddedEvent.getCommentAction()).thenReturn(CommentAction.ADDED);
+        testPullRequestBlockerCommentEvent(pullRequestCommentAddedEvent, TaskNotificationTypes.CREATED);
     }
 
     @Test
-    void onEvent_pullRequestTaskUpdatedEvent_shouldCallExpectedMethods() {
-        testPullRequestTaskEvent(taskUpdatedEvent, TaskNotificationTypes.UPDATED);
+    void onEvent_pullRequestTaskReplied_shouldCallExpectedMethods() {
+        when(pullRequestCommentAddedEvent.getCommentAction()).thenReturn(CommentAction.REPLIED);
+        testPullRequestBlockerCommentEvent(pullRequestCommentAddedEvent, TaskNotificationTypes.CREATED);
     }
 
     @Test
-    void onEvent_pullRequestTaskResolvedEvent_shouldCallExpectedMethods() {
-        when(taskUpdatedEvent.getPreviousState()).thenReturn(TaskState.OPEN);
-        when(task.getState()).thenReturn(TaskState.RESOLVED);
-        testPullRequestTaskEvent(taskUpdatedEvent, TaskNotificationTypes.RESOLVED);
+    void onEvent_pullRequestTaskUpdated_shouldCallExpectedMethods() {
+        when(pullRequestCommentEditedEvent.getCommentAction()).thenReturn(CommentAction.EDITED);
+        testPullRequestBlockerCommentEvent(pullRequestCommentEditedEvent, TaskNotificationTypes.UPDATED);
     }
 
     @Test
-    void onEvent_pullRequestTaskReopenedEvent_shouldCallExpectedMethods() {
-        when(taskUpdatedEvent.getPreviousState()).thenReturn(TaskState.RESOLVED);
-        when(task.getState()).thenReturn(TaskState.OPEN);
-        testPullRequestTaskEvent(taskUpdatedEvent, TaskNotificationTypes.REOPENED);
+    void onEvent_pullRequestTaskResolved_shouldCallExpectedMethods() {
+        when(pullRequestCommentEditedEvent.getCommentAction()).thenReturn(CommentAction.EDITED);
+        when(pullRequestCommentEditedEvent.getPreviousState()).thenReturn(CommentState.OPEN);
+        when(comment.getState()).thenReturn(CommentState.RESOLVED);
+        testPullRequestBlockerCommentEvent(pullRequestCommentEditedEvent, TaskNotificationTypes.RESOLVED);
     }
 
     @Test
-    void onEvent_pullRequestTaskDeletedEvent_shouldCallExpectedMethods() {
-        testPullRequestTaskEvent(taskDeletedEvent, TaskNotificationTypes.DELETED);
+    void onEvent_pullRequestTaskReopened_shouldCallExpectedMethods() {
+        when(pullRequestCommentEditedEvent.getCommentAction()).thenReturn(CommentAction.EDITED);
+        when(pullRequestCommentEditedEvent.getPreviousState()).thenReturn(CommentState.RESOLVED);
+        when(comment.getState()).thenReturn(CommentState.OPEN);
+        testPullRequestBlockerCommentEvent(pullRequestCommentEditedEvent, TaskNotificationTypes.REOPENED);
+    }
+
+    @Test
+    void onEvent_pullRequestTaskDeleted_shouldCallExpectedMethods() {
+        when(pullRequestCommentDeletedEvent.getCommentAction()).thenReturn(CommentAction.DELETED);
+        when(pullRequestCommentDeletedEvent.getComment()).thenReturn(comment);
+        testPullRequestBlockerCommentEvent(pullRequestCommentDeletedEvent, TaskNotificationTypes.DELETED);
     }
 
     void testPullRequestEvent(PullRequestEvent event, PullRequestNotificationTypes type) {
@@ -239,7 +234,7 @@ class BitbucketNotificationEventListenerTest {
         testPullRequestEvent(event, type, "PR title", reviewers);
     }
 
-    void testPullRequestEvent(PullRequestEvent event, PullRequestNotificationTypes type, String prTitle, boolean reviewers) {
+    void testPullRequestEvent(PullRequestEvent event, PullRequestNotificationTypes type, String prTitle, boolean isReviewersUpdate) {
         when(event.getPullRequest()).thenReturn(pullRequest);
         when(pullRequest.getTitle()).thenReturn(prTitle);
         when(pullRequest.getToRef()).thenReturn(pullRequestRef);
@@ -255,8 +250,8 @@ class BitbucketNotificationEventListenerTest {
                 captor.capture());
 
         captor.getValue().apply(extendedOptions);
-        if (reviewers) {
-            verify(slackNotificationRenderer).getReviewersPullRequestMessage((PullRequestReviewersUpdatedEvent) event, true);
+        if (isReviewersUpdate) {
+            verify(slackNotificationRenderer).getReviewersPullRequestMessage(pullRequest, user, true, true);
         } else {
             verify(slackNotificationRenderer).getPullRequestMessage(event);
         }
@@ -309,21 +304,29 @@ class BitbucketNotificationEventListenerTest {
 
     @Test
     void onEvent_pullRequestCommentAddedEvent_shouldCallExpectedMethods() {
+        when(pullRequestCommentAddedEvent.getComment()).thenReturn(comment);
+        when(comment.getSeverity()).thenReturn(NORMAL);
         testPullRequestEvent(pullRequestCommentAddedEvent, PullRequestNotificationTypes.COMMENT_ADDED);
     }
 
     @Test
     void onEvent_pullRequestCommentEditedEvent_shouldCallExpectedMethods() {
+        when(comment.getSeverity()).thenReturn(NORMAL);
+        when(pullRequestCommentEditedEvent.getComment()).thenReturn(comment);
         testPullRequestEvent(pullRequestCommentEditedEvent, PullRequestNotificationTypes.COMMENT_EDITED);
     }
 
     @Test
     void onEvent_pullRequestCommentRepliedEvent_shouldCallExpectedMethods() {
+        when(comment.getSeverity()).thenReturn(NORMAL);
+        when(pullRequestCommentRepliedEvent.getComment()).thenReturn(comment);
         testPullRequestEvent(pullRequestCommentRepliedEvent, PullRequestNotificationTypes.COMMENT_REPLIED);
     }
 
     @Test
     void onEvent_pullRequestCommentDeletedEvent_shouldCallExpectedMethods() {
+        when(comment.getSeverity()).thenReturn(NORMAL);
+        when(pullRequestCommentDeletedEvent.getComment()).thenReturn(comment);
         testPullRequestEvent(pullRequestCommentDeletedEvent, PullRequestNotificationTypes.COMMENT_DELETED);
     }
 
@@ -408,6 +411,46 @@ class BitbucketNotificationEventListenerTest {
         verify(notificationPublisher).findChannelsAndPublishNotificationsAsync(
                 same(repository),
                 eq(RepositoryNotificationTypes.PUSHED.getKey()),
+                any(),
+                captor.capture());
+
+        captor.getValue().apply(extendedOptions);
+        verify(slackNotificationRenderer).getPushMessage(repositoryPushEvent, refChange, Verbosity.EXTENDED);
+    }
+
+    @Test
+    void onEvent_repositoryPushBranchDeletedEvent_notificationTypeShouldBeFixed() {
+        when(repositoryPushEvent.getRepository()).thenReturn(repository);
+        when(repositoryPushEvent.getRefChanges()).thenReturn(Collections.singleton(refChange));
+        when(refChange.getType()).thenReturn(RefChangeType.DELETE);
+        when(refChange.getRef()).thenReturn(minimalRef);
+        when(minimalRef.getType()).thenReturn(StandardRefType.BRANCH);
+
+        target.onEvent(repositoryPushEvent);
+
+        verify(notificationPublisher).findChannelsAndPublishNotificationsAsync(
+                same(repository),
+                eq(RepositoryNotificationTypes.BRANCH_DELETED.getKey()),
+                any(),
+                captor.capture());
+
+        captor.getValue().apply(extendedOptions);
+        verify(slackNotificationRenderer).getPushMessage(repositoryPushEvent, refChange, Verbosity.EXTENDED);
+    }
+
+    @Test
+    void onEvent_repositoryPushTagDeletedEvent_notificationTypeShouldBeFixed() {
+        when(repositoryPushEvent.getRepository()).thenReturn(repository);
+        when(repositoryPushEvent.getRefChanges()).thenReturn(Collections.singleton(refChange));
+        when(refChange.getType()).thenReturn(RefChangeType.DELETE);
+        when(refChange.getRef()).thenReturn(minimalRef);
+        when(minimalRef.getType()).thenReturn(StandardRefType.TAG);
+
+        target.onEvent(repositoryPushEvent);
+
+        verify(notificationPublisher).findChannelsAndPublishNotificationsAsync(
+                same(repository),
+                eq(RepositoryNotificationTypes.TAG_DELETED.getKey()),
                 any(),
                 captor.capture());
 

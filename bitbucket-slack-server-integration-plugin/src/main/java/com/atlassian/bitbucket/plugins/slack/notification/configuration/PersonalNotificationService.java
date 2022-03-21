@@ -7,6 +7,7 @@ import com.atlassian.bitbucket.plugins.slack.model.ExtendedChannelToNotify;
 import com.atlassian.bitbucket.plugins.slack.notification.BitbucketPersonalNotificationTypes;
 import com.atlassian.bitbucket.plugins.slack.notification.renderer.SlackNotificationRenderer;
 import com.atlassian.bitbucket.pull.PullRequest;
+import com.atlassian.bitbucket.pull.PullRequestParticipant;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.user.SecurityService;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.atlassian.bitbucket.plugins.slack.notification.BitbucketPersonalNotificationTypes.COMMIT_AUTHOR_COMMENT;
 import static com.atlassian.bitbucket.plugins.slack.notification.BitbucketPersonalNotificationTypes.PR_AUTHOR;
@@ -90,43 +92,41 @@ public class PersonalNotificationService {
 
     public Set<ExtendedChannelToNotify> findNotificationsFor(final ApplicationUser currentUser,
                                                              final PullRequest pullRequest,
-                                                             final Set<ApplicationUser> addedUsers,
-                                                             final boolean isCreation) {
+                                                             final Set<ApplicationUser> addedReviewers) {
         if (slackSettingService.isPersonalNotificationsDisabled()) {
             return Collections.emptySet();
         }
 
-        final Map<Integer, ExtendedChannelToNotify> userMap = new HashMap<>();
+        final Map<Integer, ExtendedChannelToNotify> usersToNotify = new HashMap<>();
 
         // author
         final ApplicationUser author = pullRequest.getAuthor().getUser();
-        addAuthorNotification(currentUser, userMap, author, PR_AUTHOR);
+        addAuthorNotification(currentUser, usersToNotify, author, PR_AUTHOR);
 
         // watchers
         final Set<Watcher> watchers = getWatchers(pullRequest);
         watchers.stream()
                 .filter(watcher -> !Objects.equals(watcher.getUser(), currentUser) && !Objects.equals(watcher.getUser(), author))
                 .filter(watcher -> isPersonalNotificationTypeEnabled(watcher.getUser(), PR_WATCHER))
-                .forEach(watcher -> addUserChannelToMapIfUserIsMapped(userMap, watcher.getUser(), PR_WATCHER));
+                .forEach(watcher -> addUserChannelToNotify(usersToNotify, watcher.getUser(), PR_WATCHER));
 
         // reviewers
-        pullRequest.getReviewers().stream()
-                .filter(participant -> !Objects.equals(participant.getUser(), currentUser))
-                .filter(participant -> {
-                    ApplicationUser user = participant.getUser();
-                    final boolean createdEnabled = isPersonalNotificationTypeEnabled(user, PR_REVIEWER_CREATED);
-                    if (isCreation) {
-                        return createdEnabled;
-                    }
-
-                    final boolean updatedEnabled = isPersonalNotificationTypeEnabled(user, PR_REVIEWER_UPDATED);
-                    final boolean updateAddedUser = addedUsers.contains(user);
-                    return updatedEnabled || (updateAddedUser && createdEnabled);
+        Set<ApplicationUser> reviewersWithoutActor = pullRequest.getReviewers().stream()
+                .map(PullRequestParticipant::getUser)
+                .filter(user -> !Objects.equals(user, currentUser))
+                .collect(Collectors.toSet());
+        reviewersWithoutActor.stream()
+                .filter(user -> isPersonalNotificationTypeEnabled(user, PR_REVIEWER_UPDATED))
+                .forEach(user -> addUserChannelToNotify(usersToNotify, user, PR_REVIEWER_UPDATED));
+        reviewersWithoutActor.stream()
+                .filter(user -> {
+                    final boolean notifyMyWhenIAmAddedToPr = isPersonalNotificationTypeEnabled(user, PR_REVIEWER_CREATED);
+                    final boolean userWasJustAdded = addedReviewers.contains(user);
+                    return notifyMyWhenIAmAddedToPr && userWasJustAdded;
                 })
-                .forEach(participant -> addUserChannelToMapIfUserIsMapped(userMap, participant.getUser(),
-                        isCreation ? PR_REVIEWER_CREATED : PR_REVIEWER_UPDATED));
+                .forEach(user -> addUserChannelToNotify(usersToNotify, user, PR_REVIEWER_CREATED));
 
-        return new HashSet<>(userMap.values());
+        return new HashSet<>(usersToNotify.values());
     }
 
     private void addAuthorNotification(final ApplicationUser currentUser,
@@ -137,34 +137,35 @@ public class PersonalNotificationService {
         if (!isAuthorCurrentActor) {
             final boolean isAssigneeToBeNotified = isPersonalNotificationTypeEnabled(author, type);
             if (isAssigneeToBeNotified) {
-                addUserChannelToMapIfUserIsMapped(userMap, author, type);
+                addUserChannelToNotify(userMap, author, type);
             }
         }
     }
 
-    private void addUserChannelToMapIfUserIsMapped(final Map<Integer, ExtendedChannelToNotify> userMap,
-                                                   final ApplicationUser applicationUser,
-                                                   final BitbucketPersonalNotificationTypes type) {
-        if (userMap.containsKey(applicationUser.getId())) {
+    private void addUserChannelToNotify(final Map<Integer, ExtendedChannelToNotify> usersToNotify,
+                                        final ApplicationUser applicationUser,
+                                        final BitbucketPersonalNotificationTypes type) {
+        int userId = applicationUser.getId();
+        if (usersToNotify.containsKey(userId)) {
             return;
         }
 
-        final String userId = String.valueOf(applicationUser.getId());
+        final String userIdString = String.valueOf(userId);
         final String notificationTeamId = securityService
                 .impersonating(applicationUser, "Slack plugin impersonates user to get access to user settings")
-                .call(() -> slackUserSettingsService.getNotificationTeamId(new UserKey(userId)));
+                .call(() -> slackUserSettingsService.getNotificationTeamId(new UserKey(userIdString)));
         if (isBlank(notificationTeamId)) {
             return;
         }
 
-        slackUserManager.getByTeamIdAndUserKey(notificationTeamId, userId)
+        slackUserManager.getByTeamIdAndUserKey(notificationTeamId, userIdString)
                 .filter(user -> isNotEmpty(user.getUserToken()))
                 .map(user -> new ExtendedChannelToNotify(new ChannelToNotify(
                         notificationTeamId,
                         user.getSlackUserId(),
                         null,
-                        true), type.name().toLowerCase()))
-                .ifPresent(info -> userMap.put(applicationUser.getId(), info));
+                        true), type.name().toLowerCase(), applicationUser))
+                .ifPresent(info -> usersToNotify.put(userId, info));
     }
 
     private Set<Watcher> getWatchers(final PullRequest pullRequest) {

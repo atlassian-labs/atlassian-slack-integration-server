@@ -24,6 +24,8 @@
         <entity>com.atlassian.confluence.plugins.slack.spacetochannel.ao.AOEntityToChannelMapping</entity>
         <entity>com.atlassian.plugins.slack.ao.AOSlackLink</entity>
         <entity>com.atlassian.plugins.slack.ao.AOSlackUser</entity>
+
+        <upgradeTask>com.atlassian.confluence.plugins.slack.spacetochannel.ao.upgrade.v1.MutedChannelIdUpgradeTask001</upgradeTask>
     </ao>
 
     <!-- Personal notifications -->

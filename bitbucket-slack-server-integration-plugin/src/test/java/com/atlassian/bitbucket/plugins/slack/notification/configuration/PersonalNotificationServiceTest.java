@@ -123,7 +123,7 @@ public class PersonalNotificationServiceTest {
         Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, commitDiscussion);
 
         assertThat(channels, contains(new ExtendedChannelToNotify(new ChannelToNotify(TEAM_ID, SLACK_USER_ID, null, true),
-                "commit_author_comment")));
+                "commit_author_comment", commitAuthor)));
     }
 
     @Test
@@ -143,10 +143,10 @@ public class PersonalNotificationServiceTest {
         when(slackUser.getSlackUserId()).thenReturn(SLACK_USER_ID);
         when(watcherService.search(any(), any())).thenReturn(new PageImpl<>(new PageRequestImpl(0, 10), Collections.emptySet(), true));
 
-        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.emptySet(), false);
+        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.emptySet());
 
         assertThat(channels, contains(new ExtendedChannelToNotify(new ChannelToNotify(TEAM_ID, SLACK_USER_ID, null, true),
-                "pr_author")));
+                "pr_author", authorUser)));
     }
 
     @Test
@@ -168,10 +168,10 @@ public class PersonalNotificationServiceTest {
         when(slackUser.getUserToken()).thenReturn("someUserToken");
         when(slackUser.getSlackUserId()).thenReturn(SLACK_USER_ID);
 
-        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.emptySet(), false);
+        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.emptySet());
 
         assertThat(channels, contains(new ExtendedChannelToNotify(new ChannelToNotify(TEAM_ID, SLACK_USER_ID, null, true),
-                "pr_watcher")));
+                "pr_watcher", watcherUser)));
     }
 
     @Test
@@ -193,10 +193,10 @@ public class PersonalNotificationServiceTest {
         when(slackUser.getUserToken()).thenReturn("someUserToken");
         when(slackUser.getSlackUserId()).thenReturn(SLACK_USER_ID);
 
-        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.emptySet(), true);
+        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.singleton(reviewerUser));
 
         assertThat(channels, contains(new ExtendedChannelToNotify(new ChannelToNotify(TEAM_ID, SLACK_USER_ID, null, true),
-                "pr_reviewer_created")));
+                "pr_reviewer_created", reviewerUser)));
     }
 
     @Test
@@ -218,9 +218,9 @@ public class PersonalNotificationServiceTest {
         when(slackUser.getUserToken()).thenReturn("someUserToken");
         when(slackUser.getSlackUserId()).thenReturn(SLACK_USER_ID);
 
-        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.emptySet(), false);
+        Set<ExtendedChannelToNotify> channels = target.findNotificationsFor(currentUser, pullRequest, Collections.emptySet());
 
         assertThat(channels, contains(new ExtendedChannelToNotify(new ChannelToNotify(TEAM_ID, SLACK_USER_ID, null, true),
-                "pr_reviewer_updated")));
+                "pr_reviewer_updated", reviewerUser)));
     }
 }

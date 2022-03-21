@@ -1,6 +1,7 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.configuration;
 
 import com.atlassian.confluence.spaces.Space;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSortedSet;
@@ -81,14 +82,14 @@ public class SpaceToChannelConfiguration {
 
     public static class Builder {
         // Key: channelId
-        private final Map<String, SpaceToChannelSettings.Builder> channelSettingBuilders = new HashMap<>();
+        private final Map<ConversationKey, SpaceToChannelSettings.Builder> channelSettingBuilders = new HashMap<>();
 
         private final Space space;
-        private final Function<String, Optional<SlackChannelDefinition>> channelProvider;
+        private final Function<ConversationKey, Optional<SlackChannelDefinition>> channelProvider;
 
         public Builder(
                 final Space space,
-                final Function<String, Optional<SlackChannelDefinition>> channelProvider) {
+                final Function<ConversationKey, Optional<SlackChannelDefinition>> channelProvider) {
             Preconditions.checkNotNull(space);
             Preconditions.checkNotNull(channelProvider);
             this.space = space;
@@ -103,7 +104,7 @@ public class SpaceToChannelConfiguration {
         public SpaceToChannelConfiguration build() {
             final Map<SlackChannelDefinition, SpaceToChannelSettings> configuration = new HashMap<>();
 
-            channelSettingBuilders.forEach((channelId, value) -> channelProvider.apply(channelId).ifPresent(channel -> {
+            channelSettingBuilders.forEach((conversationKey, value) -> channelProvider.apply(conversationKey).ifPresent(channel -> {
                 SpaceToChannelSettings settings = value.build();
                 configuration.put(channel, settings);
             }));
@@ -114,14 +115,14 @@ public class SpaceToChannelConfiguration {
         /**
          * This will return an existing SpaceToChannelSettings.Builder for the channelId, or create a new one.
          *
-         * @param channelId the channel id the SpaceToChannelSettings.Builder is for
+         * @param conversationKey the channel id the SpaceToChannelSettings.Builder is for
          * @return a SpaceToChannelSettings.Builder
          */
-        public SpaceToChannelSettings.Builder getSettingsBuilder(String channelId) {
-            SpaceToChannelSettings.Builder builder = channelSettingBuilders.get(channelId);
+        public SpaceToChannelSettings.Builder getSettingsBuilder(ConversationKey conversationKey) {
+            SpaceToChannelSettings.Builder builder = channelSettingBuilders.get(conversationKey);
             if (builder == null) {
                 builder = new SpaceToChannelSettings.Builder();
-                channelSettingBuilders.put(channelId, builder);
+                channelSettingBuilders.put(conversationKey, builder);
             }
 
             return builder;

@@ -160,8 +160,8 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
     }
 
     @Override
-    public Set<Project> getAllProjectsByChannel(final String channelId) {
-        final Collection<ProjectConfiguration> configs = configurationDAO.findByChannel(channelId);
+    public Set<Project> getAllProjectsByChannel(final ConversationKey conversationKey) {
+        final Collection<ProjectConfiguration> configs = configurationDAO.findByChannel(conversationKey);
         return configs.stream()
                 .map(config -> projectManager.getProjectObj(config.getProjectId()))
                 .collect(Collectors.toSet());
@@ -199,8 +199,8 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
     }
 
     @Override
-    public void deleteProjectConfigurationsByChannelId(final String channelId) {
-        Map<String, List<ProjectConfiguration>> configurationsByChannelId = findProjectConfigurationsByChannelId(channelId);
+    public void deleteProjectConfigurationsByChannelId(final ConversationKey conversationKey) {
+        Map<String, List<ProjectConfiguration>> configurationsByChannelId = findProjectConfigurationsByChannelId(conversationKey);
         configurationsByChannelId.forEach((groupId, configurations) -> {
             // configurationDAO#deleteProjectConfigurationGroup requires only project id, channel id, configuration group
             configurations.stream()
@@ -359,7 +359,8 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
             }
 
             final String channelId = projectConfiguration.getChannelId();
-            final Optional<Conversation> conversation = conversationsAndLinks.conversation(channelId);
+            final ConversationKey conversationKey = new ConversationKey(teamId, channelId);
+            final Optional<Conversation> conversation = conversationsAndLinks.conversation(conversationKey);
             final String channelName = conversation.map(Conversation::getName).orElseGet(() -> "id:" + channelId);
 
             final ProjectConfigurationDTO.Builder configBuilder =
@@ -441,8 +442,8 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
     }
 
     @Override
-    public void muteProjectConfigurationsByChannelId(final String channelId) {
-        Map<String, List<ProjectConfiguration>> configurationGroups = findProjectConfigurationsByChannelId(channelId);
+    public void muteProjectConfigurationsByChannelId(final ConversationKey conversationKey) {
+        Map<String, List<ProjectConfiguration>> configurationGroups = findProjectConfigurationsByChannelId(conversationKey);
         List<ProjectConfiguration> configurationsToMute = configurationGroups.values().stream()
                 .filter(projectConfigs -> projectConfigs.stream().noneMatch(config -> IS_MUTED.equals(config.getName())))
                 .map(projectConfigs -> projectConfigs.stream().filter(config -> config.getName() == null).findAny())
@@ -459,14 +460,14 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
                 .forEach(configurationDAO::insertProjectConfiguration);
     }
 
-    private Map<String, List<ProjectConfiguration>> findProjectConfigurationsByChannelId(final String channelId) {
-        return configurationDAO.findByChannel(channelId).stream()
+    private Map<String, List<ProjectConfiguration>> findProjectConfigurationsByChannelId(final ConversationKey conversationKey) {
+        return configurationDAO.findByChannel(conversationKey).stream()
                 .collect(Collectors.groupingBy(ProjectConfiguration::getConfigurationGroupId));
     }
 
     @Override
-    public void unmuteProjectConfigurationsByChannelId(final String channelId) {
-        configurationDAO.findByChannel(channelId).stream()
+    public void unmuteProjectConfigurationsByChannelId(final ConversationKey conversationKey) {
+        configurationDAO.findByChannel(conversationKey).stream()
                 .filter(config -> IS_MUTED.equals(config.getName()))
                 .peek(config -> log.debug("Unmuting configuration of group {} connected to channel {}",
                         config.getConfigurationGroupId(), config.getChannelId()))

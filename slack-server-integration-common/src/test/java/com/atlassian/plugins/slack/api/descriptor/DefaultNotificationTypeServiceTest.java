@@ -2,6 +2,7 @@ package com.atlassian.plugins.slack.api.descriptor;
 
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.plugin.PluginAccessor;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.events.NotificationBlockedEvent;
 import com.atlassian.plugins.slack.api.notification.BaseSlackEvent;
 import com.atlassian.plugins.slack.api.notification.ChannelToNotify;
@@ -187,8 +188,8 @@ public class DefaultNotificationTypeServiceTest {
         when(slackNotification.getSlackMessage(event)).thenReturn(java.util.Optional.of(messageRequestBuilder));
         when(slackNotificationContext.getChannels(same(event), argThat(n -> Matchers.is("d1").matches(n.getKey()))))
                 .thenReturn(Arrays.asList(channelToNotify1, channelToNotify2));
-        when(slackSettingService.isChannelMuted("C1")).thenReturn(true);
-        when(slackSettingService.isChannelMuted("C2")).thenReturn(false);
+        when(slackSettingService.isChannelMuted(new ConversationKey("", "C1"))).thenReturn(true);
+        when(slackSettingService.isChannelMuted(new ConversationKey("T", "C2"))).thenReturn(false);
         when(messageRequestBuilder.threadTs("T2")).thenReturn(messageRequestBuilder);
 
         List<NotificationTypeService.ChannelNotification> result = target.getNotificationsForEvent(event);

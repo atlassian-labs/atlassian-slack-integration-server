@@ -18,6 +18,7 @@ import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.plugins.slack.analytics.AnalyticsContext;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.descriptor.NotificationTypeService;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 import lombok.RequiredArgsConstructor;
@@ -143,7 +144,7 @@ public class SpaceToChannelConfigurationResource {
                 return Response.ok().build();
             }
 
-            slackSpaceToChannelService.removeNotificationForSpaceAndChannel(spaceKey, channelId, notificationType);
+            slackSpaceToChannelService.removeNotificationForSpaceAndChannel(spaceKey, new ConversationKey(teamId, channelId), notificationType);
 
             String userKey = AuthenticatedUserThreadLocal.get().getKey().getStringValue();
             eventPublisher.publish(new SpaceToChannelNotificationDisabledAnalyticEvent(analyticsContextProvider.byTeamIdAndUserKey(
@@ -188,7 +189,7 @@ public class SpaceToChannelConfigurationResource {
             }
         }
 
-        slackSpaceToChannelService.removeNotificationsForSpaceAndChannel(spaceKey, channelId);
+        slackSpaceToChannelService.removeNotificationsForSpaceAndChannel(spaceKey, new ConversationKey(teamId, channelId));
 
         eventPublisher.publish(new SpaceToChannelUnlinkedAnalyticEvent(analyticsContextProvider.byTeamIdAndUserKey(
                 teamId, userKey), space.getId(), channelId));

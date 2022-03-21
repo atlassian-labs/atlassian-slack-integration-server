@@ -33,6 +33,7 @@ import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.plugins.slack.analytics.AnalyticsContext;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.SlackUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
@@ -147,7 +148,9 @@ public class SlackEventHandlerService {
         final Optional<SlackUser> slackUser = findSlackUser(message.getUser());
 
         // build information about source channel
+        String teamId = message.getTeamId();
         String channelId = message.getChannelId();
+        ConversationKey conversationKey = new ConversationKey(teamId, channelId);
         ChannelKey cacheKey = new ChannelKeyImpl(slackUser.map(SlackUser::getUserKey).orElse(""), message.getTeamId(), channelId);
         Optional<Conversation> conversation = mentionChannelCacheManager.get(cacheKey)
                 .map(MentionChannel::getConversation);
@@ -185,13 +188,15 @@ public class SlackEventHandlerService {
                 log.debug("Skipping link unfurling for issue {}", key);
                 continue;
             }
-
+            final boolean isProjectAutoConvertEnabled = projectConfigurationManager.isProjectAutoConvertEnabled(issue.getProjectObject());
             // user will get just one invite even if there are multiple issue references in the message
             boolean isUserAllowedToSeeIssue = true;
             if (!isSenderAllowedToSeeIssue(message.getChannelId(), slackUser, issue)) {
                 if (!isInvitationToUserSent && !slackUser.isPresent()) {
-                    inviteUserToConnectToSlack(message, issue);
-                    isInvitationToUserSent = true;
+                    if (isProjectAutoConvertEnabled) {
+                        inviteUserToConnectToSlack(message, issue);
+                        isInvitationToUserSent = true;
+                    }
                 }
                 isUserAllowedToSeeIssue = false;
             }
@@ -215,7 +220,7 @@ public class SlackEventHandlerService {
             if (!message.isMessageEdit() || !previousIssueKeys.contains(key)) {
                 final Optional<DedicatedChannel> dedicatedChannel = dedicatedChannelManager.getDedicatedChannel(issue);
 
-                final boolean isProjectAutoConvertEnabled = projectConfigurationManager.isProjectAutoConvertEnabled(issue.getProjectObject());
+
                 if (isProjectAutoConvertEnabled && !isMutedExternallyShared && isUserAllowedToSeeIssue) {
                     hasFoundAnyIssue = true;
 
@@ -255,7 +260,7 @@ public class SlackEventHandlerService {
 
                 if (willPostPublicNotification) {
                     final boolean showDedicatedChannel = dedicatedChannelManager.isNotSameChannel(
-                            channelId,
+                            conversationKey,
                             dedicatedChannel);
 
                     if (dedicatedChannel.isPresent() && showDedicatedChannel) {
@@ -280,7 +285,7 @@ public class SlackEventHandlerService {
         if (handlingLinkSharedEvent) {
             unfurlIssueLinksTask.getNotifications().forEach(notification -> eventPublisher.publish(
                     new JiraNotificationSentEvent(analyticsContextProvider.byTeamIdAndSlackUserId(
-                    notification.right().getLink().getTeamId(), notification.right().getMessageAuthorId()), null, Type.UNFURLING)));
+                            notification.right().getLink().getTeamId(), notification.right().getMessageAuthorId()), null, Type.UNFURLING)));
             taskExecutorService.submitTask(unfurlIssueLinksTask);
         }
 

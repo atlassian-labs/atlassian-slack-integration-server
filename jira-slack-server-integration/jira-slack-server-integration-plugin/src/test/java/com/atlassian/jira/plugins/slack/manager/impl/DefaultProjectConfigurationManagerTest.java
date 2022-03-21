@@ -180,9 +180,11 @@ public class DefaultProjectConfigurationManagerTest {
                 projectConfigurationMissingLink);
 
         ConversationsAndLinks conversationsAndLinks = new ConversationsAndLinks(
-                ImmutableMap.of("C", conversation, "C2", conversation2),
+                ImmutableMap.of(new ConversationKey("T", "C"), conversation,
+                        new ConversationKey("T", "C2"), conversation2),
                 ImmutableMap.of("T", slackLink),
-                ImmutableMap.of("C", slackLink, "C2", slackLink));
+                ImmutableMap.of(new ConversationKey("T", "C"), slackLink,
+                        new ConversationKey("T", "C2"), slackLink));
 
         when(projectConfiguration.getTeamId()).thenReturn("T");
         when(projectConfiguration.getChannelId()).thenReturn("C");
@@ -219,21 +221,21 @@ public class DefaultProjectConfigurationManagerTest {
         assertThat(result.getProjectId(), is(7L));
         assertThat(result.getProjectName(), is("PN"));
         assertThat(result.getProjectKey(), is("PK"));
-        assertThat(result.getOrderedChannelIds(), contains("C", "NOTC"));
-        assertThat(result.getChannels().keySet(), containsInAnyOrder("C", "NOTC"));
-        assertThat(result.getChannels().get("C").getChannelId(), is("C"));
-        assertThat(result.getChannels().get("C").getTeamId(), is("T"));
-        assertThat(result.getChannels().get("C").getChannelName(), is("CNB"));
-        assertThat(result.getChannels().get("C").getTeamName(), is("TN"));
-        assertThat(result.getChannels().get("NOTC").getChannelId(), is("NOTC"));
-        assertThat(result.getChannels().get("NOTC").getTeamId(), is("T"));
-        assertThat(result.getChannels().get("NOTC").getChannelName(), is("id:NOTC"));
-        assertThat(result.getChannels().get("NOTC").getTeamName(), is("TN"));
-        assertThat(result.getConfiguration().keySet(), containsInAnyOrder("C", "NOTC"));
-        assertThat(result.getConfiguration().get("C"), hasSize(1));
-        assertThat(result.getConfiguration().get("C").get(0).getConfigurationGroupId(), is("G"));
-        assertThat(result.getConfiguration().get("C").get(0).getSettings().keySet(), containsInAnyOrder("PCN"));
-        assertThat(result.getConfiguration().get("C").get(0).getSettings().get("PCN").getValue(), is("PCV"));
+        assertThat(result.getOrderedConversationKeys(), contains(new ConversationKey("T", "C"), new ConversationKey("T", "NOTC")));
+        assertThat(result.getChannels().keySet(), containsInAnyOrder("T:C", "T:NOTC"));
+        assertThat(result.getChannels().get("T:C").getChannelId(), is("C"));
+        assertThat(result.getChannels().get("T:C").getTeamId(), is("T"));
+        assertThat(result.getChannels().get("T:C").getChannelName(), is("CNB"));
+        assertThat(result.getChannels().get("T:C").getTeamName(), is("TN"));
+        assertThat(result.getChannels().get("T:NOTC").getChannelId(), is("NOTC"));
+        assertThat(result.getChannels().get("T:NOTC").getTeamId(), is("T"));
+        assertThat(result.getChannels().get("T:NOTC").getChannelName(), is("id:NOTC"));
+        assertThat(result.getChannels().get("T:NOTC").getTeamName(), is("TN"));
+        assertThat(result.getConfiguration().keySet(), containsInAnyOrder("T:C", "T:NOTC"));
+        assertThat(result.getConfiguration().get("T:C"), hasSize(1));
+        assertThat(result.getConfiguration().get("T:C").get(0).getConfigurationGroupId(), is("G"));
+        assertThat(result.getConfiguration().get("T:C").get(0).getSettings().keySet(), containsInAnyOrder("PCN"));
+        assertThat(result.getConfiguration().get("T:C").get(0).getSettings().get("PCN").getValue(), is("PCV"));
 
         final ConversationKey convKey = entityCaptor.getValue().apply(projectConfiguration);
         assertThat(convKey.getTeamId(), is("T"));
@@ -266,9 +268,11 @@ public class DefaultProjectConfigurationManagerTest {
                 projectConfigurationMissingLink);
 
         ConversationsAndLinks conversationsAndLinks = new ConversationsAndLinks(
-                ImmutableMap.of("C", conversation, "C2", conversation2),
+                ImmutableMap.of(new ConversationKey("T", "C"), conversation, new ConversationKey("T",
+                        "C2"), conversation2),
                 ImmutableMap.of("T", slackLink),
-                ImmutableMap.of("C", slackLink, "C2", slackLink));
+                ImmutableMap.of(new ConversationKey("T", "C"), slackLink, new ConversationKey("T",
+                        "C2"), slackLink));
 
         when(projectConfiguration.getTeamId()).thenReturn("T");
         when(projectConfiguration.getChannelId()).thenReturn("C");
@@ -321,33 +325,33 @@ public class DefaultProjectConfigurationManagerTest {
         assertThat(projConfigDTO.getProjectId(), is(7L));
         assertThat(projConfigDTO.getProjectName(), is("PN"));
         assertThat(projConfigDTO.getProjectKey(), is("PK"));
-        assertThat(projConfigDTO.getOrderedChannelIds(), contains("C", "NOTC"));
-        assertThat(projConfigDTO.getChannels().keySet(), containsInAnyOrder("C", "NOTC"));
-        assertThat(projConfigDTO.getChannels().get("C").getChannelId(), is("C"));
-        assertThat(projConfigDTO.getChannels().get("C").getTeamId(), is("T"));
-        assertThat(projConfigDTO.getChannels().get("C").getChannelName(), is("CNB"));
-        assertThat(projConfigDTO.getChannels().get("C").getTeamName(), is("TN"));
-        assertThat(projConfigDTO.getChannels().get("NOTC").getChannelId(), is("NOTC"));
-        assertThat(projConfigDTO.getChannels().get("NOTC").getTeamId(), is("T"));
-        assertThat(projConfigDTO.getChannels().get("NOTC").getChannelName(), is("id:NOTC"));
-        assertThat(projConfigDTO.getChannels().get("NOTC").getTeamName(), is("TN"));
-        assertThat(projConfigDTO.getConfiguration().keySet(), containsInAnyOrder("C", "NOTC"));
-        assertThat(projConfigDTO.getConfiguration().get("C"), hasSize(1));
-        assertThat(projConfigDTO.getConfiguration().get("C").get(0).getConfigurationGroupId(), is("G"));
-        assertThat(projConfigDTO.getConfiguration().get("C").get(0).getSettings().keySet(), containsInAnyOrder("PCN"));
-        assertThat(projConfigDTO.getConfiguration().get("C").get(0).getSettings().get("PCN").getValue(), is("PCV"));
+        assertThat(projConfigDTO.getOrderedConversationKeys(), contains(new ConversationKey("T", "C"), new ConversationKey("T", "NOTC")));
+        assertThat(projConfigDTO.getChannels().keySet(), containsInAnyOrder("T:C", "T:NOTC"));
+        assertThat(projConfigDTO.getChannels().get("T:C").getChannelId(), is("C"));
+        assertThat(projConfigDTO.getChannels().get("T:C").getTeamId(), is("T"));
+        assertThat(projConfigDTO.getChannels().get("T:C").getChannelName(), is("CNB"));
+        assertThat(projConfigDTO.getChannels().get("T:C").getTeamName(), is("TN"));
+        assertThat(projConfigDTO.getChannels().get("T:NOTC").getChannelId(), is("NOTC"));
+        assertThat(projConfigDTO.getChannels().get("T:NOTC").getTeamId(), is("T"));
+        assertThat(projConfigDTO.getChannels().get("T:NOTC").getChannelName(), is("id:NOTC"));
+        assertThat(projConfigDTO.getChannels().get("T:NOTC").getTeamName(), is("TN"));
+        assertThat(projConfigDTO.getConfiguration().keySet(), containsInAnyOrder("T:C", "T:NOTC"));
+        assertThat(projConfigDTO.getConfiguration().get("T:C"), hasSize(1));
+        assertThat(projConfigDTO.getConfiguration().get("T:C").get(0).getConfigurationGroupId(), is("G"));
+        assertThat(projConfigDTO.getConfiguration().get("T:C").get(0).getSettings().keySet(), containsInAnyOrder("PCN"));
+        assertThat(projConfigDTO.getConfiguration().get("T:C").get(0).getSettings().get("PCN").getValue(), is("PCV"));
 
         final ProjectToChannelConfigurationDTO projConfigDTO2 = result.get(1);
         assertThat(projConfigDTO2.getProjectId(), is(6L));
         assertThat(projConfigDTO2.getProjectName(), is("PN2"));
         assertThat(projConfigDTO2.getProjectKey(), is("PK2"));
-        assertThat(projConfigDTO2.getOrderedChannelIds(), contains("C2"));
+        assertThat(projConfigDTO2.getOrderedConversationKeys(), contains(new ConversationKey("T", "C2")));
         assertThat(projConfigDTO2.getChannels().size(), is(1));
-        assertThat(projConfigDTO2.getChannels().keySet(), contains("C2"));
-        assertThat(projConfigDTO2.getChannels().get("C2").getChannelId(), is("C2"));
-        assertThat(projConfigDTO2.getChannels().get("C2").getTeamId(), is("T"));
-        assertThat(projConfigDTO2.getChannels().get("C2").getChannelName(), is("CNA"));
-        assertThat(projConfigDTO2.getChannels().get("C2").getTeamName(), is("TN"));
+        assertThat(projConfigDTO2.getChannels().keySet(), contains("T:C2"));
+        assertThat(projConfigDTO2.getChannels().get("T:C2").getChannelId(), is("C2"));
+        assertThat(projConfigDTO2.getChannels().get("T:C2").getTeamId(), is("T"));
+        assertThat(projConfigDTO2.getChannels().get("T:C2").getChannelName(), is("CNA"));
+        assertThat(projConfigDTO2.getChannels().get("T:C2").getTeamName(), is("TN"));
 
         final ConversationKey convKey = entityCaptor.getValue().apply(projectConfiguration);
         assertThat(convKey.getTeamId(), is("T"));
@@ -374,11 +378,11 @@ public class DefaultProjectConfigurationManagerTest {
 
     @Test
     public void getAllProjectsByChannel() {
-        when(configurationDAO.findByChannel("C")).thenReturn(Collections.singletonList(projectConfiguration));
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.singletonList(projectConfiguration));
         when(projectConfiguration.getProjectId()).thenReturn(7L);
         when(projectManager.getProjectObj(7L)).thenReturn(project);
 
-        Set<Project> result = target.getAllProjectsByChannel("C");
+        Set<Project> result = target.getAllProjectsByChannel(new ConversationKey("T", "C"));
 
         assertThat(result, contains(project));
     }
@@ -448,13 +452,13 @@ public class DefaultProjectConfigurationManagerTest {
     @Test
     public void deleteProjectConfigurationsByChannelId() {
         initializeDeleteMocks();
-        when(configurationDAO.findByChannel("C")).thenReturn(Collections.singletonList(projectConfiguration));
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.singletonList(projectConfiguration));
         when(projectConfiguration.getConfigurationGroupId()).thenReturn("G");
         when(projectConfiguration.getTeamId()).thenReturn("T");
         when(projectConfiguration.getChannelId()).thenReturn("C");
         when(projectConfiguration.getProjectId()).thenReturn(7L);
 
-        target.deleteProjectConfigurationsByChannelId("C");
+        target.deleteProjectConfigurationsByChannelId(new ConversationKey("T", "C"));
 
         assertDeletetion(1);
     }
@@ -733,7 +737,7 @@ public class DefaultProjectConfigurationManagerTest {
 
     @Test
     public void muteProjectConfigurationsByChannelId() {
-        when(configurationDAO.findByChannel("C"))
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C")))
                 .thenReturn(Arrays.asList(projectConfiguration, projectConfiguration2));
         when(projectConfiguration.getName()).thenReturn(IS_MUTED);
         when(projectConfiguration.getConfigurationGroupId()).thenReturn("G");
@@ -743,7 +747,7 @@ public class DefaultProjectConfigurationManagerTest {
         when(projectConfiguration2.getProjectId()).thenReturn(7L);
         when(projectConfiguration2.getConfigurationGroupId()).thenReturn("G2");
 
-        target.muteProjectConfigurationsByChannelId("C");
+        target.muteProjectConfigurationsByChannelId(new ConversationKey("T", "C"));
 
         verify(configurationDAO).insertProjectConfiguration(projectConfigurationArgumentCaptor.capture());
         ProjectConfiguration newConfig = projectConfigurationArgumentCaptor.getValue();
@@ -757,12 +761,12 @@ public class DefaultProjectConfigurationManagerTest {
 
     @Test
     public void unmuteProjectConfigurationsByChannelId() {
-        when(configurationDAO.findByChannel("C"))
+        when(configurationDAO.findByChannel(new ConversationKey("T", "C")))
                 .thenReturn(Arrays.asList(projectConfiguration, projectConfiguration2));
         when(projectConfiguration.getName()).thenReturn(IS_MUTED);
         when(projectConfiguration2.getName()).thenReturn("NOT_IS_MUTED");
 
-        target.unmuteProjectConfigurationsByChannelId("C");
+        target.unmuteProjectConfigurationsByChannelId(new ConversationKey("T", "C"));
 
         verify(configurationDAO).deleteProjectConfiguration(projectConfiguration);
     }

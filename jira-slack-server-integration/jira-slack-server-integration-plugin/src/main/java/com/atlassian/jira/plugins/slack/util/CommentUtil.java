@@ -11,4 +11,16 @@ public class CommentUtil {
         return comment != null
                 && (comment.getGroupLevel() != null || comment.getRoleLevelId() != null);
     }
+
+    public static String removeJiraTags(final @Nullable String commentBody) {
+        if (commentBody == null) {
+            return "";
+        }
+        return commentBody
+                .replaceAll("\\{color(?::[^}]+)?}", "")
+                .replace("{quote}", "")
+                .replace("{noformat}", "")
+                .replaceAll("\\{panel(?::[^}]+)?}", "")
+                .replaceAll("\\{code(?::[^}]+)?}", "");
+    }
 }

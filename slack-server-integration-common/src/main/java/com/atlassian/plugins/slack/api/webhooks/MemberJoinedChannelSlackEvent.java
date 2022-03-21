@@ -9,24 +9,32 @@ import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 /*
 https://api.slack.com/events/member_joined_channel
 {
-  "token": "PfadpmYMrCxnqUH0tMl8Fryx",
-  "team_id": "TC7SRSB25",
-  "api_app_id": "AF7KED0HL",
-  "event": {
-    "type": "member_joined_channel",
-    "user": "UF62SGQP6",
-    "channel": "CF662G3JN",
-    "channel_type": "C",
-    "team": "TC7SRSB25",
-    "inviter": "UC7SRSBH7",
-    "event_ts": "1547268640.003000"
-  },
-  "type": "event_callback",
-  "event_id": "EvFCC4SB3P",
-  "event_time": 1547268640,
-  "authed_users": [
-    "UF62SGQP6"
-  ]
+    "api_app_id": "A00T0R11P66",
+    "authorizations": [
+        {
+            "enterprise_id": null,
+            "is_bot": true,
+            "is_enterprise_install": false,
+            "team_id": "TT0EEPP4R",
+            "user_id": "U11PIPLPPSM"
+        }
+    ],
+    "event": {
+        "channel": "C10P0P00303",
+        "channel_type": "C",
+        "event_ts": "1638793296.000200",
+        "inviter": "U32NBSDOPPA",
+        "team": "TT0EEPP4R",
+        "type": "member_joined_channel",
+        "user": "U00TPRPIPPA"
+    },
+    "event_context": "4-tePlwKR8Ne4dy7XjS7QhWQL7dRVkZgVEBsREJNBMDOJcSYDhfGHrIgKDGHTGDbs2KSf4HdKdVxMqQGD4GkVaAgt4KQEtMSGsDn0iQzAyNBMVCzSDF6NifQ",
+    "event_id": "Es36PQNZWHSP",
+    "event_time": 1634653566,
+    "is_ext_shared_channel": false,
+    "team_id": "TT0EEPP4R",
+    "token": "dr2FDH3al54fFGWEJHsNdo0u",
+    "type": "event_callback"
 }
 */
 @JsonIgnoreProperties(ignoreUnknown = true)

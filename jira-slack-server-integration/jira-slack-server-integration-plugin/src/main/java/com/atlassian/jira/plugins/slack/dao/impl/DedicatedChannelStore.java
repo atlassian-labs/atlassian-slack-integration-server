@@ -3,6 +3,7 @@ package com.atlassian.jira.plugins.slack.dao.impl;
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.storage.json.JsonPropertyStoreStorageStrategy;
 import com.atlassian.jira.plugins.slack.storage.json.JsonStoreFactory;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +27,13 @@ public class DedicatedChannelStore extends JsonPropertyStoreStorageStrategy<Dedi
     /**
      * Find all the mappings across all the issues which involve a particular channel
      *
-     * @param channelId the channel to search for
+     * @param conversationKey the channel to search for
      * @return an Iterable&lt;DedicatedChannel&gt; giving the mappings
      */
-    public List<DedicatedChannel> getAllForChannel(final String channelId) {
-        return findByPredicate(dedicatedChannel -> channelId.equals(dedicatedChannel.getChannelId()));
+    public List<DedicatedChannel> getAllForChannel(final ConversationKey conversationKey) {
+        return findByPredicate(dedicatedChannel ->
+                conversationKey.getTeamId().equals(dedicatedChannel.getTeamId()) &&
+                        conversationKey.getChannelId().equals(dedicatedChannel.getChannelId()));
     }
 
     public List<DedicatedChannel> getAllByTeamId(final String teamId) {

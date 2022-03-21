@@ -8,7 +8,9 @@ import com.atlassian.bitbucket.plugins.slack.event.analytic.RepositoryNotificati
 import com.atlassian.bitbucket.plugins.slack.notification.configuration.dao.NotificationConfigurationDao;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.event.api.EventPublisher;
+import com.atlassian.plugins.slack.analytics.AnalyticsContext;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DefaultNotificationConfigurationServiceTest {
@@ -31,6 +34,8 @@ public class DefaultNotificationConfigurationServiceTest {
     private PermissionValidationService permissionService;
     @Mock
     private AnalyticsContextProvider analyticsContextProvider;
+    @Mock
+    private AnalyticsContext analyticsContext;
 
     @Mock
     private Repository repository;
@@ -84,8 +89,8 @@ public class DefaultNotificationConfigurationServiceTest {
 
     @Test
     public void removeNotificationsForChannel_shouldPerformExpectedDeletion() {
-        target.removeNotificationsForChannel("C");
+        target.removeNotificationsForChannel(new ConversationKey("T", "C"));
 
-        verify(dao).removeNotificationsForChannel("C");
+        verify(dao).removeNotificationsForChannel(new ConversationKey("T", "C"));
     }
 }

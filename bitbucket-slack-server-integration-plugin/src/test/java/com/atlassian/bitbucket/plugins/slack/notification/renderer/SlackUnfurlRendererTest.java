@@ -1,6 +1,10 @@
 package com.atlassian.bitbucket.plugins.slack.notification.renderer;
 
 import com.atlassian.bitbucket.comment.Comment;
+import com.atlassian.bitbucket.comment.CommentSearchRequest;
+import com.atlassian.bitbucket.comment.CommentService;
+import com.atlassian.bitbucket.comment.CommentSeverity;
+import com.atlassian.bitbucket.comment.CommentState;
 import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.bitbucket.commit.CommitListMergeFilter;
 import com.atlassian.bitbucket.commit.CommitService;
@@ -13,7 +17,6 @@ import com.atlassian.bitbucket.pull.PullRequestRef;
 import com.atlassian.bitbucket.pull.PullRequestSearchRequest;
 import com.atlassian.bitbucket.pull.PullRequestService;
 import com.atlassian.bitbucket.pull.PullRequestState;
-import com.atlassian.bitbucket.pull.PullRequestTaskSearchRequest;
 import com.atlassian.bitbucket.repository.Branch;
 import com.atlassian.bitbucket.repository.Ref;
 import com.atlassian.bitbucket.repository.RefService;
@@ -23,8 +26,6 @@ import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.repository.StandardRefType;
 import com.atlassian.bitbucket.repository.Tag;
 import com.atlassian.bitbucket.scm.ScmService;
-import com.atlassian.bitbucket.task.TaskCount;
-import com.atlassian.bitbucket.task.TaskState;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequest;
@@ -46,6 +47,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Stream;
 
+import static com.atlassian.bitbucket.comment.CommentSeverity.BLOCKER;
+import static com.atlassian.bitbucket.comment.CommentState.OPEN;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -67,6 +70,8 @@ class SlackUnfurlRendererTest {
 
     @Mock
     I18nResolver i18nResolver;
+    @Mock
+    CommentService commentService;
     @Mock
     PullRequestService pullRequestService;
     @Mock
@@ -108,8 +113,6 @@ class SlackUnfurlRendererTest {
     PullRequestRef fromRef;
     @Mock
     PullRequestRef toRef;
-    @Mock
-    TaskCount taskCount;
     @Mock
     Comment comment;
     @Mock
@@ -153,8 +156,8 @@ class SlackUnfurlRendererTest {
         when(participantRev2.getUser()).thenReturn(reviewer2);
         when(participantRev2.getStatus()).thenReturn(PullRequestParticipantStatus.NEEDS_WORK);
 
-        when(pullRequestService.countTasks(argThat(new PullRequestTaskSearchRequestMatcher(pullRequest)))).thenReturn(taskCount);
-        when(taskCount.getCount(TaskState.OPEN)).thenReturn(2L);
+        when(commentService.countComments(argThat(new CommentSearchRequestMatcher(pullRequest, OPEN, BLOCKER))))
+                .thenReturn(2L);
 
         when(slackLinkRenderer.pullRequestLink(pullRequest)).thenReturn("/pr");
         lenient().when(slackLinkRenderer.userLink(reviewer1)).thenReturn("/rev1");
@@ -479,16 +482,23 @@ class SlackUnfurlRendererTest {
         when(slackLinkRenderer.repoLink(repository)).thenReturn(REPO_URL);
     }
 
-    static class PullRequestTaskSearchRequestMatcher implements ArgumentMatcher<PullRequestTaskSearchRequest> {
+    static class CommentSearchRequestMatcher implements ArgumentMatcher<CommentSearchRequest> {
         private final PullRequest pullRequest;
+        private final CommentState commentState;
+        private final CommentSeverity commentSeverity;
 
-        PullRequestTaskSearchRequestMatcher(final PullRequest pullRequest) {
+        CommentSearchRequestMatcher(final PullRequest pullRequest, final CommentState commentState,
+                                    final CommentSeverity commentSeverity) {
             this.pullRequest = pullRequest;
+            this.commentState = commentState;
+            this.commentSeverity = commentSeverity;
         }
 
         @Override
-        public boolean matches(final PullRequestTaskSearchRequest argument) {
-            return argument != null && pullRequest.equals(argument.getPullRequest());
+        public boolean matches(final CommentSearchRequest argument) {
+            return argument != null && pullRequest.equals(argument.getCommentable()) &&
+                    argument.getSeverities().size() == 1 && argument.getSeverities().contains(commentSeverity) &&
+                    argument.getStates().size() == 1 && argument.getStates().contains(commentState);
         }
     }
 

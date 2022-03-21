@@ -19,10 +19,12 @@ import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.analytics.AnalyticsContext;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.api.webhooks.ChannelDeletedSlackEvent;
+import com.atlassian.plugins.slack.api.webhooks.SlackEvent;
 import com.atlassian.plugins.slack.event.SlackTeamUnlinkedEvent;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.util.DigestUtil;
@@ -95,6 +97,8 @@ public class DefaultDedicatedChannelManagerTest {
     private AnalyticsContext analyticsContext;
     @Mock
     private ProjectConfigurationManager projectConfigurationManager;
+    @Mock
+    private SlackEvent slackEvent;
 
     @Captor
     private ArgumentCaptor<DedicatedChannelUnlinkedEvent> channelUnlinkedCaptor;
@@ -176,7 +180,9 @@ public class DefaultDedicatedChannelManagerTest {
     @Test
     public void onChannelDeletedEvent() {
         when(channelDeletedSlackEvent.getChannel()).thenReturn("C");
-        when(dedicatedChannelDAO.findMappingsForChannel("C")).thenReturn(Collections.singletonList(dedicatedChannel));
+        when(channelDeletedSlackEvent.getSlackEvent()).thenReturn(slackEvent);
+        when(slackEvent.getTeamId()).thenReturn("T");
+        when(dedicatedChannelDAO.findMappingsForChannel(new ConversationKey("T", "C"))).thenReturn(Collections.singletonList(dedicatedChannel));
         when(dedicatedChannel.getIssueId()).thenReturn(1L);
 
         target.onChannelDeletedEvent(channelDeletedSlackEvent);
@@ -385,20 +391,22 @@ public class DefaultDedicatedChannelManagerTest {
     @Test
     public void isNotSameChannel_shouldReturnFalseForSameChannel() {
         when(dedicatedChannel.getChannelId()).thenReturn("C");
-        boolean result = target.isNotSameChannel("C", Optional.of(dedicatedChannel));
+        when(dedicatedChannel.getTeamId()).thenReturn("T");
+        boolean result = target.isNotSameChannel(new ConversationKey("T", "C"), Optional.of(dedicatedChannel));
         assertThat(result, is(false));
     }
 
     @Test
     public void isNotSameChannel_shouldReturnTrueForDifferentChannel() {
+        when(dedicatedChannel.getTeamId()).thenReturn("T");
         when(dedicatedChannel.getChannelId()).thenReturn("C");
-        boolean result = target.isNotSameChannel("C2", Optional.of(dedicatedChannel));
+        boolean result = target.isNotSameChannel(new ConversationKey("T2", "C2"), Optional.of(dedicatedChannel));
         assertThat(result, is(true));
     }
 
     @Test
     public void isNotSameChannel_shouldReturnFalseForEmptyChannel() {
-        boolean result = target.isNotSameChannel("C", Optional.empty());
+        boolean result = target.isNotSameChannel(new ConversationKey("T2", "C2"), Optional.empty());
         assertThat(result, is(false));
     }
 }

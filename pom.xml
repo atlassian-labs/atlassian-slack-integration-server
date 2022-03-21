@@ -7,6 +7,11 @@
     <packaging>pom</packaging>
     <name>Atlassian Slack Integration for Server Project</name>
 
+    <organization>
+        <name>Atlassian</name>
+        <url>https://www.atlassian.com/</url>
+    </organization>
+
     <modules>
         <module>slack-server-integration-common</module>
         <module>jira-slack-server-integration</module>

@@ -146,12 +146,17 @@ public class AoNotificationConfigurationDao extends AbstractAoDao implements Not
     }
 
     @Override
-    public void removeNotificationsForChannel(@Nonnull final String channelId) {
+    public void removeNotificationsForChannel(@Nonnull final ConversationKey conversationKey) {
         StringBuilder query = new StringBuilder();
         ImmutableList.Builder<Object> parameters = ImmutableList.builder();
+        where(AoNotificationConfiguration.TEAM_ID_COLUMN,
+                Optional.of(conversationKey.getTeamId()),
+                parameters,
+                query,
+                value -> value);
 
         where(AoNotificationConfiguration.CHANNEL_ID_COLUMN,
-                Optional.of(channelId),
+                Optional.of(conversationKey.getChannelId()),
                 parameters,
                 query,
                 value -> value);
@@ -206,7 +211,7 @@ public class AoNotificationConfigurationDao extends AbstractAoDao implements Not
                     DefaultRepositoryConfiguration.Builder builder = new DefaultRepositoryConfiguration.Builder(repo);
                     entry.getValue()
                             .forEach(aoConfig -> {
-                                final Optional<Conversation> conversation = conversationsAndLinks.conversation(aoConfig.getChannelId());
+                                final Optional<Conversation> conversation = conversationsAndLinks.conversation(new ConversationKey(aoConfig.getTeamId(), aoConfig.getChannelId()));
                                 final Optional<SlackLink> slackLink = conversationsAndLinks.link(aoConfig.getTeamId());
                                 Verbosity verbosity = bitbucketSlackSettingsService.getVerbosity(repo.getId(),
                                         aoConfig.getTeamId(), aoConfig.getChannelId());

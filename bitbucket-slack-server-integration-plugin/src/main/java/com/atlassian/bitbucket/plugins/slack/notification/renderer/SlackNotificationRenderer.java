@@ -14,7 +14,6 @@ import com.atlassian.bitbucket.event.pull.PullRequestParticipantUnapprovedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryRefsChangedEvent;
-import com.atlassian.bitbucket.event.task.TaskEvent;
 import com.atlassian.bitbucket.permission.Permission;
 import com.atlassian.bitbucket.plugins.slack.event.RepositoryLinkedEvent;
 import com.atlassian.bitbucket.plugins.slack.model.ReplyToCommentPayload;
@@ -48,6 +47,7 @@ import com.github.seratch.jslack.api.model.block.composition.MarkdownTextObject;
 import com.github.seratch.jslack.api.model.block.composition.PlainTextObject;
 import com.github.seratch.jslack.api.model.block.element.BlockElement;
 import com.github.seratch.jslack.api.model.block.element.ButtonElement;
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.ObjectUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.atlassian.bitbucket.comment.CommentSeverity.BLOCKER;
 import static com.atlassian.plugins.slack.util.SlackHelper.escapeSignsForSlackLink;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
@@ -316,17 +317,14 @@ public class SlackNotificationRenderer {
         return standardBlockMessage(text);
     }
 
-    public ChatPostMessageRequestBuilder getReviewersPullRequestMessage(
-            final PullRequestReviewersUpdatedEvent event,
-            final boolean isVerbose) {
-        final PullRequest pullRequest = event.getPullRequest();
+    public ChatPostMessageRequestBuilder getReviewersPullRequestMessage(final PullRequest pullRequest,
+                                                                        final ApplicationUser actor,
+                                                                        final boolean hasUserJoinedPr,
+                                                                        final boolean isVerbose) {
         final PullRequestRef toRef = pullRequest.getToRef();
         final Repository repository = toRef.getRepository();
-        final ApplicationUser actor = event.getUser();
-        final Collection<ApplicationUser> addedReviewers = ObjectUtils.firstNonNull(event.getAddedReviewers(), emptyList());
-        final boolean isOneUserAdded = addedReviewers.size() == 1;
 
-        final String suffix = isOneUserAdded ? "joined" : "removed";
+        final String suffix = hasUserJoinedPr ? "joined" : "removed";
         final String verboseSuffix = isVerbose ? ".long" : ".short";
         final String text = i18nResolver.getText(
                 "slack.activity.pr.reviewers." + suffix + verboseSuffix,
@@ -403,16 +401,17 @@ public class SlackNotificationRenderer {
     }
 
     public ChatPostMessageRequestBuilder getPullRequestTaskMessage(final PullRequest pullRequest,
-                                                                   final TaskEvent event,
-                                                                   final TaskNotificationTypes taskAction) {
-        final ApplicationUser actor = event.getUser();
-        final String taskText = event.getTask().getText();
-        final long commentId = event.getTask().getAnchor().getId();
+                                                                   final TaskNotificationTypes taskAction,
+                                                                   final Comment comment,
+                                                                   final ApplicationUser user) {
+        Preconditions.checkArgument(comment.getSeverity() == BLOCKER, "Expecting blocker severity comment");
+        final String taskText = comment.getText();
+        final long commentId = comment.getId();
         final PullRequestRef toRef = pullRequest.getToRef();
         final Repository repository = toRef.getRepository();
         final String text = i18nResolver.getText(
                 "slack.activity.pr.task." + taskAction.name().toLowerCase() + ".long",
-                slackLinkRenderer.userLink(actor),
+                slackLinkRenderer.userLink(user),
                 slackLinkRenderer.pullRequestCommentUrl(pullRequest, commentId),
                 slackLinkRenderer.pullRequestLink(pullRequest),
                 slackLinkRenderer.repoLink(repository),

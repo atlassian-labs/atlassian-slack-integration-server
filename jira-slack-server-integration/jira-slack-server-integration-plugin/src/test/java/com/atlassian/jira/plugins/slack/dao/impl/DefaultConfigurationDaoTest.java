@@ -7,6 +7,7 @@ import com.atlassian.cache.CacheManager;
 import com.atlassian.jira.plugins.slack.manager.impl.DefaultProjectConfigurationManager;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
 import com.atlassian.jira.plugins.slack.model.ao.ProjectConfigurationAO;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import net.java.ao.Query;
 import org.junit.Rule;
 import org.junit.Test;
@@ -123,11 +124,12 @@ public class DefaultConfigurationDaoTest {
     @Test
     public void findByChannel() {
         ProjectConfigurationAO[] configurationsList = {projectConfigurationAO, projectConfigurationAO2};
-        when(ao.find(ProjectConfigurationAO.class, ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?", "C"))
+        when(ao.find(ProjectConfigurationAO.class,
+                ProjectConfigurationAO.COLUMN_TEAM_ID + " = ? AND " + ProjectConfigurationAO.COLUMN_CHANNEL_ID + " = ?", "T", "C"))
                 .thenReturn(configurationsList);
 
         target = new DefaultConfigurationDao(ao, cacheManager);
-        List<ProjectConfiguration> result = target.findByChannel("C");
+        List<ProjectConfiguration> result = target.findByChannel(new ConversationKey("T", "C"));
 
         assertThat(result, containsInAnyOrder(projectConfigurationAO, projectConfigurationAO2));
     }

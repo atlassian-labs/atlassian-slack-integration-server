@@ -15,6 +15,7 @@ import com.atlassian.bitbucket.project.Project;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.util.PageRequestImpl;
+import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.ConversationLoaderHelper;
 import com.atlassian.plugins.slack.api.client.ConversationsAndLinks;
@@ -147,7 +148,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
                 AoNotificationConfiguration.CHANNEL_ID_COLUMN, CHANNEL_ID,
                 AoNotificationConfiguration.REPO_ID_COLUMN, REPO_ID,
                 AoNotificationConfiguration.NOTIFICATION_TYPE_COLUMN, "someNotificationType"
-                ));
+        ));
         assertThat(entityManager.count(AoNotificationConfiguration.class), is(1));
 
         target.removeNotificationsForTeam(TEAM_ID);
@@ -165,7 +166,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
         ));
         assertThat(entityManager.count(AoNotificationConfiguration.class), is(1));
 
-        target.removeNotificationsForChannel(CHANNEL_ID);
+        target.removeNotificationsForChannel(new ConversationKey(TEAM_ID, CHANNEL_ID));
 
         assertThat(entityManager.count(AoNotificationConfiguration.class), is(0));
     }
@@ -223,7 +224,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
                 AoNotificationConfiguration.CHANNEL_ID_COLUMN, CHANNEL_ID
         ));
         when(conversationLoaderHelper.conversationsAndLinksById(any(), any(), any())).thenReturn(conversationsAndLinks);
-        when(conversationsAndLinks.conversation(CHANNEL_ID)).thenReturn(Optional.of(conversation));
+        when(conversationsAndLinks.conversation(new ConversationKey(TEAM_ID, CHANNEL_ID))).thenReturn(Optional.of(conversation));
         when(conversation.getName()).thenReturn("someConversationName");
         when(conversationsAndLinks.link(TEAM_ID)).thenReturn(Optional.of(slackLink));
         when(repositoryService.getById(REPO_ID)).thenReturn(repository);
@@ -236,7 +237,7 @@ public class AoNotificationConfigurationDaoTest extends AbstractAoDaoTest {
         when(bitbucketSlackSettingsService.getVerbosity(anyInt(), eq(TEAM_ID), any())).thenReturn(Verbosity.EXTENDED);
 
         List<RepositoryConfiguration> results = newArrayList(target.search(new NotificationSearchRequest.Builder()
-                        .build(), new PageRequestImpl(0, 5)).getValues());
+                .build(), new PageRequestImpl(0, 5)).getValues());
 
         assertThat(results.size(), is(2));
         assertThat(results.get(0).getRepository(), is(repository));

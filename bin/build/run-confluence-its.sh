@@ -15,7 +15,7 @@ atlas-mvn --batch-mode verify \
   -Dit.test.skip=false \
   -Dcontainer=${TOMCAT_VERSION} \
   -Dxvfb.enable=${XVFB_ENABLE:-true} \
-  -Datlassian.plugins.enable.wait=300 \
+  -Datlassian.plugins.enable.wait=30 \
   -Dserver=${HOST_NAME:-localhost} \
   -Dfailsafe.rerunFailingTestsCount=${RETRY_COUNT:-2} \
   -Dfailsafe.forkedProcessExitTimeoutInSeconds=360 \
