@@ -4,6 +4,7 @@ import com.atlassian.bitbucket.comment.AbstractCommentableVisitor;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestOpenedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryRefsChangedEvent;
@@ -14,6 +15,7 @@ import com.atlassian.bitbucket.plugins.slack.notification.TaskNotificationTypes;
 import com.atlassian.bitbucket.plugins.slack.notification.configuration.PersonalNotificationService;
 import com.atlassian.bitbucket.plugins.slack.notification.renderer.SlackNotificationRenderer;
 import com.atlassian.bitbucket.pull.PullRequest;
+import com.atlassian.bitbucket.pull.PullRequestParticipant;
 import com.atlassian.bitbucket.repository.RefChange;
 import com.atlassian.bitbucket.repository.RefChangeType;
 import com.atlassian.bitbucket.repository.Repository;
@@ -23,6 +25,8 @@ import com.atlassian.event.api.EventListener;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest.ChatPostMessageRequestBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,8 +34,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.atlassian.bitbucket.comment.CommentSeverity.BLOCKER;
 import static java.util.Collections.emptyList;
@@ -42,6 +48,7 @@ import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
 /**
  * This class listens to Bitbucket events and tried to publish the respective notification.
  */
+@Slf4j
 @Component
 public class BitbucketNotificationEventListener {
     private final I18nResolver i18nResolver;
@@ -70,22 +77,35 @@ public class BitbucketNotificationEventListener {
                 return;
             }
         }
-        PullRequestNotificationTypes.byEvent(event, i18nResolver).ifPresent(notificationType -> {
+
+        Optional<PullRequestNotificationTypes> type = PullRequestNotificationTypes.byEvent(event, i18nResolver);
+        log.debug("PR event class {} is mapped to type {}", event.getClass().getName(), type.orElse(null));
+
+        type.ifPresent(notificationType -> {
             final boolean isReviewersUpdate = event instanceof PullRequestReviewersUpdatedEvent;
             final boolean hasUserAddedOrRemovedHimself = isReviewersUpdate && hasUserAddedOrRemovedHimself((PullRequestReviewersUpdatedEvent) event);
+            final Set<ApplicationUser> addedReviewers = getAddedReviewers(event);
             notificationPublisher.findChannelsAndPublishNotificationsAsync(
                     event.getPullRequest().getToRef().getRepository(),
                     notificationType.getKey(),
                     () -> personalNotificationService.findNotificationsFor(
                             event.getUser(),
                             event.getPullRequest(),
-                            getUsersAddedToPullRequest(event),
-                            false),
+                            addedReviewers),
                     options -> {
                         if (isReviewersUpdate) {
-                            if (hasUserAddedOrRemovedHimself || options.isPersonal()) {
+                            if (hasUserAddedOrRemovedHimself) {
                                 return ofNullable(slackNotificationRenderer.getReviewersPullRequestMessage(
-                                        (PullRequestReviewersUpdatedEvent) event,
+                                        event.getPullRequest(),
+                                        event.getUser(),
+                                        addedReviewers.contains(event.getUser()),
+                                        Verbosity.EXTENDED.equals(options.getVerbosity())));
+                            } else if (options.isPersonal()) {
+                                ApplicationUser affectedUser = ObjectUtils.firstNonNull(options.getApplicationUser(), event.getUser());
+                                return ofNullable(slackNotificationRenderer.getReviewersPullRequestMessage(
+                                        event.getPullRequest(),
+                                        affectedUser,
+                                        addedReviewers.contains(affectedUser),
                                         Verbosity.EXTENDED.equals(options.getVerbosity())));
                             }
                             return empty();
@@ -106,8 +126,8 @@ public class BitbucketNotificationEventListener {
                         notificationPublisher.findChannelsAndPublishNotificationsAsync(
                                 pullRequest.getToRef().getRepository(),
                                 taskAction.getKey(),
-                                () -> personalNotificationService.findNotificationsFor(
-                                        taskEvent.getUser(), pullRequest, Collections.emptySet(), false),
+                                () -> personalNotificationService.findNotificationsFor(taskEvent.getUser(),
+                                        pullRequest, Collections.emptySet()),
                                 options -> ofNullable(slackNotificationRenderer.getPullRequestTaskMessage(pullRequest,
                                         taskAction, taskEvent.getComment(), taskEvent.getUser())));
                         return null;
@@ -115,12 +135,17 @@ public class BitbucketNotificationEventListener {
                 });
     }
 
-    private Set<ApplicationUser> getUsersAddedToPullRequest(final PullRequestEvent event) {
+    private Set<ApplicationUser> getAddedReviewers(final PullRequestEvent event) {
+        Set<ApplicationUser> addedReviewers = Collections.emptySet();
         if (event instanceof PullRequestReviewersUpdatedEvent) {
             final PullRequestReviewersUpdatedEvent e = (PullRequestReviewersUpdatedEvent) event;
-            return e.getAddedReviewers();
+            addedReviewers = e.getAddedReviewers();
+        } else if (event instanceof PullRequestOpenedEvent) {
+            addedReviewers = event.getPullRequest().getReviewers().stream()
+                    .map(PullRequestParticipant::getUser)
+                    .collect(Collectors.toSet());
         }
-        return Collections.emptySet();
+        return addedReviewers;
     }
 
     private boolean hasUserAddedOrRemovedHimself(final PullRequestReviewersUpdatedEvent event) {
@@ -131,12 +156,13 @@ public class BitbucketNotificationEventListener {
         final boolean isOneUserRemoved = removedReviewers.size() == 1;
 
         // produces event if, and only if, the user added or removed himself from the UI
+        boolean result = false;
         if (isOneUserAdded && !isOneUserRemoved) {
-            return addedReviewers.iterator().next().equals(actor);
+            result = addedReviewers.iterator().next().equals(actor);
         } else if (!isOneUserAdded && isOneUserRemoved) {
-            return removedReviewers.iterator().next().equals(actor);
+            result = removedReviewers.iterator().next().equals(actor);
         }
-        return false;
+        return result;
     }
 
     @EventListener

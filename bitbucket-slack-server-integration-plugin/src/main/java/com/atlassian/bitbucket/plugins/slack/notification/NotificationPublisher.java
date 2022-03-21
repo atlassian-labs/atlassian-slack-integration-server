@@ -68,7 +68,7 @@ public class NotificationPublisher {
             final Verbosity verbosity = bitbucketSlackSettingsService.getVerbosity(
                     repository.getId(), channelToNotify.getTeamId(), channelToNotify.getChannelId());
             messageProvider
-                    .apply(new NotificationRenderingOptions(verbosity, channelToNotify.isPersonal()))
+                    .apply(new NotificationRenderingOptions(verbosity, channelToNotify.isPersonal(), channel.getApplicationUser()))
                     .ifPresent(message -> {
                         AnalyticsContext context = analyticsContextProvider.byTeamId(channelToNotify.getTeamId());
                         eventPublisher.publish(new BitbucketNotificationSentEvent(context, channel.getNotificationKey(),
@@ -86,7 +86,7 @@ public class NotificationPublisher {
                 .build();
         Set<ChannelToNotify> channels = notificationConfigurationService.getChannelsToNotify(request);
         return channels.stream()
-                .map(channel -> new ExtendedChannelToNotify(channel, notificationTypeKey))
+                .map(channel -> new ExtendedChannelToNotify(channel, notificationTypeKey, null))
                 .collect(Collectors.toSet());
     }
 
