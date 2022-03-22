@@ -1,5 +1,7 @@
 package com.atlassian.jira.plugins.slack.web.actions;
 
+import com.atlassian.jira.security.request.RequestMethod;
+import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.web.action.ActionViewDataMappings;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.google.common.collect.ImmutableMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 /**
  * Provides context for migrate to Slack channel selection dialog.
  */
+@SupportedMethods(RequestMethod.GET)
 public class MigrateToSlackAction extends JiraWebActionSupport {
     private String roomName;
 

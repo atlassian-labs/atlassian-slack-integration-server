@@ -9,6 +9,8 @@ import com.atlassian.jira.plugins.slack.model.mentions.IssueMentionViewResponseF
 import com.atlassian.jira.plugins.slack.model.mentions.MentionChannel;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.jira.security.PermissionManager;
+import com.atlassian.jira.security.request.RequestMethod;
+import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.web.action.ActionViewDataMappings;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+@SupportedMethods(RequestMethod.GET)
 @RequiredArgsConstructor
 public class SlackIssueMentionsAction extends JiraWebActionSupport {
     private final IssueMentionService issueMentionService;
