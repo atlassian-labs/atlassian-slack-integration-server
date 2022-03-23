@@ -33,9 +33,12 @@ public class MappingRow extends ConfluenceAbstractPageComponent {
 
     public void clickTrashButton() {
         container.find(By.className("trash-channel-mapping")).click();
+
         final Dialog2 dialog = pageBinder.bind(Dialog2.class, "slack-remove-mapping-dialog");
-        Poller.waitUntilTrue(getConfirmButton(dialog).timed().isVisible());
-        getConfirmButton(dialog).click();
+        final PageElement confirmButton = getConfirmButton(dialog);
+
+        Poller.waitUntilTrue(confirmButton.timed().isVisible());
+        confirmButton.click();
     }
 
     private PageElement getConfirmButton(Dialog2 dialog) {
