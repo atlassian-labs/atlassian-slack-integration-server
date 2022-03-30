@@ -42,7 +42,7 @@ public class ConfigurationWebTest extends SlackWebTestBase {
     void addNewConfiguration() {
         final SpaceConfigurationPage configPage = confluence.loginAs(
                 UserWithDetails.ADMIN, SpaceConfigurationPage.class, SPACE_KEY, DUMMY_TEAM_ID);
-        closeAuiFlags();
+        closeAuiFlags(2 * 1000);
 
         assertThat(configPage.isLinked(), is(true));
         ConnectionStatus workspaceConnection = configPage.workspaceConnection();
@@ -84,7 +84,9 @@ public class ConfigurationWebTest extends SlackWebTestBase {
 
         final SpaceConfigurationPage configPage = confluence.loginAs(
                 UserWithDetails.ADMIN, SpaceConfigurationPage.class, SPACE_KEY, DUMMY_TEAM_ID);
-        closeAuiFlags();
+        configPage.waitForPageToBeLoaded();
+        configPage.dismissFlagMessages();
+        closeAuiFlags(2 * 1000);
 
         final ConfigurationSection configurationSection = configPage.geConfigurationSection();
         final Optional<MappingRow> mapping = findMappingRow(configurationSection.getMappingTable(), PUBLIC.getId());

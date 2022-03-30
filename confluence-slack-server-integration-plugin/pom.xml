@@ -31,6 +31,12 @@
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>slack-server-integration-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.atlassian.selenium</groupId>
+                    <artifactId>atlassian-pageobjects-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Slack -->
@@ -199,11 +205,17 @@
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>slack-server-integration-test-common</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.atlassian.selenium</groupId>
+                    <artifactId>atlassian-webdriver-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-webdriver-pageobjects</artifactId>
-            <version>9.0.12</version>
+            <version>11.4.5</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -219,6 +231,12 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

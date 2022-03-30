@@ -30,11 +30,11 @@ public class ChannelSelector extends DropdownSelect {
         waitForChannelOption(channelName);
 
         // try and retry
-        pickOption(channelName);
+        pickOptionFixed(channelName);
         if (!isChannelSelected(channelName)) {
             // it's probably flakiness so let's try one more time
             flakyWait();
-            pickOption(channelName);
+            pickOptionFixed(channelName);
         }
         if (!isChannelSelected(channelName)) {
             // it's probably flakiness so let's fallback to set value directly
@@ -61,4 +61,18 @@ public class ChannelSelector extends DropdownSelect {
         }
     }
 
+    // fixed version of Atlassian-provided DropdownSelect.pickOption()
+    // it starts freezing in Jira 9.0
+    private void pickOptionFixed(String optionId) {
+        this.open();
+        By selector = By.cssSelector(String.format(".aui-list-item-li-%s", optionId));
+        this.activateSelection(selector);
+        this.getDropDownItem(selector).click();
+        this.waitForClose();
+    }
+
+    private void activateSelection(By by) {
+        PageElement selection = this.elementFinder.find(by);
+        this.actions.moveToElement(selection).moveByOffset(1, 0).perform();
+    }
 }

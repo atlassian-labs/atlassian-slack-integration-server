@@ -166,8 +166,9 @@ public class SlackMockServer {
     private class MockDispatcher extends Dispatcher {
         @Override
         public MockResponse dispatch(final RecordedRequest request) {
+            final String body = request.getBody().readUtf8();
             final RequestHistoryItem historyItem = new RequestHistoryItem(
-                    request, replaceRegularAndEncodedBaseUrl(request.getBody().readUtf8()));
+                    request, replaceRegularAndEncodedBaseUrl(body));
             final boolean isOauthAccess = "oauth.access".equals(historyItem.apiMethod());
             final String reqTag = defaultString(historyItem.tag());
 

@@ -93,15 +93,16 @@ public class DefaultOauth2AuthoriseService implements Oauth2AuthoriseService {
                             .queryParam("team", link.getTeamId())
                             .build();
 
-                    final UriBuilder originUri = UriBuilder.fromUri(applicationProperties.getBaseUrl(UrlMode.ABSOLUTE))
+                    final UriBuilder originUriBuilder = UriBuilder.fromUri(applicationProperties.getBaseUrl(UrlMode.ABSOLUTE))
                             .path(data.getRedirect())
                             .replaceQuery(data.getRedirectQuery());
                     if (StringUtils.isNotBlank(data.getFragment())) {
-                        originUri.fragment(data.getFragment());
+                        originUriBuilder.fragment(data.getFragment());
                     }
 
                     final HttpSession session = data.getServletRequest().getSession();
-                    session.setAttribute(data.getSecret() + "-origin-url", originUri.build().toString());
+                    final String originUrl = originUriBuilder.build().toString();
+                    session.setAttribute(data.getSecret() + "-origin-url", originUrl);
 
                     eventPublisher.publish(new OauthFlowEvent(analyticsContextProvider.bySlackLink(link), Status.STARTED));
 

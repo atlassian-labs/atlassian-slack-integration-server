@@ -280,13 +280,14 @@ public class DefaultSlackClient implements SlackClient {
         checkArgument(isNotBlank(code), "code cannot be null or empty");
 
         // https://api.slack.com/methods/oauth.access
-        return toEither("oauth.access/" + slackLink.getClientId(), () ->
+        Either<ErrorResponse, OAuthAccessResponse> result = toEither("oauth.access/" + slackLink.getClientId(), () ->
                 slackMethods.oauthAccess(OAuthAccessRequest.builder()
                         .code(code)
                         .redirectUri(redirectUri)
                         .clientId(slackLink.getClientId())
                         .clientSecret(slackLink.getClientSecret())
                         .build()));
+        return result;
     }
 
     // conversations

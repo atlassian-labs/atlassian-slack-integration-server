@@ -4,6 +4,8 @@ import com.atlassian.jira.plugins.slack.manager.PluginConfigurationManager;
 import com.atlassian.jira.plugins.slack.manager.ProjectConfigurationManager;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
+import com.atlassian.jira.security.request.RequestMethod;
+import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.web.action.ActionViewDataMappings;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 import com.google.common.collect.ImmutableMap;
@@ -17,6 +19,7 @@ import java.util.Map;
  * We edit the project settings from here There is a shared scope between EditProjectSettings and EditGlobalSettings so
  * it's better to inherit for later use
  */
+@SupportedMethods(RequestMethod.GET)
 public class SlackEditProjectSettings extends SlackEditGlobalSettings {
     private static final String PROJECT_KEY = "projectKey";
     private static final String ALLOW_PROJECT_AUTOCONVERT = "allowProjectAutoConvert";
