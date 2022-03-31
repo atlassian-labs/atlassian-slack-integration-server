@@ -29,10 +29,12 @@ import com.atlassian.bitbucket.scm.ScmService;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequest;
+import com.atlassian.plugins.slack.settings.SlackSettingService;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.model.Attachment;
 import com.github.seratch.jslack.api.model.Field;
 import com.google.common.collect.ImmutableSet;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
@@ -82,6 +84,8 @@ class SlackUnfurlRendererTest {
     RefService refService;
     @Mock
     CommitService commitService;
+    @Mock
+    SlackSettingService slackSettingService;
 
     @Mock
     Repository repository;
@@ -126,6 +130,11 @@ class SlackUnfurlRendererTest {
 
     @InjectMocks
     SlackUnfurlRenderer renderer;
+
+    @BeforeEach
+    protected void beforeEach() {
+        lenient().when(slackSettingService.isInstancePublic()).thenReturn(true);
+    }
 
     @Test
     void pullRequest_shouldReturnPullRequestUnfurl() {

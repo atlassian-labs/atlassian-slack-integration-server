@@ -47,21 +47,48 @@ public class BackoffRetryInterceptor implements Interceptor {
                 }
 
                 response = chain.proceed(request);
+                final int code = response.code();
                 if (response.isSuccessful()) {
+                    if (tryCount > 0 && log.isDebugEnabled()) {
+                        log.debug("Backoff recover req_id={} {} {} -> {} - attempt {}/{}",
+                                request.header(RequestIdInterceptor.REQ_ID_HEADER),
+                                request.method(),
+                                request.url(),
+                                code,
+                                tryCount + 1,
+                                retryCount + 1);
+                    }
+
                     break;
                 }
 
                 // do not retry if not a server error
-                final int code = response.code();
                 if (code < 500 || code >= 600) {
                     break;
                 }
 
-                if (!lastAttempt) {
-                    log.debug("Will wait and retry on request error:  {} {} -> {}", request.method(), request.url(), code);
+                if (log.isDebugEnabled()) {
+                    log.debug("Backoff retry req_id={} {} {} -> {} - retrying in {}s - attempt {}/{}",
+                            request.header(RequestIdInterceptor.REQ_ID_HEADER),
+                            request.method(),
+                            request.url(),
+                            code,
+                            retryDelay(tryCount),
+                            tryCount + 1,
+                            retryCount + 1);
                 }
             } catch (Exception e) {
-                log.debug("Will wait and retry after request error: {}", e.getMessage(), e);
+                if (log.isDebugEnabled()) {
+                    log.debug("Backoff retry error req_id={} {} {} - retrying in {}s - attempt {}/{} - {}",
+                            request.header(RequestIdInterceptor.REQ_ID_HEADER),
+                            request.method(),
+                            request.url(),
+                            retryDelay(tryCount),
+                            tryCount + 1,
+                            retryCount + 1,
+                            e.getMessage(),
+                            e);
+                }
 
                 if ("canceled".equalsIgnoreCase(e.getMessage())) {
                     throw e;
@@ -73,19 +100,17 @@ public class BackoffRetryInterceptor implements Interceptor {
             }
 
             if (!lastAttempt) {
-                sleepBeforeRetry(tryCount, request);
+                sleep(1000L * retryDelay(tryCount));
             }
         }
 
         return response;
     }
 
-    private void sleepBeforeRetry(final int tryCount, final Request request) {
-        final int retryDelay = tryCount >= RETRY_BACKOFF_DELAYS.length
+    private int retryDelay(final int tryCount) {
+        return tryCount >= RETRY_BACKOFF_DELAYS.length
                 ? RETRY_BACKOFF_DELAYS[RETRY_BACKOFF_DELAYS.length - 1]
                 : RETRY_BACKOFF_DELAYS[tryCount];
-        log.info("Failed request to Slack {} {}. Retrying after {}s", request.method(), request.url(), retryDelay);
-        sleep(1000L * retryDelay);
     }
 
     private void sleep(final long ms) {
@@ -95,5 +120,4 @@ public class BackoffRetryInterceptor implements Interceptor {
             throw new RuntimeException(e);
         }
     }
-
 }
