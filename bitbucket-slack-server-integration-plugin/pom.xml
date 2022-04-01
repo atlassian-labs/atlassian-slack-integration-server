@@ -333,6 +333,8 @@
         <dependency>
             <groupId>com.atlassian.activeobjects</groupId>
             <artifactId>activeobjects-test</artifactId>
+            <!-- version is different here from the one inherited from bitbucket-test-util because of H2 2.x incompatibility -->
+            <version>3.6.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
