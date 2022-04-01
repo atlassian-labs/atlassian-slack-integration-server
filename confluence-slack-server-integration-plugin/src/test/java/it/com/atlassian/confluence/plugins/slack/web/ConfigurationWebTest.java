@@ -85,6 +85,14 @@ public class ConfigurationWebTest extends SlackWebTestBase {
         final SpaceConfigurationPage configPage = confluence.loginAs(
                 UserWithDetails.ADMIN, SpaceConfigurationPage.class, SPACE_KEY, DUMMY_TEAM_ID);
         configPage.waitForPageToBeLoaded();
+
+        // wait for flags to open if they are present
+        try {
+            Thread.sleep(2 * 1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         configPage.dismissFlagMessages();
 
         final ConfigurationSection configurationSection = configPage.geConfigurationSection();
