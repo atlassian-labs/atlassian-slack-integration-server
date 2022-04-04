@@ -2,12 +2,14 @@ package com.atlassian.confluence.plugins.slack;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.cache.CacheManager;
+import com.atlassian.config.db.HibernateConfig;
 import com.atlassian.confluence.api.service.search.CQLSearchService;
 import com.atlassian.confluence.content.CustomContentManager;
 import com.atlassian.confluence.core.ContentPermissionManager;
 import com.atlassian.confluence.languages.LocaleManager;
 import com.atlassian.confluence.mail.notification.NotificationManager;
 import com.atlassian.confluence.pages.PageManager;
+import com.atlassian.confluence.persistence.EntityManagerProvider;
 import com.atlassian.confluence.search.v2.SearchManager;
 import com.atlassian.confluence.security.PermissionManager;
 import com.atlassian.confluence.security.SpacePermissionManager;
@@ -37,7 +39,6 @@ import com.atlassian.sal.api.web.context.HttpContext;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
-import net.sf.hibernate.SessionFactory;
 
 @SuppressWarnings("unused")
 public class ComponentImports {
@@ -76,7 +77,9 @@ public class ComponentImports {
     @ComponentImport
     ActiveObjects ao;
     @ComponentImport
-    SessionFactory sessionFactory;
+    EntityManagerProvider entityManagerProvider;
+    @ComponentImport
+    HibernateConfig hibernateConfig;
     @ComponentImport("salUserManager")
     UserManager userManager;
     @ComponentImport("salApplicationProperties")
