@@ -58,7 +58,8 @@ AJS.toInit(function ($) {
      */
     function showError(error) {
         var errorPanel = $("#error-panel");
-        errorPanel.append(" Could not complete the action : Status [" + error.status + "] Reason [" + error.statusText + "]");
+        var reason = error.responseText || error.statusText
+        errorPanel.append(" Could not complete the action : Status [" + error.status + "] Reason [" + reason + "]");
         errorPanel.show();
     }
 });
