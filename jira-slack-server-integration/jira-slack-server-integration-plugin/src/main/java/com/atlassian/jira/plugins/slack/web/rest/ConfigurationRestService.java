@@ -69,7 +69,7 @@ public class ConfigurationRestService {
     @GET
     @Path("/status")
     public Response getConfiguration() {
-        if (!checkAccessAsAdmin()) {
+        if (!isCurrentUserAdmin()) {
             return Response.status(FORBIDDEN).build();
         }
         return slackLinkManager.isAnyLinkDisconnected()
@@ -88,19 +88,20 @@ public class ConfigurationRestService {
             final Project project = projectManager.getProjectByCurrentKey(data.projectKey);
 
             if (project == null) {
-                return Response.status(BAD_REQUEST).build();
+                return Response.status(BAD_REQUEST).entity("Project not found").build();
             }
 
-            if (!permissionManager.hasPermission(ProjectPermissions.ADMINISTER_PROJECTS, project, context.getLoggedInUser())) {
-                return Response.status(FORBIDDEN).build();
+            if (!permissionManager.hasPermission(ProjectPermissions.ADMINISTER_PROJECTS, project, context.getLoggedInUser()) &&
+                    !isCurrentUserAdmin()) {
+                return Response.status(FORBIDDEN).entity("No permissions").build();
             }
 
             projectConfigurationManager.setProjectAutoConvertEnabled(project, allowAutoConvert);
             projectConfigurationManager.setIssuePanelHidden(project, hideIssuePanel);
             projectConfigurationManager.setSendRestrictedCommentsToDedicatedChannels(project, sendRestrictedCommentsToDedicated);
         } else {
-            if (!checkAccessAsAdmin()) {
-                return Response.status(FORBIDDEN).build();
+            if (!isCurrentUserAdmin()) {
+                return Response.status(FORBIDDEN).entity("No permissions").build();
             }
 
             final boolean guestChannelsEnabled = Boolean.parseBoolean(data.guestChannelsEnabled);
@@ -112,7 +113,7 @@ public class ConfigurationRestService {
         return Response.ok().build();
     }
 
-    private boolean checkAccessAsAdmin() {
+    private boolean isCurrentUserAdmin() {
         final UserKey userKey = userManager.getRemoteUserKey();
         return userKey != null && (userManager.isAdmin(userKey) || userManager.isSystemAdmin(userKey));
     }
