@@ -1,10 +1,10 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.service;
 
-import com.atlassian.config.db.HibernateConfig;
 import com.atlassian.confluence.persistence.EntityManagerProvider;
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.SpaceResult;
 import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.confluence.spaces.SpaceStatus;
+import com.atlassian.confluence.status.service.SystemInformationService;
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.sal.api.user.UserManager;
@@ -65,17 +65,17 @@ public class DefaultSpacesWithAdminPermissionProvider implements SpacesWithAdmin
     private final EntityManagerProvider entityManagerProvider;
     private final UserAccessor userAccessor;
     private final UserManager userManager;
-    private final HibernateConfig hibernateConfig;
+    private final SystemInformationService systemInformationService;
 
     @Autowired
     public DefaultSpacesWithAdminPermissionProvider(
             final EntityManagerProvider entityManagerProvider,
-            final HibernateConfig hibernateConfig,
+            final SystemInformationService systemInformationService,
             final UserAccessor userAccessor,
             @Qualifier("salUserManager") final UserManager userManager) {
         this.userManager = userManager;
         this.entityManagerProvider = entityManagerProvider;
-        this.hibernateConfig = hibernateConfig;
+        this.systemInformationService = systemInformationService;
         this.userAccessor = userAccessor;
     }
 
@@ -134,7 +134,8 @@ public class DefaultSpacesWithAdminPermissionProvider implements SpacesWithAdmin
     }
 
     private String queryOrderBy() {
-        if (hibernateConfig.isMySql()) {
+        String dialect = systemInformationService.getDatabaseInfo().getDialect();
+        if (dialect != null && dialect.matches(".*?MySQL.*?Dialect$")) {
             return QUERY_ORDER_LENGTH_MSSQL;
         } else {
             return QUERY_ORDER_LENGTH;

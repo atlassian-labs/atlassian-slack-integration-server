@@ -2,7 +2,6 @@ package com.atlassian.confluence.plugins.slack;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.cache.CacheManager;
-import com.atlassian.config.db.HibernateConfig;
 import com.atlassian.confluence.api.service.search.CQLSearchService;
 import com.atlassian.confluence.content.CustomContentManager;
 import com.atlassian.confluence.core.ContentPermissionManager;
@@ -16,6 +15,7 @@ import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.setup.settings.SettingsManager;
 import com.atlassian.confluence.spaces.SpaceLogoManager;
 import com.atlassian.confluence.spaces.SpaceManager;
+import com.atlassian.confluence.status.service.SystemInformationService;
 import com.atlassian.confluence.user.PersonalInformationManager;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.confluence.util.i18n.I18NBeanFactory;
@@ -79,7 +79,7 @@ public class ComponentImports {
     @ComponentImport
     EntityManagerProvider entityManagerProvider;
     @ComponentImport
-    HibernateConfig hibernateConfig;
+    SystemInformationService systemInformationService;
     @ComponentImport("salUserManager")
     UserManager userManager;
     @ComponentImport("salApplicationProperties")

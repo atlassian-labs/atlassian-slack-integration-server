@@ -1,10 +1,10 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.service;
 
-import com.atlassian.config.db.HibernateConfig;
 import com.atlassian.confluence.persistence.EntityManagerProvider;
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.SpaceResult;
 import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.confluence.spaces.SpaceStatus;
+import com.atlassian.confluence.status.service.SystemInformationService;
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.sal.api.user.UserKey;
@@ -13,6 +13,7 @@ import io.atlassian.fugue.Either;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,8 +50,8 @@ public class DefaultSpacesWithAdminPermissionProviderTest {
     private EntityManagerProvider entityManagerProvider;
     @Mock
     private EntityManager entityManager;
-    @Mock
-    private HibernateConfig hibernateConfig;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private SystemInformationService systemInformationService;
 
     @InjectMocks
     private DefaultSpacesWithAdminPermissionProvider target;
@@ -60,7 +61,7 @@ public class DefaultSpacesWithAdminPermissionProviderTest {
         when(entityManagerProvider.getEntityManager()).thenReturn(entityManager);
         when(confluenceUser.getKey()).thenReturn(userKey);
         when(userManager.isAdmin(userKey)).thenReturn(true);
-        when(hibernateConfig.isMySql()).thenReturn(false);
+        when(systemInformationService.getDatabaseInfo().getDialect()).thenReturn("PostgresDialect");
         when(entityManager.createQuery(DefaultSpacesWithAdminPermissionProvider.QUERY_ADMIN
                 + DefaultSpacesWithAdminPermissionProvider.QUERY_ORDER_LENGTH)).thenReturn(query);
         when(query.getResultList()).thenReturn(Collections.singletonList(new Object[]{"name", "key"}));
@@ -85,7 +86,7 @@ public class DefaultSpacesWithAdminPermissionProviderTest {
         when(confluenceUser.getName()).thenReturn(USER);
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userAccessor.getGroupNamesForUserName(USER)).thenReturn(Arrays.asList("PERM", " "));
-        when(hibernateConfig.isMySql()).thenReturn(false);
+        when(systemInformationService.getDatabaseInfo().getDialect()).thenReturn("PostgresDialect");
         when(entityManager.createQuery(DefaultSpacesWithAdminPermissionProvider.QUERY_WITH_GROUPS
                 + DefaultSpacesWithAdminPermissionProvider.QUERY_ORDER_LENGTH)).thenReturn(query);
         when(query.getResultList()).thenReturn(Collections.singletonList(new Object[]{"name", "key"}));
@@ -113,7 +114,7 @@ public class DefaultSpacesWithAdminPermissionProviderTest {
         when(confluenceUser.getName()).thenReturn(USER);
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userAccessor.getGroupNamesForUserName(USER)).thenReturn(Collections.emptyList());
-        when(hibernateConfig.isMySql()).thenReturn(false);
+        when(systemInformationService.getDatabaseInfo().getDialect()).thenReturn("PostgresDialect");
         when(entityManager.createQuery(DefaultSpacesWithAdminPermissionProvider.QUERY_WITH_NO_GROUPS
                 + DefaultSpacesWithAdminPermissionProvider.QUERY_ORDER_LENGTH)).thenReturn(query);
         when(query.getResultList()).thenReturn(Collections.singletonList(new Object[]{"name", "key"}));
