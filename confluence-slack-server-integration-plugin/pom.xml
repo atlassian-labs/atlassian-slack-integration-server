@@ -358,7 +358,6 @@
                             org.xml.sax,
                             net.java.ao,
                             net.java.ao.schema,
-                            net.sf.hibernate,
 
                             *;resolution:=optional
                         </Import-Package>
