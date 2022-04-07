@@ -42,6 +42,7 @@ import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -272,6 +273,16 @@ public class SlackMessageResource {
                     @Override
                     public boolean isArchived() {
                         return false;
+                    }
+
+                    @Override
+                    public ApplicationUser getArchivedBy() {
+                        return null;
+                    }
+
+                    @Override
+                    public Date getArchivedDate() {
+                        return null;
                     }
                 };
             }

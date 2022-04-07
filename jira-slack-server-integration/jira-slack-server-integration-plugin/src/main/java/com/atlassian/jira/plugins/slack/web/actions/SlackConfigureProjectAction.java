@@ -8,6 +8,8 @@ import com.atlassian.jira.plugins.slack.model.dto.ProjectToChannelConfigurationD
 import com.atlassian.jira.plugins.slack.model.event.JiraPage;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.projectconfig.util.ProjectConfigRequestCache;
+import com.atlassian.jira.security.request.RequestMethod;
+import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.util.velocity.VelocityRequestContextFactory;
 import com.atlassian.jira.web.action.ActionViewDataMappings;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
@@ -28,6 +30,7 @@ import java.util.Optional;
 /**
  * Be careful when naming actions: https://jira.atlassian.com/browse/JRASERVER-26275
  */
+@SupportedMethods(RequestMethod.GET)
 public class SlackConfigureProjectAction extends AbstractProjectAction {
     public static final String JQL_HELP_URL_PARAM = "jqlHelpUrl";
     public static final String ADVANCED_SEARCH_HELP_KEY = "advanced_search";

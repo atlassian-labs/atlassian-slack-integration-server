@@ -42,7 +42,10 @@ public class BackoffRetryInterceptorTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    Request request = new Request.Builder().url("https://example.com").build();
+    Request request = new Request.Builder()
+            .url("https://example.com")
+            .header(RequestIdInterceptor.REQ_ID_HEADER, "xyz")
+            .build();
     Response successResponse = respBuilder(200).message("msg").build();
     Response serverErrorResponse = respBuilder(500).message("msg").build();
     Response requestErrorResponse = respBuilder(400).message("msg").build();

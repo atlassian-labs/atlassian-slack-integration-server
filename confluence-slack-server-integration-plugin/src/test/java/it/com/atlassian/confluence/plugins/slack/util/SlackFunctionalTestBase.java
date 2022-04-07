@@ -40,7 +40,10 @@ public abstract class SlackFunctionalTestBase {
 
     @RegisterExtension
     protected static SlackMockServerExtension server = new SlackMockServerExtension(
-            () -> Collections.singleton(client.instance().getBaseUrl()), testNameProvider);
+            () -> {
+                String baseUrl = client.instance().getBaseUrl();
+                return Collections.singleton(baseUrl);
+            }, testNameProvider);
 
     public static final String SPACE_KEY = "IT";
 

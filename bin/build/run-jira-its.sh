@@ -2,13 +2,6 @@
 set -ex
 trap 'set +ex' EXIT
 
-TOMCAT_VERSION=${TOMCAT_VERSION:-tomcat8x}
-
-# Support Jira 8
-if [[ ${VERSION} == 8* ]] ; then
-    TESTKIT_VERSION=${TESTKIT_VERSION:-8.1.28}
-fi
-
 # Version less than or equal
 # https://stackoverflow.com/a/4024263
 verlte() {
@@ -17,6 +10,7 @@ verlte() {
 
 VERSION_ARG=$([[ -z ${VERSION} ]] && echo "" || echo "-Djira.version=${VERSION} -Dproduct.version=${VERSION}")
 TESTKIT_VERSION_ARG=$([[ -z ${TESTKIT_VERSION} ]] && echo "" || echo "-Dtestkit.version=${TESTKIT_VERSION}")
+CONTAINER_VERSION_ARG=$([[ -z ${CONTAINER_VERSION} ]] && echo "" || echo "-Dcontainer=${TESTKIT_VERSION}")
 # override Selenium version for Jira versions starting with 8.17.1
 SELENIUM_VERSION_ARG=$([[ -z ${VERSION} ]] || verlte ${VERSION} '8.17.0' && echo "" || echo "-Datlassian.selenium.version=3.2.4")
 
@@ -30,9 +24,9 @@ atlas-mvn --batch-mode verify \
   ${VERSION_ARG} \
   ${TESTKIT_VERSION_ARG} \
   ${SELENIUM_VERSION_ARG} \
+  ${CONTAINER_VERSION_ARG} \
   -Dut.test.skip=true \
   -Dit.test.skip=false \
-  -Dcontainer=${TOMCAT_VERSION} \
   -Dxvfb.enable=${XVFB_ENABLE:-true} \
   -Datlassian.plugins.enable.wait=300 \
   -Dserver=${HOST_NAME:-localhost} \

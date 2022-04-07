@@ -5,6 +5,7 @@ import com.atlassian.plugins.slack.api.SlackLinkDto;
 import com.atlassian.plugins.slack.api.client.cache.SlackResponseCache;
 import com.atlassian.plugins.slack.api.client.interceptor.BackoffRetryInterceptor;
 import com.atlassian.plugins.slack.api.client.interceptor.RateLimitRetryInterceptor;
+import com.atlassian.plugins.slack.api.client.interceptor.RequestIdInterceptor;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserManager;
@@ -68,6 +69,7 @@ public class DefaultSlackClientProviderTest {
     @Mock
     private ProxySelector proxySelector;
 
+    private RequestIdInterceptor requestIdInterceptor = new RequestIdInterceptor();
     private BackoffRetryInterceptor backoffRetryInterceptor = new BackoffRetryInterceptor();
     private RateLimitRetryInterceptor rateLimitRetryInterceptor = new RateLimitRetryInterceptor();
 
@@ -80,7 +82,8 @@ public class DefaultSlackClientProviderTest {
     @Before
     public void setUp() {
         provider = spy(new DefaultSlackClientProvider(slackLinkManager, slackUserManager, userManager, eventPublisher,
-                executorServiceHelper, backoffRetryInterceptor, rateLimitRetryInterceptor, slackResponseCache));
+                executorServiceHelper, requestIdInterceptor, backoffRetryInterceptor, rateLimitRetryInterceptor,
+                slackResponseCache));
         when(executorServiceHelper.createBoundedExecutorService()).thenReturn(executorService);
     }
 

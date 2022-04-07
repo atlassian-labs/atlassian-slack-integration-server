@@ -2,6 +2,7 @@ package it.com.atlassian.jira.plugins.slack.functional;
 
 import com.atlassian.jira.functest.rule.SkipCacheCheck;
 import it.com.atlassian.jira.plugins.slack.util.SlackFunctionalTestBase;
+import okhttp3.Response;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,9 +21,10 @@ public class SanityCheckFuncTest extends SlackFunctionalTestBase {
 
     @Test
     public void openIssuePage() {
+        Response pageHtml = client.admin().visitPage("browse/PRO-1");
         assertThat(
-                client.admin().visitPage("browse/PRO-1"),
-                success(containsString("<title>[PRO-1] This is your first task - Super Jira</title>")));
+                pageHtml,
+                success(containsString("[PRO-1] This is your first task")));
     }
 
     @Test

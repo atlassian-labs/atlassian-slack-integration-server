@@ -30,6 +30,7 @@ import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.user.Person;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageUtils;
+import com.atlassian.plugins.slack.settings.SlackSettingService;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.model.Attachment;
 import com.github.seratch.jslack.api.model.Attachment.AttachmentBuilder;
@@ -66,6 +67,9 @@ public class SlackUnfurlRenderer {
     private final RefService refService;
     private final CommitService commitService;
     private final FileService fileService;
+    private final SlackSettingService slackSettingService;
+
+    private final boolean includeImages;
 
     @Autowired
     public SlackUnfurlRenderer(final I18nResolver i18nResolver,
@@ -76,7 +80,8 @@ public class SlackUnfurlRenderer {
                                final RepositoryService repositoryService,
                                final RefService refService,
                                final CommitService commitService,
-                               final FileService fileService) {
+                               final FileService fileService,
+                               final SlackSettingService slackSettingService) {
         this.i18nResolver = i18nResolver;
         this.commentService = commentService;
         this.pullRequestService = pullRequestService;
@@ -86,6 +91,9 @@ public class SlackUnfurlRenderer {
         this.refService = refService;
         this.commitService = commitService;
         this.fileService = fileService;
+        this.slackSettingService = slackSettingService;
+
+        includeImages = Boolean.parseBoolean(System.getProperty("slack.notification.include.images", "true"));
     }
 
     /**
@@ -429,13 +437,21 @@ public class SlackUnfurlRenderer {
     private AttachmentBuilder baseMessage(final Repository repository, @Nullable final Person author) {
         AttachmentBuilder attachmentBuilder = Attachment.builder()
                 .footer(slackLinkRenderer.repoLink(repository))
-                .footerIcon(slackLinkRenderer.projectAvatarUrl(repository.getProject()))
                 .mrkdwnIn(asList("text", "fields"));
+
+        if (includeImages && slackSettingService.isInstancePublic()) {
+            attachmentBuilder.footerIcon(slackLinkRenderer.projectAvatarUrl(repository.getProject()));
+        }
+
         if (author != null) {
             attachmentBuilder = attachmentBuilder.authorName(slackLinkRenderer.userName(author))
-                    .authorLink(slackLinkRenderer.userUrl(author))
-                    .authorIcon(slackLinkRenderer.userAvatarUrl(author));
+                    .authorLink(slackLinkRenderer.userUrl(author));
+
+            if (includeImages && slackSettingService.isInstancePublic()) {
+                attachmentBuilder.authorIcon(slackLinkRenderer.userAvatarUrl(author));
+            }
         }
+
         return attachmentBuilder;
     }
 

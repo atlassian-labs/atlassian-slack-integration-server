@@ -1,16 +1,21 @@
 package com.atlassian.jira.plugins.slack.web.actions;
 
 import com.atlassian.jira.plugins.slack.manager.PluginConfigurationManager;
+import com.atlassian.jira.security.request.RequestMethod;
+import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.web.action.ActionViewDataMappings;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 import com.google.common.collect.ImmutableMap;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
 /**
  * Page of advanced settings for global stuff
  */
+@SupportedMethods(RequestMethod.GET)
+@RequiredArgsConstructor
 public class SlackEditGlobalSettings extends JiraWebActionSupport {
     public static final String ALLOW_GLOBAL_AUTOCONVERT = "allowGlobalAutoConvert";
     public static final String ALLOW_AUTOCONVERT_FOR_GUEST_CHANNELS = "allowAutoConvertInGuestChannels";
@@ -18,12 +23,6 @@ public class SlackEditGlobalSettings extends JiraWebActionSupport {
 
     protected final PluginConfigurationManager pluginConfigurationManager;
     private final PageBuilderService pageBuilderService;
-
-    public SlackEditGlobalSettings(PluginConfigurationManager pluginConfigurationManager,
-                                   PageBuilderService pageBuilderService) {
-        this.pluginConfigurationManager = pluginConfigurationManager;
-        this.pageBuilderService = pageBuilderService;
-    }
 
     @ActionViewDataMappings({SUCCESS})
     public Map<String, Object> getDataMap() {

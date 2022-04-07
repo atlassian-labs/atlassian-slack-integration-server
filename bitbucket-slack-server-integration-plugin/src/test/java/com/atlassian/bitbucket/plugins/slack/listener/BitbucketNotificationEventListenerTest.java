@@ -162,7 +162,7 @@ class BitbucketNotificationEventListenerTest {
     @InjectMocks
     private BitbucketNotificationEventListener target;
 
-    private NotificationRenderingOptions extendedOptions = new NotificationRenderingOptions(Verbosity.EXTENDED, false);
+    private NotificationRenderingOptions extendedOptions = new NotificationRenderingOptions(Verbosity.EXTENDED, false, null);
 
     private void testPullRequestBlockerCommentEvent(PullRequestCommentEvent event, TaskNotificationTypes type) {
         when(event.getComment()).thenReturn(comment);
@@ -234,7 +234,7 @@ class BitbucketNotificationEventListenerTest {
         testPullRequestEvent(event, type, "PR title", reviewers);
     }
 
-    void testPullRequestEvent(PullRequestEvent event, PullRequestNotificationTypes type, String prTitle, boolean reviewers) {
+    void testPullRequestEvent(PullRequestEvent event, PullRequestNotificationTypes type, String prTitle, boolean isReviewersUpdate) {
         when(event.getPullRequest()).thenReturn(pullRequest);
         when(pullRequest.getTitle()).thenReturn(prTitle);
         when(pullRequest.getToRef()).thenReturn(pullRequestRef);
@@ -250,8 +250,8 @@ class BitbucketNotificationEventListenerTest {
                 captor.capture());
 
         captor.getValue().apply(extendedOptions);
-        if (reviewers) {
-            verify(slackNotificationRenderer).getReviewersPullRequestMessage((PullRequestReviewersUpdatedEvent) event, true);
+        if (isReviewersUpdate) {
+            verify(slackNotificationRenderer).getReviewersPullRequestMessage(pullRequest, user, true, true);
         } else {
             verify(slackNotificationRenderer).getPullRequestMessage(event);
         }

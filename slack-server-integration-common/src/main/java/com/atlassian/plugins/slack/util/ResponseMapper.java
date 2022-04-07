@@ -8,6 +8,8 @@ import org.codehaus.jackson.map.PropertyNamingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ResponseMapper {
@@ -21,16 +23,23 @@ public class ResponseMapper {
     public static <T extends SlackApiResponse> Either<ErrorResponse, T> toEither(String id, ResponseSupplier<T> supplier) {
         try {
             T resp = supplier.get();
+
+            log.trace("Slack response to {}: {}", id, resp);
+
             if (resp.isOk()) {
                 log.info("Successful request to Slack: {}", id);
                 return Either.right(resp);
             } else {
                 final String error = resp.getError();
                 // handle gracefully errors that are not really a problem
-                if ("already_in_channel".equals(error)) {
-                    log.debug("Slack returned an unsuccessful response to {}: {}", id, error);
-                } else {
-                    log.warn("Slack returned an unsuccessful response to {}: {}", id, error);
+                final boolean isExpectedError = "already_in_channel".equals(error);
+                if (!isExpectedError) {
+                    final Map<String, String> errorMap = new HashMap<>();
+                    errorMap.put("error", error);
+                    errorMap.put("needed", resp.getNeeded());
+                    errorMap.put("provided", resp.getProvided());
+                    errorMap.put("warning", resp.getWarning());
+                    log.warn("Slack returned an unsuccessful response to {}: {}", id, errorMap);
                 }
                 return Either.left(new ErrorResponse(resp));
             }

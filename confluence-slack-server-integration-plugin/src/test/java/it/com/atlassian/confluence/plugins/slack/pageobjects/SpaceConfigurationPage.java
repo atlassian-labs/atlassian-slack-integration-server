@@ -3,6 +3,7 @@ package it.com.atlassian.confluence.plugins.slack.pageobjects;
 import com.atlassian.confluence.webdriver.pageobjects.page.ConfluenceAbstractPage;
 import com.atlassian.pageobjects.elements.ElementBy;
 import com.atlassian.pageobjects.elements.PageElement;
+import com.atlassian.pageobjects.elements.query.Poller;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -46,5 +47,9 @@ public class SpaceConfigurationPage extends ConfluenceAbstractPage {
     @Override
     public String getUrl() {
         return "/spaces/slack2.action?key=" + spaceKey + "&teamId=" + teamId;
+    }
+
+    public void waitForPageToBeLoaded() {
+        Poller.waitUntilTrue("Configuration page failed to load", configurationSection.timed().isVisible());
     }
 }
