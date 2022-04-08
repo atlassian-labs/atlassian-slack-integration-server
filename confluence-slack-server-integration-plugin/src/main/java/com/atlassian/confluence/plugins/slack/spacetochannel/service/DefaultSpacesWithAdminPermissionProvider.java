@@ -133,9 +133,13 @@ public class DefaultSpacesWithAdminPermissionProvider implements SpacesWithAdmin
         return builder.build();
     }
 
+    /**
+     * Reference for dialect names :
+     * https://docs.jboss.org/hibernate/stable/annotations/api/org/hibernate/dialect/package-summary.html
+     */
     private String queryOrderBy() {
         String dialect = systemInformationService.getDatabaseInfo().getDialect();
-        if (dialect != null && dialect.matches(".*?MySQL.*?Dialect$")) {
+        if (dialect != null && dialect.toLowerCase().contains("sqlserver")) {
             return QUERY_ORDER_LENGTH_MSSQL;
         } else {
             return QUERY_ORDER_LENGTH;
