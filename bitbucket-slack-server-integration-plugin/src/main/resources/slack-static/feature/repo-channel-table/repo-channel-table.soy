@@ -248,6 +248,12 @@
                     {param repository: $repository/}
                 {/call}
                 {call .renderItem}
+                    {param notificationKey: 'FileEdited'/}
+                    {param label: getText('bitbucket.plugins.slack.notification.FileEdited')/}
+                    {param channelConfig: $channelConfig /}
+                    {param repository: $repository/}
+                {/call}
+                {call .renderItem}
                     {param notificationKey: 'CommitComment'/}
                     {param label: getText('bitbucket.plugins.slack.notification.CommitCommentAdded')/}
                     {param channelConfig: $channelConfig /}

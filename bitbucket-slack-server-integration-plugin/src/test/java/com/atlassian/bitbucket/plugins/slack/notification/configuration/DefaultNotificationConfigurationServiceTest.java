@@ -51,7 +51,7 @@ public class DefaultNotificationConfigurationServiceTest {
 
         verify(permissionService).validateForRepository(repository, Permission.REPO_ADMIN);
         verify(dao).delete(request);
-        verify(eventPublisher, times(31)).publish(any(RepositoryNotificationDisabledAnalyticEvent.class));
+        verify(eventPublisher, times(32)).publish(any(RepositoryNotificationDisabledAnalyticEvent.class));
     }
 
     @Test

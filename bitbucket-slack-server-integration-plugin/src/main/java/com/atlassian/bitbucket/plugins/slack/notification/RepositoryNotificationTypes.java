@@ -6,6 +6,7 @@ import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentAddedEvent;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentDeletedEvent;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentEditedEvent;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentRepliedEvent;
+import com.atlassian.bitbucket.event.content.FileEditedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryPushEvent;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 public enum RepositoryNotificationTypes {
     PUSHED("CommitPushed"),
+    FILE_EDITED("FileEdited"),
     TAG_CREATED("TagCreated"),
     TAG_DELETED("TagDeleted"),
     BRANCH_CREATED("BranchCreated"),
@@ -32,6 +34,7 @@ public enum RepositoryNotificationTypes {
             ImmutableMap.<Class<? extends RepositoryEvent>, RepositoryNotificationTypes>builder()
                     .put(RepositoryForkedEvent.class, RepositoryNotificationTypes.FORKED)
                     .put(RepositoryPushEvent.class, RepositoryNotificationTypes.PUSHED)
+                    .put(FileEditedEvent.class, RepositoryNotificationTypes.FILE_EDITED)
                     .put(TagCreatedEvent.class, RepositoryNotificationTypes.TAG_CREATED)
                     .put(TagDeletedEvent.class, RepositoryNotificationTypes.TAG_DELETED)
                     .put(BranchCreatedEvent.class, RepositoryNotificationTypes.BRANCH_CREATED)

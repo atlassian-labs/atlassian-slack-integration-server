@@ -2,6 +2,7 @@ package com.atlassian.bitbucket.plugins.slack.listener;
 
 import com.atlassian.bitbucket.comment.AbstractCommentableVisitor;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentEvent;
+import com.atlassian.bitbucket.event.content.FileEditedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestOpenedEvent;
@@ -177,8 +178,11 @@ public class BitbucketNotificationEventListener {
                             event.getRepository(),
                             correctedType.getKey(),
                             Collections::emptySet,
-                            options -> ofNullable(slackNotificationRenderer.getPushMessage(
-                                    event, refChange, options.getVerbosity())));
+                            options -> correctedType == RepositoryNotificationTypes.FILE_EDITED
+                                    ? ofNullable(slackNotificationRenderer.getFileEditedMessage(
+                                            (FileEditedEvent) event, refChange, options.getVerbosity()))
+                                    : ofNullable(slackNotificationRenderer.getPushMessage(event, refChange,
+                                            options.getVerbosity())));
                 }));
     }
 
