@@ -8,12 +8,14 @@ import com.atlassian.confluence.core.ContentPermissionManager;
 import com.atlassian.confluence.languages.LocaleManager;
 import com.atlassian.confluence.mail.notification.NotificationManager;
 import com.atlassian.confluence.pages.PageManager;
+import com.atlassian.confluence.persistence.EntityManagerProvider;
 import com.atlassian.confluence.search.v2.SearchManager;
 import com.atlassian.confluence.security.PermissionManager;
 import com.atlassian.confluence.security.SpacePermissionManager;
 import com.atlassian.confluence.setup.settings.SettingsManager;
 import com.atlassian.confluence.spaces.SpaceLogoManager;
 import com.atlassian.confluence.spaces.SpaceManager;
+import com.atlassian.confluence.status.service.SystemInformationService;
 import com.atlassian.confluence.user.PersonalInformationManager;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.confluence.util.i18n.I18NBeanFactory;
@@ -37,7 +39,6 @@ import com.atlassian.sal.api.web.context.HttpContext;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
-import net.sf.hibernate.SessionFactory;
 
 @SuppressWarnings("unused")
 public class ComponentImports {
@@ -76,7 +77,9 @@ public class ComponentImports {
     @ComponentImport
     ActiveObjects ao;
     @ComponentImport
-    SessionFactory sessionFactory;
+    EntityManagerProvider entityManagerProvider;
+    @ComponentImport
+    SystemInformationService systemInformationService;
     @ComponentImport("salUserManager")
     UserManager userManager;
     @ComponentImport("salApplicationProperties")
