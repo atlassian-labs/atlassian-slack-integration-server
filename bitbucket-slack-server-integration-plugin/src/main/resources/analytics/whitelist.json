@@ -20,7 +20,7 @@
       "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
         "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
         "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
-        "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed",
+        "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed", "FileEdited",
         "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
         "TagDeleted", "BranchCreated", "BranchDeleted"]
     }
@@ -30,7 +30,7 @@
       "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
         "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
         "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
-        "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed",
+        "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed", "FileEdited",
         "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
         "TagDeleted", "BranchCreated", "BranchDeleted"]
     }
@@ -42,7 +42,7 @@
     "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
       "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
       "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
-      "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed",
+      "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed", "FileEdited",
       "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
       "TagDeleted", "BranchCreated", "BranchDeleted"]
   }],

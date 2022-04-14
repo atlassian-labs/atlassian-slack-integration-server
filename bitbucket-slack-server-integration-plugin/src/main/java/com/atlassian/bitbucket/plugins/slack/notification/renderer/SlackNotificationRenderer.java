@@ -7,11 +7,11 @@ import com.atlassian.bitbucket.commit.CommitRequest;
 import com.atlassian.bitbucket.commit.CommitService;
 import com.atlassian.bitbucket.commit.CommitsBetweenRequest;
 import com.atlassian.bitbucket.event.commit.CommitDiscussionCommentEvent;
+import com.atlassian.bitbucket.event.content.FileEditedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestOpenedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestParticipantUnapprovedEvent;
-import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryRefsChangedEvent;
 import com.atlassian.bitbucket.permission.Permission;
@@ -48,7 +48,6 @@ import com.github.seratch.jslack.api.model.block.composition.PlainTextObject;
 import com.github.seratch.jslack.api.model.block.element.BlockElement;
 import com.github.seratch.jslack.api.model.block.element.ButtonElement;
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.ObjectUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static com.atlassian.bitbucket.comment.CommentSeverity.BLOCKER;
@@ -213,6 +211,34 @@ public class SlackNotificationRenderer {
         if (verbosity == Verbosity.BASIC) {
             fullMessage = text;
         } else {
+            final String formattedCommits = slackLinkRenderer.formatCommitList(commits);
+            fullMessage = text + "\n" + slackLinkRenderer.slackMultilineQuote(formattedCommits);
+        }
+        return standardBlockMessage(text, fullMessage);
+    }
+
+    public ChatPostMessageRequestBuilder getFileEditedMessage(final FileEditedEvent event,
+                                                              final RefChange refChange,
+                                                              final Verbosity verbosity) {
+        final Repository repository = event.getRepository();
+        final String userLink = slackLinkRenderer.userLink(event.getUser());
+        final String filePath = "`" + event.getPath() + "`";
+        final ResolveRefRequest refRequest = new ResolveRefRequest.Builder(repository)
+                .refId(refChange.getRef().getId())
+                .build();
+        final Ref ref = refService.resolveRef(refRequest);
+        final String refLink = ref == null
+                ? "`" + refChange.getRef().getDisplayId() + "`"
+                : slackLinkRenderer.refLink(repository, ref);
+        final String repoLink = slackLinkRenderer.repoLink(repository);
+        final String text = i18nResolver.getText("slack.activity.file.edited", userLink, filePath, refLink, repoLink);
+
+        final String fullMessage;
+        if (verbosity == Verbosity.BASIC) {
+            fullMessage = text;
+        } else {
+            final Page<Commit> commitsPage = getAddedCommitsToRender(refChange, repository);
+            final List<Commit> commits = newArrayList(commitsPage.getValues());
             final String formattedCommits = slackLinkRenderer.formatCommitList(commits);
             fullMessage = text + "\n" + slackLinkRenderer.slackMultilineQuote(formattedCommits);
         }
