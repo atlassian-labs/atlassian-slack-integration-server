@@ -26,8 +26,6 @@ import static org.mockito.Mockito.when;
 public class JqlIndexSearcherTest {
     @Mock
     private SearchProvider searchProvider;
-    @Mock
-    private IssueIndexingService indexingService;
 
     @Mock
     private ApplicationUser applicationUser;
@@ -52,7 +50,6 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, applicationUser, query);
 
         assertThat(result, is(true));
-        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 
     @Test
@@ -62,7 +59,6 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, applicationUser, query);
 
         assertThat(result, is(false));
-        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 
     @Test
@@ -72,7 +68,6 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, null, query);
 
         assertThat(result, is(true));
-        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 
     @Test
@@ -82,6 +77,5 @@ public class JqlIndexSearcherTest {
         boolean result = target.doesIssueMatchQuery(issue, null, query);
 
         assertThat(result, is(false));
-        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 }
