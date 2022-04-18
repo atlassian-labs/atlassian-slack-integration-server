@@ -1,9 +1,6 @@
 package com.atlassian.jira.plugins.slack.bridge.jql.impl;
 
 import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.index.IndexException;
-import com.atlassian.jira.issue.index.IssueIndexingParams;
-import com.atlassian.jira.issue.index.IssueIndexingService;
 import com.atlassian.jira.issue.index.ThreadLocalSearcherCache;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchProvider;
@@ -13,12 +10,11 @@ import com.atlassian.jira.plugins.slack.bridge.jql.JqlSearcher;
 import com.atlassian.jira.plugins.slack.compat.FixRequestTypeClauseVisitor;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.util.ImportUtils;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
@@ -27,25 +23,16 @@ import javax.annotation.Nullable;
  * This jql index searcher commits the issue to the FS and runs the query.
  */
 @Service
+@RequiredArgsConstructor
 public class JqlIndexSearcher implements JqlSearcher {
     private static final Logger log = LoggerFactory.getLogger(JqlIndexSearcher.class);
 
     private final SearchProvider searchProvider;
-    private final IssueIndexingService indexingService;
-
-    @Autowired
-    public JqlIndexSearcher(final SearchProvider searchProvider,
-                            final IssueIndexingService indexingService) {
-        this.searchProvider = searchProvider;
-        this.indexingService = indexingService;
-    }
 
     @Override
     public Boolean doesIssueMatchQuery(final Issue issue,
                                        @Nullable final ApplicationUser caller,
                                        final Query query) throws SearchException {
-        reIndexIssue(issue);
-
         try {
             ThreadLocalSearcherCache.startSearcherContext();
             long searchCount;
@@ -64,19 +51,6 @@ public class JqlIndexSearcher implements JqlSearcher {
             throw new RuntimeException(e);
         } finally {
             ThreadLocalSearcherCache.stopAndCloseSearcherContext();
-        }
-    }
-
-    private void reIndexIssue(final Issue issue) {
-        final boolean indexIssues = ImportUtils.isIndexIssues();
-        ImportUtils.setIndexIssues(true);
-
-        try {
-            indexingService.reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
-        } catch (IndexException e) {
-            log.error("An error occurred during the issue {} reindex", issue.getId(), e);
-        } finally {
-            ImportUtils.setIndexIssues(indexIssues);
         }
     }
 
