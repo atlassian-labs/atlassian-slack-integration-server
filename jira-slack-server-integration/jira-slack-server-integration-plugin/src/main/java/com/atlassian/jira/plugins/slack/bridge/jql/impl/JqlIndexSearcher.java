@@ -15,6 +15,7 @@ import com.atlassian.query.clause.Clause;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
  * This jql index searcher commits the issue to the FS and runs the query.
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class JqlIndexSearcher implements JqlSearcher {
     private static final Logger log = LoggerFactory.getLogger(JqlIndexSearcher.class);
 

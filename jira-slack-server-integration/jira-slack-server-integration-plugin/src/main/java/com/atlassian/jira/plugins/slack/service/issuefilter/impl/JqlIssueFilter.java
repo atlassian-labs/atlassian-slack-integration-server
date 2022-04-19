@@ -28,7 +28,7 @@ import java.util.Optional;
  * We validate if a query applies to the following filter
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class JqlIssueFilter implements IssueFilter {
     public static final int ISSUE_SEARCH_RETRY_DELAY_SECONDS = 2;
 
