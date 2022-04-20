@@ -3,6 +3,8 @@ package com.atlassian.jira.plugins.slack.service.issuefilter.impl;
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.index.IssueIndexingParams;
+import com.atlassian.jira.issue.index.IssueIndexingService;
 import com.atlassian.jira.jql.builder.ConditionBuilder;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
@@ -31,6 +33,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @PrepareForTest({JqlIssueFilter.class, JqlQueryBuilder.class})
@@ -41,6 +44,8 @@ public class JqlIssueFilterTest {
     private SearchService searchService;
     @Mock
     private JqlSearcher searcher;
+    @Mock
+    private IssueIndexingService indexingService;
 
     @Mock
     private ApplicationUser applicationUser;
@@ -93,10 +98,12 @@ public class JqlIssueFilterTest {
         when(jqlClauseBuilder.issue()).thenReturn(conditionBuilder);
         when(conditionBuilder.eq(issue.getKey())).thenReturn(jqlClauseBuilder);
         when(jqlClauseBuilder.buildQuery()).thenReturn(newQuery);
-
         when(searcher.doesIssueMatchQuery(issue, null, newQuery)).thenReturn(true);
 
-        assertThat(target.matchesJql("Q", issue, Optional.of(applicationUser)), is(true));
+        boolean matchingResult = target.matchesJql("Q", issue, Optional.of(applicationUser));
+
+        assertThat(matchingResult, is(true));
+        verify(indexingService).reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
     }
 
 }

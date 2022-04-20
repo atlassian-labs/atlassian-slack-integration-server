@@ -2,6 +2,9 @@ package com.atlassian.jira.plugins.slack.service.issuefilter.impl;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.index.IndexException;
+import com.atlassian.jira.issue.index.IssueIndexingParams;
+import com.atlassian.jira.issue.index.IssueIndexingService;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.plugins.slack.bridge.jql.JqlSearcher;
@@ -9,8 +12,10 @@ import com.atlassian.jira.plugins.slack.model.EventFilterType;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.service.issuefilter.IssueFilter;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.util.ImportUtils;
 import com.atlassian.query.Query;
 import com.google.common.base.Strings;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,7 @@ import java.util.Optional;
  * We validate if a query applies to the following filter
  */
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class JqlIssueFilter implements IssueFilter {
     public static final int ISSUE_SEARCH_RETRY_DELAY_SECONDS = 2;
 
@@ -30,13 +36,7 @@ public class JqlIssueFilter implements IssueFilter {
 
     private final SearchService searchService;
     private final JqlSearcher searcher;
-
-    @Autowired
-    public JqlIssueFilter(final SearchService searchService,
-                          final JqlSearcher searcher) {
-        this.searcher = searcher;
-        this.searchService = searchService;
-    }
+    private final IssueIndexingService indexingService;
 
     @Override
     public boolean apply(final JiraIssueEvent event, final @NotNull String value) {
@@ -74,10 +74,15 @@ public class JqlIssueFilter implements IssueFilter {
         final SearchService.ParseResult parseResult = searchService.parseQuery(caller.orElse(null), jql);
         Boolean result = false;
         if (parseResult.isValid()) {
+            // reindex the issue just once regardless of the number of queries to cache to improve performance
+            // each reindex fires an event, that may be handled Jira or in other apps
+            // too many reindex queries make Jira slower
+            reIndexIssue(issue);
 
             // check if the issue is indexed and wait otherwise
             int i = 0;
-            while (i++ < 3) {
+            int maxAttempts = 3;
+            while (i++ < maxAttempts) {
                 final Query query = JqlQueryBuilder.newBuilder()
                         .where()
                         .and()
@@ -91,8 +96,8 @@ public class JqlIssueFilter implements IssueFilter {
                 }
 
                 try {
-                    log.debug("Issue key={} is not found in index. Attempt #{}. Retrying in {} seconds", issue.getKey(), i,
-                            ISSUE_SEARCH_RETRY_DELAY_SECONDS);
+                    log.debug("Issue key={} is not found in index. Attempt #{}.{}", issue.getKey(), i,
+                            i < maxAttempts ? " Retrying in " + ISSUE_SEARCH_RETRY_DELAY_SECONDS + " seconds" : "");
                     Thread.sleep(ISSUE_SEARCH_RETRY_DELAY_SECONDS * 1000);
                 } catch (InterruptedException e) {
                     // no-op
@@ -114,6 +119,23 @@ public class JqlIssueFilter implements IssueFilter {
         }
 
         return result;
+    }
+
+    private void reIndexIssue(final Issue issue) {
+        final boolean wasIndexingIssues = ImportUtils.isIndexIssues();
+        if (!wasIndexingIssues) {
+            ImportUtils.setIndexIssues(true);
+        }
+
+        try {
+            indexingService.reIndex(issue, IssueIndexingParams.INDEX_ISSUE_ONLY);
+        } catch (IndexException e) {
+            log.error("An error occurred during the issue key={} reindex", issue.getKey(), e);
+        } finally {
+            if (!wasIndexingIssues) {
+                ImportUtils.setIndexIssues(false);
+            }
+        }
     }
 
     @Override
