@@ -10,6 +10,7 @@ import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.RetryUser;
 import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
+import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.model.Message;
 import io.atlassian.fugue.Either;
@@ -64,7 +65,7 @@ public class SendNotificationTaskTest {
     private Message message;
 
     @Captor
-    private ArgumentCaptor<Function<SlackClient, Optional<Message>>> loaderCaptor;
+    private ArgumentCaptor<Function<SlackClient, Either<ErrorResponse, Message>>> loaderCaptor;
     @Captor
     private ArgumentCaptor<RetryUser> retryUserCaptor1;
     @Captor
@@ -109,7 +110,7 @@ public class SendNotificationTaskTest {
         verify(retryLoaderHelper).retryWithUserTokens(
                 same(client), loaderCaptor.capture(), retryUserCaptor1.capture(), retryUserCaptor2.capture());
 
-        assertThat(loaderCaptor.getValue().apply(client), is(Optional.of(message)));
+        assertThat(loaderCaptor.getValue().apply(client).toOptional(), is(Optional.of(message)));
 
         retryUserCaptor1.getValue().withClient(client);
         verify(client, never()).withInstallerUserToken();
