@@ -86,7 +86,7 @@ public class SendNotificationTask implements Callable<Void> {
 
                     retryLoaderHelper.retryWithUserTokens(
                             client,
-                            localClient -> localClient.postMessage(message.getMessageRequest()).toOptional(),
+                            localClient -> localClient.postMessage(message.getMessageRequest()),
                             RetryUser.botUser(),
                             RetryUser.userKey(message.getConfigurationOwner()));
                 }

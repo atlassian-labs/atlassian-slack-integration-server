@@ -81,7 +81,7 @@ public class ErrorResponse {
 
     @Override
     public String toString() {
-        return "ResourceError{" +
+        return "ErrorResponse{" +
                 "message=" + message +
                 ", statusCode=" + statusCode +
                 '}';
