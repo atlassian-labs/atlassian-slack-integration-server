@@ -7,6 +7,7 @@ import com.atlassian.plugins.slack.api.client.cache.SlackResponseCache;
 import com.atlassian.plugins.slack.api.client.interceptor.BackoffRetryInterceptor;
 import com.atlassian.plugins.slack.api.client.interceptor.RateLimitRetryInterceptor;
 import com.atlassian.plugins.slack.api.client.interceptor.RequestIdInterceptor;
+import com.atlassian.plugins.slack.api.client.jslack.PatchedSlackHttpClient;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserManager;
@@ -99,7 +100,7 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
     @Override
     public SlackClient withLink(final SlackLink link) {
         checkNotNull(link, "link cannot be null");
-        return new DefaultSlackClient(new SlackHttpClient(
+        return new DefaultSlackClient(new PatchedSlackHttpClient(
                 client.get()), link, slackUserManager, userManager, eventPublisher, slackResponseCache);
     }
 
@@ -107,13 +108,13 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
     public Either<Throwable, SlackClient> withTeamId(final String teamId) {
         return slackLinkManager
                 .getLinkByTeamId(teamId)
-                .map(link -> new DefaultSlackClient(new SlackHttpClient(
+                .map(link -> new DefaultSlackClient(new PatchedSlackHttpClient(
                         client.get()), link, slackUserManager, userManager, eventPublisher, slackResponseCache));
     }
 
     @Override
     public SlackLimitedClient withoutCredentials() {
-        return new DefaultSlackLimitedClient(Slack.getInstance(new SlackHttpClient(client.get())));
+        return new DefaultSlackLimitedClient(Slack.getInstance(new PatchedSlackHttpClient(client.get())));
     }
 
     @Override
@@ -195,7 +196,6 @@ public class DefaultSlackClientProvider implements SlackClientProvider, Disposab
             if (forceHttp1) {
                 builder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
             }
-
 
             final OkHttpClient client = builder.build();
             if (log.isDebugEnabled()) {
