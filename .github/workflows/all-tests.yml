@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
-      - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
-      - run: echo 'Head commit message [${{ github.event.head_commit.message }}].'
+      - run: echo "Github event inputs [${{ toJson(github.event.inputs) }}]."
+      - run: echo "Head commit message [${{ github.event.head_commit.message }}]."
 
   unit-tests:
     name: Unit Tests
