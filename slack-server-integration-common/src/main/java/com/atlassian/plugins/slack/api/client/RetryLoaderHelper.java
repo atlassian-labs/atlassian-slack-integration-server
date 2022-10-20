@@ -32,17 +32,6 @@ public class RetryLoaderHelper {
                 if (either.isRight()) {
                     return either.toOptional();
                 }
-
-                // an error happened
-                ErrorResponse errorResponse = either.left().get();
-                Throwable exception = errorResponse.getException();
-
-                // error parsing unsupported block ('rich_text' or other); ignore it and stop retrying
-                // TODO: remove this workaround when REST client is upgraded to stop failing on unknown blocks
-                if (exception instanceof JsonParseException &&
-                        exception.getMessage().contains("Unsupported layout block type")) {
-                    return Optional.empty();
-                }
                 // else some other error happened; keep retrying
             }
         }
