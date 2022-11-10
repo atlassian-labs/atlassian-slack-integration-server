@@ -7,7 +7,7 @@ case "$1" in
     echo "PLUGIN=jira-slack-server-integration/jira-slack-server-integration-plugin" >> $GITHUB_ENV
     ;;
   confluence)
-    echo "PLUGIN=confluence-slack-server-integration-plugin" >> $GITHUB_ENV
+    echo "PLUGIN=confluence-slack-integration/confluence-slack-server-integration-plugin" >> $GITHUB_ENV
     ;;
   bitbucket)
     echo "PLUGIN=bitbucket-slack-server-integration-plugin" >> $GITHUB_ENV

@@ -23,19 +23,20 @@ jobs:
     timeout-minutes: 15
     steps:
       - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
           java-version: ${{ github.event.inputs.java-version }}
+          distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository/com/atlassian/jira
           key: maven-integration-jira-${{ github.event.inputs.product-version }}
@@ -44,8 +45,8 @@ jobs:
           VERSION=${{ github.event.inputs.product-version }} \
           TESTKIT_VERSION=${{ github.event.inputs.testkit-version }} \
           bin/build/run-jira-its.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: webdriver-screenshots-jira-${{ github.event.inputs.product-version }}-java-${{ matrix.java-version }}
+          name: webdriver-screenshots-jira-${{ github.event.inputs.product-version }}-java-${{ github.event.inputs.java-version }}
           path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**

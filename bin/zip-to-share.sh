@@ -10,7 +10,7 @@ echo "Compressing project files to share with customers, if we're asked..."
         zip -vr target/${filename} \
             bin/ \
             bitbucket-slack-server-integration-plugin/ \
-            confluence-slack-server-integration-plugin/ \
+            confluence-slack-integration/ \
             jira-slack-server-integration/ \
             slack-server-integration-common/ \
             slack-server-integration-test-common/ \

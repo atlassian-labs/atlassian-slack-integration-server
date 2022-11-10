@@ -6,6 +6,6 @@
         -Datlassian.dev.mode=true \
         -Dmaven.test.skip=true \
         "$@" \
-        -pl confluence-slack-server-integration-plugin \
+        -pl confluence-slack-integration/confluence-slack-server-integration-plugin \
         | tee confluence.log
 )

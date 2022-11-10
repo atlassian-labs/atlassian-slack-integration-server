@@ -35,6 +35,7 @@ import com.github.seratch.jslack.api.model.User;
 import com.github.seratch.jslack.common.json.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -83,9 +84,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.replaceEachRepeatedly;
 
+@Slf4j
 @SuppressWarnings("WeakerAccess")
 public class SlackMockServer {
-    private static final Logger log = LoggerFactory.getLogger(SlackMockServer.class);
     public static final String STATIC_BASE_URL = "http://example.com/context";
     private static final String STATIC_BASE_URL_ENCODED = "http%3A%2F%2Fexample.com%2Fcontext";
 
@@ -169,7 +170,10 @@ public class SlackMockServer {
             final String body = request.getBody().readUtf8();
             final RequestHistoryItem historyItem = new RequestHistoryItem(
                     request, replaceRegularAndEncodedBaseUrl(body));
-            final boolean isOauthAccess = "oauth.access".equals(historyItem.apiMethod());
+            final String apiMethod = historyItem.apiMethod();
+            log.debug("Received a call to apiMethod {}", apiMethod);
+
+            final boolean isOauthAccess = "oauth.access".equals(apiMethod);
             final String reqTag = defaultString(historyItem.tag());
 
             try {
@@ -195,7 +199,7 @@ public class SlackMockServer {
                     return error(401, "invalid_auth");
                 }
 
-                switch (historyItem.apiMethod()) {
+                switch (apiMethod) {
                     case AUTH_TEST:
                         return handleAuthTest(team, user);
                     case USERS_CONVERSATIONS:

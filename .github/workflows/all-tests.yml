@@ -13,6 +13,10 @@ on:
         description: Jobs to run (comma-separated, defaults to all)
         required: false
 
+# override Maven from Plugin SDK as it is too old to run Confluence 8
+env:
+  ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn
+
 jobs:
   log-params:
     name: Log Params
@@ -21,36 +25,40 @@ jobs:
     steps:
       - run: echo "Github event inputs [${{ toJson(github.event.inputs) }}]."
       - run: echo "Head commit message [${{ github.event.head_commit.message }}]."
+      # check path to bundled Maven executable; it should be then used in ATLAS_MVN
+      - run: mvn -version
 
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # around 800 Mb of dependencies need to be loaded; it may take long first time until it's cached
+    timeout-minutes: 30
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         java-version: [8, 11]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }}
+          distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: maven-unit
       - run: bin/build/run-unit-tests.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: unit-tests-coverage-java-${{ matrix.java-version }}
           path: '**/target/site/jacoco/**'
 
   integration-tests-jira:
-    name: Integration Tests - Jira
+    name: Jira
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')
@@ -61,69 +69,74 @@ jobs:
         jira-version: [8.9.0, 9.0.0-m0008]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }}
+          distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository/com/atlassian/jira
           key: maven-integration-jira-${{ matrix.jira-version }}
       - run: bin/build/install-common-modules.sh
       - run: VERSION=${{ matrix.jira-version }} bin/build/run-jira-its.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: webdriver-screenshots-jira-${{ matrix.jira-version }}
           path: jira-slack-server-integration/jira-slack-server-integration-plugin/target/webdriverTests/**
 
-  integration-tests-confluence-7:
-    name: Integration Tests - Confluence
+  integration-tests-confluence:
+    name: Confluence
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence-6')
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence')
     needs: unit-tests
     strategy:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
         java-version: [8, 11]
-        confluence-version: [7.4.14, 7.15.0]
+        confluence-version: [7.10.0, 8.0.0-m90]
+        exclude:
+          - java-version: 8
+            confluence-version: 8.0.0-m90 # Confluence 8 doesn't support Java 8 anymore
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }}
+          distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository/com/atlassian/confluence
           key: maven-integration-confluence-${{ matrix.confluence-version }}
       - run: bin/build/install-common-modules.sh
       - run: VERSION=${{ matrix.confluence-version }} bin/build/run-confluence-its.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: webdriver-screenshots-confluence-${{ matrix.confluence-version }}-java-${{ matrix.java-version }}
           path: confluence-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-bitbucket:
-    name: Integration Tests - Bitbucket
+    name: Bitbucket
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
@@ -134,25 +147,26 @@ jobs:
         bitbucket-version: [7.0.0, 8.0.0-breakit-m13]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java-version }}
+          distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.m2/repository/com/atlassian/bitbucket
           key: maven-integration-bitbucket-${{ matrix.bitbucket-version }}
       - run: bin/build/install-common-modules.sh
       - run: VERSION=${{ matrix.bitbucket-version }} bin/build/run-bitbucket-its.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: webdriver-screenshots-bitbucket-${{ matrix.bitbucket-version }}-java-${{ matrix.java-version }}
