@@ -13,6 +13,10 @@ on:
         description: Confluence version to run tests against
         required: true
 
+# override Maven from Plugin SDK as it is too old to run Confluence 8
+env:
+  ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn
+
 jobs:
   integration-tests-confluence:
     name: Confluence Integration Tests

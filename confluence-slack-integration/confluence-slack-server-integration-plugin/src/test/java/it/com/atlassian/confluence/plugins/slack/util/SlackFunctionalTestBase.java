@@ -91,18 +91,11 @@ public abstract class SlackFunctionalTestBase {
     }
 
     protected void createTestSpace() {
-        /*final AuthenticatedWebResourceProvider prov = AuthenticatedWebResourceProvider.createWithNewClient(client.instance().getBaseUrl());
-        prov.setAuthContext(ADMIN.getUsername(), ADMIN.getPassword().toCharArray());
-        final RemoteSpaceServiceImpl spaceService = new RemoteSpaceServiceImpl(prov, MoreExecutors.newDirectExecutorService());
-        final Space testSpace = Space.builder().name("IT Space").key(SPACE_KEY).build();
-        if (spaceService.find().withKeys(SPACE_KEY).fetchOne().claim().isEmpty()) {
-            spaceService.create(testSpace, false).claim();
-        }*/
-
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor((Chain chain) -> {
-                    String credential = Credentials.basic("admin", "admin");
-                    Request authenticatedReq = chain.request().newBuilder().header("Authorization", credential)
+                    String credentials = Credentials.basic("admin", "admin");
+                    Request authenticatedReq = chain.request().newBuilder()
+                            .header("Authorization", credentials)
                             .build();
                     return chain.proceed(authenticatedReq);
                 }).build();
