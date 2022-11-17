@@ -95,10 +95,10 @@ public class DefaultAttachmentBuilder implements AttachmentBuilder {
                     getSlackPrettyDate(content.getLastModificationDate().getTime()),
                     userLink(lastModifier));
 
-            final boolean creatorIsLastModifier = creator != null
+            final boolean isCreatorLastModifier = creator != null
                     && lastModifier != null
                     && creator.getKey().equals(lastModifier.getKey());
-            if (creatorIsLastModifier) {
+            if (isCreatorLastModifier) {
                 return slackUpdatedTimestamp;
             } else {
                 return slackPublishedTimestamp + " | " + slackUpdatedTimestamp;
