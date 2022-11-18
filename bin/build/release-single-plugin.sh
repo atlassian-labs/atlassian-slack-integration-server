@@ -8,7 +8,8 @@ DEVELOPMENT_VERSION_ARG=$([[ -z $DEVELOPMENT_VERSION ]] && echo "" || echo "-Dde
 MAVEN_HOME=$(atlas-version | grep 'ATLAS Maven Home' | grep -oE '/.+$')
 
 # atlas-mvn or atlas-release fails with "Unknown lifecycle phase ci]" error
-$MAVEN_HOME/bin/mvn -gs ${MAVEN_HOME}/conf/settings.xml release:prepare release:perform \
+#  so let's use mvn executable directly here
+$ATLAS_MVN -gs ${MAVEN_HOME}/conf/settings.xml release:prepare release:perform \
     --show-version \
     --batch-mode \
     -Dmaven.test.skip=true \
