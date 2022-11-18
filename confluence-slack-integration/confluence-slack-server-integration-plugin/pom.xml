@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.atlassian.plugins</groupId>
+        <artifactId>confluence-slack-integration</artifactId>
+        <version>1.1.13</version>
+    </parent>
+
+    <groupId>com.atlassian.confluence.plugins</groupId>
+    <artifactId>confluence-slack-server-integration-plugin</artifactId>
+    <packaging>atlassian-plugin</packaging>
+    <name>Slack for Confluence Server</name>
+    <version>2.1.7-SNAPSHOT</version>
+    <description>This is the Slack integration for Confluence Server</description>
+
+    <properties>
+        <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
+
+        <project.root.directory>${project.basedir}/..</project.root.directory>
+
+        <!-- version of Confluence libraries used to compile plugin code -->
+        <confluence.api.version>7.10.0</confluence.api.version>
+
+        <!-- version of Confluence used in integration tests -->
+        <confluence.version>7.10.0</confluence.version>
+        <confluence.data.version>${confluence.version}</confluence.data.version>
+
+        <confluence.amps.version>8.6.0</confluence.amps.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>slack-server-integration-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.atlassian.selenium</groupId>
+                    <artifactId>atlassian-pageobjects-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>confluence-8-compat</artifactId>
+            <version>${slack.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>confluence-7-compat</artifactId>
+            <version>${slack.common.version}</version>
+        </dependency>
+
+        <!-- Slack -->
+        <dependency>
+            <groupId>com.github.seratch</groupId>
+            <artifactId>jslack</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Runtime dependencies -->
+        <dependency>
+            <groupId>com.atlassian.confluence</groupId>
+            <artifactId>confluence</artifactId>
+            <version>${confluence.api.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>daisydiff</artifactId>
+                    <groupId>org.outerj.daisy</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.analytics</groupId>
+            <artifactId>analytics-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.cache</groupId>
+            <artifactId>atlassian-cache-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.sal</groupId>
+            <artifactId>sal-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.templaterenderer</groupId>
+            <artifactId>atlassian-template-renderer-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13-atlassian-1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13-atlassian-1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.activeobjects</groupId>
+            <artifactId>activeobjects-plugin</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.annotations</groupId>
+            <artifactId>atlassian-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.event</groupId>
+            <artifactId>atlassian-event</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>atlassian-plugins-webresource</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.plugins.rest</groupId>
+            <artifactId>atlassian-rest-common</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Compile dependency -->
+        <dependency>
+            <groupId>com.atlassian.ozymandias</groupId>
+            <artifactId>atlassian-plugin-point-safety</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Test dependencies-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian</groupId>
+            <artifactId>atlassian-test-categories</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.atlassian.plugin</groupId>
+            <artifactId>atlassian-spring-scanner-annotation</artifactId>
+        </dependency>
+
+        <!-- Integration Tests -->
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>slack-server-integration-test-common</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.atlassian.selenium</groupId>
+                    <artifactId>atlassian-webdriver-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.confluence</groupId>
+            <artifactId>confluence-webdriver-pageobjects</artifactId>
+            <version>11.4.5</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>junit-dep</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>confluence-maven-plugin</artifactId>
+                <version>${confluence.amps.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <productVersion>${confluence.version}</productVersion>
+                    <productDataVersion>${confluence.data.version}</productDataVersion>
+                    <skipITs>${it.test.skip}</skipITs>
+                    <skipUTs>${ut.test.skip}</skipUTs>
+                    <noWebapp>${app.startup.skip}</noWebapp>
+
+                    <compressResources>false</compressResources>
+                    <enableQuickReload>${atlassian.dev.mode}</enableQuickReload>
+                    <allowGoogleTracking>false</allowGoogleTracking>
+                    <skipRestDocGeneration>true</skipRestDocGeneration>
+                    <skipManifestValidation>true</skipManifestValidation>
+                    <forceUpdateCheck>false</forceUpdateCheck>
+                    <skipAllPrompts>true</skipAllPrompts>
+
+                    <!-- Custom logging config to show logs from plugin classes by default -->
+                    <log4jProperties>src/main/resources/log4j.properties</log4jProperties>
+                    <forceUpdateCheck>false</forceUpdateCheck>
+
+                    <jvmArgs>-Xmx2g -XX:MaxPermSize=512m</jvmArgs>
+                    <jvmDebugPort>5006</jvmDebugPort>
+
+                    <systemPropertyVariables combine.children="append">
+                        <plugin.resource.directories>
+                            ${plugin.parent.directory}/slack-server-integration-common/src/main/resources,
+                            ${plugin.parent.directory}/confluence-slack-server-integration-plugin/src/main/resources,
+                        </plugin.resource.directories>
+                        <!--Properties to make testing easier in confluence-->
+                        <atlassian.dev.mode>${atlassian.dev.mode}</atlassian.dev.mode>
+                        <plugin.webresource.batching.off>false</plugin.webresource.batching.off>
+                        <xvfb.enable>${xvfb.enable}</xvfb.enable>
+                        <!-- Discovery is disabled by default -->
+                        <discovery.test.mode>true</discovery.test.mode>
+                        <synchrony.proxy.enabled>false</synchrony.proxy.enabled>
+                        <!-- This disables the Post Upgrade Landing Page, which we never want showing up in tests -->
+                        <atlassian.darkfeature.pulp>false</atlassian.darkfeature.pulp>
+                    </systemPropertyVariables>
+                    <instructions>
+                        <CONF_COMM />
+                        <Bundle-SymbolicName>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin</Bundle-SymbolicName>
+                        <Import-Package>
+                            org.springframework.osgi.context;resolution:=optional,
+                            org.springframework.osgi.service.exporter.support;resolution:=optional,
+                            org.springframework.osgi.service.importer.support;resolution:=optional,
+                            org.eclipse.gemini.blueprint.context;resolution:=optional,
+                            org.eclipse.gemini.blueprint.service.exporter;resolution:=optional,
+                            org.eclipse.gemini.blueprint.service.exporter.support;resolution:=optional,
+                            org.eclipse.gemini.blueprint.service.importer.support;resolution:=optional,
+
+                            com.atlassian.activeobjects.external,
+                            com.atlassian.analytics.api.annotations,
+                            com.atlassian.analytics.api.services,
+                            com.atlassian.annotations,
+                            com.atlassian.annotations.security,
+                            com.atlassian.cache,
+                            com.atlassian.confluence.cache,
+                            com.atlassian.event.api,
+                            com.atlassian.hibernate,
+                            com.atlassian.html.encode,
+                            com.atlassian.json.marshal,
+                            com.atlassian.plugin,
+                            com.atlassian.plugin.osgi.factory,
+                            com.atlassian.plugin.web,
+                            com.atlassian.plugin.webresource,
+                            com.atlassian.plugin.webresource.condition,
+                            com.atlassian.plugin.webresource.transformer,
+                            com.atlassian.plugin.webresource.url,
+                            com.atlassian.plugin.servlet,
+                            com.atlassian.plugins.rest.common.security,
+                            com.atlassian.sal.api,
+                            com.atlassian.sal.api.executor,
+                            com.atlassian.sal.api.lifecycle,
+                            com.atlassian.sal.api.message,
+                            com.atlassian.sal.api.pluginsettings,
+                            com.atlassian.sal.api.transaction,
+                            com.atlassian.sal.api.user,
+                            com.atlassian.sal.api.timezone,
+                            com.atlassian.sal.api.web.context,
+                            com.atlassian.seraph.util,
+                            com.atlassian.templaterenderer,
+                            com.atlassian.util.concurrent,
+                            com.atlassian.webresource.api,
+                            com.atlassian.webresource.api.prebake,
+
+                            com.google.common.base,
+                            com.google.common.collect,
+                            com.sun.jersey.api.view,
+                            com.sun.jersey.api.uri,
+                            javax.annotation,
+                            javax.inject,
+                            javax.naming,
+                            javax.net,
+                            javax.net.ssl,
+                            javax.security.auth.x500,
+                            javax.servlet,
+                            javax.servlet.http,
+                            javax.ws.rs,
+                            javax.ws.rs.core,
+                            javax.ws.rs.ext,
+                            javax.xml.bind.annotation,
+                            javax.xml.stream,
+                            javax.xml.transform,
+                            org.apache.commons.lang3,
+                            org.apache.commons.lang3.text,
+                            org.apache.commons.lang3.tuple,
+                            org.apache.commons.logging,
+                            org.apache.velocity,
+                            org.apache.velocity.runtime,
+                            org.apache.velocity.app.event,
+                            org.codehaus.jackson.annotate,
+                            org.springframework.aop.support,
+                            org.springframework.beans,
+                            org.springframework.beans.factory,
+                            org.springframework.beans.factory.annotation,
+                            org.springframework.beans.factory.config,
+                            org.springframework.beans.factory.parsing,
+                            org.springframework.beans.factory.support,
+                            org.springframework.beans.factory.xml,
+                            org.springframework.context.annotation,
+                            org.springframework.core.io,
+                            org.springframework.stereotype,
+                            org.springframework.util,
+                            org.w3c.dom,
+                            org.apache.commons.beanutils,
+                            org.slf4j,
+                            org.xml.sax,
+                            net.java.ao,
+                            net.java.ao.schema,
+
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Spring-Context>*</Spring-Context>
+                    </instructions>
+
+                    <testGroups>
+                        <testGroup>
+                            <id>integration-tests</id>
+                            <productIds>
+                                <productId>confluence</productId>
+                            </productIds>
+                            <includes>
+                                <include>it/**/*Test.java</include>
+                            </includes>
+                        </testGroup>
+                    </testGroups>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+                <configuration>
+                    <skipTests>${ut.test.skip}</skipTests>
+                    <excludes>
+                        <exclude>${functional.test.pattern}</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>test-jar</id>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                        <configuration>
+                            <forceCreation>true</forceCreation>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                    <filesets>
+                        <fileset>
+                            <directory>target</directory>
+                            <excludes>
+                                <exclude>confluence/home/**</exclude>
+                                <exclude>container/**</exclude>
+                            </excludes>
+                        </fileset>
+                        <fileset>
+                            <directory>target/confluence/home/plugins</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.atlassian.plugin</groupId>
+                <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+                <version>${atlassian.spring.scanner.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>atlassian-spring-scanner</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <scannedDependencies>
+                        <dependency>
+                            <groupId>com.atlassian.plugins</groupId>
+                            <artifactId>slack-server-integration-common</artifactId>
+                        </dependency>
+                    </scannedDependencies>
+                    <verbose>false</verbose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.atlassian.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile-less</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>jacoco</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>com/atlassian/confluence/plugins/slack/**</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <scm>
+        <connection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</connection>
+        <developerConnection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</developerConnection>
+        <url>https://github.com/atlassian-labs/atlassian-slack-integration-server.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Luiz Silva</name>
+            <email>lsilva@atlassian.com</email>
+            <organization>Atlassian</organization>
+            <organizationUrl>https://atlassian.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mykhailo Vlasov</name>
+            <email>mvlasov@atlassian.com</email>
+            <organization>Atlassian</organization>
+            <organizationUrl>https://atlassian.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+</project>
