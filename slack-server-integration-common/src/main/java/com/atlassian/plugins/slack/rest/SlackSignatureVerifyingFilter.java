@@ -159,7 +159,7 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
                             .toString();
                     String expectedSignature = "v0=" + encodeHmacSha256(signingSecret, payloadToHash);
                     if (!Objects.equals(expectedSignature, actualSignature)) {
-                        LOG.error("Request signature verification failed. Expected signature: {} and payload: {}", expectedSignature, payloadToHash);
+                        LOG.error("Request signature verification failed. Expected signature: {} actual singnature: {} and payload: {}", expectedSignature, actualSignature, payloadToHash);
                         failVerification(new SecurityException("Request signature verification failed."),
                                 teamId, Cause.BAD_SIGNATURE);
                     }
