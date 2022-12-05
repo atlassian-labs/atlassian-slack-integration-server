@@ -367,6 +367,9 @@
 
                     <!-- Custom logging config to show logs from plugin classes by default -->
                     <log4jProperties>src/main/resources/log4j.properties</log4jProperties>
+                    <log4j2Config>src/main/resources/log4j2.xml</log4j2Config>
+
+                    <!-- Give Java more heap to make Jira faster -->
                     <jvmArgs>-Xmx2g -XX:MaxPermSize=512m</jvmArgs>
 
                     <pluginArtifacts>
@@ -619,7 +622,7 @@
     </build>
 
     <properties>
-        <jira.amps.version>8.2.2</jira.amps.version>
+        <jira.amps.version>8.7.0</jira.amps.version>
         <project.root.directory>${project.basedir}/../..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- modified standard logging config. See full config at <jira-home>/WEB-INF/classes/log4j2.xml -->
+<Configuration packages="com.atlassian.logging.log4j,com.atlassian.jira.logging">
+    <Properties>
+        <!-- date level [logger] message\n -->
+        <Property name="MyLogMessagePattern">%d %p [%c] %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="my-console">
+            <PatternLayout>
+                <Pattern>${MyLogMessagePattern}</Pattern>
+            </PatternLayout>
+        </Console>
+        <JiraHomeAppender name="my-filelog"
+                          fileName="atlassian-jira.log"
+                          filePattern="atlassian-jira.log.%i">
+            <PatternLayout>
+                <Pattern>${MyLogMessagePattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20480 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="min" max="10"/>
+        </JiraHomeAppender>
+    </Appenders>
+
+    <Loggers>
+        <Root level="WARN">
+            <AppenderRef ref="my-console"/>
+            <AppenderRef ref="my-filelog"/>
+        </Root>
+        <!-- logs from classes in common module -->
+        <Logger name="com.atlassian.plugins.slack" level="TRACE" additivity="false">
+            <AppenderRef ref="my-console"/>
+            <AppenderRef ref="my-filelog"/>
+        </Logger>
+        <!-- logs from classes in jira-specific module -->
+        <Logger name="com.atlassian.jira.plugins.slack" level="TRACE" additivity="false">
+            <AppenderRef ref="my-console"/>
+            <AppenderRef ref="my-filelog"/>
+        </Logger>
+        <!-- logs from integration tests -->
+        <Logger name="com.atlassian.jira.plugins.slack" level="TRACE" additivity="false">
+            <AppenderRef ref="my-console"/>
+            <AppenderRef ref="my-filelog"/>
+        </Logger>
+        <!-- jslack logs -->
+        <Logger name="com.github.seratach.jslack.maintainer.json" level="TRACE" additivity="false">
+            <AppenderRef ref="my-console"/>
+            <AppenderRef ref="my-filelog"/>
+        </Logger>
+        <!-- Spring start-up errors -->
+        <Logger name="org.springframework.beans.factory.support" level="ERROR" additivity="false">
+            <AppenderRef ref="my-console"/>
+            <AppenderRef ref="my-filelog"/>
+        </Logger>
+    </Loggers>
+</Configuration>
