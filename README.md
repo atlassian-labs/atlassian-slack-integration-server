@@ -37,9 +37,11 @@ After successful installation running `atlas-version` should print SDK version.
 If you don't have ngrok, the plugin still can send notification to Slack in uni-directional way. 
 Slack demands HTTPS OAuth redirect URLs, so you also need to add your ngrok host to domain allowlist at
 http://localhost:2990/jira/plugins/servlet/whitelist. 
-4. If you are setting up the project for the first time run `./jira.sh common` from the project root directory to install 
+4. Install Maven 3.8.6 or later and define path to its executable: `export ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn`.
+It's needed because current versions of AMPS plugin isn't compatible with Maven bundled into the Atlassian Plugin SDK.
+5. If you are setting up the project for the first time run `./jira.sh common` from the project root directory to install 
 all common modules to local Maven repository.
-5. Go to **\<product> Plugin Development** section for further steps. 
+6. Go to **\<product> Plugin Development** section for further steps. 
 
 # Jira Server Plugin Development
 

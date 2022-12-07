@@ -281,6 +281,8 @@
                     <log4jProperties>src/main/resources/log4j.properties</log4jProperties>
                     <forceUpdateCheck>false</forceUpdateCheck>
 
+                    <!-- MaxPermSize is unsupported in Java 17 and JVM fails to start -->
+                    <!-- remove the option when Java 17 support is needed -->
                     <jvmArgs>-Xmx2g -XX:MaxPermSize=512m</jvmArgs>
                     <jvmDebugPort>5006</jvmDebugPort>
 

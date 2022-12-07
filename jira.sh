@@ -27,7 +27,7 @@ Examples:
 # check java 8
 javaVersion=`java -version 2>&1 | head -n 1 | cut -d\" -f 2`
 javaCompilerVersion=`javac -version 2>&1 | head -n 1 | cut -d\" -f 2`
-[[ "$javaVersion" != "1.8."* || "$javaCompilerVersion" != *"1.8."* ]] && echo "Java 8 expected" && exit 1
+# [[ "$javaVersion" != "1.8."* || "$javaCompilerVersion" != *"1.8."* ]] && echo "Java 8 expected" && exit 1
 
 # compute parameters
 purge=$([[ "$*" == *"purge"* ]] && echo "yes" || echo "no")

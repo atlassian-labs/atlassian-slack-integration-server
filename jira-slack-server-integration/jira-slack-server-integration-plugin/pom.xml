@@ -370,7 +370,7 @@
                     <log4j2Config>src/main/resources/log4j2.xml</log4j2Config>
 
                     <!-- Give Java more heap to make Jira faster -->
-                    <jvmArgs>-Xmx2g -XX:MaxPermSize=512m</jvmArgs>
+                    <jvmArgs>-Xmx2g</jvmArgs>
 
                     <pluginArtifacts>
                         <pluginArtifact>
