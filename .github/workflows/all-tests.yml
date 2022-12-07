@@ -20,7 +20,7 @@ env:
 jobs:
   log-params:
     name: Log Params
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - run: echo "Github event inputs [${{ toJson(github.event.inputs) }}]."
@@ -30,7 +30,7 @@ jobs:
 
   unit-tests:
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     # around 800 Mb of dependencies need to be loaded; it may take long first time until it's cached
     timeout-minutes: 30
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
@@ -59,7 +59,7 @@ jobs:
 
   integration-tests-jira:
     name: Jira
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')
     needs: unit-tests
@@ -96,7 +96,7 @@ jobs:
 
   integration-tests-confluence:
     name: Confluence
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence')
     needs: unit-tests
@@ -137,7 +137,7 @@ jobs:
 
   integration-tests-bitbucket:
     name: Bitbucket
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 15
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
     needs: unit-tests

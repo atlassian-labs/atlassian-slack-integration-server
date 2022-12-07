@@ -19,7 +19,7 @@ on:
 jobs:
   integration-tests-jira:
     name: Jira Integration Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
       - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
