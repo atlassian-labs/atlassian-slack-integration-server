@@ -370,7 +370,7 @@
                     <log4j2Config>src/main/resources/log4j2.xml</log4j2Config>
 
                     <!-- Give Java more heap to make Jira faster -->
-                    <jvmArgs>-Xmx2g</jvmArgs>
+                    <jvmArgs>${jvm17.opens} -Xmx2g</jvmArgs>
 
                     <pluginArtifacts>
                         <pluginArtifact>
@@ -568,6 +568,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
+                    <argLine>${jvm17.opens}</argLine>
                     <skipTests>${ut.test.skip}</skipTests>
                     <excludes>
                         <exclude>${functional.test.pattern}</exclude>
@@ -601,6 +602,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.0</version>
                 <configuration>
+                    <argLine>${jvm17.opens}</argLine>
                     <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
@@ -626,9 +628,19 @@
         <project.root.directory>${project.basedir}/../..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
+        <jvm17.opens />
     </properties>
 
     <profiles>
+        <profile>
+            <id>jvm17</id>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
+            <properties>
+                <jvm17.opens>--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.desktop/sun.font=ALL-UNNAMED --add-opens=java.base/sun.reflect.generics.parser=ALL-UNNAMED --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-exports=java.base/sun.util.calendar=ALL-UNNAMED --add-exports=java.base/sun.security.action=ALL-UNNAMED --add-exports=java.xml/jdk.xml.internal=ALL-UNNAMED</jvm17.opens>
+            </properties>
+        </profile>
         <profile>
             <id>jacoco</id>
             <build>
