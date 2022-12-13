@@ -14,8 +14,8 @@ or by manually downloading plugin JAR files from Marketplace pages for [Jira](ht
 or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-for-slack-official?hosting=server&tab=overview) plugins.
 Links to the official documentation are specified on Marketplace pages.
 
-Supported products (on 12 Nov, 2022). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
-* Jira: 8.9.0 (EOL 20 May, 2022) JDK 8, 11 - 9.0.0-m0008 (EOL TBD - start of 2024) on JDK 8, 11.
+Supported products (on 8th Dec, 2022). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
+* Jira: 8.15.0 (EOL date: 2 Feb 2023) JDK 8, 11 - 9.5.0 (EOL date: 6 Dec 2024) on JDK 8, 11, 17.
 * Confluence: 7.10 (EOL date: Dec 15, 2022) JDK 8, 11 - 8.0.0-m90 (EOL date: TBD - end of 2024) JDK 8, 11.
 * Bitbucket: 7.0.0 (EOL date: 5 March 2022) on JDK 8, 11 - 7.21.0 (EOL date: 2 March 2024) on JDK 8, 11.
 
@@ -37,9 +37,11 @@ After successful installation running `atlas-version` should print SDK version.
 If you don't have ngrok, the plugin still can send notification to Slack in uni-directional way. 
 Slack demands HTTPS OAuth redirect URLs, so you also need to add your ngrok host to domain allowlist at
 http://localhost:2990/jira/plugins/servlet/whitelist. 
-4. If you are setting up the project for the first time run `./jira.sh common` from the project root directory to install 
+4. Install Maven 3.8.6 or later and define path to its executable: `export ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn`.
+It's needed because current versions of AMPS plugin isn't compatible with Maven bundled into the Atlassian Plugin SDK.
+5. If you are setting up the project for the first time run `./jira.sh common` from the project root directory to install 
 all common modules to local Maven repository.
-5. Go to **\<product> Plugin Development** section for further steps. 
+6. Go to **\<product> Plugin Development** section for further steps. 
 
 # Jira Server Plugin Development
 

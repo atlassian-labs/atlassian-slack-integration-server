@@ -24,11 +24,6 @@ Examples:
   ./jira.sh clean run    -> cleans all compiled files but the Jira home directory, compiles everything, and runs Jira in development mode
 "
 
-# check java 8
-javaVersion=`java -version 2>&1 | head -n 1 | cut -d\" -f 2`
-javaCompilerVersion=`javac -version 2>&1 | head -n 1 | cut -d\" -f 2`
-[[ "$javaVersion" != "1.8."* || "$javaCompilerVersion" != *"1.8."* ]] && echo "Java 8 expected" && exit 1
-
 # compute parameters
 purge=$([[ "$*" == *"purge"* ]] && echo "yes" || echo "no")
 clean=$([[ "$*" == *"clean"* ]] && ([[ "$purge" == "yes" ]] && echo "skip" || echo "yes") || echo "no")

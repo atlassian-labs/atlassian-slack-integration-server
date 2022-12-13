@@ -16,6 +16,10 @@ on:
         description: Testkit version to run tests against
         required: false
 
+# override Maven from Plugin SDK as it is too old to run Jira 9.5
+env:
+  ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn
+
 jobs:
   integration-tests-jira:
     name: Jira Integration Tests
