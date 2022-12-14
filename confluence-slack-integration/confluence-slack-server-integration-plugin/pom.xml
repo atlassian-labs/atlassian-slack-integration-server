@@ -29,6 +29,7 @@
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
         <confluence.amps.version>8.6.0</confluence.amps.version>
+        <jvm17.opens />
     </properties>
 
     <dependencies>
@@ -283,7 +284,7 @@
 
                     <!-- MaxPermSize is unsupported in Java 17 and JVM fails to start -->
                     <!-- remove the option when Java 17 support is needed -->
-                    <jvmArgs>-Xmx2g -XX:MaxPermSize=512m</jvmArgs>
+                    <jvmArgs>${jvm17.opens} -Xmx2g</jvmArgs>
                     <jvmDebugPort>5006</jvmDebugPort>
 
                     <systemPropertyVariables combine.children="append">
@@ -417,10 +418,20 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
+                    <argLine>${jvm17.opens}</argLine>
                     <skipTests>${ut.test.skip}</skipTests>
                     <excludes>
                         <exclude>${functional.test.pattern}</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <argLine>${jvm17.opens}</argLine>
+                    <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
 
@@ -502,6 +513,16 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>jvm17</id>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
+            <properties>
+                <!-- Needed to start Confluence 8 on JDK 17 -->
+                <jvm17.opens>--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.jar=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-opens=java.base/sun.util.locale=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-exports=java.base/sun.security.action=ALL-UNNAMED --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED --add-exports=java.desktop/sun.font=ALL-UNNAMED --add-exports=java.base/sun.security.util=ALL-UNNAMED</jvm17.opens>
+            </properties>
+        </profile>
         <profile>
             <id>jacoco</id>
             <build>
