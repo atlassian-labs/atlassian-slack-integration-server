@@ -17,12 +17,17 @@ jobs:
   integration-tests-bitbucket:
     name: Bitbucket Integration Tests
     runs-on: ubuntu-20.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.ref }}
+      # Dec 13, 2022
+      # latest Bitbucket 8.6.1 doesn't support latest git 2.38.1 installed on the Ubuntu 20 image Github provides
+      # install last supported git - 2.37.4; remove this trick once Bitbucket implements support for latest git
+      # https://confluence.atlassian.com/bitbucketserver/supported-platforms-776640981.html#Supportedplatforms-dvcsDVCS
+      - run: bin/build/install-supported-git.sh
       - uses: actions/setup-java@v3
         with:
           java-version: ${{ github.event.inputs.java-version }}
