@@ -107,11 +107,13 @@ jobs:
     strategy:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
-        java-version: [8, 11]
-        confluence-version: [7.10.0, 8.0.0-m90]
+        java-version: [8, 11, 17]
+        confluence-version: [7.10.0, 8.0.0]
         exclude:
           - java-version: 8
-            confluence-version: 8.0.0-m90 # Confluence 8 doesn't support Java 8 anymore
+            confluence-version: 8.0.0 # Confluence 8 doesn't support Java 8 anymore
+          - java-version: 17
+            confluence-version: 7.10.0
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
