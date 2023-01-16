@@ -13,10 +13,6 @@ on:
         description: Confluence version to run tests against
         required: true
 
-# override Maven from Plugin SDK as it is too old to run Confluence 8
-env:
-  ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn
-
 jobs:
   integration-tests-confluence:
     name: Confluence Integration Tests
@@ -32,6 +28,7 @@ jobs:
           java-version: ${{ github.event.inputs.java-version }}
           distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
+      - run: bin/build/override-plugin-sdk-maven.sh
       - run: bin/build/install-int-test-libs.sh
       - uses: actions/cache@v3
         with:
