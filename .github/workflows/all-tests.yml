@@ -13,10 +13,6 @@ on:
         description: Jobs to run (comma-separated, defaults to all)
         required: false
 
-# override Maven from Plugin SDK as it is too old to run Confluence 8 and Jira 9.5
-env:
-  ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn
-
 jobs:
   log-params:
     name: Log Params
@@ -51,6 +47,7 @@ jobs:
         with:
           path: ~/.m2/repository
           key: maven-unit
+      - run: bin/build/override-atlassian-maven.sh
       - run: bin/build/run-unit-tests.sh
       - uses: actions/upload-artifact@v3
         with:
