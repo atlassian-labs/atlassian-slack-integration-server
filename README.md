@@ -14,7 +14,7 @@ or by manually downloading plugin JAR files from Marketplace pages for [Jira](ht
 or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-for-slack-official?hosting=server&tab=overview) plugins.
 Links to the official documentation are specified on Marketplace pages.
 
-Supported products (on 13th Dec, 2022). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
+Supported products (on 10th Feb, 2023). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
 * Jira: 8.15.0 (EOL date: 2 Feb 2023) JDK 8, 11 - 9.5.0 (EOL date: 6 Dec 2024) on JDK 8, 11, 17.
 * Confluence: 7.10 (EOL date: Dec 15, 2022) JDK 8, 11 - 8.0.0-m90 (EOL date: TBD - end of 2024) JDK 8, 11.
 * Bitbucket: 7.6.0 (EOL date: Q1 calendar year 2023) on JDK 8, 11 - 8.8.0 (EOL date: 7 Feb 2025) on JDK 8, 11, 17.
