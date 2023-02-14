@@ -20,6 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <jvm17.opens />
 
         <!-- default properties. copied from parent POM in order to allow to resolve plugin plugin dependencies during BBS build -->
         <it.test.skip>true</it.test.skip>
@@ -420,7 +421,7 @@
                     <skipAllPrompts>true</skipAllPrompts>
 
                     <!-- It allows to connect to Bitbucket embedded database while it is running -->
-                    <jvmArgs>-Djdbc.url=jdbc:h2:${project.build.directory}/bitbucket/home/shared/data/db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE</jvmArgs>
+                    <jvmArgs>${jvm17.opens} -Djdbc.url=jdbc:h2:${project.build.directory}/bitbucket/home/shared/data/db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE</jvmArgs>
                     <jvmDebugPort>5007</jvmDebugPort>
 
                     <systemPropertyVariables>
@@ -489,10 +490,21 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
+                    <argLine>${jvm17.opens}</argLine>
                     <skipTests>${ut.test.skip}</skipTests>
                     <excludes>
                         <exclude>${functional.test.pattern}</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <argLine>${jvm17.opens}</argLine>
+                    <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
 
@@ -521,6 +533,16 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>jvm17</id>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
+            <properties>
+                <!-- Needed to start Bitbucket on JDK 17 -->
+                <jvm17.opens>--add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED</jvm17.opens>
+            </properties>
+        </profile>
         <profile>
             <id>jacoco</id>
             <build>
