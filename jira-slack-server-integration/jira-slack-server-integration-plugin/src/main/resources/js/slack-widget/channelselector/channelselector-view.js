@@ -1,7 +1,7 @@
 define("slack/widget/channelselector/channelselector-view",
 [
     "jquery",
-    "backbone",
+    "slack/backbone",
     "slack/widget/channelselector/channelmapping-service",
     "jira/ajs/select/single-select",
     "jira/ajs/list/group-descriptor",

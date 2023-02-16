@@ -1,7 +1,7 @@
 /**
  * Top level configuration/information object.
  */
-define("slack/base", [ "underscore", "backbone", "exports" ], function (_, Backbone, exports) {
+define("slack/base", [ "underscore", "slack/backbone", "exports" ], function (_, Backbone, exports) {
     if (typeof Slack === "undefined" || !Slack) {
         window.Slack = {};
     }

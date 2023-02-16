@@ -104,6 +104,7 @@
         <transformation extension="less">
             <transformer key="less-transformer"/>
         </transformation>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
 
         <resource type="download" name="slack.js" location="js/slack-base.js"/>
         <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.less"/>
@@ -121,6 +122,11 @@
         <resource name="feature-channelmapping-channelmapping.soy" type="soy" location="slack-soy/channelmapping/channelmapping.soy"/>
         <resource name="feature-channelmapping-channelmapping-client-soy.js" type="soy" location="slack-soy/channelmapping/channelmapping-client.soy"/>
         <resource name="slack-settings.soy" type="soy" location="slack-soy/settings/settings.soy"/>
+    </web-resource>
+
+    <web-resource key="slack-backbone-resource">
+        <dependency>jira.webresources:backbone-1.3.3</dependency>
+        <resource type="download" name="slack-backbone-amd.js" location="js/lib/backbone-amd.js"/>
     </web-resource>
 
     <web-resource key="feature-channelmapping-resources">
@@ -156,6 +162,7 @@
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:base-slack-common-resources</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
     </web-resource>
 
     <web-resource key="widget-channelselector">
@@ -191,6 +198,7 @@
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
         <dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
     </web-resource>
 
     <web-resource key="slack-project-config-resources">
@@ -213,6 +221,7 @@
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:global</dependency>
         <dependency>com.atlassian.jira.jira-issue-nav-components:query</dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
     </web-resource>
 
     <web-item key="slack-project-notifications" name="Project Slack Notifications Configuration" section="atl.jira.proj.config/projectgroup4"
@@ -436,6 +445,7 @@
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-links-support</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-user-link-support</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:widget-channelselector</dependency>
+        <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
 
         <context>slack-issue-panel</context>
         <context>jira.view.issue</context>

@@ -1,7 +1,7 @@
 define("slack/feature/channelmapping/channelmapping-page",
 [
     "jquery",
-    "backbone",
+    "slack/backbone",
     "underscore",
     "slack/feature/channelmapping/mapping",
     "slack/feature/channelmapping/mapping-view",

@@ -1,7 +1,7 @@
 define("slack/feature/issuepanel/issuemention-view",
 [
     "jquery",
-    "backbone",
+    "slack/backbone",
     "slack/base",
     "jira/flag"
 ], function (
