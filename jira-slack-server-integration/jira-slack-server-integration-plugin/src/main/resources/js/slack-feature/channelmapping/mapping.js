@@ -1,7 +1,7 @@
 define("slack/feature/channelmapping/mapping",
 [
     "jquery",
-    "backbone",
+    "slack/backbone",
     "slack/feature/channelmapping/mapping-setting"
 ], function (
     $,

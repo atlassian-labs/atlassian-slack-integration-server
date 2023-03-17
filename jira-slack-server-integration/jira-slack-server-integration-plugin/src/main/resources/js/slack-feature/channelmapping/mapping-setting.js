@@ -1,6 +1,6 @@
 define("slack/feature/channelmapping/mapping-setting",
 [
-    "backbone",
+    "slack/backbone",
     "slack/base"
 ], function (
     Backbone,

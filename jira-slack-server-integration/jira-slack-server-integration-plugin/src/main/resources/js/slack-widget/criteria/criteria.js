@@ -1,7 +1,7 @@
 define("slack/widget/criteria/criteria",
 [
     "jquery",
-    "backbone",
+    "slack/backbone",
     "jira/components/query/basic/searchercollection",
     "jira/components/query/querystatemodel",
     "jira/components/query/basic/criteriamodel",

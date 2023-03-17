@@ -1,7 +1,7 @@
 define("slack/feature/channelmapping/mapping-view",
 [
     "jquery",
-    "backbone",
+    "slack/backbone",
     "slack/base",
     "slack/feature/channelmapping/querymodule",
     "slack/widget/criteria/criteria",

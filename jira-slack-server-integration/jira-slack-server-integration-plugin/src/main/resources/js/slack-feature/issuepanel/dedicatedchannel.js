@@ -1,7 +1,7 @@
 define("slack/feature/issuepanel/dedicatedchannel",
 [
     "jquery",
-    "backbone"
+    "slack/backbone"
 ], function (
     $,
     Backbone

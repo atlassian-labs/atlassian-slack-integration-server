@@ -1,7 +1,7 @@
 define("slack/feature/issuepanel/issuepanel-view",
 [
     "jquery",
-    "backbone",
+    "slack/backbone",
     "slack/base",
     "slack/feature/issuepanel/dedicatedchannel",
     "slack/feature/issuepanel/dedicatedchannel-view",

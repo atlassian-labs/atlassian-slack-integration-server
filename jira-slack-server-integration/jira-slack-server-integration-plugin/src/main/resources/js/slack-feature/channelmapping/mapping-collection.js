@@ -1,6 +1,6 @@
 define("slack/feature/channelmapping/mapping-collection",
 [
-    "backbone",
+    "slack/backbone",
     "slack/feature/channelmapping/mapping"
 ], function (
     Backbone,

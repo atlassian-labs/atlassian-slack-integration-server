@@ -1,7 +1,7 @@
 define("slack/feature/issuepanel/issuemention",
 [
     "jquery",
-    "backbone"
+    "slack/backbone"
 ], function (
     $,
     Backbone
