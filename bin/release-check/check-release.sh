@@ -55,7 +55,11 @@ echo "Running workflow with params: workflow-name=$workflow_name java-version=11
 second_workflow_link=$(start_workflow $workflow_name 11 $product_version)
 echo "Pipeline URL: $second_workflow_link"
 
-workflow_links="$first_workflow_link, $second_workflow_link"
+echo "Running workflow with params: workflow-name=$workflow_name java-version=17 product-version=$product_version"
+third_workflow_link=$(start_workflow $workflow_name 17 $product_version)
+echo "Pipeline URL: $third_workflow_link"
+
+workflow_links="$first_workflow_link, $second_workflow_link, $third_workflow_link"
 
 # CREATE NEW ISSUE FOR RELEASE
 echo "Creating a new issue"
