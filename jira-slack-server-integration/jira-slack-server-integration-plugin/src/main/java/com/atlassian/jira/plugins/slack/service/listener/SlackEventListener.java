@@ -10,8 +10,6 @@ import com.atlassian.jira.plugins.slack.model.event.ShowHelpEvent;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueNotFoundEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
@@ -19,6 +17,7 @@ import com.atlassian.plugins.slack.api.webhooks.GenericMessageSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.LinkSharedSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.SlackSlashCommand;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 public class SlackEventListener extends AutoSubscribingEventListener {
     private static final Logger logger = LoggerFactory.getLogger(SlackEventListener.class);
 
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final TaskBuilder taskBuilder;
     private final SlackLinkManager slackLinkManager;
     private final SlackEventHandlerService slackEventHandlerService;
@@ -51,13 +50,13 @@ public class SlackEventListener extends AutoSubscribingEventListener {
 
     @Autowired
     SlackEventListener(final EventPublisher eventPublisher,
-                       final TaskExecutorService taskExecutorService,
+                       final AsyncExecutor asyncExecutor,
                        final TaskBuilder taskBuilder,
                        final SlackLinkManager slackLinkManager,
                        final SlackEventHandlerService slackEventHandlerService,
                        final AnalyticsContextProvider analyticsContextProvider) {
         super(eventPublisher);
-        this.taskExecutorService = taskExecutorService;
+        this.asyncExecutor = asyncExecutor;
         this.taskBuilder = taskBuilder;
         this.slackLinkManager = slackLinkManager;
         this.slackEventHandlerService = slackEventHandlerService;
@@ -106,11 +105,9 @@ public class SlackEventListener extends AutoSubscribingEventListener {
                     null,
                     null,
                     Verbosity.EXTENDED);
-            final SendNotificationTask task = taskBuilder.newSendNotificationTask(
-                    handleCommand(commandText, command.getUserId(), command.getSlackLink().getBotUserId(), command.getCommandName()),
-                    notificationInfo,
-                    taskExecutorService);
-            taskExecutorService.submitTask(task);
+            PluginEvent pluginEvent = handleCommand(commandText, command.getUserId(), command.getSlackLink().getBotUserId(),
+                    command.getCommandName());
+            asyncExecutor.run(taskBuilder.newSendNotificationTask(pluginEvent, notificationInfo, asyncExecutor));
         }
     }
 
@@ -130,7 +127,7 @@ public class SlackEventListener extends AutoSubscribingEventListener {
         final SlackLink slackLink = slackEvent.getSlackEvent().getSlackLink();
 
         if (slackEvent.isDeletedEvent()) {
-            taskExecutorService.submitTask(taskBuilder.newProcessMessageDeletionTask(new SlackDeletedMessage(
+            asyncExecutor.run(taskBuilder.newProcessMessageDeletionTask(new SlackDeletedMessage(
                     slackEvent.getSlackEvent().getTeamId(),
                     slackLink,
                     slackEvent.getChannel(),
@@ -183,11 +180,7 @@ public class SlackEventListener extends AutoSubscribingEventListener {
                 final PluginEvent commandEvent = handleCommand(removeSlackLinks(messageText), slackEvent.getUser(),
                         slackLink.getBotUserId(), null);
 
-                final SendNotificationTask task = taskBuilder.newSendNotificationTask(
-                        commandEvent,
-                        notificationInfo,
-                        taskExecutorService);
-                taskExecutorService.submitTask(task);
+                asyncExecutor.run(taskBuilder.newSendNotificationTask(commandEvent, notificationInfo, asyncExecutor));
             }
         }
     }

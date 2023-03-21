@@ -16,8 +16,6 @@ import com.atlassian.jira.plugins.slack.service.notification.IssueEventProcessor
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.notification.PersonalNotificationManager;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.plugins.slack.settings.JiraSettingsService;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.user.ApplicationUser;
@@ -58,8 +56,6 @@ import static org.mockito.Mockito.when;
 
 public class DefaultJiraSlackEventListenerTest {
     @Mock
-    private TaskExecutorService taskExecutorService;
-    @Mock
     private TaskBuilder taskBuilder;
     @Mock
     private IssueEventToEventMatcherTypeConverter issueEventToEventMatcherTypeConverter;
@@ -97,7 +93,7 @@ public class DefaultJiraSlackEventListenerTest {
     @Mock
     private NotificationInfo notificationInfo3;
     @Mock
-    private SendNotificationTask sendNotificationTask;
+    private Runnable sendNotificationTask;
     @Mock
     private SpanningOperation spanningOperation;
 
@@ -131,13 +127,13 @@ public class DefaultJiraSlackEventListenerTest {
         when(notificationInfo1.getChannelId()).thenReturn("C1");
         when(notificationInfo2.getChannelId()).thenReturn("C2");
         when(notificationInfo3.getChannelId()).thenReturn("C2");
-        when(taskBuilder.newSendNotificationTask(eventCaptor3.capture(), notInfoCaptor.capture(), same(taskExecutorService)))
+        when(taskBuilder.newSendNotificationTask(eventCaptor3.capture(), notInfoCaptor.capture(), same(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
         CommonTestUtil.bypass(asyncExecutor);
 
         target.issueEvent(issueEventBundle);
 
-        verify(sendNotificationTask).call();
+        verify(sendNotificationTask).run();
 
         DefaultJiraIssueEvent defaultJiraIssueEvent = eventCaptor3.getValue();
         assertThat(defaultJiraIssueEvent.getEventMatcher(), sameInstance(EventMatcherType.ISSUE_UPDATED));
@@ -184,14 +180,14 @@ public class DefaultJiraSlackEventListenerTest {
                 .thenReturn(Arrays.asList(EventMatcherType.ISSUE_UPDATED, EventMatcherType.ISSUE_ASSIGNMENT_CHANGED));
         when(issueEventProcessorService.getNotificationsFor(argThat(arg -> arg.getEventMatcher() == EventMatcherType.ISSUE_ASSIGNMENT_CHANGED)))
                 .thenReturn(Collections.singleton(notificationInfo1));
-        when(taskBuilder.newSendNotificationTask(any(PluginEvent.class), anyList(), eq(taskExecutorService)))
+        when(taskBuilder.newSendNotificationTask(any(PluginEvent.class), anyList(), eq(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
         CommonTestUtil.bypass(asyncExecutor);
 
         target.issueEvent(issueEventBundle);
 
-        verify(sendNotificationTask).call();
-        verify(taskBuilder, times(1)).newSendNotificationTask(any(PluginEvent.class), anyList(), eq(taskExecutorService));
+        verify(sendNotificationTask).run();
+        verify(taskBuilder, times(1)).newSendNotificationTask(any(PluginEvent.class), anyList(), eq(asyncExecutor));
     }
 
     @Test

@@ -25,10 +25,6 @@ import com.atlassian.jira.plugins.slack.model.event.UnauthorizedUnfurlEvent;
 import com.atlassian.jira.plugins.slack.model.mentions.MentionChannel;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.DirectMessageTask;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
-import com.atlassian.jira.plugins.slack.service.task.impl.UnfurlIssueLinksTask;
 import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.plugins.slack.analytics.AnalyticsContext;
@@ -38,11 +34,13 @@ import com.atlassian.plugins.slack.api.SlackUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 import com.github.seratch.jslack.api.model.Conversation;
 import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -68,7 +66,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @Slf4j
 public class SlackEventHandlerService {
     private final EventPublisher eventPublisher;
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final TaskBuilder taskBuilder;
     private final IssueManager issueManager;
     private final ApplicationProperties applicationProperties;
@@ -100,7 +98,7 @@ public class SlackEventHandlerService {
 
     @Autowired
     SlackEventHandlerService(final EventPublisher eventPublisher,
-                             final TaskExecutorService taskExecutorService,
+                             final AsyncExecutor asyncExecutor,
                              final TaskBuilder taskBuilder,
                              final IssueManager issueManager,
                              final ApplicationProperties applicationProperties,
@@ -115,7 +113,7 @@ public class SlackEventHandlerService {
                              final PermissionManager permissionManager,
                              final AnalyticsContextProvider analyticsContextProvider) {
         this.eventPublisher = eventPublisher;
-        this.taskExecutorService = taskExecutorService;
+        this.asyncExecutor = asyncExecutor;
         this.taskBuilder = taskBuilder;
         this.issueManager = issueManager;
         this.applicationProperties = applicationProperties;
@@ -168,7 +166,7 @@ public class SlackEventHandlerService {
         List<IssueReference> issueReferences = extractIssueKeys(message.getText(), message.getLinks());
         log.debug("Found {} issue references", issueReferences.size());
 
-        UnfurlIssueLinksTask unfurlIssueLinksTask = taskBuilder.newUnfurlIssueLinksTask();
+        final List<Pair<JiraCommandEvent, NotificationInfo>> unfurlNotificationInfos = new ArrayList<>();
         boolean isInvitationToUserSent = false;
         for (IssueReference issueReference : issueReferences) {
             String key = issueReference.getKey();
@@ -213,7 +211,7 @@ public class SlackEventHandlerService {
 
             // save or update issue mention message
             if (shouldStoreMention) {
-                taskExecutorService.submitTask(taskBuilder.newProcessIssueMentionTask(issue, message));
+                asyncExecutor.run(taskBuilder.newProcessIssueMentionTask(issue, message));
             }
 
             // do not send repeated edits
@@ -239,7 +237,8 @@ public class SlackEventHandlerService {
                                 issueReference.getUrl(),
                                 Verbosity.EXTENDED);
                         final JiraCommandEvent event = new ShowIssueEvent(issue, dedicatedChannel.orElse(null));
-                        unfurlIssueLinksTask.addNotification(event, notificationInfo);
+
+                        unfurlNotificationInfos.add(Pair.of(event, notificationInfo));
                     } else {
                         final NotificationInfo notificationInfo = new NotificationInfo(
                                 message.getSlackLink(),
@@ -282,11 +281,11 @@ public class SlackEventHandlerService {
         }
 
         // send one unfurling notification for all parsed issue links
-        if (handlingLinkSharedEvent) {
-            unfurlIssueLinksTask.getNotifications().forEach(notification -> eventPublisher.publish(
+        if (handlingLinkSharedEvent && !unfurlNotificationInfos.isEmpty()) {
+            unfurlNotificationInfos.forEach(info -> eventPublisher.publish(
                     new JiraNotificationSentEvent(analyticsContextProvider.byTeamIdAndSlackUserId(
-                            notification.right().getLink().getTeamId(), notification.right().getMessageAuthorId()), null, Type.UNFURLING)));
-            taskExecutorService.submitTask(unfurlIssueLinksTask);
+                            info.getRight().getLink().getTeamId(), info.getRight().getMessageAuthorId()), null, Type.UNFURLING)));
+            asyncExecutor.run(taskBuilder.newUnfurlIssueLinksTask(unfurlNotificationInfos));
         }
 
         return hasFoundAnyIssue;
@@ -300,11 +299,7 @@ public class SlackEventHandlerService {
                 null, Type.DEDICATED));
 
         final JiraCommandEvent event = new IssueMentionedEvent(message, dedicatedChannel.getIssueId());
-        final SendNotificationTask task = taskBuilder.newSendNotificationTask(
-                event,
-                notificationInfo,
-                taskExecutorService);
-        taskExecutorService.submitTask(task);
+        asyncExecutor.run(taskBuilder.newSendNotificationTask(event, notificationInfo, asyncExecutor));
         eventPublisher.publish(new DedicatedChannelIssueMentionedEvent(AnalyticsContext.fromSlackUser(slackUser),
                 message.getChannelId(), dedicatedChannel.getChannelId(), dedicatedChannel.getIssueId()));
     }
@@ -381,7 +376,6 @@ public class SlackEventHandlerService {
         AnalyticsContext context = analyticsContextProvider.byTeamIdAndSlackUserId(message.getTeamId(), message.getUser());
         UnauthorizedUnfurlEvent event = new UnauthorizedUnfurlEvent(context, issue.getProjectId(), issue.getKey(),
                 message.getChannelId(), null);
-        DirectMessageTask task = taskBuilder.newDirectMessageTask(event, notificationInfo);
-        taskExecutorService.submitTask(task);
+        asyncExecutor.run(taskBuilder.newDirectMessageTask(event, notificationInfo));
     }
 }

@@ -14,16 +14,12 @@ import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.model.SlackIncomingMessage;
 import com.atlassian.jira.plugins.slack.model.analytics.DedicatedChannelIssueMentionedEvent;
 import com.atlassian.jira.plugins.slack.model.event.IssueMentionedEvent;
+import com.atlassian.jira.plugins.slack.model.event.JiraCommandEvent;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueEvent;
 import com.atlassian.jira.plugins.slack.model.event.UnauthorizedUnfurlEvent;
 import com.atlassian.jira.plugins.slack.model.mentions.MentionChannel;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.DirectMessageTask;
-import com.atlassian.jira.plugins.slack.service.task.impl.ProcessIssueMentionTask;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
-import com.atlassian.jira.plugins.slack.service.task.impl.UnfurlIssueLinksTask;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
@@ -35,10 +31,12 @@ import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.SlackUser;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 import com.github.seratch.jslack.api.model.Conversation;
 import io.atlassian.fugue.Either;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -49,6 +47,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
@@ -70,7 +69,7 @@ public class SlackEventHandlerServiceTest {
     @Mock
     private EventPublisher eventPublisher;
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private TaskBuilder taskBuilder;
     @Mock
@@ -107,7 +106,7 @@ public class SlackEventHandlerServiceTest {
     @Mock
     private Conversation conversation;
     @Mock
-    private UnfurlIssueLinksTask unfurlIssueLinksTask;
+    private Runnable unfurlIssueLinksTask;
 
     @Mock
     private ApplicationUser applicationUser;
@@ -122,15 +121,15 @@ public class SlackEventHandlerServiceTest {
     @Mock
     private DedicatedChannel dedicatedChannel;
     @Mock
-    private DirectMessageTask directMessageTask;
+    private Runnable directMessageTask;
     @Mock
-    private ProcessIssueMentionTask processIssueMentionTask;
+    private Runnable processIssueMentionTask;
     @Mock
     private SlackUser slackUser;
     @Mock
     private Project project;
     @Mock
-    private SendNotificationTask sendNotificationTask;
+    private Runnable sendNotificationTask;
     @Mock
     private AnalyticsContext context;
 
@@ -144,6 +143,8 @@ public class SlackEventHandlerServiceTest {
     private ArgumentCaptor<ShowIssueEvent> showIssueEventArgumentCaptor;
     @Captor
     private ArgumentCaptor<UnauthorizedUnfurlEvent> unauthorizedUnfurlEventArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<List<Pair<JiraCommandEvent, NotificationInfo>>> notificationInfoListCaptor;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -181,7 +182,6 @@ public class SlackEventHandlerServiceTest {
         when(mentionChannelCacheManager.get(key)).thenReturn(Optional.of(new MentionChannel(key, conversation, "")));
 
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(true);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("ISS-1")).thenReturn(issue1);
         when(issueManager.getIssueByCurrentKey("ISS-2")).thenReturn(issue2);
         when(issueManager.getIssueByCurrentKey("ISS-3")).thenReturn(issue3);
@@ -202,7 +202,7 @@ public class SlackEventHandlerServiceTest {
 
         assertThat(result, is(true));
 
-        verify(taskExecutorService).submitTask(processIssueMentionTask);
+        verify(asyncExecutor).run(processIssueMentionTask);
         verify(issueDetailsMessageManager).sendIssueDetailsMessageToChannel(
                 notificationInfoCaptor.capture(), same(issue1), isNull());
 
@@ -229,7 +229,6 @@ public class SlackEventHandlerServiceTest {
         when(mentionChannelCacheManager.get(key)).thenReturn(Optional.of(new MentionChannel(key, conversation, "")));
 
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(true);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("DED-1")).thenReturn(issueDedicated);
         when(issueDedicated.getProjectObject()).thenReturn(project);
 
@@ -249,15 +248,15 @@ public class SlackEventHandlerServiceTest {
         when(taskBuilder.newSendNotificationTask(
                 issueMentionedEventArgumentCaptor.capture(),
                 notificationInfoCaptorDedicated.capture(),
-                same(taskExecutorService))
+                same(asyncExecutor))
         ).thenReturn(sendNotificationTask);
 
         boolean result = target.handleMessage(message);
 
         assertThat(result, is(true));
 
-        verify(taskExecutorService).submitTask(processIssueMentionTask);
-        verify(taskExecutorService).submitTask(sendNotificationTask);
+        verify(asyncExecutor).run(processIssueMentionTask);
+        verify(asyncExecutor).run(sendNotificationTask);
         verify(eventPublisher).publish(isA(DedicatedChannelIssueMentionedEvent.class));
         verify(issueDetailsMessageManager).sendIssueDetailsMessageToChannel(
                 notificationInfoCaptor.capture(), same(issueDedicated), same(dedicatedChannel));
@@ -298,7 +297,7 @@ public class SlackEventHandlerServiceTest {
         when(mentionChannelCacheManager.get(key)).thenReturn(Optional.of(new MentionChannel(key, conversation, "")));
 
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(false);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
+        when(taskBuilder.newUnfurlIssueLinksTask(notificationInfoListCaptor.capture())).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("ISS-1")).thenReturn(issue1);
         when(issue1.getProjectObject()).thenReturn(project);
 
@@ -314,13 +313,11 @@ public class SlackEventHandlerServiceTest {
 
         assertThat(result, is(true));
 
-        verify(taskExecutorService).submitTask(processIssueMentionTask);
-        verify(taskExecutorService).submitTask(unfurlIssueLinksTask);
+        verify(asyncExecutor).run(processIssueMentionTask);
+        verify(asyncExecutor).run(unfurlIssueLinksTask);
         verify(issueDetailsMessageManager, never()).sendIssueDetailsMessageToChannel(any(), any(), any());
 
-        verify(unfurlIssueLinksTask).addNotification(showIssueEventArgumentCaptor.capture(), notificationInfoCaptor.capture());
-
-        NotificationInfo notifInfo = notificationInfoCaptor.getValue();
+        NotificationInfo notifInfo = notificationInfoListCaptor.getValue().get(0).getRight();
         assertThat(notifInfo.getLink(), sameInstance(link));
         assertThat(notifInfo.getChannelId(), is("C"));
         assertThat(notifInfo.getResponseUrl(), is("url"));
@@ -349,7 +346,6 @@ public class SlackEventHandlerServiceTest {
         when(mentionChannelCacheManager.get(key)).thenReturn(Optional.of(new MentionChannel(key, conversation, "")));
 
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(false);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("ISS-1")).thenReturn(issue1);
         when(issue1.getProjectId()).thenReturn(7L);
         when(issue1.getKey()).thenReturn("K");
@@ -368,9 +364,9 @@ public class SlackEventHandlerServiceTest {
 
         assertThat(result, is(false));
 
-        verify(taskExecutorService).submitTask(directMessageTask);
+        verify(asyncExecutor).run(directMessageTask);
         verify(issueDetailsMessageManager, never()).sendIssueDetailsMessageToChannel(any(), any(), any());
-        verify(unfurlIssueLinksTask, never()).addNotification(any(), any());
+        verify(asyncExecutor, never()).run(unfurlIssueLinksTask);
 
         UnauthorizedUnfurlEvent event = unauthorizedUnfurlEventArgumentCaptor.getValue();
         assertThat(event.getTeamId(), is("T"));
@@ -403,7 +399,6 @@ public class SlackEventHandlerServiceTest {
         when(pluginConfigurationManager.isIssuePreviewForGuestChannelsEnabled()).thenReturn(false);
         when(conversation.isExtShared()).thenReturn(true);
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(true);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("DED-1")).thenReturn(issueDedicated);
         when(issueDedicated.getProjectObject()).thenReturn(project);
         when(dedicatedChannelManager.getDedicatedChannel(issueDedicated)).thenReturn(Optional.of(dedicatedChannel));
@@ -417,7 +412,7 @@ public class SlackEventHandlerServiceTest {
 
         assertThat(result, is(false));
 
-        verify(taskExecutorService, never()).submitTask(any()); //sendNotificationTask);
+        verify(asyncExecutor, never()).run(any());
         verify(eventPublisher, never()).publish(any());
         verify(issueDetailsMessageManager, never()).sendIssueDetailsMessageToChannel(any(), any(), any());
     }
@@ -435,7 +430,6 @@ public class SlackEventHandlerServiceTest {
         when(slackUser.getUserKey()).thenReturn("JU");
 
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(true);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("DED-1")).thenReturn(issueDedicated);
         when(issueDedicated.getProjectObject()).thenReturn(project);
 
@@ -478,7 +472,6 @@ public class SlackEventHandlerServiceTest {
         when(slackUser.getUserKey()).thenReturn("JU");
 
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(true);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("DED-1")).thenReturn(issueDedicated);
         when(issueDedicated.getProjectObject()).thenReturn(project);
 
@@ -523,7 +516,6 @@ public class SlackEventHandlerServiceTest {
         when(mentionChannelCacheManager.get(key)).thenReturn(Optional.of(new MentionChannel(key, conversation, "")));
 
         when(slackLinkManager.shouldUseLinkUnfurl("T")).thenReturn(true);
-        when(taskBuilder.newUnfurlIssueLinksTask()).thenReturn(unfurlIssueLinksTask);
         when(issueManager.getIssueByCurrentKey("DED-1")).thenReturn(issueDedicated);
         when(dedicatedChannelManager.getDedicatedChannel(issueDedicated)).thenReturn(Optional.of(dedicatedChannel));
         when(slackUserManager.getBySlackUserId("U")).thenReturn(Optional.of(slackUser));
@@ -537,7 +529,7 @@ public class SlackEventHandlerServiceTest {
         assertThat(result, is(false));
 
         verify(taskBuilder).newProcessIssueMentionTask(any(), any());
-        verify(taskExecutorService).submitTask(processIssueMentionTask);
+        verify(asyncExecutor).run(processIssueMentionTask);
         verify(taskBuilder, never()).newSendNotificationTask(any(), (NotificationInfo) any(), any());
         verify(eventPublisher, never()).publish(any());
         verify(issueDetailsMessageManager, never()).sendIssueDetailsMessageToChannel(any(), any(), any());

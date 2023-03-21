@@ -11,16 +11,18 @@ import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.model.Attachment;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -64,9 +66,6 @@ public class UnfurlIssueLinksTaskTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @InjectMocks
-    private UnfurlIssueLinksTask target;
-
     @Test
     public void call() {
         when(eventRenderer.render(jiraCommandEvent, Collections.singletonList(notificationInfo)))
@@ -82,7 +81,11 @@ public class UnfurlIssueLinksTaskTest {
         when(slackClientProvider.withLink(link)).thenReturn(client);
         when(client.withUserTokenIfAvailable(slackUser)).thenReturn(Optional.of(userClient));
 
-        target.addNotification(jiraCommandEvent, notificationInfo);
+        List<Pair<JiraCommandEvent, NotificationInfo>> notificationInfos = Arrays.asList(Pair.of(
+                jiraCommandEvent, notificationInfo));
+
+        UnfurlIssueLinksTask target = new UnfurlIssueLinksTask(eventRenderer, slackClientProvider, slackUserManager,
+                notificationInfos);
         target.call();
 
         verify(userClient).unfurl(eq("C"), eq("ts"), captor.capture());

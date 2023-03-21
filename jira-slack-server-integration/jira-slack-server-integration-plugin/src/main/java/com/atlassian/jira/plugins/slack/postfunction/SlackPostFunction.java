@@ -9,13 +9,13 @@ import com.atlassian.jira.plugins.slack.model.event.DefaultJiraPostFunctionEvent
 import com.atlassian.jira.plugins.slack.service.issuefilter.impl.JqlIssueFilter;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.function.issue.AbstractJiraFunctionProvider;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.opensymphony.module.propertyset.PropertySet;
@@ -46,7 +46,7 @@ public class SlackPostFunction extends AbstractJiraFunctionProvider {
     private static final String ORIGINAL_ISSUE_OBJECT = "originalissueobject";
 
     private final TaskBuilder taskBuilder;
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final JqlIssueFilter issueFilter;
     private final SlackLinkManager slackLinkManager;
     private final EventPublisher eventPublisher;
@@ -149,7 +149,7 @@ public class SlackPostFunction extends AbstractJiraFunctionProvider {
                                 notification.getLink()), notificationKey, Type.POST_FUNCTION));
                     }
                 });
-                taskBuilder.newSendNotificationTask(postFunctionEvent, notificationInfos, taskExecutorService).call();
+                taskBuilder.newSendNotificationTask(postFunctionEvent, notificationInfos, asyncExecutor).run();
             }
         } catch (Exception e) {
             logger.warn("Exception trying to send information to Slack", e);

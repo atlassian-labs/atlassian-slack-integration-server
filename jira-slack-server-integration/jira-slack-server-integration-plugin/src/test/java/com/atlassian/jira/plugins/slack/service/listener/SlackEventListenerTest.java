@@ -8,15 +8,13 @@ import com.atlassian.jira.plugins.slack.model.event.ShowHelpEvent;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueNotFoundEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.ProcessMessageDeletedTask;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.webhooks.GenericMessageSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.LinkSharedSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.SlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.SlackSlashCommand;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -44,7 +42,7 @@ public class SlackEventListenerTest {
     @Mock
     private EventPublisher eventPublisher;
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private TaskBuilder taskBuilder;
     @Mock
@@ -59,7 +57,7 @@ public class SlackEventListenerTest {
     @Mock
     private LinkSharedSlackEvent linkSharedSlackEvent;
     @Mock
-    private SendNotificationTask sendNotificationTask;
+    private Runnable sendNotificationTask;
     @Mock
     private SlackLink link;
     @Mock
@@ -69,7 +67,7 @@ public class SlackEventListenerTest {
     @Mock
     private SlackEvent slackEvent;
     @Mock
-    private ProcessMessageDeletedTask processMessageDeletedTask;
+    private Runnable processMessageDeletedTask;
     @Mock
     private GenericMessageSlackEvent.ChangedMessage currentMessage;
     @Mock
@@ -96,7 +94,7 @@ public class SlackEventListenerTest {
         when(taskBuilder.newSendNotificationTask(
                 isA(ShowHelpEvent.class),
                 notificationInfoArgumentCaptor.capture(),
-                same(taskExecutorService))).thenReturn(sendNotificationTask);
+                same(asyncExecutor))).thenReturn(sendNotificationTask);
 
         testCommand();
     }
@@ -107,7 +105,7 @@ public class SlackEventListenerTest {
         when(taskBuilder.newSendNotificationTask(
                 isA(ShowHelpEvent.class),
                 notificationInfoArgumentCaptor.capture(),
-                same(taskExecutorService))).thenReturn(sendNotificationTask);
+                same(asyncExecutor))).thenReturn(sendNotificationTask);
 
         testCommand();
     }
@@ -119,7 +117,7 @@ public class SlackEventListenerTest {
         when(taskBuilder.newSendNotificationTask(
                 showAccountInfoEventArgumentCaptor.capture(),
                 notificationInfoArgumentCaptor.capture(),
-                same(taskExecutorService))).thenReturn(sendNotificationTask);
+                same(asyncExecutor))).thenReturn(sendNotificationTask);
 
         testCommand();
 
@@ -136,7 +134,7 @@ public class SlackEventListenerTest {
         when(taskBuilder.newSendNotificationTask(
                 isA(ShowIssueNotFoundEvent.class),
                 notificationInfoArgumentCaptor.capture(),
-                same(taskExecutorService))).thenReturn(sendNotificationTask);
+                same(asyncExecutor))).thenReturn(sendNotificationTask);
 
         testCommand();
 
@@ -164,7 +162,7 @@ public class SlackEventListenerTest {
 
         target.slashCommand(command);
 
-        verify(taskExecutorService, never()).submitTask(any());
+        verify(asyncExecutor, never()).run(any());
     }
 
     private void testCommand() {
@@ -174,7 +172,7 @@ public class SlackEventListenerTest {
 
         target.slashCommand(command);
 
-        verify(taskExecutorService).submitTask(sendNotificationTask);
+        verify(asyncExecutor).run(sendNotificationTask);
 
         NotificationInfo notifInfo = notificationInfoArgumentCaptor.getValue();
         assertThat(notifInfo.getLink(), sameInstance(link));
@@ -196,7 +194,7 @@ public class SlackEventListenerTest {
 
         target.messageReceived(messageSlackEvent);
 
-        verify(taskExecutorService).submitTask(processMessageDeletedTask);
+        verify(asyncExecutor).run(processMessageDeletedTask);
 
         SlackDeletedMessage msg = slackDeletedMessageArgumentCaptor.getValue();
         assertThat(msg.getTeamId(), is("T"));
@@ -281,7 +279,7 @@ public class SlackEventListenerTest {
         when(taskBuilder.newSendNotificationTask(
                 isA(ShowHelpEvent.class),
                 notificationInfoArgumentCaptor.capture(),
-                same(taskExecutorService))).thenReturn(sendNotificationTask);
+                same(asyncExecutor))).thenReturn(sendNotificationTask);
 
         target.messageReceived(messageSlackEvent);
 

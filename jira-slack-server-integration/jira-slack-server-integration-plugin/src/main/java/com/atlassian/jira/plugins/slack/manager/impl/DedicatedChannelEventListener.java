@@ -7,10 +7,10 @@ import com.atlassian.jira.plugins.slack.model.event.DedicatedChannelUnlinkedEven
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,17 +21,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DedicatedChannelEventListener extends AutoSubscribingEventListener {
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final TaskBuilder taskBuilder;
     private final SlackLinkManager slackLinkManager;
 
     @Autowired
     public DedicatedChannelEventListener(final EventPublisher eventPublisher,
-                                         final TaskExecutorService taskExecutorService,
+                                         final AsyncExecutor asyncExecutor,
                                          final TaskBuilder taskBuilder,
                                          final SlackLinkManager slackLinkManager) {
         super(eventPublisher);
-        this.taskExecutorService = taskExecutorService;
+        this.asyncExecutor = asyncExecutor;
         this.taskBuilder = taskBuilder;
         this.slackLinkManager = slackLinkManager;
     }
@@ -59,9 +59,6 @@ public class DedicatedChannelEventListener extends AutoSubscribingEventListener 
                 null,
                 owner,
                 Verbosity.EXTENDED);
-        taskExecutorService.submitTask(taskBuilder.newSendNotificationTask(
-                pluginEvent,
-                notificationInfo,
-                taskExecutorService));
+        asyncExecutor.run(taskBuilder.newSendNotificationTask(pluginEvent, notificationInfo, asyncExecutor));
     }
 }

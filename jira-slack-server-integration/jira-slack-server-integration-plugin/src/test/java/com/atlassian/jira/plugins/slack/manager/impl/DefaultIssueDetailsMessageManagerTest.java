@@ -6,10 +6,9 @@ import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.SlackLink;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 public class DefaultIssueDetailsMessageManagerTest {
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private TaskBuilder taskBuilder;
     @Mock
@@ -45,7 +44,7 @@ public class DefaultIssueDetailsMessageManagerTest {
     @Mock
     private DedicatedChannel dedicatedChannel;
     @Mock
-    private SendNotificationTask sendNotificationTask;
+    private Runnable sendNotificationTask;
     @Mock
     private SlackLink slackLink;
 
@@ -63,13 +62,13 @@ public class DefaultIssueDetailsMessageManagerTest {
         when(taskBuilder.newSendNotificationTask(
                 captor.capture(),
                 same(notificationInfo),
-                same(taskExecutorService))
+                same(asyncExecutor))
         ).thenReturn(sendNotificationTask);
         when(notificationInfo.getLink()).thenReturn(slackLink);
 
         target.sendIssueDetailsMessageToChannel(notificationInfo, issue, dedicatedChannel);
 
-        verify(taskExecutorService).submitTask(sendNotificationTask);
+        verify(asyncExecutor).run(sendNotificationTask);
 
         final ShowIssueEvent event = captor.getValue();
         assertThat(event.getDedicatedChannel(), is(Optional.of(dedicatedChannel)));

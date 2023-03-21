@@ -4,11 +4,11 @@ import com.atlassian.jira.plugins.slack.model.SlackNotification;
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.RetryUser;
 import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostEphemeralRequest;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.google.common.collect.Iterables;
@@ -29,20 +29,20 @@ public class SendNotificationTask implements Callable<Void> {
     private final EventRenderer eventRenderer;
     private final PluginEvent event;
     private final List<NotificationInfo> notifications;
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final SlackClientProvider slackClientProvider;
     private final RetryLoaderHelper retryLoaderHelper;
 
     SendNotificationTask(final EventRenderer eventRenderer,
                          final PluginEvent event,
                          final List<NotificationInfo> notifications,
-                         final TaskExecutorService taskExecutorService,
+                         final AsyncExecutor asyncExecutor,
                          final SlackClientProvider slackClientProvider,
                          final RetryLoaderHelper retryLoaderHelper) {
         this.eventRenderer = eventRenderer;
         this.event = event;
         this.notifications = notifications;
-        this.taskExecutorService = taskExecutorService;
+        this.asyncExecutor = asyncExecutor;
         this.slackClientProvider = slackClientProvider;
         this.retryLoaderHelper = retryLoaderHelper;
     }
@@ -52,7 +52,7 @@ public class SendNotificationTask implements Callable<Void> {
         final List<SlackNotification> messages = eventRenderer.render(event, notifications);
         log.info("Found {} messages to send to Slack", Iterables.size(messages));
         for (final SlackNotification message : messages) {
-            taskExecutorService.submitTask((Callable<Void>) () -> {
+            asyncExecutor.run(() -> {
                 final SlackClient client = slackClientProvider.withLink(message.getSlackLink());
 
                 if (message.getResponseUrl() != null) {
@@ -90,7 +90,6 @@ public class SendNotificationTask implements Callable<Void> {
                             RetryUser.botUser(),
                             RetryUser.userKey(message.getConfigurationOwner()));
                 }
-                return null;
             });
         }
         return null;

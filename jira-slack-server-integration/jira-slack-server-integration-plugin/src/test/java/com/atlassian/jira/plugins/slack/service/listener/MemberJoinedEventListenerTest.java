@@ -8,12 +8,11 @@ import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
 import com.atlassian.jira.plugins.slack.model.event.ShowBotAddedHelpEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.webhooks.MemberJoinedChannelSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.SlackEvent;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -42,7 +41,7 @@ public class MemberJoinedEventListenerTest {
     @Mock
     private DedicatedChannelDAO dedicatedChannelDAO;
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private TaskBuilder taskBuilder;
 
@@ -57,7 +56,7 @@ public class MemberJoinedEventListenerTest {
     @Mock
     private DedicatedChannel dedicatedChannel;
     @Mock
-    private SendNotificationTask sendNotificationTask;
+    private Runnable sendNotificationTask;
 
     @Captor
     private ArgumentCaptor<NotificationInfo> notificationInfoCaptor;
@@ -77,17 +76,15 @@ public class MemberJoinedEventListenerTest {
         when(memberJoinedChannelSlackEvent.getChannel()).thenReturn("C");
         when(slackEvent.getSlackLink()).thenReturn(link);
         when(link.getBotUserId()).thenReturn("B");
-//        when(configurationDAO.findByChannel("C")).thenReturn(Collections.singletonList(projectConfiguration));
-//        when(dedicatedChannelDAO.findMappingsForChannel("C")).thenReturn(Collections.singletonList(dedicatedChannel));
         when(configurationDAO.findByChannel(new ConversationKey("T", "C"))).thenReturn(Collections.emptyList());
         when(dedicatedChannelDAO.findMappingsForChannel(new ConversationKey("T", "C"))).thenReturn(Collections.emptyList());
 
-        when(taskBuilder.newSendNotificationTask(eventCaptor.capture(), notificationInfoCaptor.capture(), same(taskExecutorService)))
+        when(taskBuilder.newSendNotificationTask(eventCaptor.capture(), notificationInfoCaptor.capture(), same(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
 
         target.memberJoined(memberJoinedChannelSlackEvent);
 
-        verify(taskExecutorService).submitTask(sendNotificationTask);
+        verify(asyncExecutor).run(sendNotificationTask);
         assertThat(eventCaptor.getValue().getSlackLink(), sameInstance(link));
         assertThat(eventCaptor.getValue().getChannelId(), is("C"));
 
@@ -106,7 +103,7 @@ public class MemberJoinedEventListenerTest {
         target.memberJoined(memberJoinedChannelSlackEvent);
 
         verify(configurationDAO, never()).findByChannel(any());
-        verify(taskExecutorService, never()).submitTask(sendNotificationTask);
+        verify(asyncExecutor, never()).run(sendNotificationTask);
     }
 
     @Test
@@ -120,7 +117,7 @@ public class MemberJoinedEventListenerTest {
 
         target.memberJoined(memberJoinedChannelSlackEvent);
 
-        verify(taskExecutorService, never()).submitTask(sendNotificationTask);
+        verify(asyncExecutor, never()).run(sendNotificationTask);
     }
 
     @Test
@@ -135,6 +132,6 @@ public class MemberJoinedEventListenerTest {
 
         target.memberJoined(memberJoinedChannelSlackEvent);
 
-        verify(taskExecutorService, never()).submitTask(sendNotificationTask);
+        verify(asyncExecutor, never()).run(sendNotificationTask);
     }
 }

@@ -4,12 +4,12 @@ import com.atlassian.jira.plugins.slack.model.SlackNotification;
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.RetryUser;
 import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.model.Message;
@@ -17,7 +17,6 @@ import io.atlassian.fugue.Either;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,12 +28,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.AdditionalAnswers.answer;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,7 +48,7 @@ public class SendNotificationTaskTest {
     @Spy
     private List<NotificationInfo> notifications = new ArrayList<>();
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private SlackClientProvider slackClientProvider;
     @Mock
@@ -80,8 +81,10 @@ public class SendNotificationTaskTest {
     @Test
     public void call_withResponseUrl() {
         when(eventRenderer.render(event, notifications)).thenReturn(Collections.singletonList(slackNotification));
-        when(taskExecutorService.submitTask(ArgumentMatchers.any()))
-                .thenAnswer(args -> ((Callable<Void>) args.getArgument(0)).call());
+        doAnswer(answer((Runnable r) -> {
+            r.run();
+            return null;
+        })).when(asyncExecutor).run(any(Runnable.class));
         when(slackClientProvider.withLink(link)).thenReturn(client);
         when(slackNotification.getSlackLink()).thenReturn(link);
         when(slackNotification.getResponseUrl()).thenReturn("url");
@@ -95,8 +98,10 @@ public class SendNotificationTaskTest {
     @Test
     public void call_withoutResponseUrl() {
         when(eventRenderer.render(event, notifications)).thenReturn(Collections.singletonList(slackNotification));
-        when(taskExecutorService.submitTask(ArgumentMatchers.any()))
-                .thenAnswer(args -> ((Callable<Void>) args.getArgument(0)).call());
+        doAnswer(answer((Runnable r) -> {
+            r.run();
+            return null;
+        })).when(asyncExecutor).run(any(Runnable.class));
         when(slackClientProvider.withLink(link)).thenReturn(client);
         when(slackNotification.getSlackLink()).thenReturn(link);
         when(slackNotification.getResponseUrl()).thenReturn(null);
