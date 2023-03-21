@@ -50,8 +50,8 @@ public class DefaultTaskBuilder implements TaskBuilder {
     public Runnable newSendNotificationTask(final PluginEvent event,
                                             final List<NotificationInfo> notificationInfos,
                                             final AsyncExecutor asyncExecutor) {
-        SendNotificationTask task = new SendNotificationTask(eventRenderer, event, notificationInfos,
-                asyncExecutor, slackClientProvider, retryLoaderHelper);
+        SendNotificationTask task = new SendNotificationTask(eventRenderer, asyncExecutor, slackClientProvider,
+                retryLoaderHelper, this, event, notificationInfos);
         return new ThreadLocalAwareTask(jiraThreadLocalUtil, task);
     }
 
@@ -86,5 +86,10 @@ public class DefaultTaskBuilder implements TaskBuilder {
     public Runnable newDirectMessageTask(final PluginEvent event, final NotificationInfo notification) {
         DirectMessageTask task = new DirectMessageTask(eventRenderer, slackClientProvider, event, notification);
         return new ThreadLocalAwareTask(jiraThreadLocalUtil, task);
+    }
+
+    @Override
+    public Runnable newThreadLocalAwareTask(final Runnable runnable) {
+        return new ThreadLocalAwareTask(jiraThreadLocalUtil, runnable);
     }
 }

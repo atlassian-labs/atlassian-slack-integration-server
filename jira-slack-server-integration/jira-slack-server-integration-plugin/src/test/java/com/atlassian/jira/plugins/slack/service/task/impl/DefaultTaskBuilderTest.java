@@ -90,8 +90,8 @@ public class DefaultTaskBuilderTest {
 
     @Test
     public void newSendNotificationTask_withList() throws Exception {
-        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, event,
-                Collections.singletonList(notificationInfo), asyncExecutor, slackClientProvider, retryLoaderHelper
+        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, asyncExecutor, slackClientProvider,
+                retryLoaderHelper, target, event, Collections.singletonList(notificationInfo)
         ).thenReturn(sendNotificationTask);
         PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, sendNotificationTask)
                 .thenReturn(threadLocalAwareTask);
@@ -103,8 +103,8 @@ public class DefaultTaskBuilderTest {
 
     @Test
     public void newSendNotificationTask_singleItem() throws Exception {
-        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, event,
-                Collections.singletonList(notificationInfo), asyncExecutor, slackClientProvider, retryLoaderHelper
+        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, asyncExecutor, slackClientProvider,
+                retryLoaderHelper, target, event, Collections.singletonList(notificationInfo)
         ).thenReturn(sendNotificationTask);
         PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, sendNotificationTask)
                 .thenReturn(threadLocalAwareTask);

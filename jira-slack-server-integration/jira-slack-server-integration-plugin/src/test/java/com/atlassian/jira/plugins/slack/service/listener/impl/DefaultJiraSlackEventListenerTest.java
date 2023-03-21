@@ -44,6 +44,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -129,6 +130,7 @@ public class DefaultJiraSlackEventListenerTest {
         when(notificationInfo3.getChannelId()).thenReturn("C2");
         when(taskBuilder.newSendNotificationTask(eventCaptor3.capture(), notInfoCaptor.capture(), same(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
+        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         CommonTestUtil.bypass(asyncExecutor);
 
         target.issueEvent(issueEventBundle);
@@ -182,6 +184,7 @@ public class DefaultJiraSlackEventListenerTest {
                 .thenReturn(Collections.singleton(notificationInfo1));
         when(taskBuilder.newSendNotificationTask(any(PluginEvent.class), anyList(), eq(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
+        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         CommonTestUtil.bypass(asyncExecutor);
 
         target.issueEvent(issueEventBundle);

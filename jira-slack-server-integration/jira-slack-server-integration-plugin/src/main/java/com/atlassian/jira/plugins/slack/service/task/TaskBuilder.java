@@ -28,4 +28,6 @@ public interface TaskBuilder {
     Runnable newUnfurlIssueLinksTask(List<Pair<JiraCommandEvent, NotificationInfo>> notificationInfos);
 
     Runnable newDirectMessageTask(final PluginEvent event, final NotificationInfo notification);
+
+    Runnable newThreadLocalAwareTask(Runnable runnable);
 }

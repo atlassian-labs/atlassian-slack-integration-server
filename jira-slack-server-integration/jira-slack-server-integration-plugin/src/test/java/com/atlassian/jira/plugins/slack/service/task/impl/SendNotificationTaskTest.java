@@ -4,6 +4,7 @@ import com.atlassian.jira.plugins.slack.model.SlackNotification;
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
+import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.RetryUser;
@@ -53,6 +54,8 @@ public class SendNotificationTaskTest {
     private SlackClientProvider slackClientProvider;
     @Mock
     private RetryLoaderHelper retryLoaderHelper;
+    @Mock
+    private TaskBuilder taskBuilder;
 
     @Mock
     private SlackNotification slackNotification;
@@ -64,6 +67,8 @@ public class SendNotificationTaskTest {
     private SlackClient client;
     @Mock
     private Message message;
+    @Mock
+    private ThreadLocalAwareTask threadLocalAwareTask;
 
     @Captor
     private ArgumentCaptor<Function<SlackClient, Either<ErrorResponse, Message>>> loaderCaptor;
@@ -81,6 +86,7 @@ public class SendNotificationTaskTest {
     @Test
     public void call_withResponseUrl() {
         when(eventRenderer.render(event, notifications)).thenReturn(Collections.singletonList(slackNotification));
+        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         doAnswer(answer((Runnable r) -> {
             r.run();
             return null;
@@ -98,6 +104,7 @@ public class SendNotificationTaskTest {
     @Test
     public void call_withoutResponseUrl() {
         when(eventRenderer.render(event, notifications)).thenReturn(Collections.singletonList(slackNotification));
+        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         doAnswer(answer((Runnable r) -> {
             r.run();
             return null;
