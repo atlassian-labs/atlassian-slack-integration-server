@@ -67,8 +67,6 @@ public class SendNotificationTaskTest {
     private SlackClient client;
     @Mock
     private Message message;
-    @Mock
-    private ThreadLocalAwareTask threadLocalAwareTask;
 
     @Captor
     private ArgumentCaptor<Function<SlackClient, Either<ErrorResponse, Message>>> loaderCaptor;
@@ -84,9 +82,8 @@ public class SendNotificationTaskTest {
     private SendNotificationTask target;
 
     @Test
-    public void call_withResponseUrl() {
+    public void run_withResponseUrl() {
         when(eventRenderer.render(event, notifications)).thenReturn(Collections.singletonList(slackNotification));
-        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         doAnswer(answer((Runnable r) -> {
             r.run();
             return null;
@@ -96,15 +93,14 @@ public class SendNotificationTaskTest {
         when(slackNotification.getResponseUrl()).thenReturn("url");
         when(slackNotification.getMessageRequest()).thenReturn(chatPostMessageRequest);
 
-        target.call();
+        target.run();
 
         verify(client).postResponse("url", "ephemeral", chatPostMessageRequest);
     }
 
     @Test
-    public void call_withoutResponseUrl() {
+    public void run_withoutResponseUrl() {
         when(eventRenderer.render(event, notifications)).thenReturn(Collections.singletonList(slackNotification));
-        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         doAnswer(answer((Runnable r) -> {
             r.run();
             return null;
@@ -117,7 +113,7 @@ public class SendNotificationTaskTest {
         when(slackNotification.getMessageRequest()).thenReturn(chatPostMessageRequest);
         when(client.postMessage(chatPostMessageRequest)).thenReturn(Either.right(message));
 
-        target.call();
+        target.run();
 
         verify(retryLoaderHelper).retryWithUserTokens(
                 same(client), loaderCaptor.capture(), retryUserCaptor1.capture(), retryUserCaptor2.capture());

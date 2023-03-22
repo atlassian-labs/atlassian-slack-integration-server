@@ -8,6 +8,8 @@ import com.atlassian.jira.plugins.slack.model.event.ShowHelpEvent;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueNotFoundEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
+import com.atlassian.jira.plugins.slack.service.task.impl.ProcessMessageDeletedTask;
+import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.webhooks.GenericMessageSlackEvent;
 import com.atlassian.plugins.slack.api.webhooks.LinkSharedSlackEvent;
@@ -57,7 +59,7 @@ public class SlackEventListenerTest {
     @Mock
     private LinkSharedSlackEvent linkSharedSlackEvent;
     @Mock
-    private Runnable sendNotificationTask;
+    private SendNotificationTask sendNotificationTask;
     @Mock
     private SlackLink link;
     @Mock
@@ -67,7 +69,7 @@ public class SlackEventListenerTest {
     @Mock
     private SlackEvent slackEvent;
     @Mock
-    private Runnable processMessageDeletedTask;
+    private ProcessMessageDeletedTask processMessageDeletedTask;
     @Mock
     private GenericMessageSlackEvent.ChangedMessage currentMessage;
     @Mock
@@ -162,7 +164,7 @@ public class SlackEventListenerTest {
 
         target.slashCommand(command);
 
-        verify(asyncExecutor, never()).run(any());
+        verify(asyncExecutor, never()).run(any(Runnable.class));
     }
 
     private void testCommand() {

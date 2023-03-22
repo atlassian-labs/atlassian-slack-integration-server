@@ -9,7 +9,6 @@ import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.util.thread.JiraThreadLocalUtil;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.user.SlackUserManager;
@@ -25,7 +24,6 @@ import static java.util.Collections.singletonList;
 
 @Service
 public class DefaultTaskBuilder implements TaskBuilder {
-    private final JiraThreadLocalUtil jiraThreadLocalUtil;
     private final IssueMentionService issueMentionService;
     private final EventRenderer eventRenderer;
     private final SlackClientProvider slackClientProvider;
@@ -33,63 +31,51 @@ public class DefaultTaskBuilder implements TaskBuilder {
     private final SlackUserManager slackUserManager;
 
     @Autowired
-    public DefaultTaskBuilder(final JiraThreadLocalUtil jiraThreadLocalUtil,
-                              final IssueMentionService issueMentionService,
+    public DefaultTaskBuilder(final IssueMentionService issueMentionService,
                               @Qualifier("eventRendererDispatcher") final EventRenderer eventRenderer,
                               final SlackClientProvider slackClientProvider,
                               final RetryLoaderHelper retryLoaderHelper,
                               final SlackUserManager slackUserManager) {
-        this.jiraThreadLocalUtil = jiraThreadLocalUtil;
         this.issueMentionService = issueMentionService;
         this.eventRenderer = eventRenderer;
         this.slackClientProvider = slackClientProvider;
         this.retryLoaderHelper = retryLoaderHelper;
         this.slackUserManager = slackUserManager;
     }
+
     @Override
-    public Runnable newSendNotificationTask(final PluginEvent event,
-                                            final List<NotificationInfo> notificationInfos,
-                                            final AsyncExecutor asyncExecutor) {
-        SendNotificationTask task = new SendNotificationTask(eventRenderer, asyncExecutor, slackClientProvider,
-                retryLoaderHelper, this, event, notificationInfos);
-        return new ThreadLocalAwareTask(jiraThreadLocalUtil, task);
+    public SendNotificationTask newSendNotificationTask(final PluginEvent event,
+                                                        final List<NotificationInfo> notificationInfos,
+                                                        final AsyncExecutor asyncExecutor) {
+        return new SendNotificationTask(eventRenderer, asyncExecutor, slackClientProvider, retryLoaderHelper, event,
+                notificationInfos);
     }
 
     @Override
-    public Runnable newSendNotificationTask(final PluginEvent event,
-                                            final NotificationInfo notificationInfo,
-                                            final AsyncExecutor asyncExecutor) {
+    public SendNotificationTask newSendNotificationTask(final PluginEvent event,
+                                                        final NotificationInfo notificationInfo,
+                                                        final AsyncExecutor asyncExecutor) {
         return newSendNotificationTask(event, singletonList(notificationInfo), asyncExecutor);
     }
 
     @Override
-    public Runnable newProcessIssueMentionTask(final Issue issue,
-                                               final SlackIncomingMessage slackMessage) {
-        ProcessIssueMentionTask task = new ProcessIssueMentionTask(issueMentionService, issue, slackMessage);
-        return new ThreadLocalAwareTask(jiraThreadLocalUtil, task);
+    public ProcessIssueMentionTask newProcessIssueMentionTask(final Issue issue,
+                                                              final SlackIncomingMessage slackMessage) {
+        return new ProcessIssueMentionTask(issueMentionService, issue, slackMessage);
     }
 
     @Override
-    public Runnable newProcessMessageDeletionTask(final SlackDeletedMessage deletedMessage) {
-        ProcessMessageDeletedTask task = new ProcessMessageDeletedTask(issueMentionService, deletedMessage);
-        return new ThreadLocalAwareTask(jiraThreadLocalUtil, task);
+    public ProcessMessageDeletedTask newProcessMessageDeletionTask(final SlackDeletedMessage deletedMessage) {
+        return new ProcessMessageDeletedTask(issueMentionService, deletedMessage);
     }
 
     @Override
-    public Runnable newUnfurlIssueLinksTask(final List<Pair<JiraCommandEvent, NotificationInfo>> notificationInfos) {
-        UnfurlIssueLinksTask task = new UnfurlIssueLinksTask(eventRenderer, slackClientProvider, slackUserManager,
-                notificationInfos);
-        return new ThreadLocalAwareTask(jiraThreadLocalUtil, task);
+    public UnfurlIssueLinksTask newUnfurlIssueLinksTask(final List<Pair<JiraCommandEvent, NotificationInfo>> notificationInfos) {
+        return new UnfurlIssueLinksTask(eventRenderer, slackClientProvider, slackUserManager, notificationInfos);
     }
 
     @Override
-    public Runnable newDirectMessageTask(final PluginEvent event, final NotificationInfo notification) {
-        DirectMessageTask task = new DirectMessageTask(eventRenderer, slackClientProvider, event, notification);
-        return new ThreadLocalAwareTask(jiraThreadLocalUtil, task);
-    }
-
-    @Override
-    public Runnable newThreadLocalAwareTask(final Runnable runnable) {
-        return new ThreadLocalAwareTask(jiraThreadLocalUtil, runnable);
+    public DirectMessageTask newDirectMessageTask(final PluginEvent event, final NotificationInfo notification) {
+        return new DirectMessageTask(eventRenderer, slackClientProvider, event, notification);
     }
 }

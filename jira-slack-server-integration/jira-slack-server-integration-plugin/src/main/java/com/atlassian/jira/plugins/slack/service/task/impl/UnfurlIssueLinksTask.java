@@ -15,9 +15,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public class UnfurlIssueLinksTask implements Callable<Void> {
+public class UnfurlIssueLinksTask implements Runnable {
     private final EventRenderer eventRenderer;
     private final SlackClientProvider slackClientProvider;
     private final SlackUserManager slackUserManager;
@@ -34,7 +33,7 @@ public class UnfurlIssueLinksTask implements Callable<Void> {
     }
 
     @Override
-    public Void call() {
+    public void run() {
         if (!notificationInfos.isEmpty()) {
             // render attachments for every issue link
             Map<String, Attachment> unfurledIssueAttachments = new HashMap<>();
@@ -58,7 +57,5 @@ public class UnfurlIssueLinksTask implements Callable<Void> {
                     .flatMap(user -> slackClientProvider.withLink(link).withUserTokenIfAvailable(user))
                     .ifPresent(client -> client.unfurl(channelId, messageTimestamp, unfurledIssueAttachments));
         }
-
-        return null;
     }
 }

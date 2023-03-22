@@ -5,6 +5,7 @@ import com.atlassian.jira.plugins.slack.dao.ConfigurationDAO;
 import com.atlassian.jira.plugins.slack.model.event.ShowWelcomeEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
+import com.atlassian.jira.plugins.slack.service.task.impl.DirectMessageTask;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.event.SlackLinkedEvent;
 import com.atlassian.plugins.slack.event.SlackTeamUnlinkedEvent;
@@ -38,7 +39,7 @@ public class LinkEventListenerTest {
     @Mock
     private SlackLink link;
     @Mock
-    private Runnable directMessageTask;
+    private DirectMessageTask directMessageTask;
 
     @Captor
     private ArgumentCaptor<NotificationInfo> notificationInfoCaptor;

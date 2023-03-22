@@ -103,12 +103,12 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
                 // Running processing in main thread because it has some user context attached that is used
                 // when matching an issue against JQL;
                 // running this operation in background thread causes missing notifications on JSD tickets operations
-                asyncExecutor.run(taskBuilder.newThreadLocalAwareTask(() -> {
+                asyncExecutor.run(() -> {
                     Issue issue = issueEvent.getIssue();
                     log.debug("Processing eventTypeId={} for issue key={}, id={}", issueEvent.getEventTypeId(),
                             issue.getKey(), issue.getId());
                     processIssueEvent(issueEvent, eventsSeen);
-                }));
+                });
             }
         } catch (Exception e) {
             log.error("Error processing event", e);
@@ -208,7 +208,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
             return;
         }
 
-        asyncExecutor.run(taskBuilder.newThreadLocalAwareTask(() -> {
+        asyncExecutor.run(() -> {
             Issue issue = issueChangedEvent.getIssue();
             log.debug("Processing IssueChangedEvent for issue key={}, id={}", issue.getKey(), issue.getId());
 
@@ -219,6 +219,6 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
                 DefaultJiraIssueEvent internalEventWrapper = DefaultJiraIssueEvent.of(matcher, issueChangedEvent);
                 sendNotifications(internalEventWrapper);
             }
-        }));
+        });
     }
 }

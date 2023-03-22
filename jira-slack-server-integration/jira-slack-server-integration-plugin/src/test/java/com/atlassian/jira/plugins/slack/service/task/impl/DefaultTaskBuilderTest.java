@@ -8,7 +8,6 @@ import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.util.thread.JiraThreadLocalUtil;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.SlackClient;
@@ -35,7 +34,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
-@PrepareForTest({DefaultTaskBuilder.class, SendNotificationTask.class, ThreadLocalAwareTask.class})
+@PrepareForTest({DefaultTaskBuilder.class, SendNotificationTask.class})
 @RunWith(PowerMockRunner.class)
 public class DefaultTaskBuilderTest {
     @Mock
@@ -48,8 +47,6 @@ public class DefaultTaskBuilderTest {
     private RetryLoaderHelper retryLoaderHelper;
     @Mock
     private SlackUserManager slackUserManager;
-    @Mock
-    private JiraThreadLocalUtil jiraThreadLocalUtil;
 
     @Mock
     private PluginEvent event;
@@ -79,8 +76,6 @@ public class DefaultTaskBuilderTest {
     private UnfurlIssueLinksTask unfurlIssueLinksTask;
     @Mock
     private DirectMessageTask directMessageTask;
-    @Mock
-    private ThreadLocalAwareTask threadLocalAwareTask;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -91,51 +86,43 @@ public class DefaultTaskBuilderTest {
     @Test
     public void newSendNotificationTask_withList() throws Exception {
         PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, asyncExecutor, slackClientProvider,
-                retryLoaderHelper, target, event, Collections.singletonList(notificationInfo)
+                retryLoaderHelper, event, Collections.singletonList(notificationInfo)
         ).thenReturn(sendNotificationTask);
-        PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, sendNotificationTask)
-                .thenReturn(threadLocalAwareTask);
 
-        Runnable result = target.newSendNotificationTask(event, Collections.singletonList(notificationInfo), asyncExecutor);
+        SendNotificationTask result = target.newSendNotificationTask(event, Collections.singletonList(notificationInfo), asyncExecutor);
 
-        assertThat(result, sameInstance(threadLocalAwareTask));
+        assertThat(result, sameInstance(sendNotificationTask));
     }
 
     @Test
     public void newSendNotificationTask_singleItem() throws Exception {
         PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, asyncExecutor, slackClientProvider,
-                retryLoaderHelper, target, event, Collections.singletonList(notificationInfo)
+                retryLoaderHelper, event, Collections.singletonList(notificationInfo)
         ).thenReturn(sendNotificationTask);
-        PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, sendNotificationTask)
-                .thenReturn(threadLocalAwareTask);
 
-        Runnable result = target.newSendNotificationTask(event, notificationInfo, asyncExecutor);
+        SendNotificationTask result = target.newSendNotificationTask(event, notificationInfo, asyncExecutor);
 
-        assertThat(result, sameInstance(threadLocalAwareTask));
+        assertThat(result, sameInstance(sendNotificationTask));
     }
 
     @Test
     public void newProcessIssueMentionTask() throws Exception {
         PowerMockito.whenNew(ProcessIssueMentionTask.class).withArguments(issueMentionService, issue, slackMessage)
                 .thenReturn(processIssueMentionTask);
-        PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, processIssueMentionTask)
-                .thenReturn(threadLocalAwareTask);
 
-        Runnable result = target.newProcessIssueMentionTask(issue, slackMessage);
+        ProcessIssueMentionTask result = target.newProcessIssueMentionTask(issue, slackMessage);
 
-        assertThat(result, sameInstance(threadLocalAwareTask));
+        assertThat(result, sameInstance(processIssueMentionTask));
     }
 
     @Test
     public void newProcessMessageDeletionTask() throws Exception {
         PowerMockito.whenNew(ProcessMessageDeletedTask.class).withArguments(issueMentionService, deletedMessage)
                 .thenReturn(processMessageDeletedTask);
-        PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, processMessageDeletedTask)
-                .thenReturn(threadLocalAwareTask);
 
-        Runnable result = target.newProcessMessageDeletionTask(deletedMessage);
+        ProcessMessageDeletedTask result = target.newProcessMessageDeletionTask(deletedMessage);
 
-        assertThat(result, sameInstance(threadLocalAwareTask));
+        assertThat(result, sameInstance(processMessageDeletedTask));
     }
 
     @Test
@@ -144,23 +131,19 @@ public class DefaultTaskBuilderTest {
         PowerMockito.whenNew(UnfurlIssueLinksTask.class)
                 .withArguments(eventRenderer, slackClientProvider, slackUserManager, notificationInfos)
                 .thenReturn(unfurlIssueLinksTask);
-        PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, unfurlIssueLinksTask)
-                .thenReturn(threadLocalAwareTask);
 
-        Runnable result = target.newUnfurlIssueLinksTask(notificationInfos);
+        UnfurlIssueLinksTask result = target.newUnfurlIssueLinksTask(notificationInfos);
 
-        assertThat(result, sameInstance(threadLocalAwareTask));
+        assertThat(result, sameInstance(unfurlIssueLinksTask));
     }
 
     @Test
     public void newDirectMessageTask() throws Exception {
         PowerMockito.whenNew(DirectMessageTask.class).withArguments(eventRenderer, slackClientProvider, event, notificationInfo)
                 .thenReturn(directMessageTask);
-        PowerMockito.whenNew(ThreadLocalAwareTask.class).withArguments(jiraThreadLocalUtil, directMessageTask)
-                .thenReturn(threadLocalAwareTask);
 
-        Runnable result = target.newDirectMessageTask(event, notificationInfo);
+        DirectMessageTask result = target.newDirectMessageTask(event, notificationInfo);
 
-        assertThat(result, sameInstance(threadLocalAwareTask));
+        assertThat(result, sameInstance(directMessageTask));
     }
 }

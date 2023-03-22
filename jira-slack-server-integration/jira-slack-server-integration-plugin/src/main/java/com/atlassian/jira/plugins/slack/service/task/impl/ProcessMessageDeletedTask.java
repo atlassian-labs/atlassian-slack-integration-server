@@ -5,14 +5,13 @@ import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.plugins.slack.api.ConversationKey;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Callable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Sends the notification to the specific channel.
  */
-public class ProcessMessageDeletedTask implements Callable<Void> {
+public class ProcessMessageDeletedTask implements Runnable {
     private final IssueMentionService issueMentionService;
     private final SlackDeletedMessage message;
 
@@ -23,8 +22,7 @@ public class ProcessMessageDeletedTask implements Callable<Void> {
     }
 
     @Override
-    public Void call() {
+    public void run() {
         issueMentionService.deleteMessageMention(new ConversationKey(message.getTeamId(), message.getChannelId()), message.getTs());
-        return null;
     }
 }

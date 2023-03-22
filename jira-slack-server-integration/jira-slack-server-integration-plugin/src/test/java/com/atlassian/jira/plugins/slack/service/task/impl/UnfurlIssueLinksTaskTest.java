@@ -67,7 +67,7 @@ public class UnfurlIssueLinksTaskTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Test
-    public void call() {
+    public void run() {
         when(eventRenderer.render(jiraCommandEvent, Collections.singletonList(notificationInfo)))
                 .thenReturn(Collections.singletonList(slackNotification));
         when(slackNotification.getMessageRequest()).thenReturn(chatPostMessageRequest);
@@ -86,7 +86,7 @@ public class UnfurlIssueLinksTaskTest {
 
         UnfurlIssueLinksTask target = new UnfurlIssueLinksTask(eventRenderer, slackClientProvider, slackUserManager,
                 notificationInfos);
-        target.call();
+        target.run();
 
         verify(userClient).unfurl(eq("C"), eq("ts"), captor.capture());
         assertThat(captor.getValue().size(), is(1));

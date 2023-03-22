@@ -14,6 +14,7 @@ import com.atlassian.jira.plugins.slack.model.event.ConfigurationEvent;
 import com.atlassian.jira.plugins.slack.model.event.ProjectMappingConfigurationEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
+import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.user.ApplicationUser;
@@ -128,7 +129,7 @@ public class DefaultProjectConfigurationManagerTest {
     @Mock
     private ProjectConfigurationDTO projectConfigurationDTO;
     @Mock
-    private Runnable sendNotificationTask;
+    private SendNotificationTask sendNotificationTask;
     @Mock
     private PluginSettings pluginSettings;
     @Mock

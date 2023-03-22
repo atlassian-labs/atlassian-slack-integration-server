@@ -4,7 +4,6 @@ import com.atlassian.jira.plugins.slack.model.SlackNotification;
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.RetryUser;
 import com.atlassian.plugins.slack.api.client.SlackClient;
@@ -26,24 +25,23 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
  * Sends the notification to the specific channel.
  */
 @RequiredArgsConstructor
-public class SendNotificationTask implements Callable<Void> {
+public class SendNotificationTask implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(SendNotificationTask.class);
 
     private final EventRenderer eventRenderer;
     private final AsyncExecutor asyncExecutor;
     private final SlackClientProvider slackClientProvider;
     private final RetryLoaderHelper retryLoaderHelper;
-    private final TaskBuilder taskBuilder;
 
     private final PluginEvent event;
     private final List<NotificationInfo> notifications;
 
     @Override
-    public Void call() {
+    public void run() {
         final List<SlackNotification> messages = eventRenderer.render(event, notifications);
         log.info("Found {} messages to send to Slack", Iterables.size(messages));
         for (final SlackNotification message : messages) {
-            asyncExecutor.run(taskBuilder.newThreadLocalAwareTask(() -> {
+            asyncExecutor.run(() -> {
                 final SlackClient client = slackClientProvider.withLink(message.getSlackLink());
 
                 if (message.getResponseUrl() != null) {
@@ -81,8 +79,7 @@ public class SendNotificationTask implements Callable<Void> {
                             RetryUser.botUser(),
                             RetryUser.userKey(message.getConfigurationOwner()));
                 }
-            }));
+            });
         }
-        return null;
     }
 }

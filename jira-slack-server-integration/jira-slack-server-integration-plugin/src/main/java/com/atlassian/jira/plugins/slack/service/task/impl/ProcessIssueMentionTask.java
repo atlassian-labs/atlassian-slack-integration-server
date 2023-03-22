@@ -5,14 +5,13 @@ import com.atlassian.jira.plugins.slack.model.SlackIncomingMessage;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Callable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Sends the notification to the specific channel.
  */
-public class ProcessIssueMentionTask implements Callable<Void> {
+public class ProcessIssueMentionTask implements Runnable {
     private final IssueMentionService issueMentionService;
     private final Issue issue;
     private final SlackIncomingMessage message;
@@ -26,8 +25,7 @@ public class ProcessIssueMentionTask implements Callable<Void> {
     }
 
     @Override
-    public Void call() {
+    public void run() {
         issueMentionService.issueMentioned(issue, message);
-        return null;
     }
 }

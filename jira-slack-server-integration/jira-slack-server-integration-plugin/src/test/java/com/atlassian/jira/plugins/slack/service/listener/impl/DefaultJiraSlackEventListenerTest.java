@@ -16,6 +16,7 @@ import com.atlassian.jira.plugins.slack.service.notification.IssueEventProcessor
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.notification.PersonalNotificationManager;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
+import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.plugins.slack.settings.JiraSettingsService;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.user.ApplicationUser;
@@ -44,7 +45,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
-import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -94,7 +94,7 @@ public class DefaultJiraSlackEventListenerTest {
     @Mock
     private NotificationInfo notificationInfo3;
     @Mock
-    private Runnable sendNotificationTask;
+    private SendNotificationTask sendNotificationTask;
     @Mock
     private SpanningOperation spanningOperation;
 
@@ -130,7 +130,6 @@ public class DefaultJiraSlackEventListenerTest {
         when(notificationInfo3.getChannelId()).thenReturn("C2");
         when(taskBuilder.newSendNotificationTask(eventCaptor3.capture(), notInfoCaptor.capture(), same(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
-        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         CommonTestUtil.bypass(asyncExecutor);
 
         target.issueEvent(issueEventBundle);
@@ -184,7 +183,6 @@ public class DefaultJiraSlackEventListenerTest {
                 .thenReturn(Collections.singleton(notificationInfo1));
         when(taskBuilder.newSendNotificationTask(any(PluginEvent.class), anyList(), eq(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
-        when(taskBuilder.newThreadLocalAwareTask(any(Runnable.class))).thenAnswer(answer((Runnable runnable) -> runnable));
         CommonTestUtil.bypass(asyncExecutor);
 
         target.issueEvent(issueEventBundle);

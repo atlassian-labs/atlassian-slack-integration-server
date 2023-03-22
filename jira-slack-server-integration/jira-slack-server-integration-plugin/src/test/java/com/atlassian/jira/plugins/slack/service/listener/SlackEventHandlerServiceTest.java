@@ -20,6 +20,10 @@ import com.atlassian.jira.plugins.slack.model.event.UnauthorizedUnfurlEvent;
 import com.atlassian.jira.plugins.slack.model.mentions.MentionChannel;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
+import com.atlassian.jira.plugins.slack.service.task.impl.DirectMessageTask;
+import com.atlassian.jira.plugins.slack.service.task.impl.ProcessIssueMentionTask;
+import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
+import com.atlassian.jira.plugins.slack.service.task.impl.UnfurlIssueLinksTask;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
@@ -106,7 +110,7 @@ public class SlackEventHandlerServiceTest {
     @Mock
     private Conversation conversation;
     @Mock
-    private Runnable unfurlIssueLinksTask;
+    private UnfurlIssueLinksTask unfurlIssueLinksTask;
 
     @Mock
     private ApplicationUser applicationUser;
@@ -121,15 +125,15 @@ public class SlackEventHandlerServiceTest {
     @Mock
     private DedicatedChannel dedicatedChannel;
     @Mock
-    private Runnable directMessageTask;
+    private DirectMessageTask directMessageTask;
     @Mock
-    private Runnable processIssueMentionTask;
+    private ProcessIssueMentionTask processIssueMentionTask;
     @Mock
     private SlackUser slackUser;
     @Mock
     private Project project;
     @Mock
-    private Runnable sendNotificationTask;
+    private SendNotificationTask sendNotificationTask;
     @Mock
     private AnalyticsContext context;
 
@@ -412,7 +416,7 @@ public class SlackEventHandlerServiceTest {
 
         assertThat(result, is(false));
 
-        verify(asyncExecutor, never()).run(any());
+        verify(asyncExecutor, never()).run(any(Runnable.class));
         verify(eventPublisher, never()).publish(any());
         verify(issueDetailsMessageManager, never()).sendIssueDetailsMessageToChannel(any(), any(), any());
     }

@@ -6,6 +6,7 @@ import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
+import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
@@ -44,7 +45,7 @@ public class DefaultIssueDetailsMessageManagerTest {
     @Mock
     private DedicatedChannel dedicatedChannel;
     @Mock
-    private Runnable sendNotificationTask;
+    private SendNotificationTask sendNotificationTask;
     @Mock
     private SlackLink slackLink;
 

@@ -26,12 +26,12 @@ public class ProcessMessageDeletedTaskTest {
     private ProcessMessageDeletedTask target;
 
     @Test
-    public void call() {
+    public void run() {
         when(message.getChannelId()).thenReturn("C");
         when(message.getTeamId()).thenReturn("T");
         when(message.getTs()).thenReturn("ts");
 
-        target.call();
+        target.run();
 
         verify(issueMentionService).deleteMessageMention(new ConversationKey("T", "C"), "ts");
     }

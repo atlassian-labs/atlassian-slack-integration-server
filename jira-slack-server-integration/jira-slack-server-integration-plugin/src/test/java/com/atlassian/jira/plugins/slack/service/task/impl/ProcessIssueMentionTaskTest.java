@@ -27,8 +27,8 @@ public class ProcessIssueMentionTaskTest {
     private ProcessIssueMentionTask target;
 
     @Test
-    public void call() {
-        target.call();
+    public void run() {
+        target.run();
 
         verify(issueMentionService).issueMentioned(issue, message);
     }
