@@ -25,6 +25,7 @@ import com.atlassian.jira.plugins.slack.model.event.UnauthorizedUnfurlEvent;
 import com.atlassian.jira.plugins.slack.model.mentions.MentionChannel;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
+import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.plugins.slack.analytics.AnalyticsContext;
@@ -299,7 +300,11 @@ public class SlackEventHandlerService {
                 null, Type.DEDICATED));
 
         final JiraCommandEvent event = new IssueMentionedEvent(message, dedicatedChannel.getIssueId());
-        asyncExecutor.run(taskBuilder.newSendNotificationTask(event, notificationInfo, asyncExecutor));
+        final SendNotificationTask task = taskBuilder.newSendNotificationTask(
+                event,
+                notificationInfo,
+                asyncExecutor);
+        asyncExecutor.run(task);
         eventPublisher.publish(new DedicatedChannelIssueMentionedEvent(AnalyticsContext.fromSlackUser(slackUser),
                 message.getChannelId(), dedicatedChannel.getChannelId(), dedicatedChannel.getIssueId()));
     }

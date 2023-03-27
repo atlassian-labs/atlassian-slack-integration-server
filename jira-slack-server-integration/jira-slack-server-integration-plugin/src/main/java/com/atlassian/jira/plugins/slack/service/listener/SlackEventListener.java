@@ -10,7 +10,6 @@ import com.atlassian.jira.plugins.slack.model.event.ShowHelpEvent;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueNotFoundEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.api.webhooks.GenericMessageSlackEvent;
@@ -46,21 +45,18 @@ public class SlackEventListener extends AutoSubscribingEventListener {
     private final TaskBuilder taskBuilder;
     private final SlackLinkManager slackLinkManager;
     private final SlackEventHandlerService slackEventHandlerService;
-    private final AnalyticsContextProvider analyticsContextProvider;
 
     @Autowired
     SlackEventListener(final EventPublisher eventPublisher,
                        final AsyncExecutor asyncExecutor,
                        final TaskBuilder taskBuilder,
                        final SlackLinkManager slackLinkManager,
-                       final SlackEventHandlerService slackEventHandlerService,
-                       final AnalyticsContextProvider analyticsContextProvider) {
+                       final SlackEventHandlerService slackEventHandlerService) {
         super(eventPublisher);
         this.asyncExecutor = asyncExecutor;
         this.taskBuilder = taskBuilder;
         this.slackLinkManager = slackLinkManager;
         this.slackEventHandlerService = slackEventHandlerService;
-        this.analyticsContextProvider = analyticsContextProvider;
     }
 
     private PluginEvent handleCommand(final String commandText,
