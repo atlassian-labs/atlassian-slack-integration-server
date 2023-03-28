@@ -19,8 +19,6 @@ import com.atlassian.jira.plugins.slack.model.event.ConfigurationEvent.Configura
 import com.atlassian.jira.plugins.slack.model.event.ProjectMappingConfigurationEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.user.ApplicationUser;
@@ -35,6 +33,7 @@ import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.SlackChannelDTO;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.github.seratch.jslack.api.model.Conversation;
 import com.google.common.base.Strings;
 import com.google.common.collect.Ordering;
@@ -71,7 +70,7 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
     public static final String SKIP_RESTRICTED_COMMENTS = "SKIP_RESTRICTED_COMMENTS";
 
     private final ConfigurationDAO configurationDAO;
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final TaskBuilder taskBuilder;
     private final EventPublisher eventPublisher;
     private final ProjectManager projectManager;
@@ -429,13 +428,10 @@ public class DefaultProjectConfigurationManager implements ProjectConfigurationM
                 .build();
 
         slackLinkManager.getLinkByTeamId(configurationDTO.getTeamId()).forEach(link -> {
-            SendNotificationTask sendNotificationTask = taskBuilder.newSendNotificationTask(
-                    event,
-                    new NotificationInfo(link, event.getChannelId(), null, null,
-                            getOwner(configurationDTO).orElse(null),
-                            getVerbosity(configurationDTO).orElse(Verbosity.EXTENDED)),
-                    taskExecutorService);
-            taskExecutorService.submitTask(sendNotificationTask);
+            NotificationInfo notificationInfo = new NotificationInfo(link, event.getChannelId(), null, null,
+                    getOwner(configurationDTO).orElse(null),
+                    getVerbosity(configurationDTO).orElse(Verbosity.EXTENDED));
+            asyncExecutor.run(taskBuilder.newSendNotificationTask(event, notificationInfo, asyncExecutor));
 
             eventPublisher.publish(event.getAnalyticsEvent());
         });

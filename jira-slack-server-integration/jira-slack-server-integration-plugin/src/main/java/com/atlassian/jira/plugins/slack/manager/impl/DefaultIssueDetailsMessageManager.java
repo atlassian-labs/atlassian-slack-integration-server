@@ -10,9 +10,8 @@ import com.atlassian.jira.plugins.slack.model.event.JiraCommandEvent;
 import com.atlassian.jira.plugins.slack.model.event.ShowIssueEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,7 @@ import javax.annotation.Nullable;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class DefaultIssueDetailsMessageManager implements IssueDetailsMessageManager {
     private final TaskBuilder taskBuilder;
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final EventPublisher eventPublisher;
     private final AnalyticsContextProvider analyticsContextProvider;
 
@@ -38,10 +37,6 @@ public class DefaultIssueDetailsMessageManager implements IssueDetailsMessageMan
                 notificationInfo.getLink().getTeamId(), notificationInfo.getMessageAuthorId()), null, Type.UNFURLING));
 
         final JiraCommandEvent event = new ShowIssueEvent(issue, dedicatedChannel);
-        final SendNotificationTask task = taskBuilder.newSendNotificationTask(
-                event,
-                notificationInfo,
-                taskExecutorService);
-        taskExecutorService.submitTask(task);
+        asyncExecutor.run(taskBuilder.newSendNotificationTask(event, notificationInfo, asyncExecutor));
     }
 }

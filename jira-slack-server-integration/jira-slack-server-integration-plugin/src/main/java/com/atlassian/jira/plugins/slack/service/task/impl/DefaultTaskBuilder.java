@@ -3,15 +3,17 @@ package com.atlassian.jira.plugins.slack.service.task.impl;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.model.SlackDeletedMessage;
 import com.atlassian.jira.plugins.slack.model.SlackIncomingMessage;
+import com.atlassian.jira.plugins.slack.model.event.JiraCommandEvent;
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.user.SlackUserManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -44,21 +46,16 @@ public class DefaultTaskBuilder implements TaskBuilder {
     @Override
     public SendNotificationTask newSendNotificationTask(final PluginEvent event,
                                                         final List<NotificationInfo> notificationInfos,
-                                                        final TaskExecutorService taskExecutorService) {
-        return new SendNotificationTask(
-                eventRenderer,
-                event,
-                notificationInfos,
-                taskExecutorService,
-                slackClientProvider,
-                retryLoaderHelper);
+                                                        final AsyncExecutor asyncExecutor) {
+        return new SendNotificationTask(eventRenderer, asyncExecutor, slackClientProvider, retryLoaderHelper, event,
+                notificationInfos);
     }
 
     @Override
     public SendNotificationTask newSendNotificationTask(final PluginEvent event,
                                                         final NotificationInfo notificationInfo,
-                                                        final TaskExecutorService taskExecutorService) {
-        return newSendNotificationTask(event, singletonList(notificationInfo), taskExecutorService);
+                                                        final AsyncExecutor asyncExecutor) {
+        return newSendNotificationTask(event, singletonList(notificationInfo), asyncExecutor);
     }
 
     @Override
@@ -73,8 +70,8 @@ public class DefaultTaskBuilder implements TaskBuilder {
     }
 
     @Override
-    public UnfurlIssueLinksTask newUnfurlIssueLinksTask() {
-        return new UnfurlIssueLinksTask(eventRenderer, slackClientProvider, slackUserManager);
+    public UnfurlIssueLinksTask newUnfurlIssueLinksTask(final List<Pair<JiraCommandEvent, NotificationInfo>> notificationInfos) {
+        return new UnfurlIssueLinksTask(eventRenderer, slackClientProvider, slackUserManager, notificationInfos);
     }
 
     @Override

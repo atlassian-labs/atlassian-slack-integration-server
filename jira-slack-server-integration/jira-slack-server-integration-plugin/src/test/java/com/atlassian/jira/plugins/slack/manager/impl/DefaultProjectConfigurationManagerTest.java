@@ -14,7 +14,6 @@ import com.atlassian.jira.plugins.slack.model.event.ConfigurationEvent;
 import com.atlassian.jira.plugins.slack.model.event.ProjectMappingConfigurationEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
@@ -28,6 +27,7 @@ import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.github.seratch.jslack.api.model.Conversation;
@@ -76,7 +76,7 @@ public class DefaultProjectConfigurationManagerTest {
     @Mock
     private ConfigurationDAO configurationDAO;
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private TaskBuilder taskBuilder;
     @Mock
@@ -474,7 +474,7 @@ public class DefaultProjectConfigurationManagerTest {
         when(taskBuilder.newSendNotificationTask(
                 eventCaptor.capture(),
                 notificationInfoCaptor.capture(),
-                same(taskExecutorService))
+                same(asyncExecutor))
         ).thenReturn(sendNotificationTask);
         when(configurationDAO.findByProjectConfigurationGroupId(7L, "G"))
                 .thenReturn(Collections.singletonList(projectConfigurationOwner));
@@ -483,7 +483,7 @@ public class DefaultProjectConfigurationManagerTest {
     }
 
     private void assertDeletetion(int eventCount) {
-        verify(taskExecutorService).submitTask(sendNotificationTask);
+        verify(asyncExecutor).run(sendNotificationTask);
         verify(eventPublisher, times(eventCount)).publish(genericCaptor.capture());
         assertThat(genericCaptor.getAllValues().get(0), instanceOf(ProjectChannelUnlinkedEvent.class));
 

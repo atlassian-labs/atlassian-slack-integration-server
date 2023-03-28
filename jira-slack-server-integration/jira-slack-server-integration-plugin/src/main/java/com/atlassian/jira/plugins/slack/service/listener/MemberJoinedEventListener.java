@@ -7,11 +7,10 @@ import com.atlassian.jira.plugins.slack.dao.DedicatedChannelDAO;
 import com.atlassian.jira.plugins.slack.model.event.ShowBotAddedHelpEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.api.webhooks.MemberJoinedChannelSlackEvent;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +25,19 @@ public class MemberJoinedEventListener extends AutoSubscribingEventListener {
 
     private final ConfigurationDAO configurationDAO;
     private final DedicatedChannelDAO dedicatedChannelDAO;
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final TaskBuilder taskBuilder;
 
     @Autowired
     public MemberJoinedEventListener(final EventPublisher eventPublisher,
                                      final ConfigurationDAO configurationDAO,
                                      final DedicatedChannelDAO dedicatedChannelDAO,
-                                     final TaskExecutorService taskExecutorService,
+                                     final AsyncExecutor asyncExecutor,
                                      final TaskBuilder taskBuilder) {
         super(eventPublisher);
         this.configurationDAO = configurationDAO;
         this.dedicatedChannelDAO = dedicatedChannelDAO;
-        this.taskExecutorService = taskExecutorService;
+        this.asyncExecutor = asyncExecutor;
         this.taskBuilder = taskBuilder;
     }
 
@@ -56,14 +55,9 @@ public class MemberJoinedEventListener extends AutoSubscribingEventListener {
                         null,
                         "",
                         Verbosity.EXTENDED);
-                final SendNotificationTask task = taskBuilder.newSendNotificationTask(
-                        new ShowBotAddedHelpEvent(
-                                event.getSlackEvent().getSlackLink(),
-                                event.getChannel()
-                        ),
-                        notificationInfo,
-                        taskExecutorService);
-                taskExecutorService.submitTask(task);
+                ShowBotAddedHelpEvent pluginEvent = new ShowBotAddedHelpEvent(event.getSlackEvent().getSlackLink(),
+                        event.getChannel());
+                asyncExecutor.run(taskBuilder.newSendNotificationTask(pluginEvent, notificationInfo, asyncExecutor));
             }
         }
     }

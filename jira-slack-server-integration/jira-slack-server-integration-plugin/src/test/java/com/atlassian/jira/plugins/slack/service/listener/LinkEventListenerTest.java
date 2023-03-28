@@ -5,11 +5,11 @@ import com.atlassian.jira.plugins.slack.dao.ConfigurationDAO;
 import com.atlassian.jira.plugins.slack.model.event.ShowWelcomeEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.service.task.impl.DirectMessageTask;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.event.SlackLinkedEvent;
 import com.atlassian.plugins.slack.event.SlackTeamUnlinkedEvent;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -32,7 +32,7 @@ public class LinkEventListenerTest {
     @Mock
     private ConfigurationDAO configurationDAO;
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private TaskBuilder taskBuilder;
 
@@ -68,7 +68,7 @@ public class LinkEventListenerTest {
 
         target.linkWasCreated(new SlackLinkedEvent(link));
 
-        verify(taskExecutorService).submitTask(directMessageTask);
+        verify(asyncExecutor).run(directMessageTask);
         assertThat(showWelcomeEventArgumentCaptor.getValue().getTeamId(), is("T"));
 
         NotificationInfo notifInfo = notificationInfoCaptor.getValue();

@@ -6,11 +6,10 @@ import com.atlassian.jira.plugins.slack.dao.ConfigurationDAO;
 import com.atlassian.jira.plugins.slack.model.event.ShowWelcomeEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
-import com.atlassian.jira.plugins.slack.service.task.impl.DirectMessageTask;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.event.SlackLinkedEvent;
 import com.atlassian.plugins.slack.event.SlackTeamUnlinkedEvent;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +26,17 @@ public class LinkEventListener extends AutoSubscribingEventListener {
     private static final Logger logger = LoggerFactory.getLogger(LinkEventListener.class);
 
     private final ConfigurationDAO configurationDAO;
-    private final TaskExecutorService taskExecutorService;
+    private final AsyncExecutor asyncExecutor;
     private final TaskBuilder taskBuilder;
 
     @Autowired
     public LinkEventListener(final EventPublisher eventPublisher,
                              final ConfigurationDAO configurationDAO,
-                             final TaskExecutorService taskExecutorService,
+                             final AsyncExecutor asyncExecutor,
                              final TaskBuilder taskBuilder) {
         super(eventPublisher);
         this.configurationDAO = configurationDAO;
-        this.taskExecutorService = taskExecutorService;
+        this.asyncExecutor = asyncExecutor;
         this.taskBuilder = taskBuilder;
     }
 
@@ -62,9 +61,7 @@ public class LinkEventListener extends AutoSubscribingEventListener {
                 event.getLink().getUserId(),
                 "",
                 Verbosity.EXTENDED);
-        final DirectMessageTask task = taskBuilder.newDirectMessageTask(
-                new ShowWelcomeEvent(event.getLink().getTeamId()),
-                notificationInfo);
-        taskExecutorService.submitTask(task);
+        ShowWelcomeEvent pluginEvent = new ShowWelcomeEvent(event.getLink().getTeamId());
+        asyncExecutor.run(taskBuilder.newDirectMessageTask(pluginEvent, notificationInfo));
     }
 }

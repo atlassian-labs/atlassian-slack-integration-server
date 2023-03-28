@@ -21,7 +21,6 @@ import com.atlassian.jira.plugins.slack.service.notification.IssueEventProcessor
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.notification.PersonalNotificationManager;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.settings.JiraSettingsService;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogExtractor;
 import com.atlassian.jira.plugins.slack.util.changelog.ChangeLogItem;
@@ -48,7 +47,6 @@ import java.util.function.Consumer;
 @Service
 @Slf4j
 public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener implements JiraSlackEventListener {
-    private final TaskExecutorService taskExecutorService;
     private final TaskBuilder taskBuilder;
     private final IssueEventToEventMatcherTypeConverter issueEventToEventMatcherTypeConverter;
     private final DedicatedChannelManager dedicatedChannelManager;
@@ -61,7 +59,6 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
 
     @Autowired
     public DefaultJiraSlackEventListener(final EventPublisher eventPublisher,
-                                         final TaskExecutorService taskExecutorService,
                                          final TaskBuilder taskBuilder,
                                          final IssueEventToEventMatcherTypeConverter issueEventToEventMatcherTypeConverter,
                                          final DedicatedChannelManager dedicatedChannelManager,
@@ -72,7 +69,6 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
                                          final AsyncExecutor asyncExecutor,
                                          final ChangeLogExtractor changeLogExtractor) {
         super(eventPublisher);
-        this.taskExecutorService = taskExecutorService;
         this.taskBuilder = taskBuilder;
         this.issueEventToEventMatcherTypeConverter = issueEventToEventMatcherTypeConverter;
         this.dedicatedChannelManager = dedicatedChannelManager;
@@ -167,7 +163,7 @@ public class DefaultJiraSlackEventListener extends AutoSubscribingEventListener 
             personalNotifications.forEach(notification ->
                     eventPublisher.publish(new JiraNotificationSentEvent(analyticsContextProvider.bySlackLink(
                             notification.getLink()), notificationKey, Type.PERSONAL)));
-            taskBuilder.newSendNotificationTask(internalIssueEvent, uniqueNotifications, taskExecutorService).call();
+            taskBuilder.newSendNotificationTask(internalIssueEvent, uniqueNotifications, asyncExecutor).run();
         }
     }
 

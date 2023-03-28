@@ -3,17 +3,19 @@ package com.atlassian.jira.plugins.slack.service.task.impl;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.model.SlackDeletedMessage;
 import com.atlassian.jira.plugins.slack.model.SlackIncomingMessage;
+import com.atlassian.jira.plugins.slack.model.event.JiraCommandEvent;
 import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.jira.plugins.slack.service.notification.EventRenderer;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.RetryLoaderHelper;
 import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.user.SlackUserManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.github.seratch.jslack.api.model.Conversation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +27,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
@@ -49,7 +53,7 @@ public class DefaultTaskBuilderTest {
     @Mock
     private NotificationInfo notificationInfo;
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private Issue issue;
     @Mock
@@ -81,22 +85,22 @@ public class DefaultTaskBuilderTest {
 
     @Test
     public void newSendNotificationTask_withList() throws Exception {
-        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, event,
-                Collections.singletonList(notificationInfo), taskExecutorService, slackClientProvider, retryLoaderHelper
+        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, asyncExecutor, slackClientProvider,
+                retryLoaderHelper, event, Collections.singletonList(notificationInfo)
         ).thenReturn(sendNotificationTask);
 
-        SendNotificationTask result = target.newSendNotificationTask(event, Collections.singletonList(notificationInfo), taskExecutorService);
+        SendNotificationTask result = target.newSendNotificationTask(event, Collections.singletonList(notificationInfo), asyncExecutor);
 
         assertThat(result, sameInstance(sendNotificationTask));
     }
 
     @Test
     public void newSendNotificationTask_singleItem() throws Exception {
-        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, event,
-                Collections.singletonList(notificationInfo), taskExecutorService, slackClientProvider, retryLoaderHelper
+        PowerMockito.whenNew(SendNotificationTask.class).withArguments(eventRenderer, asyncExecutor, slackClientProvider,
+                retryLoaderHelper, event, Collections.singletonList(notificationInfo)
         ).thenReturn(sendNotificationTask);
 
-        SendNotificationTask result = target.newSendNotificationTask(event, notificationInfo, taskExecutorService);
+        SendNotificationTask result = target.newSendNotificationTask(event, notificationInfo, asyncExecutor);
 
         assertThat(result, sameInstance(sendNotificationTask));
     }
@@ -123,10 +127,12 @@ public class DefaultTaskBuilderTest {
 
     @Test
     public void newUnfurlIssueLinksTask() throws Exception {
-        PowerMockito.whenNew(UnfurlIssueLinksTask.class).withArguments(eventRenderer, slackClientProvider, slackUserManager)
+        List<Pair<JiraCommandEvent, NotificationInfo>> notificationInfos = new ArrayList<>();
+        PowerMockito.whenNew(UnfurlIssueLinksTask.class)
+                .withArguments(eventRenderer, slackClientProvider, slackUserManager, notificationInfos)
                 .thenReturn(unfurlIssueLinksTask);
 
-        UnfurlIssueLinksTask result = target.newUnfurlIssueLinksTask();
+        UnfurlIssueLinksTask result = target.newUnfurlIssueLinksTask(notificationInfos);
 
         assertThat(result, sameInstance(unfurlIssueLinksTask));
     }

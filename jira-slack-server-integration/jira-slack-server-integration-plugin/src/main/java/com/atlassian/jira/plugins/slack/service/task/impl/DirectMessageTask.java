@@ -10,9 +10,8 @@ import com.google.common.collect.Iterables;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-public class DirectMessageTask implements Callable<Void> {
+public class DirectMessageTask implements Runnable {
     private final EventRenderer eventRenderer;
     private final SlackClientProvider slackClientProvider;
     private final PluginEvent event;
@@ -29,12 +28,10 @@ public class DirectMessageTask implements Callable<Void> {
     }
 
     @Override
-    public Void call() {
+    public void run() {
         final List<SlackNotification> messages = eventRenderer.render(event, Collections.singletonList(notification));
         SlackNotification message = Iterables.getOnlyElement(messages);
         final SlackClient client = slackClientProvider.withLink(message.getSlackLink());
         client.postDirectMessage(notification.getMessageAuthorId(), message.getMessageRequest());
-
-        return null;
     }
 }

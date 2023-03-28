@@ -46,7 +46,7 @@ public class DirectMessageTaskTest {
     private DirectMessageTask target;
 
     @Test
-    public void call() {
+    public void run() {
         when(eventRenderer.render(event, Collections.singletonList(notification)))
                 .thenReturn(Collections.singletonList(slackNotification));
         when(slackNotification.getSlackLink()).thenReturn(link);
@@ -54,7 +54,7 @@ public class DirectMessageTaskTest {
         when(notification.getMessageAuthorId()).thenReturn("O");
         when(slackClientProvider.withLink(link)).thenReturn(client);
 
-        target.call();
+        target.run();
 
         verify(client).postDirectMessage("O", chatPostMessageRequest);
     }

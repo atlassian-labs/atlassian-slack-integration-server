@@ -4,10 +4,10 @@ import com.atlassian.jira.plugins.slack.model.event.DedicatedChannelLinkedEvent;
 import com.atlassian.jira.plugins.slack.model.event.DedicatedChannelUnlinkedEvent;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
 import com.atlassian.jira.plugins.slack.service.task.TaskBuilder;
-import com.atlassian.jira.plugins.slack.service.task.TaskExecutorService;
 import com.atlassian.jira.plugins.slack.service.task.impl.SendNotificationTask;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.plugins.slack.util.AsyncExecutor;
 import io.atlassian.fugue.Either;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 public class DedicatedChannelEventListenerTest {
     @Mock
-    private TaskExecutorService taskExecutorService;
+    private AsyncExecutor asyncExecutor;
     @Mock
     private TaskBuilder taskBuilder;
     @Mock
@@ -57,12 +57,12 @@ public class DedicatedChannelEventListenerTest {
         when(dedicatedChannelLinkedEvent.getChannelId()).thenReturn("C");
         when(dedicatedChannelLinkedEvent.getOwner()).thenReturn("O");
         when(slackLinkManager.getLinkByTeamId("T")).thenReturn(Either.right(link));
-        when(taskBuilder.newSendNotificationTask(same(dedicatedChannelLinkedEvent), notificationInfo.capture(), same(taskExecutorService)))
+        when(taskBuilder.newSendNotificationTask(same(dedicatedChannelLinkedEvent), notificationInfo.capture(), same(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
 
         target.dedicatedChannelLinkedEventListener(dedicatedChannelLinkedEvent);
 
-        verify(taskExecutorService).submitTask(sendNotificationTask);
+        verify(asyncExecutor).run(sendNotificationTask);
 
         NotificationInfo info = notificationInfo.getValue();
         assertThat(info.getLink(), sameInstance(link));
@@ -76,12 +76,12 @@ public class DedicatedChannelEventListenerTest {
         when(dedicatedChannelUnlinkedEvent.getChannelId()).thenReturn("C");
         when(dedicatedChannelUnlinkedEvent.getOwner()).thenReturn("O");
         when(slackLinkManager.getLinkByTeamId("T")).thenReturn(Either.right(link));
-        when(taskBuilder.newSendNotificationTask(same(dedicatedChannelUnlinkedEvent), notificationInfo.capture(), same(taskExecutorService)))
+        when(taskBuilder.newSendNotificationTask(same(dedicatedChannelUnlinkedEvent), notificationInfo.capture(), same(asyncExecutor)))
                 .thenReturn(sendNotificationTask);
 
         target.dedicatedChannelUnlinkedEventListener(dedicatedChannelUnlinkedEvent);
 
-        verify(taskExecutorService).submitTask(sendNotificationTask);
+        verify(asyncExecutor).run(sendNotificationTask);
 
         NotificationInfo info = notificationInfo.getValue();
         assertThat(info.getLink(), sameInstance(link));
