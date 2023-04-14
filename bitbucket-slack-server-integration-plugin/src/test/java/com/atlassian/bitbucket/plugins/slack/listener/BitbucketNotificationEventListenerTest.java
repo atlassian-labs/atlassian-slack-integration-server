@@ -29,6 +29,7 @@ import com.atlassian.bitbucket.event.pull.PullRequestParticipantApprovedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestParticipantReviewedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestParticipantUnapprovedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReopenedEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestRescopedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
@@ -89,6 +90,8 @@ class BitbucketNotificationEventListenerTest {
     private PullRequestOpenedEvent pullRequestOpenedEvent;
     @Mock
     private PullRequestUpdatedEvent pullRequestUpdatedEvent;
+    @Mock
+    private PullRequestRescopedEvent pullRequestRescopedEvent;
     @Mock
     private PullRequestDeclinedEvent pullRequestDeclinedEvent;
     @Mock
@@ -265,6 +268,11 @@ class BitbucketNotificationEventListenerTest {
     @Test
     void onEvent_pullRequestUpdatedEvent_shouldCallExpectedMethods() {
         testPullRequestEvent(pullRequestUpdatedEvent, PullRequestNotificationTypes.UPDATED);
+    }
+
+    @Test
+    void onEvent_pullRequestRescopedEvent_shouldCallExpectedMethods() {
+        testPullRequestEvent(pullRequestRescopedEvent, PullRequestNotificationTypes.RESCOPED);
     }
 
     @Test

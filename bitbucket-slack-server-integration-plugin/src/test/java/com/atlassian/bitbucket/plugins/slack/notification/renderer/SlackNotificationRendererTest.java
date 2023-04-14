@@ -17,6 +17,7 @@ import com.atlassian.bitbucket.event.pull.PullRequestParticipantApprovedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestParticipantReviewedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestParticipantUnapprovedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReopenedEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestRescopedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
@@ -141,6 +142,8 @@ public class SlackNotificationRendererTest {
     PullRequestReopenedEvent pullRequestReopenedEvent;
     @Mock
     PullRequestUpdatedEvent pullRequestUpdatedEvent;
+    @Mock
+    PullRequestRescopedEvent pullRequestRescopedEvent;
     @Mock
     PullRequestCommentEvent pullRequestCommentEvent;
     @Mock
@@ -477,6 +480,16 @@ public class SlackNotificationRendererTest {
     @Test
     void getPullRequestOpenedMessage_shouldBuildCorrectSlackMessage() {
         testGenericPullRequestMessage(pullRequestOpenedEvent, PullRequestAction.OPENED);
+    }
+
+    @Test
+    void getPullRequestUpdatedMessage_shouldBuildCorrectSlackMessage() {
+        testGenericPullRequestMessage(pullRequestUpdatedEvent, PullRequestAction.UPDATED);
+    }
+
+    @Test
+    void getPullRequestRescopedMessage_shouldBuildCorrectSlackMessage() {
+        testGenericPullRequestMessage(pullRequestRescopedEvent, PullRequestAction.RESCOPED);
     }
 
     @Test
