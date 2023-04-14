@@ -18,7 +18,7 @@
   "notifications.slack.repotochannel.notification.enabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "repositoryId",
     "channelIdHash", {
       "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
-        "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
+        "PRReopened", "PRDeleted", "PRReScoped", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
         "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
         "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed", "FileEdited",
         "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
@@ -28,7 +28,7 @@
   "notifications.slack.repotochannel.notification.disabled": ["userKeyHash", "teamIdHash", "slackUserIdHash", "repositoryId",
     "channelIdHash", {
       "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
-        "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
+        "PRReopened", "PRDeleted", "PRReScoped", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
         "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
         "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed", "FileEdited",
         "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",
@@ -40,7 +40,7 @@
 
   "notifications.slack.notification.regular.sent": ["userKeyHash", "teamIdHash", "slackUserIdHash", {
     "notificationKey": ["PRCreated", "PRParticipantUpdated", "PRReviewersUpdated", "PRMerged", "PRDeclined",
-      "PRReopened", "PRDeleted", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
+      "PRReopened", "PRDeleted", "PRReScoped", "PRParticipantApproved", "PRParticipantUnapproved", "PRParticipantReviewed",
       "PRComment", "PRCommentEdited", "PRCommentReplied", "PRCommentDeleted", "TaskCreated", "TaskUpdated",
       "TaskResolved", "TaskReopened", "TaskDeleted", "PRAutoMergeFailed", "PRAutoMergeResolved", "CommitPushed", "FileEdited",
       "CommitComment", "CommitCommentEdited", "CommitCommentReplied", "CommitCommentDeleted", "Forked", "TagCreated",

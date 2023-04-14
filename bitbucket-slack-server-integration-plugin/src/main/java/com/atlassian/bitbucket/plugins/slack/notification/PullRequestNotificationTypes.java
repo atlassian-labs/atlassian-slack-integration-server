@@ -13,6 +13,7 @@ import com.atlassian.bitbucket.event.pull.PullRequestParticipantApprovedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestParticipantReviewedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestParticipantUnapprovedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReopenedEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestRescopedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestUpdatedEvent;
 import com.atlassian.sal.api.message.I18nResolver;
@@ -26,6 +27,7 @@ import static org.apache.commons.lang3.StringUtils.startsWith;
 public enum PullRequestNotificationTypes {
     OPENED("PRCreated"),
     UPDATED("PRParticipantUpdated"),
+    RESCOPED("PRReScoped"),
     DECLINED("PRDeclined"),
     REOPENED("PRReopened"),
     MERGED("PRMerged"),
@@ -45,6 +47,7 @@ public enum PullRequestNotificationTypes {
             ImmutableMap.<Class<? extends PullRequestEvent>, PullRequestNotificationTypes>builder()
                     .put(PullRequestOpenedEvent.class, PullRequestNotificationTypes.OPENED)
                     .put(PullRequestUpdatedEvent.class, PullRequestNotificationTypes.UPDATED)
+                    .put(PullRequestRescopedEvent.class, PullRequestNotificationTypes.RESCOPED)
                     .put(PullRequestDeclinedEvent.class, PullRequestNotificationTypes.DECLINED)
                     .put(PullRequestReopenedEvent.class, PullRequestNotificationTypes.REOPENED)
                     .put(PullRequestMergedEvent.class, PullRequestNotificationTypes.MERGED)

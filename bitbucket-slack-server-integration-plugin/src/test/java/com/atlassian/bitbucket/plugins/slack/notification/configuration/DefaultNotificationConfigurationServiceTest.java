@@ -22,7 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DefaultNotificationConfigurationServiceTest {
@@ -51,7 +50,7 @@ public class DefaultNotificationConfigurationServiceTest {
 
         verify(permissionService).validateForRepository(repository, Permission.REPO_ADMIN);
         verify(dao).delete(request);
-        verify(eventPublisher, times(32)).publish(any(RepositoryNotificationDisabledAnalyticEvent.class));
+        verify(eventPublisher, times(33)).publish(any(RepositoryNotificationDisabledAnalyticEvent.class));
     }
 
     @Test
