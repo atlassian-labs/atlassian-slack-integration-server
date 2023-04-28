@@ -125,7 +125,7 @@
     </web-resource>
 
     <web-resource key="slack-backbone-resource">
-        <dependency>jira.webresources:backbone-1.3.3</dependency>
+        <dependency>jira.webresources:backbone-1.0.0</dependency>
         <resource type="download" name="slack-backbone-amd.js" location="js/lib/backbone-amd.js"/>
     </web-resource>
 

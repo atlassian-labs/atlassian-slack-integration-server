@@ -1,5 +1,5 @@
 define('slack/backbone', [
-    'jira/backbone-1.3.3'
+    'backbone'
 ], function (Backbone) {
     return Backbone;
 });
