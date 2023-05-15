@@ -1,6 +1,5 @@
 package com.atlassian.jira.plugins.slack.web.rest;
 
-import com.atlassian.cache.CacheManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.permission.GlobalPermissionKey;
@@ -66,8 +65,7 @@ public class IssuePanelResource {
                               final DedicatedChannelManager dedicatedChannelManager,
                               final SlackUserManager slackUserManager,
                               final SlackLinkManager slackLinkManager,
-                              final SlackClientProvider slackClientProvider,
-                              final CacheManager cacheManager) {
+                              final SlackClientProvider slackClientProvider) {
         this.pluginConfigurationManager = pluginConfigurationManager;
         this.slackLinkAccessManager = slackLinkAccessManager;
         this.userManager = userManager;
@@ -114,6 +112,9 @@ public class IssuePanelResource {
 
         if (issue == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        if (!permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, issue, applicationUser)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         final Project project = Objects.requireNonNull(issue.getProjectObject());
