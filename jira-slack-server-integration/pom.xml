@@ -23,7 +23,7 @@
 
         <!-- this is the version we will run integration tests against -->
         <jira.version>9.0.0-m0008</jira.version>
-        <testkit.version>8.1.45</testkit.version>
+        <testkit.version>8.1.51</testkit.version>
         <jira.test.unit.version>${jira.version}</jira.test.unit.version>
 
         <!-- This is the version the plugin is compiled against -->
