@@ -11,7 +11,7 @@
     <artifactId>confluence-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
     <name>Slack for Confluence Server</name>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.0.3</version>
     <description>This is the Slack integration for Confluence Server</description>
 
     <properties>
@@ -545,7 +545,7 @@
         <connection>scm:git:https://github.com/mvlasovatl/atlassian-slack-integration-server-private.git</connection>
         <developerConnection>scm:git:https://github.com/mvlasovatl/atlassian-slack-integration-server-private.git</developerConnection>
         <url>https://github.com/mvlasovatl/atlassian-slack-integration-server-private.git</url>
-        <tag>HEAD</tag>
+        <tag>confluence-slack-server-integration-plugin-3.0.3</tag>
     </scm>
 
     <developers>
