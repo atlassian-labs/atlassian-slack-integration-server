@@ -588,9 +588,9 @@
     </profiles>
 
     <scm>
-        <connection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</connection>
-        <developerConnection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</developerConnection>
-        <url>https://github.com/atlassian-labs/atlassian-slack-integration-server.git</url>
+        <connection>scm:git:https://github.com/mvlasovatl/atlassian-slack-integration-server-private.git</connection>
+        <developerConnection>scm:git:https://github.com/mvlasovatl/atlassian-slack-integration-server-private.git</developerConnection>
+        <url>https://github.com/mvlasovatl/atlassian-slack-integration-server-private.git</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -598,7 +598,7 @@
         <repository>
             <id>github</id>
             <name>GitHub</name>
-            <url>https://maven.pkg.github.com/atlassian-labs/atlassian-slack-integration-server</url>
+            <url>https://maven.pkg.github.com/mvlasovatl/atlassian-slack-integration-server-private</url>
         </repository>
     </distributionManagement>
 
