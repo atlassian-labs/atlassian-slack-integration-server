@@ -12,13 +12,12 @@ import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -41,13 +40,13 @@ import java.util.stream.Collectors;
 import static com.github.seratch.jslack.app_backend.SlackSignature.HeaderNames.X_SLACK_REQUEST_TIMESTAMP;
 import static com.github.seratch.jslack.app_backend.SlackSignature.HeaderNames.X_SLACK_SIGNATURE;
 
+@Slf4j
 @Provider
 public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, ResourceFilter {
     public static final String TEAM_ID = "team_id";
     public static final String SLACK_ACTION_PAYLOAD = "payload";
     public static final int MAX_REQUEST_DELAY_MINUTES = 6;
 
-    private static final Logger LOG = LoggerFactory.getLogger(SlackSignatureVerifyingFilter.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final SlackLinkManager slackLinkManager;
@@ -77,7 +76,9 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
             return request;
         }
 
-        String contentType = request.getHeaderValue(HttpHeaders.CONTENT_TYPE);
+        String contentTypeStr = request.getHeaderValue(HttpHeaders.CONTENT_TYPE);
+        MediaType contentType = parseContentType(contentTypeStr);
+
         String requestTimestamp = request.getHeaderValue(X_SLACK_REQUEST_TIMESTAMP);
         String actualSignature = request.getHeaderValue(X_SLACK_SIGNATURE);
         validateTimestamp(requestTimestamp);
@@ -89,7 +90,7 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
         }
 
         // teamId and payload are extracted differently for each content type
-        if (MediaType.APPLICATION_JSON.equals(contentType)) {
+        if (MediaType.APPLICATION_JSON_TYPE.isCompatible(contentType)) {
             String requestPayload = new String(cachedRequest.getBody(), StandardCharsets.UTF_8);
             Optional<JsonNode> payloadJson = parseJson(requestPayload);
             Optional<String> teamId = payloadJson
@@ -97,20 +98,20 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
                     .filter(StringUtils::isNotBlank);
 
             // it's dummy team from integration tests; skip verification for it
-            Optional<Boolean> isDummyTeam = teamId.map(DefaultSlackClient.TEAM_DUMMY_PREFIX::equals);
+            boolean isDummyTeam = teamId.map(id -> id.startsWith(DefaultSlackClient.TEAM_DUMMY_PREFIX)).orElse(false);
 
             // do not check signature on 'url_verification' request since it is triggered during
             // the team connection process; so database may not have corresponding SlackLink yet
             Optional<String> type = payloadJson.map(node -> node.path(SlackWebHookResource.EVENT_TYPE).getTextValue());
-            Optional<Boolean> isInitialRequest = type.map(SlackWebHookResource.TYPE_URL_VERIFICATION::equals);
-            if (!isInitialRequest.orElse(false) && !isDummyTeam.orElse(false)) {
+            boolean isInitialRequest = type.map(SlackWebHookResource.TYPE_URL_VERIFICATION::equals).orElse(false);
+            if (!isInitialRequest && !isDummyTeam) {
                 if (teamId.isPresent()) {
                     validateSignature(teamId.get(), requestPayload, requestTimestamp, actualSignature);
                 } else {
                     failVerification(new SecurityException("Team ID is not found."), null, Cause.NO_TEAM_ID);
                 }
             }
-        } else if (MediaType.APPLICATION_FORM_URLENCODED.equals(contentType)) {
+        } else if (MediaType.APPLICATION_FORM_URLENCODED_TYPE.isCompatible(contentType)) {
             Map<String, String[]> formParams = cachedRequest.getFormParams();
             Optional<String> teamId = getTeamIdFromFormPayload(formParams);
             if (teamId.isPresent()) {
@@ -121,6 +122,9 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
             } else {
                 failVerification(new SecurityException("Team ID is not found."), null, Cause.NO_TEAM_ID);
             }
+        } else {
+            String msg = String.format("Invalid content type: %s.", contentTypeStr);
+            failVerification(new SecurityException(msg), null, Cause.INVALID_CONTENT_TYPE);
         }
 
         // validation passed, so it's original Slack request; it means that instance is accessible
@@ -132,7 +136,16 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
         return request;
     }
 
-    private Optional<String> getTeamIdFromFormPayload(Map<String, String[]> formParams) {
+    private MediaType parseContentType(final String contentTypeStr) {
+        try {
+            return MediaType.valueOf(contentTypeStr);
+        } catch (IllegalArgumentException e) {
+            failVerification(new SecurityException("Failed to parse content type: " + contentTypeStr), null, Cause.OTHER);
+            return null; // will never be reached because the preceding method throws an exception
+        }
+    }
+
+    private Optional<String> getTeamIdFromFormPayload(final Map<String, String[]> formParams) {
         Optional<String> teamId = getFirst(formParams, TEAM_ID);
         if (!teamId.isPresent()) {
             Optional<String> payload = getFirst(formParams, SLACK_ACTION_PAYLOAD);
@@ -212,18 +225,17 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
     }
 
     private String encodeHmacSha256(final String key, final String data) {
-        String encodedBase64 = null;
+        String encodedPayloadHex = null;
         try {
             Mac encoder = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
             encoder.init(secretKey);
             byte[] encodedBytes = encoder.doFinal(data.getBytes(StandardCharsets.UTF_8));
-            encodedBase64 = Hex.encodeHexString(encodedBytes);
-
+            encodedPayloadHex = Hex.encodeHexString(encodedBytes);
         } catch (Exception e) {
-            LOG.error("Failed to encode payload", e);
+            log.error("Failed to encode payload", e);
         }
-        return encodedBase64;
+        return encodedPayloadHex;
     }
 
     private void failVerification(final SecurityException exception,

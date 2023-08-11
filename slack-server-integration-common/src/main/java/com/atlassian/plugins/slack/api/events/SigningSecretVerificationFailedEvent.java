@@ -14,7 +14,8 @@ public class SigningSecretVerificationFailedEvent extends BaseAnalyticEvent {
         REQUEST_EXPIRED,
         BAD_SIGNATURE,
         NO_TEAM_ID,
-        OTHER
+        OTHER,
+        INVALID_CONTENT_TYPE,
     }
 
     private Cause cause;

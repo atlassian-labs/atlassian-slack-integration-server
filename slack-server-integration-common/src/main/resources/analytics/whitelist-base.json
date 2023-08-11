@@ -32,6 +32,6 @@
 
   "notifications.slack.signature.verification.failed": [
     "userKeyHash", "teamIdHash", "slackUserIdHash",
-    {"cause": ["REQUEST_EXPIRED", "BAD_SIGNATURE", "NO_TEAM_ID", "OTHER"]}
+    {"cause": ["REQUEST_EXPIRED", "BAD_SIGNATURE", "NO_TEAM_ID", "OTHER", "INVALID_CONTENT_TYPE"]}
   ]
 }
