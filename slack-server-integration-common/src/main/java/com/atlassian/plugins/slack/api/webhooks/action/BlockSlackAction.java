@@ -37,7 +37,7 @@ import java.util.List;
     "subtype": "bot_message",
     "text": "This content can't be displayed.",
     "ts": "1558648770.002300",
-    "username": "Bitbucket Server Michael Dev",
+    "username": "Bitbucket Data Center Dev",
     "bot_id": "BHXBB7QQ5",
     "blocks": [
       {

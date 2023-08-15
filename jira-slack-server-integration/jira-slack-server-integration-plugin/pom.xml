@@ -12,8 +12,8 @@
     <packaging>atlassian-plugin</packaging>
     <version>3.0.8-SNAPSHOT</version>
 
-    <name>Slack for Jira Server</name>
-    <description>This is the Slack plugin for Jira Server</description>
+    <name>Slack for Jira Data Center</name>
+    <description>This is the Slack plugin for Jira Data Center</description>
 
     <dependencies>
         <!-- Embedded dependencies -->

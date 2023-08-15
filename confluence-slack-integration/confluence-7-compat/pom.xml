@@ -11,7 +11,7 @@
 
     <artifactId>confluence-7-compat</artifactId>
     <packaging>jar</packaging>
-    <name>Confluence Server 7 Compatibility Package</name>
+    <name>Confluence Data Center 7 Compatibility Package</name>
 
     <dependencies>
         <dependency>

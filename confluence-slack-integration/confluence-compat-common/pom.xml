@@ -11,7 +11,7 @@
 
     <artifactId>confluence-compat-common</artifactId>
     <packaging>jar</packaging>
-    <name>Confluence Server Compatibility Common Package</name>
+    <name>Confluence Data Center Compatibility Common Package</name>
 
     <dependencies>
         <dependency>
