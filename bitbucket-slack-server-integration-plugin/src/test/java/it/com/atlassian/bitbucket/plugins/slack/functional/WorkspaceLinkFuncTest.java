@@ -52,10 +52,10 @@ public class WorkspaceLinkFuncTest extends SlackFunctionalTestBase {
                 ChatPostMessageRequest.builder()
                         .channel(DIRECT.getId())
                         .text("This workspace is now connected to <http://example.com/context/dashboard?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258c2l0ZQ%3D%3D|" + applicationTitle + "> :tada:\n"
-                                + "The next step is to confirm your account in Bitbucket Server. Then you can choose events to see notifications for, "
+                                + "The next step is to confirm your account in Bitbucket Data Center. Then you can choose events to see notifications for, "
                                 + "and the channels where these notifications will appear. You'll also be able to take action on some notifications "
-                                + "and unfurl relevant Bitbucket Server links when they're pasted in Slack. "
-                                + "If you're an admin of this Bitbucket Server instance, you can configure this integration in the <http://example.com/context/plugins/servlet/slack/configure?teamId=DUMMY-T123456|administration page>. "
+                                + "and unfurl relevant Bitbucket Data Center links when they're pasted in Slack. "
+                                + "If you're an admin of this Bitbucket Data Center instance, you can configure this integration in the <http://example.com/context/plugins/servlet/slack/configure?teamId=DUMMY-T123456|administration page>. "
                                 + "For more help, take a look at our <https://confluence.atlassian.com/slack/use-slack-and-bitbucket-server-together-974387205.html|documentation>.")
                         .build()
         )))));
