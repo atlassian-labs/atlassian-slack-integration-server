@@ -8,8 +8,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jira-8-compat</artifactId>
-    <name>Jira Server 8 Compatibility Package</name>
-    <description>Provides compatibility with Java 8.</description>
+    <name>Jira Data Center 8 Compatibility Package</name>
+    <description>Provides compatibility with Jira 8.</description>
 
     <dependencies>
         <dependency>

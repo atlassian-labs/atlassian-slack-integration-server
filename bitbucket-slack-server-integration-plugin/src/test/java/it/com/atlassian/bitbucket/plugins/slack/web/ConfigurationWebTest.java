@@ -68,7 +68,7 @@ public class ConfigurationWebTest extends SlackWebTestBase {
 
         assertThat(server.requestHistoryForTest(), hasHit(CHAT_POST_MESSAGE, contains(
                 requestEntityProperty(ChatPostMessageRequest::getText, containsString(
-                        "has set up Bitbucket Server notifications for this channel. Notifications for events from the repository, *<http://example.com/context/projects/PROJECT_1/repos/rep_1/browse?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258cmVwb3NpdG9yeQ%3D%3D|Project 1/rep_1>*, will now appear here."))
+                        "has set up Bitbucket Data Center notifications for this channel. Notifications for events from the repository, *<http://example.com/context/projects/PROJECT_1/repos/rep_1/browse?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258cmVwb3NpdG9yeQ%3D%3D|Project 1/rep_1>*, will now appear here."))
         )));
 
         assertThat(server.requestHistoryForTest(), hasHit(CONVERSATIONS_INVITE, contains(allOf(

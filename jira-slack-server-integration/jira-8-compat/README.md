@@ -1,4 +1,4 @@
-# Atlassian Server Integrations for Slack
+# Atlassian Data Center Integrations for Slack
 
 This package contains Jira 8 specific implementations that would not compile in the main plugin.
 

@@ -1,17 +1,17 @@
 
-# Atlassian Server Integrations for Slack
+# Atlassian Data Center Integrations for Slack
 
 [![Atlassian license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
-Official plugins for Jira Server, Confluence Server, and Bitbucket Server that integrate with [Slack](https://slack.com/).
+Official plugins for Jira Data Center, Confluence Data Center, and Bitbucket Date Center that integrate with [Slack](https://slack.com/).
 
 
 # Usage
 
 Jira, Confluence or Bitbucket administrator can install Slack plugin to their system via embedded Marketplace (**\<Configuration gear\>** -> **Find new apps/plugins**)
-or by manually downloading plugin JAR files from Marketplace pages for [Jira](https://marketplace.atlassian.com/apps/1220099/jira-server-for-slack-official?hosting=server&tab=overview), 
+or by manually downloading plugin JAR files from Marketplace pages for [Jira](https://marketplace.atlassian.com/apps/1220099/jira-server-for-slack-official?hosting=datacenter&tab=overview), 
 [Confluence](https://marketplace.atlassian.com/apps/1220186/confluence-server-for-slack-official?hosting=datacenter&tab=overview) 
-or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-for-slack-official?hosting=server&tab=overview) plugins.
+or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-for-slack-official?hosting=datacenter&tab=overview) plugins.
 Links to the official documentation are specified on Marketplace pages.
 
 Supported products (on 10th Feb, 2023). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
@@ -23,7 +23,7 @@ Supported products (on 10th Feb, 2023). See [EOL policy](https://confluence.atla
 
 In order to [accelerate our journey to the cloud, together](https://www.atlassian.com/blog/announcements/journey-to-cloud), Atlassian will continue to maintain these apps' _compatibility_ with our Server products. However, we will not be creating new features or matching feature parity with our Cloud integrations. If you would like to add your own customizations/features to the integration, we encourage you to fork this repository and customize it as you wish like we’ve seen many customers do.
 
-When Jira, Confluence, or Bitbucket Server release new versions, we will validate the compatibility of these apps and release new versions within four weeks of their public release.
+When Jira, Confluence, or Bitbucket Data Center release new versions, we will validate the compatibility of these apps and release new versions within four weeks of their public release.
 
 # Installation
 
@@ -43,7 +43,7 @@ It's needed because current versions of AMPS plugin isn't compatible with Maven 
 all common modules to local Maven repository.
 6. Go to **\<product> Plugin Development** section for further steps. 
 
-# Jira Server Plugin Development
+# Jira Plugin Development
 
 Use tool `./jira.sh` for all dev cycle:
 
@@ -67,11 +67,11 @@ Use tool `./jira.sh` for all dev cycle:
 ./jira.sh purge
 ```
 
-# Confluence Server Plugin Development
+# Confluence Plugin Development
 
 Use tool `./confluence.sh` for all dev cycle. It has a similar set of commands to `./jira.sh` (see **Jira Server Plugin Development** section).
 
-# Bitbucket Server Plugin Development
+# Bitbucket Plugin Development
 
 Use tool `./bitbucket.sh` for all dev cycle. It has a similar set of commands to `./jira.sh` (see **Jira Server Plugin Development** section).
 
@@ -140,7 +140,7 @@ This action should be usually be run by repo maintainer only. See workflow confi
 
 # Contributions
 
-Contributions to Atlassian Server Integrations for Slack project are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+Contributions to Atlassian Data Center Integrations for Slack project are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 # License
 

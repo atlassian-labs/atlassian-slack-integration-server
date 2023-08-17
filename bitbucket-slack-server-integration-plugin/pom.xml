@@ -7,8 +7,8 @@
     <packaging>atlassian-plugin</packaging>
     <version>4.0.7-SNAPSHOT</version>
 
-    <name>Slack for Bitbucket Server</name>
-    <description>This is the Slack integration for Bitbucket Server</description>
+    <name>Slack for Bitbucket Data Center</name>
+    <description>This is the Slack integration for Bitbucket Data Center</description>
 
     <organization>
         <name>Atlassian</name>

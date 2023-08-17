@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>slack-server-integration-common</artifactId>
-    <name>Atlassian Slack Server Integration Common</name>
+    <name>Atlassian Slack Data Center Integration Common</name>
     <description>Provides resources and functionality for linking Atlassian products with slack.</description>
 
     <dependencies>
