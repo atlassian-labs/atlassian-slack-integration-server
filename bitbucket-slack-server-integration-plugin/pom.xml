@@ -42,7 +42,7 @@
         <atlassian-json-api.version>0.9</atlassian-json-api.version>
         <atlassian-concurrent.version>3.0.0</atlassian-concurrent.version>
         <commons-codec.version>1.11</commons-codec.version>
-        <slack.common.version>1.1.13</slack.common.version>
+        <slack.common.version>1.1.14</slack.common.version>
 
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>

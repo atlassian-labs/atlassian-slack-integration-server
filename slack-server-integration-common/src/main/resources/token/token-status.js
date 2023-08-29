@@ -11,9 +11,10 @@ require([
     var flag = null;
 
     $(function () {
-        // skip if user is already in configuration view or edit pages
+        // skip if user is already in configuration view or edit pages or in issue view without active slack integration
         if (contains(window.location.pathname, CONFIGURE_PAGE_URL)
-            || contains(window.location.pathname, OAUTH_SESSIONS_PAGE_URL)) {
+            || contains(window.location.pathname, OAUTH_SESSIONS_PAGE_URL)
+            || (isInIssueView() && !isSlackPanelVisible())) {
             return;
         }
 
@@ -62,6 +63,13 @@ require([
                     flag.close();
                 }
             });
+        }
+
+        function isInIssueView() {
+            return $('#issue-content').length;
+        }
+        function isSlackPanelVisible() {
+            return $("#slack-issue-panel").length;
         }
 
         function contains(str, substr) {

@@ -12,8 +12,12 @@ require([
     jsCookies
 ) {
     var SLACK_ADMIN_BANNER_COOKIE_KEY = "SLACK_ADMIN_BANNER_DISMISS_2";
+
     AJS.toInit(function () {
-        if (!isSlackConfigurationPage() && loggedInUser.isAdmin() && !isAlreadyDismissed()) {
+
+
+        if (!isSlackConfigurationPage() && loggedInUser.isAdmin() && !isAlreadyDismissed()
+            && (isInIssueView() && isSlackPanelVisible())) {
             $.ajax({
                 url: wrmContextPath() + '/slack/configuration/status',
                 dataType: 'json',
@@ -45,6 +49,13 @@ require([
 
         function isAlreadyDismissed() {
             return jsCookies.get(SLACK_ADMIN_BANNER_COOKIE_KEY) === "true";
+        }
+
+        function isInIssueView() {
+            return $('#issue-content').length;
+        }
+        function isSlackPanelVisible() {
+            return $("#slack-issue-panel").length;
         }
     });
 });

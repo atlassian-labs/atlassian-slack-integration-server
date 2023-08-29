@@ -4,13 +4,13 @@
     <parent>
         <groupId>com.atlassian.plugins</groupId>
         <artifactId>jira-slack-server-integration</artifactId>
-        <version>1.1.13</version>
+        <version>1.1.14</version>
     </parent>
 
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>3.0.10-SNAPSHOT</version>
+    <version>3.0.11-SNAPSHOT</version>
 
     <name>Slack for Jira Data Center</name>
     <description>This is the Slack plugin for Jira Data Center</description>
