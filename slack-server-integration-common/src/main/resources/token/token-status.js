@@ -11,7 +11,7 @@ require([
     var flag = null;
 
     $(function () {
-        // skip if user is already in configuration view or edit pages or in issue view without active slack integration
+        // skip if user is already in configuration view or edit pages or in issue view and slack panel isn't shown
         if (contains(window.location.pathname, CONFIGURE_PAGE_URL)
             || contains(window.location.pathname, OAUTH_SESSIONS_PAGE_URL)
             || (isInIssueView() && !isSlackPanelVisible())) {
@@ -66,10 +66,10 @@ require([
         }
 
         function isInIssueView() {
-            return $('#issue-content').length;
+            return $('#issue-content').length > 0;
         }
         function isSlackPanelVisible() {
-            return $("#slack-issue-panel").length;
+            return $("#slack-issue-panel").length > 0;
         }
 
         function contains(str, substr) {

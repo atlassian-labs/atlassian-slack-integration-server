@@ -52,10 +52,10 @@ require([
         }
 
         function isInIssueView() {
-            return $('#issue-content').length;
+            return $('#issue-content').length > 0;
         }
         function isSlackPanelVisible() {
-            return $("#slack-issue-panel").length;
+            return $("#slack-issue-panel").length > 0;
         }
     });
 });
