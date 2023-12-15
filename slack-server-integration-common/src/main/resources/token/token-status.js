@@ -65,9 +65,16 @@ require([
             });
         }
 
+        /**
+         * @returns {boolean} true when using the Slack app in Jira and the content of an issue is shown
+         */
         function isInIssueView() {
             return $('#issue-content').length > 0;
         }
+
+        /**
+         * @returns {boolean} true when using the Slack app in Jira and the slack issue panel is shown
+         */
         function isSlackPanelVisible() {
             return $("#slack-issue-panel").length > 0;
         }
