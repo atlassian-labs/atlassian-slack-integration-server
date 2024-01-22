@@ -11,10 +11,9 @@ require([
     var flag = null;
 
     $(function () {
-        // skip if user is already in configuration view or edit pages or in issue view and slack panel isn't shown
+        // skip if user is already in configuration view or edit pages
         if (contains(window.location.pathname, CONFIGURE_PAGE_URL)
-            || contains(window.location.pathname, OAUTH_SESSIONS_PAGE_URL)
-            || (isInIssueView() && !isSlackPanelVisible())) {
+            || contains(window.location.pathname, OAUTH_SESSIONS_PAGE_URL)) {
             return;
         }
 
@@ -63,20 +62,6 @@ require([
                     flag.close();
                 }
             });
-        }
-
-        /**
-         * @returns {boolean} true when using the Slack app in Jira and the content of an issue is shown
-         */
-        function isInIssueView() {
-            return $('#issue-content').length > 0;
-        }
-
-        /**
-         * @returns {boolean} true when using the Slack app in Jira and the slack issue panel is shown
-         */
-        function isSlackPanelVisible() {
-            return $("#slack-issue-panel").length > 0;
         }
 
         function contains(str, substr) {
