@@ -65,7 +65,7 @@
 
         <servlet.version>3.0.1</servlet.version>
         <spring-test.version>5.3.18</spring-test.version>
-        <spring-beans.version>5.3.18</spring-beans.version>
+        <spring-beans.version>5.3.20</spring-beans.version>
         <atlassian-plugins-core.version>3.0.15</atlassian-plugins-core.version>
         <atlassian-plugins-webfragment.version>3.0.1</atlassian-plugins-webfragment.version>
         <atlassian-user.version>3.0</atlassian-user.version>
