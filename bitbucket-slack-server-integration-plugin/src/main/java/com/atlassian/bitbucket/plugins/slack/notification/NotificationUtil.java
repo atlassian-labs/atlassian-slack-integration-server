@@ -1,5 +1,7 @@
 package com.atlassian.bitbucket.plugins.slack.notification;
 
+import static com.atlassian.bitbucket.plugins.slack.notification.PullRequestNotificationTypes.RESCOPED;
+
 import lombok.experimental.UtilityClass;
 
 import java.util.Collections;
@@ -12,7 +14,9 @@ import java.util.stream.Stream;
 public class NotificationUtil {
     public static Set<String> ALL_NOTIFICATION_TYPE_KEYS = Collections.unmodifiableSet(Stream
             .of(
-                    Stream.of(PullRequestNotificationTypes.values()).map(PullRequestNotificationTypes::getKey),
+                    Stream.of(PullRequestNotificationTypes.values())
+                        .filter(type -> RESCOPED != type)
+                        .map(PullRequestNotificationTypes::getKey),
                     Stream.of(RepositoryNotificationTypes.values()).map(RepositoryNotificationTypes::getKey),
                     Stream.of(TaskNotificationTypes.values()).map(TaskNotificationTypes::getKey)
             )
