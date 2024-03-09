@@ -45,6 +45,7 @@ import com.atlassian.bitbucket.plugins.slack.notification.TaskNotificationTypes;
 import com.atlassian.bitbucket.plugins.slack.notification.renderer.SlackNotificationRenderer;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestRef;
+import com.atlassian.bitbucket.pull.SimpleRescopeDetails;
 import com.atlassian.bitbucket.repository.MinimalRef;
 import com.atlassian.bitbucket.repository.RefChange;
 import com.atlassian.bitbucket.repository.RefChangeType;
@@ -74,6 +75,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -271,7 +273,24 @@ class BitbucketNotificationEventListenerTest {
     }
 
     @Test
+    void onEvent_pullRequestRescopedEvent_shouldIgnoreNullChanges() {
+        target.onEvent(pullRequestRescopedEvent);
+
+        verifyNoMoreInteractions(notificationPublisher, slackNotificationRenderer);
+    }
+
+    @Test
+    void onEvent_pullRequestRescopedEvent_shouldIgnoreZeroChanges() {
+        when(pullRequestRescopedEvent.getAddedCommits()).thenReturn(SimpleRescopeDetails.EMPTY);
+        when(pullRequestRescopedEvent.getRemovedCommits()).thenReturn(SimpleRescopeDetails.EMPTY);
+        target.onEvent(pullRequestRescopedEvent);
+
+        verifyNoMoreInteractions(notificationPublisher, slackNotificationRenderer);
+    }
+
+    @Test
     void onEvent_pullRequestRescopedEvent_shouldCallExpectedMethods() {
+        when(pullRequestRescopedEvent.getAddedCommits()).thenReturn(new SimpleRescopeDetails.Builder().total(1).build());
         testPullRequestEvent(pullRequestRescopedEvent, PullRequestNotificationTypes.RESCOPED);
     }
 
