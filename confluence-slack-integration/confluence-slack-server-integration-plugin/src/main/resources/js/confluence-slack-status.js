@@ -61,7 +61,7 @@ require([
         event.stopPropagation();
     }
 
-    $(function () {
-        $('body').bind('ajaxComplete', handleAjaxComplete);
+    $(function() {
+        $(document).on('ajaxComplete', handleAjaxComplete);
     });
 });

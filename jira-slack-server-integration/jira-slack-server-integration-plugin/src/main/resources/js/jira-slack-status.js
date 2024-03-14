@@ -49,6 +49,6 @@ require([
     }
 
     $(function() {
-        $('body').bind('ajaxComplete', handleAjaxComplete);
+        $(document).on('ajaxComplete', handleAjaxComplete);
     });
 });
