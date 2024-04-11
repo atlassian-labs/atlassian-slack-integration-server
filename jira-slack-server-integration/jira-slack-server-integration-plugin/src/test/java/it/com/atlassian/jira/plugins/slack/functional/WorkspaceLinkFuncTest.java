@@ -6,7 +6,6 @@ import it.com.atlassian.jira.plugins.slack.util.SlackFunctionalTestBase;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.atlassian.jira.testkit.client.util.TimeBombLicence.LICENCE_FOR_TESTING;
 import static com.atlassian.plugins.slack.test.RequestMatchers.body;
 import static com.atlassian.plugins.slack.test.RequestMatchers.hasHit;
 import static com.atlassian.plugins.slack.test.RequestMatchers.request;
@@ -24,7 +23,7 @@ import static org.hamcrest.Matchers.is;
 public class WorkspaceLinkFuncTest extends SlackFunctionalTestBase {
     @Before
     public void beforeEach() {
-        backdoor.restoreDataFromResource(SAMPLE_DATA, LICENCE_FOR_TESTING);
+        backdoor.restoreDataFromResource(SAMPLE_DATA);
     }
 
     @Test
