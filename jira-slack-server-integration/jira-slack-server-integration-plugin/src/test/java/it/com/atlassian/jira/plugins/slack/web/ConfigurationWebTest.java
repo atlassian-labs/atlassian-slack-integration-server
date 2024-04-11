@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
-import static com.atlassian.jira.testkit.client.util.TimeBombLicence.LICENCE_FOR_TESTING;
 import static com.atlassian.plugins.slack.test.RequestMatchers.hasHit;
 import static com.atlassian.plugins.slack.test.RequestMatchers.requestEntityProperty;
 import static com.atlassian.plugins.slack.test.TestChannels.PUBLIC;
@@ -44,7 +43,7 @@ public class ConfigurationWebTest extends SlackWebTestBase {
 
     @Before
     public void beforeEach() {
-        backdoor.restoreDataFromResource(SAMPLE_DATA, LICENCE_FOR_TESTING);
+        backdoor.restoreDataFromResource(SAMPLE_DATA);
         flakyWebTestKiller.disableJiraFlags();
         connectToDummyTeamAndConfirmAdminAccount();
     }
