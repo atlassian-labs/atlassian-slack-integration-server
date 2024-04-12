@@ -84,6 +84,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.atlassian.velocity.htmlsafe</groupId>
+            <artifactId>velocity-htmlsafe</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <scope>provided</scope>
