@@ -6,7 +6,6 @@ import okhttp3.Response;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.atlassian.jira.testkit.client.util.TimeBombLicence.LICENCE_FOR_TESTING;
 import static com.atlassian.plugins.slack.test.RequestMatchers.success;
 import static it.com.atlassian.jira.plugins.slack.util.JiraFuncTestData.SAMPLE_DATA;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,9 +13,10 @@ import static org.hamcrest.Matchers.containsString;
 
 @SkipCacheCheck
 public class SanityCheckFuncTest extends SlackFunctionalTestBase {
+
     @Before
     public void beforeEach() {
-        backdoor.restoreDataFromResource(SAMPLE_DATA, LICENCE_FOR_TESTING);
+        backdoor.restoreDataFromResource(SAMPLE_DATA);
     }
 
     @Test
