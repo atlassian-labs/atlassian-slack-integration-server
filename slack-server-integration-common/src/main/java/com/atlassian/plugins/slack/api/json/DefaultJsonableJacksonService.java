@@ -2,8 +2,8 @@ package com.atlassian.plugins.slack.api.json;
 
 import com.atlassian.annotations.VisibleForTesting;
 import com.atlassian.json.marshal.Jsonable;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;

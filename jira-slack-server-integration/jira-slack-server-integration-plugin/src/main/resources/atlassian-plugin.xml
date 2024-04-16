@@ -261,6 +261,12 @@
     </ao>
 
     <!-- Slack REST endpoints -->
+
+    <!--REST v2 migration tag to enable REST v2-->
+    <rest-migration key="jira-slack-key">
+        <rest-v2/>
+    </rest-migration>
+
     <rest key="slack-rest" name="Slack Jira Resources" path="/slack" version="1.0">
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>

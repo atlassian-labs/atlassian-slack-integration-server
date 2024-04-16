@@ -12,13 +12,14 @@ import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.LimitedSlackLinkDto;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -47,6 +48,7 @@ public class ConfigurationRestService {
     private final SlackLinkManager slackLinkManager;
     private final JiraSettingsService jiraSettingsService;
 
+    @Inject
     @Autowired
     public ConfigurationRestService(final PluginConfigurationManager pluginConfigurationManager,
                                     final ProjectConfigurationManager projectConfigurationManager,

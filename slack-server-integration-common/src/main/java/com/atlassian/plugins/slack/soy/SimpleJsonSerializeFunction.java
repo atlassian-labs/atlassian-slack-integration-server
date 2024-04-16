@@ -1,8 +1,8 @@
 package com.atlassian.plugins.slack.soy;
 
 import com.atlassian.soy.renderer.SoyServerFunction;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

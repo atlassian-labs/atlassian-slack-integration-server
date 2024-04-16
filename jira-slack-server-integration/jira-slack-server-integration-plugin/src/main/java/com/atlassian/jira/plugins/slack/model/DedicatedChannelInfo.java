@@ -1,10 +1,11 @@
 package com.atlassian.jira.plugins.slack.model;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = ANY)

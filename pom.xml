@@ -80,6 +80,7 @@
         <atlassian-cache.version>3.2.0</atlassian-cache.version>
 
         <slack.common.version>1.1.13</slack.common.version>
+        <platform.version>7.0.0-m40</platform.version>
     </properties>
 
     <build>
@@ -117,10 +118,25 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>jsr311-api</artifactId>
-                <version>1.1.1</version>
-                <scope>provided</scope>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-public-api</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-test-resources</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-internal-api</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.github.seratch</groupId>
@@ -292,39 +308,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.atlassian.plugins.rest</groupId>
-                <artifactId>atlassian-rest-common</artifactId>
-                <version>${rest.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>fugue</artifactId>
-                        <groupId>com.atlassian.fugue</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-core-asl</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-jaxrs</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-mapper-asl</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-xc</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                </exclusions>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.plugins.rest</groupId>
-                <artifactId>atlassian-rest-module</artifactId>
-                <version>${rest.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.atlassian.plugins</groupId>
                 <artifactId>atlassian-plugins-core</artifactId>
                 <version>${atlassian-plugins-core.version}</version>
@@ -489,20 +472,6 @@
                 <artifactId>mockwebserver</artifactId>
                 <version>${okhttp.version}</version>
                 <scope>test</scope>
-            </dependency>
-
-            <!-- Old API to use with the REST API -->
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-core-asl</artifactId>
-                <version>1.9.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-mapper-asl</artifactId>
-                <version>1.9.1</version>
-                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

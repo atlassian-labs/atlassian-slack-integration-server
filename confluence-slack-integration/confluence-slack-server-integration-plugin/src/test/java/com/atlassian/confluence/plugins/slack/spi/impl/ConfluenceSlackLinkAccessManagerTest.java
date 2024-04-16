@@ -9,7 +9,6 @@ import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import com.sun.jersey.spi.container.ContainerRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,12 +17,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 
 import static com.atlassian.confluence.plugins.slack.spi.impl.ConfluenceConfigurationRedirectionManager.FROM_SPACE_ATTRIBUTE_KEY;
 import static com.atlassian.confluence.plugins.slack.spi.impl.ConfluenceConfigurationRedirectionManager.SPACE_ATTRIBUTE_KEY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +53,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
     @Mock
     private HttpServletRequest httpServletRequest;
     @Mock
-    private ContainerRequest containerRequest;
+    private ContainerRequestContext containerRequest;
     @Mock
     private HttpSession session;
     @Mock
@@ -85,7 +88,9 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
         when(userProfile.getUserKey()).thenReturn(userKey);
-        when(containerRequest.getQueryParameters()).thenReturn(map);
+        UriInfo mockUriInfo = mock(UriInfo.class);
+        when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
+        when(mockUriInfo.getQueryParameters()).thenReturn(map);
         when(map.getFirst("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
@@ -101,7 +106,9 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
         when(userProfile.getUserKey()).thenReturn(userKey);
-        when(containerRequest.getQueryParameters()).thenReturn(map);
+        UriInfo mockUriInfo = mock(UriInfo.class);
+        when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
+        when(mockUriInfo.getQueryParameters()).thenReturn(map);
         when(map.getFirst("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
@@ -117,7 +124,9 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
         when(userProfile.getUserKey()).thenReturn(userKey);
-        when(containerRequest.getQueryParameters()).thenReturn(map);
+        UriInfo mockUriInfo = mock(UriInfo.class);
+        when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
+        when(mockUriInfo.getQueryParameters()).thenReturn(map);
         when(map.getFirst("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(null);
 

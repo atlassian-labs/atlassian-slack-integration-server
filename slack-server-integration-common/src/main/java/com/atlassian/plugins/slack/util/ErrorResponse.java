@@ -1,18 +1,18 @@
 package com.atlassian.plugins.slack.util;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.github.seratch.jslack.api.methods.SlackApiResponse;
 import com.google.common.base.Throwables;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Eithers;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = ANY)

@@ -47,10 +47,10 @@ import com.atlassian.sal.api.user.UserKey;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostEphemeralRequest;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.model.Attachment;
-import com.sun.jersey.api.uri.UriComponent;
 import io.atlassian.fugue.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.uri.UriComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

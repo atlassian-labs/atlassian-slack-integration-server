@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -28,7 +29,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 @ReadOnlyAccessAllowed
 @Path("channels")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
 public class SlackChannelsResource {
     private final SlackClientProvider slackClientProvider;
     private final EventPublisher eventPublisher;

@@ -7,6 +7,7 @@ import com.atlassian.plugins.slack.spi.SlackPluginResourceProvider;
 import com.atlassian.plugins.slack.user.SlackUserService;
 import com.atlassian.sal.api.user.UserManager;
 
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -27,6 +28,7 @@ public class SlackUsersResource {
     private final SlackUserSettingsService slackUserSettingsService;
     private final UserManager userManager;
 
+    @Inject
     public SlackUsersResource(final SlackUserService slackUserService,
                               final SlackPluginResourceProvider slackPluginResourceProvider,
                               final SlackUserSettingsService slackUserSettingsService,

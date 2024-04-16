@@ -1,12 +1,12 @@
 package com.atlassian.plugins.slack.rest.model;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = ANY)
@@ -57,6 +57,6 @@ public class SlackWebHookPayload {
     }
 
     public String getType() {
-        return event.path("type").getTextValue();
+        return event.path("type").asText();
     }
 }

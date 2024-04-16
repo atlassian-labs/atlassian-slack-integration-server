@@ -22,7 +22,6 @@ import com.atlassian.plugin.PluginController;
 import com.atlassian.plugin.module.ModuleFactory;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.plugin.web.WebInterfaceManager;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.executor.ThreadLocalDelegateExecutorFactory;
@@ -35,6 +34,7 @@ import com.atlassian.sal.api.usersettings.UserSettingsService;
 import com.atlassian.sal.api.web.context.HttpContext;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import com.atlassian.webresource.api.WebResourceUrlProvider;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 
 @SuppressWarnings("unused")

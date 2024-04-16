@@ -8,13 +8,13 @@ import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.GetWorkspacesResponse;
 import com.atlassian.plugins.slack.rest.model.LimitedSlackLinkDto;
 import com.atlassian.sal.api.message.I18nResolver;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.sun.jersey.spi.container.ResourceFilters;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -39,6 +39,7 @@ public class SlackLinkResource {
     private final I18nResolver i18nResolver;
     private final SlackClientProvider slackClientProvider;
 
+    @Inject
     @Autowired
     public SlackLinkResource(final SlackConnectionService slackConnectionService,
                              final SlackLinkManager slackLinkManager,
@@ -51,7 +52,7 @@ public class SlackLinkResource {
     }
 
     private String nonNullString(final JsonNode node) {
-        String textValue = node.getTextValue();
+        String textValue = node.asText();
         if (textValue == null || textValue.isEmpty()) {
             throw new IllegalArgumentException("Required field has no value");
         }
@@ -72,7 +73,7 @@ public class SlackLinkResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ResourceFilters(SlackLinkAdministerPermissionResourceFilter.class)
+    @SlackLinkAdministerPermission
     public Response createTeam(final String body) {
         return updateTeam(null, body);
     }
@@ -81,7 +82,7 @@ public class SlackLinkResource {
     @Path("/{teamId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ResourceFilters(SlackLinkAdministerPermissionResourceFilter.class)
+    @SlackLinkAdministerPermission
     public Response updateTeam(@PathParam("teamId") final String teamId, final String body) {
         final SlackLinkDto dto = new SlackLinkDto();
         boolean isCustom = false;
@@ -147,7 +148,7 @@ public class SlackLinkResource {
     @Path("/{teamId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ResourceFilters(SlackLinkAdministerPermissionResourceFilter.class)
+    @SlackLinkAdministerPermission
     public Response deleteTeam(@PathParam("teamId") final String teamId) {
         return slackConnectionService.disconnectTeam(teamId).fold(
                 e -> Response.status(BAD_REQUEST).build(),
@@ -158,7 +159,7 @@ public class SlackLinkResource {
     @Path("/can-reach-slack")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ResourceFilters(SlackLinkAdministerPermissionResourceFilter.class)
+    @SlackLinkAdministerPermission
     public Response validateSlackReachability() {
         return slackClientProvider.withoutCredentials().testApi().fold(
                 e -> Response

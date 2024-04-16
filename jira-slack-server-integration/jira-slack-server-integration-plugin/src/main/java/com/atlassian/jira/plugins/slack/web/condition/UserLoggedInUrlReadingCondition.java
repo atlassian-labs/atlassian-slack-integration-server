@@ -2,7 +2,7 @@ package com.atlassian.jira.plugins.slack.web.condition;
 
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.plugin.PluginParseException;
-import com.atlassian.plugin.webresource.condition.SimpleUrlReadingCondition;
+import com.atlassian.webresource.spi.condition.AbstractBooleanUrlReadingCondition;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  * Copied from com.atlassian.confluence.plugin.descriptor.web.UserLoggedInUrlReadingCondition for backward compatibility
  * with Confluence 5.3
  */
-public class UserLoggedInUrlReadingCondition extends SimpleUrlReadingCondition {
+public class UserLoggedInUrlReadingCondition extends AbstractBooleanUrlReadingCondition {
     private static final String USER_LOGGED_IN_QUERY_PARAM = "user-logged-in";
     private final JiraAuthenticationContext context;
 

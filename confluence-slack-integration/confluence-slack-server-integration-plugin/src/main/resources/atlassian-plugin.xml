@@ -205,6 +205,12 @@
     </web-item>
 
     <!-- Slack REST endpoints -->
+
+    <!--REST v2 migration tag to enable REST v2-->
+    <rest-migration key="confluence-slack-key">
+        <rest-v2/>
+    </rest-migration>
+
     <rest key="slack-rest" name="Slack Confluence Resources" path="/slack" version="1.0">
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>

@@ -77,6 +77,14 @@
                     <artifactId>daisydiff</artifactId>
                     <groupId>org.outerj.daisy</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>jackson-mapper-asl</artifactId>
+                    <groupId>org.codehaus.jackson</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jackson-core-asl</artifactId>
+                    <groupId>org.codehaus.jackson</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -104,16 +112,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.13-atlassian-1</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.13-atlassian-1</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>2.42</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -152,7 +163,7 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.plugins.rest</groupId>
-            <artifactId>atlassian-rest-common</artifactId>
+            <artifactId>atlassian-rest-v2-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -333,7 +344,6 @@
                             com.atlassian.plugin.webresource.transformer,
                             com.atlassian.plugin.webresource.url,
                             com.atlassian.plugin.servlet,
-                            com.atlassian.plugins.rest.common.security,
                             com.atlassian.sal.api,
                             com.atlassian.sal.api.executor,
                             com.atlassian.sal.api.lifecycle,
@@ -351,8 +361,6 @@
 
                             com.google.common.base,
                             com.google.common.collect,
-                            com.sun.jersey.api.view,
-                            com.sun.jersey.api.uri,
                             javax.annotation,
                             javax.inject,
                             javax.naming,
@@ -374,7 +382,6 @@
                             org.apache.velocity,
                             org.apache.velocity.runtime,
                             org.apache.velocity.app.event,
-                            org.codehaus.jackson.annotate,
                             org.springframework.aop.support,
                             org.springframework.beans,
                             org.springframework.beans.factory,

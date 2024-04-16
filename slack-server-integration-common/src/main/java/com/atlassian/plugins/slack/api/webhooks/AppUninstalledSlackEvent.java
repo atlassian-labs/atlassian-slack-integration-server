@@ -1,9 +1,9 @@
 package com.atlassian.plugins.slack.api.webhooks;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 /*
 https://api.slack.com/events/app_uninstalled

@@ -9,6 +9,7 @@ import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -26,6 +27,7 @@ public class RepositoryToChannelResource {
 
     private final RepositoryService repositoryService;
 
+    @Inject
     public RepositoryToChannelResource(final RepositoryService repositoryService) {
         this.repositoryService = repositoryService;
     }

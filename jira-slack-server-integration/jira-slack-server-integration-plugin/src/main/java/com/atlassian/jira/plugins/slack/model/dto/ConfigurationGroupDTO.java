@@ -1,13 +1,13 @@
 package com.atlassian.jira.plugins.slack.model.dto;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 /**
  * This object contains the configuration from a specific group

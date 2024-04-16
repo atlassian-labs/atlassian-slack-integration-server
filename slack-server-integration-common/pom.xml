@@ -12,14 +12,19 @@
     <description>Provides resources and functionality for linking Atlassian products with slack.</description>
 
     <dependencies>
-        <!-- Old API to use with the REST API -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.security</groupId>
+            <artifactId>atlassian-secure-random</artifactId>
         </dependency>
 
         <!-- Slack -->
@@ -89,8 +94,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -140,7 +150,7 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.plugins.rest</groupId>
-            <artifactId>atlassian-rest-common</artifactId>
+            <artifactId>atlassian-rest-v2-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

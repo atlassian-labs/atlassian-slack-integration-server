@@ -4,18 +4,18 @@ import com.atlassian.jira.plugins.slack.model.EventFilterType;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
 import com.atlassian.jira.project.Project;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.UUID;
 
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 
 /**
  * This object will represent a configuration item that maps a project to a channel.

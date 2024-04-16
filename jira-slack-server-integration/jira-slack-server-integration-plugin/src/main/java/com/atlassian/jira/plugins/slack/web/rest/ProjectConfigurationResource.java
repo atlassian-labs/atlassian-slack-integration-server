@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
@@ -42,6 +43,7 @@ public class ProjectConfigurationResource {
     private final GlobalPermissionManager globalPermissionManager;
     private final JiraAuthenticationContext authenticationContext;
 
+    @Inject
     @Autowired
     public ProjectConfigurationResource(final ProjectConfigurationManager projectConfigurationManager,
                                         final ProjectManager projectManager,
