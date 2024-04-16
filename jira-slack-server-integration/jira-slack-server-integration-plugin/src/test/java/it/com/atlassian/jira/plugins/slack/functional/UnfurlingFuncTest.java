@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.atlassian.jira.testkit.client.util.TimeBombLicence.LICENCE_FOR_TESTING;
 import static com.atlassian.plugins.slack.test.RequestMatchers.hasHit;
 import static com.atlassian.plugins.slack.test.RequestMatchers.requestEntityProperty;
 import static com.github.seratch.jslack.api.methods.Methods.CHAT_UNFURL;
@@ -23,7 +22,7 @@ import static org.hamcrest.Matchers.containsString;
 public class UnfurlingFuncTest extends SlackFunctionalTestBase {
     @Before
     public void beforeEach() {
-        backdoor.restoreDataFromResource(SAMPLE_DATA, LICENCE_FOR_TESTING);
+        backdoor.restoreDataFromResource(SAMPLE_DATA);
     }
 
     @Test
