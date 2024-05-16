@@ -6,6 +6,7 @@ import com.atlassian.bitbucket.event.content.FileEditedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestCommentEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestOpenedEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestRescopedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryRefsChangedEvent;
@@ -75,6 +76,14 @@ public class BitbucketNotificationEventListener {
             PullRequestCommentEvent commentEvent = (PullRequestCommentEvent) event;
             if (commentEvent.getComment().getSeverity() == BLOCKER) { //BLOCKER severity represents a PR task
                 onEvent(commentEvent);
+                return;
+            }
+        }
+        if (event instanceof PullRequestRescopedEvent) {
+            PullRequestRescopedEvent rescopedEvent = (PullRequestRescopedEvent) event;
+            // no changes for target PR
+            if (!Optional.ofNullable(rescopedEvent.getAddedCommits()).filter(commits -> commits.getTotal() > 0).isPresent() &&
+                !Optional.ofNullable(rescopedEvent.getRemovedCommits()).filter(commits -> commits.getTotal() > 0).isPresent()) {
                 return;
             }
         }
