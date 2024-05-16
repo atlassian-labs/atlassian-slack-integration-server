@@ -24,32 +24,50 @@ jobs:
       # check path to bundled Maven executable; it should be then used in ATLAS_MVN
       - run: mvn -version
 
+  prepare:
+    name: Prepare Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      unit-tests-matrix: ${{ steps.set-matrix.outputs.unit-tests-matrix }}
+      jira-it-matrix: ${{ steps.set-matrix.outputs.jira-it-matrix }}
+      confluence-it-matrix: ${{ steps.set-matrix.outputs.confluence-it-matrix }}
+      bitbucket-it-matrix: ${{ steps.set-matrix.outputs.bitbucket-it-matrix }}
+      # TODO: Remove these flags when new major jira (10.x) and bitbucket (9.x) are released
+      skip-jira-its: ${{ steps.set-matrix.outputs.skip-jira-its }}
+      skip-bitbucket-its: ${{ steps.set-matrix.outputs.skip-bitbucket-its }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - id: set-matrix
+        run: bin/build/prepare-matrices.sh
+
   unit-tests:
     name: Unit Tests
+    needs: prepare
     runs-on: ubuntu-20.04
     # around 800 Mb of dependencies need to be loaded; it may take long first time until it's cached
     timeout-minutes: 30
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
-      matrix:
-        java-version: [8, 11]
+      matrix: ${{ fromJSON(needs.prepare.outputs.unit-tests-matrix) }}
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
           distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-unit
       - run: bin/build/override-plugin-sdk-maven.sh
       - run: bin/build/run-unit-tests.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: unit-tests-coverage-java-${{ matrix.java-version }}
           path: '**/target/site/jacoco/**'
@@ -58,39 +76,33 @@ jobs:
     name: Jira
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')
-    needs: unit-tests
+    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')) && !needs.prepare.outputs.skip-jira-its
+    needs: [prepare, unit-tests]
     strategy:
-      matrix:
-        java-version: [8, 11, 17]
-        jira-version: [8.15.0, 9.5.0]
-        # Java 17 support is added only since Jira 9.5: https://confluence.atlassian.com/jiracore/preparing-for-jira-9-5-1167834011.html
-        exclude:
-          - java-version: 17
-            jira-version: 8.15.0
+      matrix: ${{ fromJSON(needs.prepare.outputs.jira-it-matrix) }}
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
           distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/override-plugin-sdk-maven.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository/com/atlassian/jira
           key: maven-integration-jira-${{ matrix.jira-version }}
       - run: bin/build/install-common-modules.sh
       - run: VERSION=${{ matrix.jira-version }} bin/build/run-jira-its.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: webdriver-screenshots-jira-${{ matrix.jira-version }}
@@ -101,40 +113,32 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence')
-    needs: unit-tests
+    needs: [prepare, unit-tests]
     strategy:
-      matrix:
-        # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
-        java-version: [8, 11, 17]
-        confluence-version: [7.10.0, 8.0.0]
-        exclude:
-          - java-version: 8
-            confluence-version: 8.0.0 # Confluence 8 doesn't support Java 8 anymore
-          - java-version: 17
-            confluence-version: 7.10.0
+      matrix: ${{ fromJSON(needs.prepare.outputs.confluence-it-matrix) }}
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
           distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/override-plugin-sdk-maven.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository/com/atlassian/confluence
           key: maven-integration-confluence-${{ matrix.confluence-version }}
       - run: bin/build/install-common-modules.sh
       - run: VERSION=${{ matrix.confluence-version }} bin/build/run-confluence-its.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: webdriver-screenshots-confluence-${{ matrix.confluence-version }}-java-${{ matrix.java-version }}
@@ -144,19 +148,13 @@ jobs:
     name: Bitbucket
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
-    needs: unit-tests
+    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')) && !needs.prepare.outputs.skip-bitbucket-its
+    needs: [prepare, unit-tests]
     strategy:
-      matrix:
-        java-version: [8, 11, 17]
-        bitbucket-version: [7.6.0, 8.8.0]
-        # Bitbucket 8.8.0 is the first one that supports Java 17
-        exclude:
-          - java-version: 17
-            bitbucket-version: 7.6.0
+      matrix: ${{ fromJSON(needs.prepare.outputs.bitbucket-it-matrix) }}
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
       # Dec 13, 2022
@@ -164,24 +162,24 @@ jobs:
       # install last supported git - 2.37.4; remove this trick once Bitbucket implements support for latest git
       # https://confluence.atlassian.com/bitbucketserver/supported-platforms-776640981.html#Supportedplatforms-dvcsDVCS
       - run: bin/build/install-supported-git.sh
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
           distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/override-plugin-sdk-maven.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository/com/atlassian/bitbucket
           key: maven-integration-bitbucket-${{ matrix.bitbucket-version }}
       - run: bin/build/install-common-modules.sh
       - run: VERSION=${{ matrix.bitbucket-version }} bin/build/run-bitbucket-its.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: webdriver-screenshots-bitbucket-${{ matrix.bitbucket-version }}-java-${{ matrix.java-version }}

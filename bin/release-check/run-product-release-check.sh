@@ -12,8 +12,22 @@ if [ "$latest_releases" = "" ]; then
   exit
 fi
 
-# TAKE AND CHECKS LATEST VERSION ONLY, MEANING THE GREATEST REVISION VERSION
-latest_version=$(echo "$latest_releases" | tail -1)
+# TAKE AND CHECKS LATEST COMPATIBLE VERSION ONLY, MEANING THE GREATEST REVISION VERSION
+pl_product_version=$(. ../get-plugin-major-version.sh "$PRODUCT")
+product_compat_version_regex=$(jq -r --arg pl "$pl_product_version" --arg p "$PRODUCT" '.[$p].[$pl]' ./plugin-product-compat-matrix.json)
+latest_version=$(echo "$latest_releases" | grep -oE "$product_compat_version_regex" | tail -1)
+
+if [ "$latest_version" = "" ]; then
+  echo "Could not find latest versions"
+  echo "Product [$PRODUCT]"
+  echo "Compatible version pattern [$product_compat_version_regex]"
+  exit
+fi
+
+echo "========================"
+echo "LATEST VERSION"
+echo "$latest_version"
+echo "========================"
 
 # RUN CHECK FOR LATEST VERSION
 PRODUCT_VERSION="$latest_version" . ./check-release.sh
