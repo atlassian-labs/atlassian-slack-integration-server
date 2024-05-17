@@ -235,6 +235,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
@@ -320,6 +326,12 @@
             <groupId>com.atlassian.fugue</groupId>
             <artifactId>fugue</artifactId>
             <version>2.6.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -466,10 +478,8 @@
                             com.atlassian.plugin.osgi.factory,
                             com.atlassian.plugin.web,
                             com.atlassian.plugin.webresource,
-                            com.atlassian.plugin.webresource.condition,
-                            com.atlassian.plugin.webresource.transformer,
-                            com.atlassian.plugin.webresource.url,
                             com.atlassian.plugin.servlet,
+                            com.atlassian.plugins.rest.api*
                             com.atlassian.query,
                             com.atlassian.query.clause,
                             com.atlassian.query.operand,
@@ -484,7 +494,7 @@
                             com.atlassian.seraph.util,
                             com.atlassian.templaterenderer,
                             com.atlassian.webresource.api,
-                            com.atlassian.webresource.api.prebake,
+                            com.atlassian.webresource.spi,
 
                             com.google.common.base,
                             com.google.common.collect,
@@ -496,9 +506,7 @@
                             javax.security.auth.x500,
                             javax.servlet,
                             javax.servlet.http,
-                            javax.ws.rs,
-                            javax.ws.rs.core,
-                            javax.ws.rs.ext,
+                            javax.ws.rs*;version="[2.0.0,3.0.0)",
                             javax.xml.bind.annotation,
                             javax.xml.stream,
                             javax.xml.transform,

@@ -2,9 +2,9 @@ package com.atlassian.jira.plugins.slack.spi.impl;
 
 import com.atlassian.jira.plugins.slack.model.JiraPersonalNotificationTypes;
 import com.atlassian.jira.plugins.slack.util.PluginConstants;
-import com.atlassian.plugin.webresource.UrlMode;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.plugins.slack.spi.SlackPluginResourceProvider;
+import com.atlassian.webresource.api.UrlMode;
+import com.atlassian.webresource.api.WebResourceUrlProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
