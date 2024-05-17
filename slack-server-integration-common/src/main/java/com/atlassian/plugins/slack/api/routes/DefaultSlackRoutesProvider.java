@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.Arrays;
 
 @Component("slackRoutesProvider")
 public class DefaultSlackRoutesProvider implements SlackRoutesProvider {
@@ -33,6 +34,6 @@ public class DefaultSlackRoutesProvider implements SlackRoutesProvider {
     public URI getAdminConfigurationPage() {
         return UriBuilder.fromPath(SLACK_ADMIN_BASE)
                 .path("configure")
-                .build(strBaseUrl());
+                .build(new Object[]{strBaseUrl()}, false);
     }
 }

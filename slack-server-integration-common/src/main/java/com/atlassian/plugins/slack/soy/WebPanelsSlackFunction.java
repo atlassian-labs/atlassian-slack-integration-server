@@ -1,7 +1,8 @@
 package com.atlassian.plugins.slack.soy;
 
 import com.atlassian.plugin.web.WebInterfaceManager;
-import com.atlassian.plugin.web.descriptors.WebPanelModuleDescriptor;
+import com.atlassian.plugin.web.api.descriptors.WebPanelModuleDescriptor;
+import com.atlassian.plugin.web.api.model.WebPanel;
 import com.atlassian.soy.renderer.JsExpression;
 import com.atlassian.soy.renderer.SoyClientFunction;
 import com.atlassian.soy.renderer.SoyServerFunction;
@@ -44,7 +45,7 @@ public class WebPanelsSlackFunction implements SoyServerFunction<List<String>>, 
         final Map<String, Object> context = contextBuilder.build();
 
         final List<String> webPanels = new ArrayList<>();
-        for (WebPanelModuleDescriptor webPanelModuleDescriptor : webInterfaceManager.getDisplayableWebPanelDescriptors(location, context)) {
+        for (WebPanelModuleDescriptor<? extends WebPanel> webPanelModuleDescriptor : webInterfaceManager.getDisplayableWebPanelDescriptors(location, context)) {
             try {
                 webPanels.add(webPanelModuleDescriptor.getModule().getHtml(context));
             } catch (RuntimeException e) {

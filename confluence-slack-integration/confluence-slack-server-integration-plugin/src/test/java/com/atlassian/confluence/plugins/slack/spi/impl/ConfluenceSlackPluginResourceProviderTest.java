@@ -1,7 +1,7 @@
 package com.atlassian.confluence.plugins.slack.spi.impl;
 
-import com.atlassian.plugin.webresource.UrlMode;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
+import com.atlassian.webresource.api.UrlMode;
+import com.atlassian.webresource.api.WebResourceUrlProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

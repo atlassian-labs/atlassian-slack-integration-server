@@ -22,10 +22,10 @@
         <project.root.directory>${project.basedir}/..</project.root.directory>
 
         <!-- version of Confluence libraries used to compile plugin code -->
-        <confluence.api.version>7.10.0</confluence.api.version>
+        <confluence.api.version>9.0.0-m81</confluence.api.version>
 
         <!-- version of Confluence used in integration tests -->
-        <confluence.version>7.10.0</confluence.version>
+        <confluence.version>9.0.0-m81</confluence.version>
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
         <confluence.amps.version>8.6.0</confluence.amps.version>
@@ -43,16 +43,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>confluence-8-compat</artifactId>
-            <version>${slack.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>confluence-7-compat</artifactId>
-            <version>${slack.common.version}</version>
-        </dependency>
 
         <!-- Slack -->
         <dependency>
@@ -65,6 +55,33 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.6.15.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>xwork</artifactId>
+            <version>1.0.3.6</version>
+        </dependency>
+
 
         <!-- Runtime dependencies -->
         <dependency>
@@ -72,20 +89,6 @@
             <artifactId>confluence</artifactId>
             <version>${confluence.api.version}</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>daisydiff</artifactId>
-                    <groupId>org.outerj.daisy</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jackson-mapper-asl</artifactId>
-                    <groupId>org.codehaus.jackson</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jackson-core-asl</artifactId>
-                    <groupId>org.codehaus.jackson</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian.analytics</groupId>
@@ -122,18 +125,24 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-common</artifactId>
-            <version>2.42</version>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -164,6 +173,11 @@
         <dependency>
             <groupId>com.atlassian.plugins.rest</groupId>
             <artifactId>atlassian-rest-v2-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.atlassian.fugue</groupId>
+            <artifactId>fugue</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -220,10 +234,17 @@
             <artifactId>atlassian-test-categories</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>2.42</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.atlassian.plugin</groupId>
             <artifactId>atlassian-spring-scanner-annotation</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Integration Tests -->
@@ -241,7 +262,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-webdriver-pageobjects</artifactId>
-            <version>11.4.5</version>
+            <version>11.5.2</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -251,6 +272,22 @@
                 <exclusion>
                     <artifactId>junit-dep</artifactId>
                     <groupId>junit</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.atlassian.plugins</groupId>
+                    <artifactId>atlassian-plugins-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -262,7 +299,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -337,13 +373,13 @@
                             com.atlassian.html.encode,
                             com.atlassian.json.marshal,
                             com.atlassian.plugin,
+                            com.atlassian.plugin.module,
+                            com.atlassian.plugin.elements,
                             com.atlassian.plugin.osgi.factory,
+                            com.atlassian.plugin.osgi.module,
                             com.atlassian.plugin.web,
-                            com.atlassian.plugin.webresource,
-                            com.atlassian.plugin.webresource.condition,
-                            com.atlassian.plugin.webresource.transformer,
-                            com.atlassian.plugin.webresource.url,
                             com.atlassian.plugin.servlet,
+                            com.atlassian.plugins.rest.api*,
                             com.atlassian.sal.api,
                             com.atlassian.sal.api.executor,
                             com.atlassian.sal.api.lifecycle,
@@ -357,7 +393,7 @@
                             com.atlassian.templaterenderer,
                             com.atlassian.util.concurrent,
                             com.atlassian.webresource.api,
-                            com.atlassian.webresource.api.prebake,
+                            com.atlassian.webresource.spi,
 
                             com.google.common.base,
                             com.google.common.collect,
@@ -369,12 +405,11 @@
                             javax.security.auth.x500,
                             javax.servlet,
                             javax.servlet.http,
-                            javax.ws.rs,
-                            javax.ws.rs.core,
-                            javax.ws.rs.ext,
+                            javax.ws.rs*;version="[2.0.0,3.0.0)",
                             javax.xml.bind.annotation,
                             javax.xml.stream,
                             javax.xml.transform,
+                            javax.persistence,
                             org.apache.commons.lang3,
                             org.apache.commons.lang3.text,
                             org.apache.commons.lang3.tuple,
@@ -483,7 +518,7 @@
             <plugin>
                 <groupId>com.atlassian.plugin</groupId>
                 <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
-                <version>${atlassian.spring.scanner.version}</version>
+                <version>5.0.0</version>
                 <executions>
                     <execution>
                         <goals>

@@ -15,9 +15,8 @@ import com.atlassian.confluence.plugins.slack.spacetochannel.model.ContentShared
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.PageType;
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.QuestionType;
 import com.atlassian.confluence.plugins.slack.util.ConfluenceUserImpersonator;
+import com.atlassian.confluence.plugins.slack.util.SearchBuilder;
 import com.atlassian.confluence.plugins.slack.util.TinyLinkHelper;
-import com.atlassian.confluence.plugins.slack.util.compat.ConfluenceCompatibilityDispatcher;
-import com.atlassian.confluence.plugins.slack.util.compat.ConfluenceCompatibilityHandler;
 import com.atlassian.confluence.search.v2.ISearch;
 import com.atlassian.confluence.search.v2.InvalidSearchException;
 import com.atlassian.confluence.search.v2.SearchManager;
@@ -50,9 +49,9 @@ import com.github.seratch.jslack.api.model.Attachment;
 import io.atlassian.fugue.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.uri.UriComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -95,7 +94,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
     private final SearchManager searchManager;
     private final AnalyticsContextProvider analyticsContextProvider;
     private final ConfluenceUserImpersonator confluenceUserImpersonator;
-    private final ConfluenceCompatibilityDispatcher confluenceCompatibilityDispatcher;
+    private final SearchBuilder searchBuilder;
 
     private final int maxSearchResultsToShow;
 
@@ -113,7 +112,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
                                      final SearchManager searchManager,
                                      final AnalyticsContextProvider analyticsContextProvider,
                                      final ConfluenceUserImpersonator confluenceUserImpersonator,
-                                     final ConfluenceCompatibilityDispatcher confluenceCompatibilityDispatcher) {
+                                     final SearchBuilder searchBuilder) {
         super(eventPublisher);
         this.eventPublisher = eventPublisher;
         this.attachmentBuilder = attachmentBuilder;
@@ -128,7 +127,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
         this.searchManager = searchManager;
         this.analyticsContextProvider = analyticsContextProvider;
         this.confluenceUserImpersonator = confluenceUserImpersonator;
-        this.confluenceCompatibilityDispatcher = confluenceCompatibilityDispatcher;
+        this.searchBuilder = searchBuilder;
 
         this.maxSearchResultsToShow = Integer.getInteger("slack.search.max.results", DEFAULT_MAX_SEARCH_RESULT_TO_SHOW);
     }
@@ -330,7 +329,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
 
     private Optional<? extends SpaceContentEntityObject> findContentFrom(final String url) {
         final URI link = URI.create(url);
-        final Optional<AbstractPage> byPageId = tryPageId(link);
+        final Optional<AbstractPage> byPageId = tryPageId(url);
         if (byPageId.isPresent()) {
             return byPageId;
         }
@@ -338,16 +337,9 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
         // it should contain the path after the context path
         final URI relativeLink = getContentPath(link);
         try {
-            final List<String> segments = UriComponent
-                    .decodePath(relativeLink, false)
+            final List<String> segments = UriComponentsBuilder.fromUri(relativeLink).build().getPathSegments()
                     .stream()
-                    .map(path -> {
-                        try {
-                            return URLDecoder.decode(path.getPath(), StandardCharsets.UTF_8.name());
-                        } catch (UnsupportedEncodingException e) {
-                            return path.getPath();
-                        }
-                    })
+                    .map(this::decodeValue)
                     .collect(Collectors.toList());
             final Optional<AbstractPage> byTinyUrl = tryTinyUrl(segments);
             if (byTinyUrl.isPresent()) {
@@ -369,6 +361,14 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
             log.debug("Could not parse URI {}", relativeLink, e);
         }
         return Optional.empty();
+    }
+
+    private String decodeValue(String value) {
+        try {
+            return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            return value;
+        }
     }
 
     /**
@@ -428,8 +428,8 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
      * Pages and blogs are the same:
      * http://localhost:1990/confluence/pages/viewpage.action?pageId=851986
      */
-    private Optional<AbstractPage> tryPageId(final URI link) {
-        return UriComponent.decodeQuery(link, true).entrySet().stream()
+    private Optional<AbstractPage> tryPageId(final String url) {
+        return UriComponentsBuilder.fromHttpUrl(decodeValue(url)).build().getQueryParams().entrySet().stream()
                 .filter(param -> "pageId".equals(param.getKey()))
                 .map(param -> getContentById(param.getValue().get(0)))
                 .filter(Optional::isPresent)
@@ -550,8 +550,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
                                                                             @Nullable final ConfluenceUser confluenceUser,
                                                                             final int pagesOrBlogsToSearch) {
         List<SpaceContentEntityObject> pagesOrBlogs = Collections.emptyList();
-        ConfluenceCompatibilityHandler compatibilityHandler = confluenceCompatibilityDispatcher.getHandler();
-        ISearch searchConfig = compatibilityHandler.buildSearch(query, confluenceUser, 0, pagesOrBlogsToSearch);
+        ISearch searchConfig = searchBuilder.buildSearch(query, confluenceUser, 0, pagesOrBlogsToSearch);
 
         try {
             SearchResults searchResults = searchManager.search(searchConfig);

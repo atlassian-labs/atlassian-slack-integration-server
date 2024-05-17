@@ -170,7 +170,7 @@
               weight="0">
         <description key="slack2-space-configuration.name">Slack Space Configuration</description>
         <label key="slack2-space-configuration.name"/>
-        <link linkId="slack2-space-configuration">/spaces/slack2.action?key=$generalUtil.urlEncode($space.key)</link>
+        <link linkId="slack2-space-configuration">/spaces/slack2.action?key=$htmlUtil.urlEncode($space.key)</link>
         <icon height="16" width="16">
             <link absolute="true">
                 $webResourceManager.getStaticPluginResource("com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-image-resources",
@@ -190,7 +190,7 @@
               weight="0">
         <description key="slack2-space-configuration.name">Slack Space Configuration</description>
         <label key="slack2-space-configuration.name"/>
-        <link linkId="slack2-space-configuration">/spaces/slack2.action?key=$generalUtil.urlEncode($space.key)</link>
+        <link linkId="slack2-space-configuration">/spaces/slack2.action?key=$htmlUtil.urlEncode($space.key)</link>
         <icon height="16" width="16">
             <link absolute="true">
                 $webResourceManager.getStaticPluginResource("com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-image-resources",
@@ -496,7 +496,7 @@
         <resource name="token/token-status.js" type="download" location="token/token-status.js"/>
 
         <condition class="com.atlassian.plugins.slack.api.condition.IsSlackEnabledUrlReadingCondition"/>
-        <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition"/>
+        <condition class="com.atlassian.confluence.plugin.descriptor.web.urlreadingconditions.UserLoggedInUrlReadingCondition"/>
     </web-resource>
 
     <soy-function key="slack-plugin-resource-url" name="Generates a url for a plugin resource" class="com.atlassian.plugins.slack.soy.PluginResourceUrlSlackFunction"/>

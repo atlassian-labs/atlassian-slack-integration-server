@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -105,12 +104,34 @@ public class SlackViewSpaceConfigurationActionTest {
     @Captor
     private ArgumentCaptor<Map<String, Object>> mapArgumentCaptor;
 
-    @InjectMocks
-    private SlackViewSpaceConfigurationAction servlet;
+    private SlackViewSpaceConfigurationActionMock servlet;
+
+    class SlackViewSpaceConfigurationActionMock extends SlackViewSpaceConfigurationAction {
+
+        public SlackViewSpaceConfigurationActionMock(SlackSpaceToChannelService slackSpaceToChannelService,
+                                                     SlackLinkManager slackLinkManager,
+                                                     SlackUserManager slackUserManager,
+                                                     SlackRoutesProviderFactory slackRoutesProviderFactory,
+                                                     NotificationTypeService notificationTypeService,
+                                                     SlackClientProvider slackClientProvider,
+                                                     EventPublisher eventPublisher,
+                                                     AnalyticsContextProvider analyticsContextProvider) {
+            super(slackSpaceToChannelService, slackLinkManager, slackUserManager, slackRoutesProviderFactory,
+                    notificationTypeService, slackClientProvider, eventPublisher, analyticsContextProvider);
+        }
+
+        @Override
+        protected HttpServletRequest getCurrentRequest() {
+            return request;
+        }
+    }
 
     @BeforeEach
     public void setUp() {
-        servlet.setServletRequestSupplier(() -> request);
+        servlet = new SlackViewSpaceConfigurationActionMock(slackSpaceToChannelService, slackLinkManager,
+                slackUserManager, slackRoutesProviderFactory, notificationTypeService, slackClientProvider,
+                eventPublisher, analyticsContextProvider);
+
         servlet.setKey(SPACE_KEY);
         servlet.setSpaceManager(spaceManager);
         AuthenticatedUserThreadLocal.set(confluenceUser);
