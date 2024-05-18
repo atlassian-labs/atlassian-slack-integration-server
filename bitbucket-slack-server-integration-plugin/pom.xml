@@ -18,8 +18,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <jvm17.opens />
 
         <!-- default properties. copied from parent POM in order to allow to resolve plugin plugin dependencies during BBS build -->
@@ -35,22 +35,20 @@
         <project.scm.id>github</project.scm.id>
 
         <!-- dependency versions -->
-        <atlassian.spring.scanner.version>2.1.7</atlassian.spring.scanner.version>
+        <atlassian.spring.scanner.version>5.0.0</atlassian.spring.scanner.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
         <atlassian.selenium.version>3.0.0</atlassian.selenium.version>
-        <atlassian-json-api.version>0.9</atlassian-json-api.version>
-        <atlassian-concurrent.version>3.0.0</atlassian-concurrent.version>
         <commons-codec.version>1.11</commons-codec.version>
         <slack.common.version>1.1.13</slack.common.version>
 
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.api.version>7.6.0</bitbucket.api.version>
-        <bitbucket.version>7.6.0</bitbucket.version>
+        <bitbucket.api.version>9.0.0-plat-7-m20</bitbucket.api.version>
+        <bitbucket.version>9.0.0-plat-7-m20</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
         <bitbucket.amps.version>8.2.2</bitbucket.amps.version>
-        <platform.version>7.0.0-m40</platform.version>
+        <platform.version>7.0.3</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -163,7 +161,6 @@
         <dependency>
             <groupId>com.atlassian.json</groupId>
             <artifactId>atlassian-json-api</artifactId>
-            <version>${atlassian-json-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -179,6 +176,7 @@
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
+            <version>1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -227,7 +225,6 @@
         <dependency>
             <groupId>com.atlassian.util.concurrent</groupId>
             <artifactId>atlassian-util-concurrent</artifactId>
-            <version>${atlassian-concurrent.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -243,6 +240,11 @@
         <dependency>
             <groupId>io.atlassian.fugue</groupId>
             <artifactId>fugue</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.analytics</groupId>
+            <artifactId>analytics-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -274,8 +276,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -396,6 +398,34 @@
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-it-common</artifactId>
             <version>${bitbucket.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-servlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>2.42</version>
             <scope>test</scope>
         </dependency>
         <dependency>
