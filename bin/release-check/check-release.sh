@@ -47,22 +47,37 @@ esac
 echo "Determined workflow name: $workflow_name"
 
 # RUN TESTS AGAINST SPECIFIC VERSIONS
-echo "Running workflow with params: workflow-name=$workflow_name java-version=8.0.252 product-version=$product_version"
-first_workflow_link=$(start_workflow $workflow_name 8.0.252 $product_version)
-echo "Pipeline URL: $first_workflow_link"
+workflow_links=()
+pl_common_version=$(. ../build/get-plugin-major-version.sh common)
+if [ $pl_common_version -eq 1 ]; then
+  if [ $product_type != "confluence" ]; then
+    echo "Running workflow with params: workflow-name=$workflow_name java-version=8.0.252 product-version=$product_version"
+    first_workflow_link=$(start_workflow $workflow_name 8.0.252 $product_version)
+    echo "Pipeline URL: $first_workflow_link"
+    workflow_links+=("$first_workflow_link")
+  fi
 
-echo "Running workflow with params: workflow-name=$workflow_name java-version=11 product-version=$product_version"
-second_workflow_link=$(start_workflow $workflow_name 11 $product_version)
-echo "Pipeline URL: $second_workflow_link"
+  echo "Running workflow with params: workflow-name=$workflow_name java-version=11 product-version=$product_version"
+  second_workflow_link=$(start_workflow $workflow_name 11 $product_version)
+  echo "Pipeline URL: $second_workflow_link"
+  workflow_links+=("$second_workflow_link")
+fi
 
 echo "Running workflow with params: workflow-name=$workflow_name java-version=17 product-version=$product_version"
 third_workflow_link=$(start_workflow $workflow_name 17 $product_version)
 echo "Pipeline URL: $third_workflow_link"
+workflow_links+=("$third_workflow_link")
 
-workflow_links="$first_workflow_link, $second_workflow_link, $third_workflow_link"
+# Join elements with a multi-character delimiter
+function join_by {
+  local d=${1-} f=${2-}
+  if shift 2; then
+    printf %s "$f" "${@/#/$d}"
+  fi
+}
 
 # CREATE NEW ISSUE FOR RELEASE
 echo "Creating a new issue"
-new_issue_url=$(RELEASE_LABEL="$release_label" WORKFLOW_LINKS=$workflow_links. ./create-issue.sh)
+new_issue_url=$(RELEASE_LABEL="$release_label" WORKFLOW_LINKS="$(join_by ', ' ${workflow_links[@]})" . ./create-issue.sh)
 
 echo "New ticket created: $new_issue_url"
