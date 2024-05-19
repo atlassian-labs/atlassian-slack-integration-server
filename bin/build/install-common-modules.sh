@@ -11,8 +11,5 @@ jira-slack-server-integration/jira-service-desk-compat/jira-service-desk-compat-
 jira-slack-server-integration/jira-service-desk-compat/jira-service-desk-4-compat,\
 jira-slack-server-integration/jira-service-desk-compat/jira-service-desk-compat-main,\
 confluence-slack-integration,\
-confluence-slack-integration/confluence-compat-common,\
-confluence-slack-integration/confluence-7-compat,\
-confluence-slack-integration/confluence-8-compat,\
 slack-server-integration-test-common \
     -Dmaven.test.skip=true
