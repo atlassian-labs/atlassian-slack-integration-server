@@ -9,7 +9,7 @@
     },
     "confluence-it": {
       "java-version": ["17"],
-      "confluence-version": ["9.0.0-m81"]
+      "confluence-version": ["9.0.0-m72"]
     },
     "bitbucket-it": {
       "java-version": ["17"],
