@@ -60,7 +60,7 @@
         <powermock.version>2.0.2</powermock.version>
 
         <slack.common.version>2.0.0</slack.common.version>
-        <platform.version>7.0.4</platform.version>
+        <platform.version>7.0.0</platform.version>
         <jvm17.opens />
     </properties>
 
