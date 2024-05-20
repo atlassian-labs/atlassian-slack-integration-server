@@ -8,7 +8,6 @@ import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import com.sun.jersey.spi.container.ContainerRequest;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,12 +17,15 @@ import org.mockito.junit.MockitoRule;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 
 import static com.atlassian.jira.plugins.slack.spi.impl.JiraConfigurationRedirectionManager.FROM_PROJECT_ATTRIBUTE_KEY;
 import static com.atlassian.jira.plugins.slack.spi.impl.JiraConfigurationRedirectionManager.PROJECT_ATTRIBUTE_KEY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class JiraSlackLinkAccessManagerTest {
@@ -49,7 +51,7 @@ public class JiraSlackLinkAccessManagerTest {
     @Mock
     private HttpServletRequest httpServletRequest;
     @Mock
-    private ContainerRequest containerRequest;
+    private ContainerRequestContext containerRequest;
     @Mock
     private HttpSession session;
     @Mock
@@ -87,7 +89,9 @@ public class JiraSlackLinkAccessManagerTest {
         when(salUserManager.isAdmin(userKey)).thenReturn(false);
         when(salUserManager.isSystemAdmin(userKey)).thenReturn(false);
         when(userProfile.getUserKey()).thenReturn(userKey);
-        when(containerRequest.getQueryParameters()).thenReturn(map);
+        UriInfo mockUriInfo = mock(UriInfo.class);
+        when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
+        when(mockUriInfo.getQueryParameters()).thenReturn(map);
         when(map.getFirst("projectKey")).thenReturn(PROJECT);
         when(projectManager.getProjectByCurrentKey(PROJECT)).thenReturn(project);
         when(jiraUserManager.getUserByKeyEvenWhenUnknown(USER)).thenReturn(applicationUser);
@@ -103,7 +107,9 @@ public class JiraSlackLinkAccessManagerTest {
         when(salUserManager.isAdmin(userKey)).thenReturn(false);
         when(salUserManager.isSystemAdmin(userKey)).thenReturn(false);
         when(userProfile.getUserKey()).thenReturn(userKey);
-        when(containerRequest.getQueryParameters()).thenReturn(map);
+        UriInfo mockUriInfo = mock(UriInfo.class);
+        when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
+        when(mockUriInfo.getQueryParameters()).thenReturn(map);
         when(map.getFirst("projectKey")).thenReturn(PROJECT);
         when(projectManager.getProjectByCurrentKey(PROJECT)).thenReturn(project);
         when(jiraUserManager.getUserByKeyEvenWhenUnknown(USER)).thenReturn(applicationUser);
@@ -119,7 +125,9 @@ public class JiraSlackLinkAccessManagerTest {
         when(salUserManager.isAdmin(userKey)).thenReturn(false);
         when(salUserManager.isSystemAdmin(userKey)).thenReturn(false);
         when(userProfile.getUserKey()).thenReturn(userKey);
-        when(containerRequest.getQueryParameters()).thenReturn(map);
+        UriInfo mockUriInfo = mock(UriInfo.class);
+        when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
+        when(mockUriInfo.getQueryParameters()).thenReturn(map);
         when(map.getFirst("projectKey")).thenReturn(PROJECT);
         when(projectManager.getProjectByCurrentKey(PROJECT)).thenReturn(null);
 

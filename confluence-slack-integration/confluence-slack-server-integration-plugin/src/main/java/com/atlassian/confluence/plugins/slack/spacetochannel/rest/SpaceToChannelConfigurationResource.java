@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PUT;
@@ -47,7 +48,7 @@ import static com.atlassian.confluence.security.PermissionManager.TARGET_APPLICA
 @ReadOnlyAccessAllowed
 @Path("/config/{spaceKey}")
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
 public class SpaceToChannelConfigurationResource {
     private final SpaceManager spaceManager;
     private final PermissionManager permissionManager;

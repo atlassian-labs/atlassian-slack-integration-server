@@ -6,6 +6,7 @@ import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.SlackChannelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,6 +21,7 @@ public class SlackMigrationResource {
     private final SlackLinkManager slackLinkManager;
     private final SlackClientProvider slackClientProvider;
 
+    @Inject
     @Autowired
     public SlackMigrationResource(final SlackLinkManager slackLinkManager,
                                   final SlackClientProvider slackClientProvider) {

@@ -32,6 +32,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -262,13 +265,18 @@ public class SlackLinkRendererTest {
 
     @Test
     public void adminConfigurationPage_shouldReturnExpectedValue() {
-        String result = renderer.adminConfigurationPage("T");
+        // DummyNavBuilder fails to mock `withParam(name, value)` so that mocking manually
+        NavBuilder.PluginServlets pluginServlets = mock(NavBuilder.PluginServlets.class);
+        doReturn(pluginServlets).when(navBuilder).pluginServlets();
+        when(pluginServlets.path(SLACK_PATH, CONFIGURE_PATH)).thenReturn(pluginServlets);
+        when(pluginServlets.withParam("teamId", "T")).thenReturn(pluginServlets);
 
-        assertThat(result, is(navBuilder
-                .pluginServlets()
-                .path(SLACK_PATH, CONFIGURE_PATH)
-                .withParam("teamId", "T")
-                .buildAbsolute()));
+        renderer.adminConfigurationPage("T");
+
+        verify(navBuilder).pluginServlets();
+        verify(pluginServlets).path(SLACK_PATH, CONFIGURE_PATH);
+        verify(pluginServlets).withParam("teamId", "T");
+        verify(pluginServlets).buildAbsolute();
     }
 
     @Test

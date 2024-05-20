@@ -19,6 +19,7 @@ import com.atlassian.plugins.slack.api.notification.Verbosity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PUT;
@@ -35,7 +36,7 @@ import javax.ws.rs.core.Response.Status;
  */
 @Path("/config/{repositoryId}")
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class RepositoryToChannelConfigurationResource {
     private final RepositoryService repositoryService;
     private final PermissionValidationService permissionValidationService;

@@ -11,8 +11,7 @@ import com.atlassian.confluence.plugins.slack.spacetochannel.api.notifications.A
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.ContentSharedEvent;
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.QuestionType;
 import com.atlassian.confluence.plugins.slack.util.ConfluenceUserImpersonator;
-import com.atlassian.confluence.plugins.slack.util.compat.ConfluenceCompatibilityDispatcher;
-import com.atlassian.confluence.plugins.slack.util.compat.ConfluenceCompatibilityHandler;
+import com.atlassian.confluence.plugins.slack.util.SearchBuilder;
 import com.atlassian.confluence.search.v2.ISearch;
 import com.atlassian.confluence.search.v2.InvalidSearchException;
 import com.atlassian.confluence.search.v2.SearchManager;
@@ -109,8 +108,6 @@ public class SlackMessageEventListenerTest {
     private AnalyticsContextProvider analyticsContextProvider;
     @Mock
     private ConfluenceUserImpersonator confluenceUserImpersonator;
-    @Mock
-    private ConfluenceCompatibilityDispatcher confluenceCompatibilityDispatcher;
 
     @Mock
     private SlackSlashCommand slackSlashCommand;
@@ -147,7 +144,7 @@ public class SlackMessageEventListenerTest {
     @Mock
     private Comment comment;
     @Mock
-    private ConfluenceCompatibilityHandler confluenceCompatibilityHandler;
+    private SearchBuilder searchBuilder;
     @Mock
     private ISearch iSearch;
 
@@ -228,8 +225,7 @@ public class SlackMessageEventListenerTest {
         when(slackSlashCommand.getText()).thenReturn("search " + query);
         when(slackSlashCommand.getResponseUrl()).thenReturn("ru");
         when(slackSlashCommand.getSlackLink()).thenReturn(slackLink);
-        when(confluenceCompatibilityDispatcher.getHandler()).thenReturn(confluenceCompatibilityHandler);
-        when(confluenceCompatibilityHandler.buildSearch(eq(query), isNull(), anyInt(), anyInt()))
+        when(searchBuilder.buildSearch(eq(query), isNull(), anyInt(), anyInt()))
                 .thenReturn(iSearch);
         when(searchManager.search(iSearch)).thenReturn(searchResults);
         when(searchManager.convertToEntities(searchResults, SearchManager.EntityVersionPolicy.LATEST_VERSION))
@@ -255,8 +251,7 @@ public class SlackMessageEventListenerTest {
         when(slackSlashCommand.getText()).thenReturn("search " + query);
         when(slackSlashCommand.getResponseUrl()).thenReturn("ru");
         when(slackSlashCommand.getSlackLink()).thenReturn(slackLink);
-        when(confluenceCompatibilityDispatcher.getHandler()).thenReturn(confluenceCompatibilityHandler);
-        when(confluenceCompatibilityHandler.buildSearch(eq(query), isNull(), anyInt(), anyInt()))
+        when(searchBuilder.buildSearch(eq(query), isNull(), anyInt(), anyInt()))
                 .thenReturn(iSearch);
         when(searchManager.search(iSearch)).thenReturn(searchResults);
         when(searchManager.convertToEntities(searchResults, SearchManager.EntityVersionPolicy.LATEST_VERSION))
@@ -289,8 +284,7 @@ public class SlackMessageEventListenerTest {
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(confluenceUser);
         when(confluenceUserImpersonator.impersonate(confluenceUserCaptor.capture(), any(Supplier.class), anyString()))
                 .thenAnswer(answer((ConfluenceUser user, Supplier action, String reason) -> action.get()));
-        when(confluenceCompatibilityDispatcher.getHandler()).thenReturn(confluenceCompatibilityHandler);
-        when(confluenceCompatibilityHandler.buildSearch(eq(query), any(ConfluenceUser.class), anyInt(), anyInt()))
+        when(searchBuilder.buildSearch(eq(query), any(ConfluenceUser.class), anyInt(), anyInt()))
                 .thenReturn(iSearch);
         when(searchManager.search(any(ISearch.class))).thenReturn(searchResults);
         when(searchManager.convertToEntities(searchResults, SearchManager.EntityVersionPolicy.LATEST_VERSION))

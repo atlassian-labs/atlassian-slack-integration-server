@@ -1,8 +1,8 @@
 package com.atlassian.plugins.slack.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.seratch.jslack.api.model.Attachment;
 import com.github.seratch.jslack.api.model.block.LayoutBlock;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;

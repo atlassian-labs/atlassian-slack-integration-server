@@ -8,19 +8,18 @@ import com.atlassian.plugins.slack.api.events.SigningSecretVerificationFailedEve
 import com.atlassian.plugins.slack.api.events.SigningSecretVerificationFailedEvent.Cause;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.settings.SlackSettingService;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
-import com.sun.jersey.spi.container.ResourceFilter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.inject.Inject;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -42,7 +41,8 @@ import static com.github.seratch.jslack.app_backend.SlackSignature.HeaderNames.X
 
 @Slf4j
 @Provider
-public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, ResourceFilter {
+@SlackSignatureVerifying
+public class SlackSignatureVerifyingFilter implements ContainerRequestFilter {
     public static final String TEAM_ID = "team_id";
     public static final String SLACK_ACTION_PAYLOAD = "payload";
     public static final int MAX_REQUEST_DELAY_MINUTES = 6;
@@ -57,6 +57,7 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
 
     private final boolean skipVerification;
 
+    @Inject
     public SlackSignatureVerifyingFilter(final SlackLinkManager slackLinkManager,
                                          final EventPublisher eventPublisher,
                                          final RequestHolder requestHolder,
@@ -71,16 +72,16 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
     }
 
     @Override
-    public ContainerRequest filter(final ContainerRequest request) {
+    public void filter(final ContainerRequestContext request) {
         if (skipVerification) {
-            return request;
+            return;
         }
 
-        String contentTypeStr = request.getHeaderValue(HttpHeaders.CONTENT_TYPE);
+        String contentTypeStr = request.getHeaderString(HttpHeaders.CONTENT_TYPE);
         MediaType contentType = parseContentType(contentTypeStr);
 
-        String requestTimestamp = request.getHeaderValue(X_SLACK_REQUEST_TIMESTAMP);
-        String actualSignature = request.getHeaderValue(X_SLACK_SIGNATURE);
+        String requestTimestamp = request.getHeaderString(X_SLACK_REQUEST_TIMESTAMP);
+        String actualSignature = request.getHeaderString(X_SLACK_SIGNATURE);
         validateTimestamp(requestTimestamp);
 
         // fail verification immediately if cached request not found
@@ -94,7 +95,7 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
             String requestPayload = new String(cachedRequest.getBody(), StandardCharsets.UTF_8);
             Optional<JsonNode> payloadJson = parseJson(requestPayload);
             Optional<String> teamId = payloadJson
-                    .map(node -> node.path(TEAM_ID).getTextValue())
+                    .map(node -> node.path(TEAM_ID).asText())
                     .filter(StringUtils::isNotBlank);
 
             // it's dummy team from integration tests; skip verification for it
@@ -102,7 +103,7 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
 
             // do not check signature on 'url_verification' request since it is triggered during
             // the team connection process; so database may not have corresponding SlackLink yet
-            Optional<String> type = payloadJson.map(node -> node.path(SlackWebHookResource.EVENT_TYPE).getTextValue());
+            Optional<String> type = payloadJson.map(node -> node.path(SlackWebHookResource.EVENT_TYPE).asText());
             boolean isInitialRequest = type.map(SlackWebHookResource.TYPE_URL_VERIFICATION::equals).orElse(false);
             if (!isInitialRequest && !isDummyTeam) {
                 if (teamId.isPresent()) {
@@ -132,8 +133,6 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
         if (!slackSettingService.isInstancePublic()) {
             slackSettingService.setInstancePublic(true);
         }
-
-        return request;
     }
 
     private MediaType parseContentType(final String contentTypeStr) {
@@ -150,7 +149,7 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
         if (!teamId.isPresent()) {
             Optional<String> payload = getFirst(formParams, SLACK_ACTION_PAYLOAD);
             teamId = payload.flatMap(this::parseJson)
-                    .map(node -> node.path("team").path("id").getTextValue())
+                    .map(node -> node.path("team").path("id").asText())
                     .filter(StringUtils::isNotBlank);
         }
         return teamId;
@@ -245,15 +244,5 @@ public class SlackSignatureVerifyingFilter implements ContainerRequestFilter, Re
         AnalyticsContext analyticsContext = analyticsContextProvider.byTeamId(teamId);
         eventPublisher.publish(new SigningSecretVerificationFailedEvent(analyticsContext, cause));
         throw exception;
-    }
-
-    @Override
-    public ContainerRequestFilter getRequestFilter() {
-        return this;
-    }
-
-    @Override
-    public ContainerResponseFilter getResponseFilter() {
-        return null;
     }
 }

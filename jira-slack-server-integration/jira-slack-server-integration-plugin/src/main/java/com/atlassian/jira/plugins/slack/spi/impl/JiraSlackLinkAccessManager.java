@@ -9,13 +9,13 @@ import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.plugins.slack.spi.impl.AbstractSlackLinkAccessManager;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import com.sun.jersey.spi.container.ContainerRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class JiraSlackLinkAccessManager extends AbstractSlackLinkAccessManager i
     }
 
     @Override
-    public boolean hasAccess(final UserProfile userProfile, final ContainerRequest request) {
+    public boolean hasAccess(final UserProfile userProfile, final ContainerRequestContext request) {
         if (super.hasAccess(userProfile, request)) {
             return true;
         }
@@ -65,8 +65,8 @@ public class JiraSlackLinkAccessManager extends AbstractSlackLinkAccessManager i
         return hasAccess(userProfile, getProject(request));
     }
 
-    private Optional<Project> getProject(final ContainerRequest request) {
-        final MultivaluedMap<String, String> params = request.getQueryParameters();
+    private Optional<Project> getProject(final ContainerRequestContext request) {
+        final MultivaluedMap<String, String> params = request.getUriInfo().getQueryParameters();
         return getProjectFromKey(params.getFirst("projectKey"));
     }
 

@@ -8,13 +8,13 @@ import com.atlassian.plugins.slack.spi.impl.AbstractSlackLinkAccessManager;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.user.User;
-import com.sun.jersey.spi.container.ContainerRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.Optional;
 
@@ -50,7 +50,7 @@ public class ConfluenceSlackLinkAccessManager extends AbstractSlackLinkAccessMan
     }
 
     @Override
-    public boolean hasAccess(UserProfile userProfile, ContainerRequest request) {
+    public boolean hasAccess(UserProfile userProfile, ContainerRequestContext request) {
         if (super.hasAccess(userProfile, request)) {
             return true;
         }
@@ -70,8 +70,8 @@ public class ConfluenceSlackLinkAccessManager extends AbstractSlackLinkAccessMan
         return hasAccess(userProfile, space);
     }
 
-    private Optional<Space> getSpace(ContainerRequest request) {
-        MultivaluedMap<String, String> params = request.getQueryParameters();
+    private Optional<Space> getSpace(ContainerRequestContext request) {
+        MultivaluedMap<String, String> params = request.getUriInfo().getQueryParameters();
         String spaceKey = params.getFirst("key");
 
         return getSpaceFromKey(spaceKey);

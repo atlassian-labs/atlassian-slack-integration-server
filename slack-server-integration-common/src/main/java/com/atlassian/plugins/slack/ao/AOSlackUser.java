@@ -1,13 +1,13 @@
 package com.atlassian.plugins.slack.ao;
 
 import com.atlassian.plugins.slack.api.SlackUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.java.ao.Preload;
 import net.java.ao.RawEntity;
 import net.java.ao.schema.Indexed;
 import net.java.ao.schema.NotNull;
 import net.java.ao.schema.PrimaryKey;
 import net.java.ao.schema.Table;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Table("AOSLACK_USER")
 @Preload

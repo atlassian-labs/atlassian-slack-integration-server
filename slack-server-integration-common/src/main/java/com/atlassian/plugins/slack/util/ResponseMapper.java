@@ -1,10 +1,10 @@
 package com.atlassian.plugins.slack.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.github.seratch.jslack.api.methods.SlackApiResponse;
 import io.atlassian.fugue.Either;
 import okhttp3.Response;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.PropertyNamingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ResponseMapper {
     private static final Logger log = LoggerFactory.getLogger(ResponseMapper.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
     private ResponseMapper() {
     }

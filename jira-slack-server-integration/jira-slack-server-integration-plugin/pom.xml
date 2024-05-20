@@ -4,13 +4,13 @@
     <parent>
         <groupId>com.atlassian.plugins</groupId>
         <artifactId>jira-slack-server-integration</artifactId>
-        <version>1.1.13</version>
+        <version>2.0.0</version>
     </parent>
 
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>3.0.10-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
 
     <name>Slack for Jira Data Center</name>
     <description>This is the Slack plugin for Jira Data Center</description>
@@ -71,6 +71,10 @@
                     <artifactId>jackson-mapper-asl</artifactId>
                     <groupId>org.codehaus.jackson</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>jackson-core-asl</artifactId>
+                    <groupId>org.codehaus.jackson</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -94,18 +98,18 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -135,7 +139,7 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.plugins.rest</groupId>
-            <artifactId>atlassian-rest-common</artifactId>
+            <artifactId>atlassian-rest-v2-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -173,15 +177,14 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Old API to use with the REST API -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -232,6 +235,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
@@ -249,6 +258,20 @@
             <groupId>com.atlassian.jira</groupId>
             <artifactId>atlassian-jira-pageobjects</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jackson-mapper-asl</artifactId>
+                    <groupId>org.codehaus.jackson</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jackson-core-asl</artifactId>
+                    <groupId>org.codehaus.jackson</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.atlassian.plugins.rest</groupId>
+                    <artifactId>atlassian-rest-common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
@@ -279,6 +302,20 @@
             <groupId>com.atlassian.jira.tests</groupId>
             <artifactId>jira-testkit-client</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian</groupId>
@@ -292,29 +329,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.atlassian.plugin</groupId>
             <artifactId>atlassian-spring-scanner-annotation</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- Old API used by integration tests -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.9.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-jaxrs</artifactId>
-            <version>1.9.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-xc</artifactId>
-            <version>1.9.1</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -455,11 +478,8 @@
                             com.atlassian.plugin.osgi.factory,
                             com.atlassian.plugin.web,
                             com.atlassian.plugin.webresource,
-                            com.atlassian.plugin.webresource.condition,
-                            com.atlassian.plugin.webresource.transformer,
-                            com.atlassian.plugin.webresource.url,
                             com.atlassian.plugin.servlet,
-                            com.atlassian.plugins.rest.common.security,
+                            com.atlassian.plugins.rest.api*
                             com.atlassian.query,
                             com.atlassian.query.clause,
                             com.atlassian.query.operand,
@@ -474,11 +494,10 @@
                             com.atlassian.seraph.util,
                             com.atlassian.templaterenderer,
                             com.atlassian.webresource.api,
-                            com.atlassian.webresource.api.prebake,
+                            com.atlassian.webresource.spi,
 
                             com.google.common.base,
                             com.google.common.collect,
-                            com.sun.jersey.api.view,
                             javax.annotation,
                             javax.inject,
                             javax.naming,
@@ -487,9 +506,7 @@
                             javax.security.auth.x500,
                             javax.servlet,
                             javax.servlet.http,
-                            javax.ws.rs,
-                            javax.ws.rs.core,
-                            javax.ws.rs.ext,
+                            javax.ws.rs*;version="[2.0.0,3.0.0)",
                             javax.xml.bind.annotation,
                             javax.xml.stream,
                             javax.xml.transform,
@@ -500,7 +517,6 @@
                             org.apache.velocity,
                             org.apache.velocity.runtime,
                             org.apache.velocity.app.event,
-                            org.codehaus.jackson.annotate,
                             org.springframework.beans,
                             org.springframework.beans.factory,
                             org.springframework.beans.factory.annotation,
@@ -543,7 +559,7 @@
             <plugin>
                 <groupId>com.atlassian.plugin</groupId>
                 <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
-                <version>${atlassian.spring.scanner.version}</version>
+                <version>5.0.0</version>
                 <executions>
                     <execution>
                         <goals>

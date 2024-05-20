@@ -1,14 +1,14 @@
 package com.atlassian.plugins.slack.soy;
 
-import com.atlassian.plugin.webresource.UrlMode;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.soy.renderer.SoyServerFunction;
+import com.atlassian.webresource.api.UrlMode;
+import com.atlassian.webresource.api.WebResourceUrlProvider;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
 
 public class PluginResourceUrlSlackFunction implements SoyServerFunction<String> {
-    private WebResourceUrlProvider webResourceUrlProvider;
+    private final WebResourceUrlProvider webResourceUrlProvider;
 
     public PluginResourceUrlSlackFunction(final WebResourceUrlProvider webResourceUrlProvider) {
         this.webResourceUrlProvider = webResourceUrlProvider;

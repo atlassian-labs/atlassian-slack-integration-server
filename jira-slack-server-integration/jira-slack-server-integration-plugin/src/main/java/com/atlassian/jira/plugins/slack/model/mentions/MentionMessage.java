@@ -2,12 +2,12 @@ package com.atlassian.jira.plugins.slack.model.mentions;
 
 import com.atlassian.jira.plugins.slack.model.mentions.cache.MentionMessageKey;
 import com.atlassian.jira.plugins.slack.storage.cache.CacheableEntity;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 
 /**
  * An Issue Mention Message

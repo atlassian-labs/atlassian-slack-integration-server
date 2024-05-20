@@ -1,9 +1,9 @@
 package com.atlassian.bitbucket.plugins.slack.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Value;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
 
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.PUBLIC_ONLY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.PUBLIC_ONLY;
 
 @JsonAutoDetect(fieldVisibility = PUBLIC_ONLY)
 @Value

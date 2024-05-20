@@ -16,12 +16,13 @@ import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.seratch.jslack.api.methods.response.auth.AuthTestResponse;
 import lombok.RequiredArgsConstructor;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.codehaus.jackson.annotate.JsonProperty;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -48,6 +49,7 @@ public class ConnectionStatusResource {
     private final SlackLinkAccessManager slackLinkAccessManager;
     private final SlackSettingService slackSettingService;
 
+    @Inject
     public ConnectionStatusResource(final SlackClientProvider slackClientProvider,
                                     final I18nResolver i18nResolver,
                                     final SlackLinkManager slackLinkManager,

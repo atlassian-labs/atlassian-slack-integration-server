@@ -3,23 +3,26 @@ package com.atlassian.plugins.slack.rest;
 import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
-import com.sun.jersey.spi.container.ResourceFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.ext.Provider;
 
 /**
  * Determines whether the user has permission to administer Slack links.
  */
 @Provider
-public class SlackLinkAdministerPermissionResourceFilter implements ResourceFilter, ContainerRequestFilter {
+@Component
+@SlackLinkAdministerPermission
+public class SlackLinkAdministerPermissionResourceFilter implements ContainerRequestFilter {
     private final UserManager userManager;
     private final SlackLinkAccessManager slackLinkAccessManager;
 
+    @Inject
     @Autowired
     public SlackLinkAdministerPermissionResourceFilter(
             @Qualifier("salUserManager") final UserManager userManager,
@@ -29,26 +32,14 @@ public class SlackLinkAdministerPermissionResourceFilter implements ResourceFilt
     }
 
     @Override
-    public ContainerRequest filter(final ContainerRequest containerRequest) {
-        if (hasAccess(containerRequest)) {
-            return containerRequest;
+    public void filter(final ContainerRequestContext containerRequest) {
+        if (!hasAccess(containerRequest)) {
+            throw new SecurityException("User must be an Admin to configure this plugin.");
         }
-
-        throw new SecurityException("User must be an Admin to configure this plugin.");
     }
 
-    private boolean hasAccess(final ContainerRequest containerRequest) {
+    private boolean hasAccess(final ContainerRequestContext containerRequest) {
         UserProfile remoteUser = userManager.getRemoteUser();
         return slackLinkAccessManager.hasAccess(remoteUser, containerRequest);
-    }
-
-    @Override
-    public ContainerRequestFilter getRequestFilter() {
-        return this;
-    }
-
-    @Override
-    public ContainerResponseFilter getResponseFilter() {
-        return null;
     }
 }

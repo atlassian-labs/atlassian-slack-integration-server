@@ -1,9 +1,9 @@
 package com.atlassian.plugins.slack.spi;
 
 import com.atlassian.sal.api.user.UserProfile;
-import com.sun.jersey.spi.container.ContainerRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.container.ContainerRequestContext;
 
 /**
  * Determines if a user has access to the Slack link.
@@ -17,7 +17,7 @@ public interface SlackLinkAccessManager {
      * @param request     - the request
      * @return true if the given user has access to add a link given the request.
      */
-    boolean hasAccess(UserProfile userProfile, ContainerRequest request);
+    boolean hasAccess(UserProfile userProfile, ContainerRequestContext request);
 
     /**
      * Returns true if the given user has access to add a link

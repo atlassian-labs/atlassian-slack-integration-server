@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.atlassian.plugins</groupId>
     <artifactId>atlassian-slack-server-integration-parent</artifactId>
-    <version>1.1.13</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
     <name>Atlassian Slack Integration for Server Project</name>
 
@@ -23,8 +24,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <project.root.directory>${project.basedir}</project.root.directory>
         <plugin.parent.directory>${project.root.directory}</plugin.parent.directory>
@@ -45,41 +46,22 @@
         <project.scm.id>github</project.scm.id>
 
         <!-- Dependencies -->
-        <atlassian.spring.scanner.version>2.1.7</atlassian.spring.scanner.version>
-        <analytics-api.version>3.15</analytics-api.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <sal.api.version>3.1.0</sal.api.version>
         <mockito-core.version>2.25.0</mockito-core.version>
         <junit.version>4.13.2</junit.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
-        <rest.version>2.9.2</rest.version>
         <joda-time.version>2.3</joda-time.version>
-        <io.fugue.version>4.7.2</io.fugue.version>
         <commons-lang3.version>3.8</commons-lang3.version>
         <commons-codec.version>1.11</commons-codec.version>
-        <jackson.version>2.9.2</jackson.version>
-        <atlassian-annotations.version>2.1.0</atlassian-annotations.version>
-        <atlassian-event.version>4.0.0</atlassian-event.version>
-        <ao.version>1.3.0</ao.version>
+        <ao.version>6.0.0</ao.version>
         <okhttp.version>4.10.0</okhttp.version>
 
-        <servlet.version>3.0.1</servlet.version>
-        <spring-test.version>5.3.18</spring-test.version>
-        <spring-beans.version>5.3.19</spring-beans.version>
-        <atlassian-plugins-core.version>3.0.15</atlassian-plugins-core.version>
-        <atlassian-plugins-webfragment.version>3.0.1</atlassian-plugins-webfragment.version>
         <atlassian-user.version>3.0</atlassian-user.version>
-        <template.renderer.version>2.1.0</template.renderer.version>
         <hamcrest-core.version>1.3</hamcrest-core.version>
-        <atlassian-concurrent.version>3.0.0</atlassian-concurrent.version>
-        <atlassian-json-api.version>0.9</atlassian-json-api.version>
         <powermock.version>2.0.2</powermock.version>
-        <soy-template-renderer.version>2.1.1</soy-template-renderer.version>
 
-        <webresource.version>3.5.39</webresource.version>
-        <atlassian-cache.version>3.2.0</atlassian-cache.version>
-
-        <slack.common.version>1.1.13</slack.common.version>
+        <slack.common.version>2.0.0</slack.common.version>
+        <platform.version>7.0.0</platform.version>
+        <jvm17.opens />
     </properties>
 
     <build>
@@ -91,9 +73,12 @@
                     <version>1.0-alpha-2</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.surefire</groupId>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.1</version>
+                    <configuration>
+                        <argLine>${jvm17.opens}</argLine>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -117,10 +102,25 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>jsr311-api</artifactId>
-                <version>1.1.1</version>
-                <scope>provided</scope>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-public-api</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-test-resources</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-internal-api</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.github.seratch</groupId>
@@ -141,19 +141,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.atlassian.plugin</groupId>
-                <artifactId>atlassian-spring-scanner-annotation</artifactId>
-                <version>${atlassian.spring.scanner.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.atlassian.soy</groupId>
-                <artifactId>soy-template-renderer-api</artifactId>
-                <version>${soy-template-renderer.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.atlassian.plugins</groupId>
                 <artifactId>slack-server-integration-common</artifactId>
                 <version>${slack.common.version}</version>
@@ -166,32 +153,11 @@
             </dependency>
 
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.atlassian.analytics</groupId>
-                <artifactId>analytics-api</artifactId>
-                <version>${analytics-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.sal</groupId>
-                <artifactId>sal-api</artifactId>
-                <version>${sal.api.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>com.atlassian.user</groupId>
                 <artifactId>atlassian-user</artifactId>
@@ -219,16 +185,6 @@
                 <artifactId>hamcrest-library</artifactId>
                 <version>${hamcrest-core.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${servlet.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>1.3.2</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.ozymandias</groupId>
@@ -275,11 +231,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.atlassian.templaterenderer</groupId>
-                <artifactId>atlassian-template-renderer-api</artifactId>
-                <version>${template.renderer.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito-core.version}</version>
@@ -291,80 +242,7 @@
                 </exclusions>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>com.atlassian.plugins.rest</groupId>
-                <artifactId>atlassian-rest-common</artifactId>
-                <version>${rest.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>fugue</artifactId>
-                        <groupId>com.atlassian.fugue</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-core-asl</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-jaxrs</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-mapper-asl</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jackson-xc</artifactId>
-                        <groupId>org.codehaus.jackson</groupId>
-                    </exclusion>
-                </exclusions>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.plugins.rest</groupId>
-                <artifactId>atlassian-rest-module</artifactId>
-                <version>${rest.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.plugins</groupId>
-                <artifactId>atlassian-plugins-core</artifactId>
-                <version>${atlassian-plugins-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.plugins</groupId>
-                <artifactId>atlassian-plugins-webfragment</artifactId>
-                <version>${atlassian-plugins-webfragment.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.plugins</groupId>
-                <artifactId>atlassian-plugins-webresource</artifactId>
-                <version>${webresource.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>fugue</artifactId>
-                        <groupId>com.atlassian.fugue</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring-test.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring-beans.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-webmvc</artifactId>
-                <version>${spring-beans.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring-beans.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>com.atlassian.activeobjects</groupId>
                 <artifactId>activeobjects-plugin</artifactId>
@@ -375,11 +253,6 @@
                         <groupId>net.java.dev.activeobjects</groupId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>io.atlassian.fugue</groupId>
-                <artifactId>fugue</artifactId>
-                <version>${io.fugue.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -401,26 +274,6 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.annotations</groupId>
-                <artifactId>atlassian-annotations</artifactId>
-                <version>${atlassian-annotations.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.event</groupId>
-                <artifactId>atlassian-event</artifactId>
-                <version>${atlassian-event.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.util.concurrent</groupId>
-                <artifactId>atlassian-util-concurrent</artifactId>
-                <version>${atlassian-concurrent.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.json</groupId>
-                <artifactId>atlassian-json-api</artifactId>
-                <version>${atlassian-json-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
@@ -454,22 +307,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>com.atlassian.applinks</groupId>
-                <artifactId>applinks-host</artifactId>
-                <version>4.1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.applinks</groupId>
-                <artifactId>applinks-api</artifactId>
-                <version>4.2.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.cache</groupId>
-                <artifactId>atlassian-cache-api</artifactId>
-                <version>${atlassian-cache.version}</version>
-                <scope>provided</scope>
-            </dependency>
+
             <!-- AT/SLAT test case annotations -->
             <dependency>
                 <groupId>com.atlassian</groupId>
@@ -490,41 +328,18 @@
                 <version>${okhttp.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <!-- Old API to use with the REST API -->
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-core-asl</artifactId>
-                <version>1.9.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-mapper-asl</artifactId>
-                <version>1.9.1</version>
-                <scope>provided</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <profiles>
-        <!--<profile>
-            <id>doclint-java8-disable</id>
+        <profile>
+            <id>jvm17</id>
             <activation>
-                <jdk>[1.8,)</jdk>
+                <jdk>17</jdk>
             </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>-->
+            <properties>
+                <jvm17.opens>--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.ref=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.jar=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED --add-opens=java.base/sun.util.locale=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-exports=java.base/sun.security.action=ALL-UNNAMED --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xml.internal.utils=ALL-UNNAMED --add-exports=java.desktop/sun.font=ALL-UNNAMED --add-exports=java.base/sun.security.util=ALL-UNNAMED</jvm17.opens>
+            </properties>
+        </profile>
         <profile>
             <id>jacoco</id>
             <build>

@@ -18,6 +18,7 @@ import io.atlassian.fugue.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -43,6 +44,7 @@ public class SlackIssueMentionsResource {
     private final EventPublisher eventPublisher;
     private final AnalyticsContextProvider analyticsContextProvider;
 
+    @Inject
     public SlackIssueMentionsResource(final UserManager userManager,
                                       final IssueMentionService issueMentionService,
                                       final IssueManager issueManager,

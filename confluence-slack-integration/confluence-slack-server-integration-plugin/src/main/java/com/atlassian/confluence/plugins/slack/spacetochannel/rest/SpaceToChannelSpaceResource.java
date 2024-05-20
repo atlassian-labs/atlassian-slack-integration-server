@@ -5,6 +5,7 @@ import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.confluence.user.ConfluenceUser;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,6 +20,7 @@ public class SpaceToChannelSpaceResource {
 
     private final SpacesWithAdminPermissionProvider defaultSpacesWithAdminPermissionProvider;
 
+    @Inject
     public SpaceToChannelSpaceResource(final SpacesWithAdminPermissionProvider defaultSpacesWithAdminPermissionProvider) {
         this.defaultSpacesWithAdminPermissionProvider = defaultSpacesWithAdminPermissionProvider;
     }

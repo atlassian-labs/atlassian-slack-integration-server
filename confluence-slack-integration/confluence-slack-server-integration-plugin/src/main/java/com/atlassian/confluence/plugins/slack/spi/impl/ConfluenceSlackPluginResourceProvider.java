@@ -1,9 +1,9 @@
 package com.atlassian.confluence.plugins.slack.spi.impl;
 
 import com.atlassian.confluence.plugins.slack.spacetochannel.notifications.ConfluencePersonalNotificationTypes;
-import com.atlassian.plugin.webresource.UrlMode;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.plugins.slack.spi.SlackPluginResourceProvider;
+import com.atlassian.webresource.api.UrlMode;
+import com.atlassian.webresource.api.WebResourceUrlProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
