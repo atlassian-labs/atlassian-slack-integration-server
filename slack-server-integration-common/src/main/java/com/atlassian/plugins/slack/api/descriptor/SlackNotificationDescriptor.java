@@ -3,10 +3,10 @@ package com.atlassian.plugins.slack.api.descriptor;
 import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginParseException;
 import com.atlassian.plugin.descriptors.AbstractModuleDescriptor;
+import com.atlassian.plugin.module.Element;
 import com.atlassian.plugin.module.ModuleFactory;
 import com.atlassian.plugins.slack.api.notification.SlackNotification;
 import com.atlassian.util.concurrent.ResettableLazyReference;
-import org.dom4j.Element;
 
 public class SlackNotificationDescriptor extends AbstractModuleDescriptor<SlackNotification<Object>> {
     private String value;
@@ -15,7 +15,7 @@ public class SlackNotificationDescriptor extends AbstractModuleDescriptor<SlackN
     private int weight;
     private boolean activeByDefault;
 
-    private final ResettableLazyReference<SlackNotification<Object>> moduleReference = new ResettableLazyReference<SlackNotification<Object>>() {
+    private final ResettableLazyReference<SlackNotification<Object>> moduleReference = new ResettableLazyReference<>() {
         @Override
         protected SlackNotification<Object> create() {
             return createModule();

@@ -143,7 +143,7 @@ public class DefaultAttachmentHelperTest {
         assertThat(result.getTitleLink(), startsWith("http://baseUrl/browse/K"));
         assertThat(result.getText(), is("Status: `S`       Ass: *Unas*       "));
         assertThat(result.getFallback(), is("K S"));
-        assertThat(result.getFooter(), is("<http://baseUrl/projects/PK?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258cHJvamVjdA%3D%3D|Proj> | <http://baseUrl?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258c2l0ZQ%3D%3D|J>"));
+        assertThat(result.getFooter(), is("<http://baseUrl/projects/PK?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258cHJvamVjdA%3D%3D|Proj> | <http://baseUrl/?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258c2l0ZQ%3D%3D|J>"));
         assertThat(result.getFooterIcon(), is("https://jira.com/context/avatar.png?format=png"));
         assertThat(result.getColor(), is("#2684FF"));
         assertThat(result.getFields(), contains(f));

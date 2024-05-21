@@ -6,7 +6,6 @@ Arguments:
   - run       compile the common module, the Confluence plugin, and start up Confluence for development
   - pack      compile the Confluence plugin ('pack' is skipped if 'run' is passed)
   - common    compile common module
-  - compat    compile Confluence 8 compatibility module
   - clean     clear compiled files, except Confluence home directory ('clean' is skipped if 'purge' is passed)
   - purge     clear all compiled files, including Confluence home directory with database and everything
   - deps      clean the plugin's embedded dependencies, forcing them to be rebuild in the next compilation
@@ -34,8 +33,6 @@ pack=$([[ "$*" == *"pack"* || "$empty" == "yes" ]] && ([[ "$run" == "yes" ]] && 
 
 common=$([[ "$*" == *"common"* || "$empty" == "yes" || "$run" == "yes" ]] && echo "yes" || echo "no") # enabled by default or when run is passed
 
-compat=$([[ "$*" == *"compat"* ]] && echo "yes" || echo "no")
-
 deps=$([[ "$*" == *"deps"* ]] && echo "yes" || echo "no") # it cleans dependencies when building the plugin
 
 help=$([[ "$*" == *"help"* ]] && echo "yes" || echo "no")
@@ -52,7 +49,6 @@ export PLUGIN="confluence-slack-integration/confluence-slack-server-integration-
     ([[ "$clean" != "yes" ]] || atlas-mvn clean) && \
     ([[ "$purge" != "yes" ]] || (rm -rf ${PLUGIN}/target && atlas-mvn clean)) && \
     ([[ "$common" != "yes" ]] || ./bin/pack-common.sh) && \
-    ([[ "$compat" != "yes" ]] || ./bin/pack-compat-confluence.sh) && \
     ([[ "$deps" != "yes" ]] || (rm -f ${PLUGIN}/target/dependency-maven-plugin-markers/*.marker && rm -rf ${PLUGIN}/target/classes)) && \
     ([[ "$pack" != "yes" ]] || bin/pack-plugin.sh) && \
     ([[ "$run" != "yes" ]] || ./bin/run-confluence.sh)

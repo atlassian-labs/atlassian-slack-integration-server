@@ -16,6 +16,7 @@ import com.atlassian.plugins.slack.api.routes.SlackRoutesProvider;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.spi.SlackRoutesProviderFactory;
 import com.atlassian.plugins.slack.user.SlackUserManager;
+import com.atlassian.xwork.PermittedMethods;
 import com.github.seratch.jslack.api.model.User;
 import com.google.common.collect.ImmutableMap;
 import com.opensymphony.xwork.Action;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.atlassian.xwork.HttpMethod.GET;
 import static com.google.common.collect.Lists.newArrayList;
 
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class SlackViewSpaceConfigurationAction extends AbstractSpaceAdminAction 
     private SlackRoutesProvider routesProvider;
     private String teamId;
 
+    @PermittedMethods(GET)
     @Override
     public String execute() {
         List<SlackLink> links = slackLinkManager.getLinks();

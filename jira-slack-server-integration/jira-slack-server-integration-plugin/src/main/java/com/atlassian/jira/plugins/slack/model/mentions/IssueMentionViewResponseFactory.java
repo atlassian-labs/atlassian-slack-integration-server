@@ -6,8 +6,8 @@ import com.atlassian.jira.plugins.slack.mentions.storage.cache.MentionChannelCac
 import com.atlassian.jira.plugins.slack.mentions.storage.cache.MentionUserCacheManager;
 import com.atlassian.jira.plugins.slack.model.ChannelKeyImpl;
 import com.atlassian.jira.plugins.slack.model.UserIdImpl;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.atlassian.plugins.slack.util.SlackHelper.escapeSignsForSlackLink;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
 
 /**
  * Json storage object containing all the Slack mentions for a Jira issue in one channel

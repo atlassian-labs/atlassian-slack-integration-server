@@ -1,7 +1,7 @@
 package com.atlassian.plugins.slack.api.webhooks;
 
 import com.atlassian.plugins.slack.api.SlackLink;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SlackEvent {
     private String teamId;

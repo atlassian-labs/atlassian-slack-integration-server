@@ -3,7 +3,7 @@ package com.atlassian.plugins.slack.rest;
 import com.atlassian.annotations.security.XsrfProtectionExcluded;
 import com.atlassian.confluence.compat.api.service.accessmode.ReadOnlyAccessAllowed;
 import com.atlassian.event.api.EventPublisher;
-import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
+import com.atlassian.plugins.rest.api.security.annotation.AnonymousSiteAccess;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.events.SlackActionAnalyticEvent;
@@ -29,15 +29,15 @@ import com.atlassian.plugins.slack.api.webhooks.action.SlackAction;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.SlackWebHookPayload;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.sun.jersey.spi.container.ResourceFilters;
 import lombok.RequiredArgsConstructor;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -61,7 +61,7 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
  */
 @ReadOnlyAccessAllowed
 @Path("/")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
 public class SlackWebHookResource {
     public static final String EVENT_TYPE = "type";
     public static final String TYPE_URL_VERIFICATION = "url_verification";
@@ -98,12 +98,12 @@ public class SlackWebHookResource {
     @POST
     @Path("/event")
     @Consumes(MediaType.APPLICATION_JSON)
-    @AnonymousAllowed
-    @ResourceFilters(SlackSignatureVerifyingFilter.class)
+    @AnonymousSiteAccess
+    @SlackSignatureVerifying
     public Response webEvent(@Context final HttpServletRequest request, final JsonNode eventPayload) {
-        if (TYPE_URL_VERIFICATION.equals(eventPayload.path(EVENT_TYPE).getTextValue())) {
+        if (TYPE_URL_VERIFICATION.equals(eventPayload.path(EVENT_TYPE).asText())) {
             return Response
-                    .ok(eventPayload.path("challenge").getTextValue())
+                    .ok(eventPayload.path("challenge").asText())
                     .type(MediaType.TEXT_PLAIN)
                     .build();
         }
@@ -167,9 +167,9 @@ public class SlackWebHookResource {
     @Path("/command")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @AnonymousAllowed
+    @AnonymousSiteAccess
     @XsrfProtectionExcluded
-    @ResourceFilters(SlackSignatureVerifyingFilter.class)
+    @SlackSignatureVerifying
     public Response slashCommand(
             @HeaderParam("X-Slack-Signature") final String signingSecret,
             @FormParam("token") String verificationToken,
@@ -223,9 +223,9 @@ public class SlackWebHookResource {
     @Path("/action")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @AnonymousAllowed
+    @AnonymousSiteAccess
     @XsrfProtectionExcluded
-    @ResourceFilters(SlackSignatureVerifyingFilter.class)
+    @SlackSignatureVerifying
     public Response action(@FormParam("payload") String payload) {
         asyncExecutor.run(() -> {
             log.debug("Received action {}", payload);

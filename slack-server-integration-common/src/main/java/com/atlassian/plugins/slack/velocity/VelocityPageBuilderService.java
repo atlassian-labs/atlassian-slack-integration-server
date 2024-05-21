@@ -1,6 +1,6 @@
 package com.atlassian.plugins.slack.velocity;
 
-import com.atlassian.templaterenderer.annotations.HtmlSafe;
+import com.atlassian.velocity.htmlsafe.HtmlSafe;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

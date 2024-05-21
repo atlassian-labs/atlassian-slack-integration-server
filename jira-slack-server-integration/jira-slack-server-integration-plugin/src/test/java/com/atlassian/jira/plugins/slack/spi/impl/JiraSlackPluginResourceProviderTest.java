@@ -1,7 +1,7 @@
 package com.atlassian.jira.plugins.slack.spi.impl;
 
-import com.atlassian.plugin.webresource.UrlMode;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
+import com.atlassian.webresource.api.UrlMode;
+import com.atlassian.webresource.api.WebResourceUrlProvider;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;

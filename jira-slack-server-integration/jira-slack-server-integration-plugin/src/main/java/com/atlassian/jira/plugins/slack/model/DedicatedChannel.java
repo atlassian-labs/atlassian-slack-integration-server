@@ -2,7 +2,7 @@ package com.atlassian.jira.plugins.slack.model;
 
 import com.atlassian.jira.plugins.slack.model.dto.DedicatedChannelDTO;
 import com.atlassian.jira.plugins.slack.storage.StorableEntity;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(as = DedicatedChannelDTO.class)
 public interface DedicatedChannel extends StorableEntity<String> {

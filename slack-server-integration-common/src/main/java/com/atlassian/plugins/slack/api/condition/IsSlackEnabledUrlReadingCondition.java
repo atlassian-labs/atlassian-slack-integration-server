@@ -2,12 +2,12 @@ package com.atlassian.plugins.slack.api.condition;
 
 import com.atlassian.plugin.PluginParseException;
 import com.atlassian.plugin.web.Condition;
-import com.atlassian.plugin.webresource.condition.SimpleUrlReadingCondition;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.webresource.spi.condition.AbstractBooleanUrlReadingCondition;
 
 import java.util.Map;
 
-public class IsSlackEnabledUrlReadingCondition extends SimpleUrlReadingCondition implements Condition {
+public class IsSlackEnabledUrlReadingCondition extends AbstractBooleanUrlReadingCondition implements Condition {
     private static final String SLACK_ENABLED_PARAM = "slack-enabled";
     private final SlackLinkManager slackLinkManager;
 

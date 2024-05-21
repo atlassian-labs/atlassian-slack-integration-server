@@ -19,10 +19,11 @@ import com.atlassian.plugins.slack.rest.model.LimitedSlackLinkDto;
 import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserManager;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -54,6 +55,7 @@ public class IssuePanelResource {
     private final SlackLinkManager slackLinkManager;
     private final SlackClientProvider slackClientProvider;
 
+    @Inject
     @Autowired
     public IssuePanelResource(final PluginConfigurationManager pluginConfigurationManager,
                               final SlackLinkAccessManager slackLinkAccessManager,

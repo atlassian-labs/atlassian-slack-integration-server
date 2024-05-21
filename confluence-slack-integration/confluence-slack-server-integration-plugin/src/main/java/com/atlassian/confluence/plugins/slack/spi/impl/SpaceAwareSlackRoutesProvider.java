@@ -33,6 +33,6 @@ public class SpaceAwareSlackRoutesProvider implements SlackRoutesProvider {
     public URI getAdminConfigurationPage() {
         return UriBuilder.fromPath(SLACK_SPACE_ADMIN)
                 .queryParam("key", spaceKey)
-                .build(baseUrl());
+                .build(new Object[]{baseUrl()}, false);
     }
 }

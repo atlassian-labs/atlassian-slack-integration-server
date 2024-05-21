@@ -24,15 +24,16 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.templaterenderer.RenderingException;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.ofbiz.core.entity.GenericValue;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -54,6 +55,7 @@ public class SlackMessageResource {
     private final JiraPostFunctionEventRenderer eventRenderer;
     private final JiraAuthenticationContext authenticationContext;
 
+    @Inject
     @Autowired
     public SlackMessageResource(final JiraPostFunctionEventRenderer eventRenderer,
                                 final JiraAuthenticationContext authenticationContext) {

@@ -2,7 +2,6 @@ package com.atlassian.confluence.plugins.slack.spacetochannel.actions;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -15,6 +14,7 @@ import static com.atlassian.confluence.plugins.slack.spi.impl.ConfluenceConfigur
 import static com.atlassian.confluence.plugins.slack.spi.impl.ConfluenceConfigurationRedirectionManager.SPACE_ATTRIBUTE_KEY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,19 +23,23 @@ public class SlackViewSpaceInstallationActionTest {
     private static final String SPACE_KEY = "SPACE";
 
     @Mock
-    private HttpServletRequest request;
-    @Mock
     private HttpSession session;
 
-    @InjectMocks
-    private SlackViewSpaceInstallationAction servlet;
+    private final SlackViewSpaceInstallationActionMock servlet = new SlackViewSpaceInstallationActionMock();
+
+    class SlackViewSpaceInstallationActionMock extends SlackViewSpaceInstallationAction {
+        @Override
+        protected HttpServletRequest getCurrentRequest() {
+            HttpServletRequest req = mock(HttpServletRequest.class);
+            when(req.getSession()).thenReturn(session);
+            when(session.getAttribute(CONTEXT_ATTRIBUTE_LABEL)).thenReturn(Collections.emptyMap());
+            return req;
+        }
+    }
 
     @Test
     public void execute_shouldRemoveContextAddAttrsAndReturnSuccess() {
-        servlet.setServletRequestSupplier(() -> request);
         servlet.setKey(SPACE_KEY);
-        when(request.getSession()).thenReturn(session);
-        when(session.getAttribute(CONTEXT_ATTRIBUTE_LABEL)).thenReturn(Collections.emptyMap());
 
         String result = servlet.execute();
 

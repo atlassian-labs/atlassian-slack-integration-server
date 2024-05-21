@@ -34,8 +34,8 @@ public class IssuePanelResourceTest {
 
     @Mock
     UserProfile userProfile;
-    @Mock
-    UserKey userKey;
+//    @Mock
+//    UserKey userKey;
     @Mock
     ApplicationUser applicationUser;
     @Mock
@@ -52,8 +52,9 @@ public class IssuePanelResourceTest {
         String issueId = "some-issue-id";
         String userKeyStr = "some-user-key";
         when(userManager.getRemoteUser()).thenReturn(userProfile);
-        when(userProfile.getUserKey()).thenReturn(userKey);
-        when(userKey.getStringValue()).thenReturn(userKeyStr);
+        UserKey stubUserKey = new UserKey(userKeyStr);
+        when(userProfile.getUserKey()).thenReturn(stubUserKey);
+//        when(userKey.getStringValue()).thenReturn(userKeyStr);
         when(jiraUserManager.getUserByKey(userKeyStr)).thenReturn(applicationUser);
         when(issueManager.getIssueByKeyIgnoreCase(issueId)).thenReturn(mutableIssue);
         when(permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, mutableIssue, applicationUser))

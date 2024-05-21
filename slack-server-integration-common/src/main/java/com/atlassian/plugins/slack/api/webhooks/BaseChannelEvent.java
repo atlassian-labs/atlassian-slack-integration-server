@@ -1,7 +1,7 @@
 package com.atlassian.plugins.slack.api.webhooks;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.ObjectUtils;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BaseChannelEvent implements SlackEventHolder {
     private SlackEvent slackEvent;

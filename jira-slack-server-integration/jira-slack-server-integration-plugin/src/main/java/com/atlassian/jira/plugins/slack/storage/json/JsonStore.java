@@ -3,9 +3,9 @@ package com.atlassian.jira.plugins.slack.storage.json;
 import com.atlassian.jira.entity.property.EntityProperty;
 import com.atlassian.jira.entity.property.JsonEntityPropertyManager;
 import com.atlassian.jira.plugins.slack.storage.StorableEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -15,11 +15,11 @@ import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.sun.jersey.spi.container.ResourceFilters;
 import io.atlassian.fugue.Either;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -47,6 +47,7 @@ public class SlackOAuth2Resource {
     private final I18nResolver i18nResolver;
     private final SlackConnectionService slackConnectionService;
 
+    @Inject
     public SlackOAuth2Resource(final Oauth2AuthoriseService oauth2AuthoriseService,
                                final XsrfTokenGenerator tokenGenerator,
                                final SlackLinkManager slackLinkManager,
@@ -62,7 +63,7 @@ public class SlackOAuth2Resource {
     }
 
     @GET
-    @ResourceFilters(SlackLinkAdministerPermissionResourceFilter.class)
+    @SlackLinkAdministerPermission
     public Response installViaOauth2(@Context final HttpServletRequest servletRequest,
                                      @Context final HttpServletResponse servletResponse,
                                      @QueryParam("code") final String code,

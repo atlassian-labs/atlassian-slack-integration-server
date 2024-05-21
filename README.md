@@ -14,10 +14,16 @@ or by manually downloading plugin JAR files from Marketplace pages for [Jira](ht
 or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-for-slack-official?hosting=datacenter&tab=overview) plugins.
 Links to the official documentation are specified on Marketplace pages.
 
-Supported products (on 10th Feb, 2023). See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
-* Jira: 8.15.0 (EOL date: 2 Feb 2023) JDK 8, 11 - 9.5.0 (EOL date: 6 Dec 2024) on JDK 8, 11, 17.
-* Confluence: 7.10 (EOL date: Dec 15, 2022) JDK 8, 11 - 8.0.0-m90 (EOL date: TBD - end of 2024) JDK 8, 11.
-* Bitbucket: 7.6.0 (EOL date: Q1 calendar year 2023) on JDK 8, 11 - 8.8.0 (EOL date: 7 Feb 2025) on JDK 8, 11, 17.
+Supported products. See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
+* `master`/`dev` branch
+  * Jira: 10+ (not released yet) on JDK 17.
+  * Confluence: 9+ (not released yet) on JDK 17.
+  * Bitbucket: 9+ (not released yet) on JDK 17.
+
+* `release-1.x` branch
+  * Jira: 8.15.0 (EOL date: 2 Feb 2023) JDK 8, 11 - 9.5.0 (EOL date: 6 Dec 2024) on JDK 8, 11, 17.
+  * Confluence: 7.10 (EOL date: Dec 15, 2022) JDK 8, 11 - 8.0.0-m90 (EOL date: TBD - end of 2024) JDK 8, 11.
+  * Bitbucket: 7.6.0 (EOL date: Q1 calendar year 2023) on JDK 8, 11 - 8.8.0 (EOL date: 7 Feb 2025) on JDK 8, 11, 17.
 
 ## A note on future development plans
 
@@ -27,10 +33,12 @@ When Jira, Confluence, or Bitbucket Data Center release new versions, we will va
 
 # Installation
 
-1. Download and install [JDK 8](https://www.oracle.com/java/technologies/javase-downloads.html). After installation `
+1. Download and install [JDK 17](https://adoptium.net/en-GB/temurin/releases/?version=17). After installation `
 java` command should be available in the terminal and `JAVA_HOME` environment variable should point to JDK installation directory.
 Running `$JAVA_HOME/bin/java -version` should print a JDK version.
-*Note*: Plugin can be compiled and run using **JDK 11**, but some old products may not support it.
+> **Note:** Use [JDK 8](https://adoptium.net/en-GB/temurin/releases/?version=8) / [JDK 11](https://adoptium.net/en-GB/temurin/releases/?version=11) if working with the `release-1.x` branch
+>
+> **Note:** Plugin can be compiled and run using **JDK 11**, but some old products may not support it.
 2. Download and install [Atlassian Plugin SDK](https://developer.atlassian.com/server/framework/atlassian-sdk/install-the-atlassian-sdk-on-a-linux-or-mac-system/). 
 After successful installation running `atlas-version` should print SDK version.
 3. (Optional) Install [ngrok](https://ngrok.com/) to enable Slack -> product features (slash commands, unfurling). 

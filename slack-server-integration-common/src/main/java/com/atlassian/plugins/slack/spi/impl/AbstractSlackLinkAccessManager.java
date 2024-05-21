@@ -4,9 +4,9 @@ import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import com.sun.jersey.spi.container.ContainerRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.container.ContainerRequestContext;
 
 public abstract class AbstractSlackLinkAccessManager implements SlackLinkAccessManager {
 
@@ -17,7 +17,7 @@ public abstract class AbstractSlackLinkAccessManager implements SlackLinkAccessM
     }
 
     @Override
-    public boolean hasAccess(UserProfile userProfile, ContainerRequest request) {
+    public boolean hasAccess(UserProfile userProfile, ContainerRequestContext request) {
         return hasAccess(userProfile);
     }
 

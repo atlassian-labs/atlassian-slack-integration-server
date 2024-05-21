@@ -22,18 +22,19 @@ import com.atlassian.bitbucket.user.SecurityService;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 import com.google.common.primitives.Ints;
-import com.sun.jersey.api.uri.UriComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -98,21 +99,15 @@ public class UnfurlLinkExtractor {
         final URI link = URI.create(url);
         // it should contain only the path after the context path
         final URI relativeLink = getContentPath(link);
-        final MultivaluedMap<String, String> queryParams = UriComponent.decodeQuery(link, true);
+        final MultiValueMap<String, String> queryParams = UriComponentsBuilder.fromHttpUrl(decodeValue(url))
+                .build().getQueryParams();
         try {
             final Comment comment = tryComment(queryParams).orElse(null);
             final String commentKey = comment != null ? String.valueOf(comment.getId()) : "";
 
-            final List<String> segments = UriComponent
-                    .decodePath(relativeLink, false)
+            final List<String> segments = UriComponentsBuilder.fromUri(relativeLink).build().getPathSegments()
                     .stream()
-                    .map(path -> {
-                        try {
-                            return URLDecoder.decode(path.getPath(), "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            return path.getPath();
-                        }
-                    })
+                    .map(this::decodeValue)
                     .collect(Collectors.toList());
             final String fragment = StringUtils.defaultString(relativeLink.getFragment());
 
@@ -183,11 +178,19 @@ public class UnfurlLinkExtractor {
         return Optional.empty();
     }
 
+    private String decodeValue(String value) {
+        try {
+            return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            return value;
+        }
+    }
+
     /**
      * /projects/HC/repos/webcore-next/pull-requests/3586/overview?commentId=1223781
      * /projects/HC/repos/webcore-next/commits/428cf995f290c9601df043dbb6748bb641bb6b10?commentId=1582891
      */
-    private Optional<Comment> tryComment(final MultivaluedMap<String, String> queryParams) {
+    private Optional<Comment> tryComment(final MultiValueMap<String, String> queryParams) {
         return queryParams.entrySet().stream()
                 .filter(param -> "commentId".equals(param.getKey()))
                 .map(param -> getCommentById(param.getValue().get(0)))
@@ -213,7 +216,7 @@ public class UnfurlLinkExtractor {
      * /projects/PROJECT_1/repos/rep_1/browse/add_file/add_file.txt?at=basic_branching
      */
     private Optional<Ref> tryBranchOrTag(final Repository repository,
-                                         final MultivaluedMap<String, String> queryParams,
+                                         final MultiValueMap<String, String> queryParams,
                                          final List<String> segments) {
         if (segments.size() == 5 && "browse".equals(segments.get(4))) {
             return getBranchOrTag(repository, queryParams);
@@ -221,7 +224,7 @@ public class UnfurlLinkExtractor {
         return Optional.empty();
     }
 
-    private Optional<Ref> getBranchOrTag(final Repository repository, final MultivaluedMap<String, String> queryParams) {
+    private Optional<Ref> getBranchOrTag(final Repository repository, final MultiValueMap<String, String> queryParams) {
         return queryParams.entrySet().stream()
                 .filter(param -> "at".equals(param.getKey()))
                 .map(param -> getBranchOrTag(repository, param.getValue().get(0)))
@@ -265,7 +268,7 @@ public class UnfurlLinkExtractor {
         return Optional.empty();
     }
 
-    private Optional<Commit> findCommit(final Repository repository, final MultivaluedMap<String, String> queryParams) {
+    private Optional<Commit> findCommit(final Repository repository, final MultiValueMap<String, String> queryParams) {
         return queryParams.entrySet().stream()
                 .filter(param -> "at".equals(param.getKey()))
                 .map(param -> findCommit(repository, param.getValue().get(0)))
@@ -317,7 +320,7 @@ public class UnfurlLinkExtractor {
                                       final Optional<Commit> commitFromPath,
                                       final Optional<PullRequest> pullRequest,
                                       final List<String> segments,
-                                      final MultivaluedMap<String, String> queryParams,
+                                      final MultiValueMap<String, String> queryParams,
                                       final String fragment) {
         // file in default or custom branch/tag, or in "commit from pr" view
         if (segments.size() >= 6 && "browse".equals(segments.get(4))) {
@@ -343,7 +346,7 @@ public class UnfurlLinkExtractor {
     }
 
     private Optional<FileDto> parseFileForKnownRef(final Repository repository,
-                                                   final MultivaluedMap<String, String> queryParams,
+                                                   final MultiValueMap<String, String> queryParams,
                                                    final String fragment,
                                                    final String filePath) {
         Commit commit;

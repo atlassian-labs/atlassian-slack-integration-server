@@ -33,6 +33,6 @@ public class DefaultSlackRoutesProvider implements SlackRoutesProvider {
     public URI getAdminConfigurationPage() {
         return UriBuilder.fromPath(SLACK_ADMIN_BASE)
                 .path("configure")
-                .build(strBaseUrl());
+                .build(new Object[]{strBaseUrl()}, false);
     }
 }

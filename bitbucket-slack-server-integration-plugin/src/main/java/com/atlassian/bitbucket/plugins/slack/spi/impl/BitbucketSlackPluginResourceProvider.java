@@ -1,9 +1,9 @@
 package com.atlassian.bitbucket.plugins.slack.spi.impl;
 
 import com.atlassian.bitbucket.plugins.slack.notification.BitbucketPersonalNotificationTypes;
-import com.atlassian.plugin.webresource.UrlMode;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.plugins.slack.spi.SlackPluginResourceProvider;
+import com.atlassian.webresource.api.UrlMode;
+import com.atlassian.webresource.api.WebResourceUrlProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

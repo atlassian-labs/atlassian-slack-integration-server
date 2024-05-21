@@ -2,15 +2,15 @@ package com.atlassian.jira.plugins.slack.model.dto;
 
 import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.rest.model.SlackChannelDTO;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Maps;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.ANY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 /**
  * This class contains all configuration for a project:
