@@ -13,7 +13,7 @@
     },
     "bitbucket-it": {
       "java-version": ["17"],
-      "bitbucket-version": ["9.0.0"]
+      "bitbucket-version": ["9.0.0-eap03"]
     }
   },
   "old": {

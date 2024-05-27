@@ -44,11 +44,11 @@
 
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.api.version>9.0.0-plat-7-m20</bitbucket.api.version>
-        <bitbucket.version>9.0.0-plat-7-m20</bitbucket.version>
+        <bitbucket.api.version>9.0.0-eap03</bitbucket.api.version>
+        <bitbucket.version>9.0.0-eap03</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <bitbucket.amps.version>8.2.2</bitbucket.amps.version>
-        <platform.version>7.0.0</platform.version>
+        <bitbucket.amps.version>8.16.0</bitbucket.amps.version>
+        <platform.version>7.0.4</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -177,7 +177,6 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
