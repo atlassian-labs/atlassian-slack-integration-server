@@ -6,9 +6,8 @@ matrix_file='bin/build/java-product-matrix.json'
 pl_common_version=$(. bin/build/get-plugin-major-version.sh common)
 if [ $pl_common_version -gt 1 ]; then
   matrix_key='current'
-# TODO: Remove these flags when new major jira (10.x) and bitbucket (9.x) are released
+# TODO: Remove these flags when new major jira (10.x) is released
   echo "skip-jira-its=true" >> $GITHUB_OUTPUT
-  echo "skip-bitbucket-its=true" >> $GITHUB_OUTPUT
 else
   matrix_key='old'
 fi
