@@ -6,7 +6,7 @@ import com.atlassian.plugin.descriptors.AbstractModuleDescriptor;
 import com.atlassian.plugin.module.Element;
 import com.atlassian.plugin.module.ModuleFactory;
 import com.atlassian.plugins.slack.api.notification.SlackNotificationContext;
-import com.atlassian.util.concurrent.ResettableLazyReference;
+import io.atlassian.util.concurrent.ResettableLazyReference;
 
 public class SlackNotificationContextDescriptor extends AbstractModuleDescriptor<SlackNotificationContext> {
     private String value;
