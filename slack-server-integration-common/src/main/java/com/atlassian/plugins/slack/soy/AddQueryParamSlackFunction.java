@@ -3,6 +3,8 @@ package com.atlassian.plugins.slack.soy;
 import com.atlassian.soy.renderer.SoyServerFunction;
 
 import javax.ws.rs.core.UriBuilder;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Set;
 
@@ -22,7 +24,8 @@ public class AddQueryParamSlackFunction implements SoyServerFunction<String> {
 
     @Override
     public String apply(final Object... args) {
-        return UriBuilder.fromUri(args[0].toString())
+        String decodedUri = URLDecoder.decode(args[0].toString(), StandardCharsets.UTF_8);
+        return UriBuilder.fromUri(decodedUri)
                 .replaceQueryParam(args[1].toString(), args[2].toString())
                 .build()
                 .toString();
