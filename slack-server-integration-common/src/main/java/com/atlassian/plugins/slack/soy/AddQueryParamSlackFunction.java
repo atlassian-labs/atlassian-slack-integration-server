@@ -22,7 +22,7 @@ public class AddQueryParamSlackFunction implements SoyServerFunction<String> {
 
     @Override
     public String apply(final Object... args) {
-        return UriBuilder.fromUri(args[0].toString())
+        return UriBuilder.fromPath(args[0].toString())
                 .replaceQueryParam(args[1].toString(), args[2].toString())
                 .build()
                 .toString();
