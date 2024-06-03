@@ -47,8 +47,8 @@
         <bitbucket.api.version>9.0.0-eap03</bitbucket.api.version>
         <bitbucket.version>9.0.0-eap03</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <bitbucket.amps.version>8.16.0</bitbucket.amps.version>
-        <platform.version>7.0.4</platform.version>
+        <bitbucket.amps.version>8.16.1</bitbucket.amps.version>
+        <platform.version>7.0.5</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -480,6 +480,12 @@
                     <!-- It allows to connect to Bitbucket embedded database while it is running -->
                     <jvmArgs>${jvm17.opens} -Djdbc.url=jdbc:h2:${project.build.directory}/bitbucket/home/shared/data/db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE</jvmArgs>
                     <jvmDebugPort>5007</jvmDebugPort>
+
+                    <banningExcludes>
+                        <exclude>com.atlassian.security:atlassian-secure-random</exclude>
+                        <exclude>com.atlassian.fugue:fugue</exclude>
+                        <exclude>com.google.code.gson:gson</exclude>
+                    </banningExcludes>
 
                     <systemPropertyVariables>
                         <plugin.resource.directories>
