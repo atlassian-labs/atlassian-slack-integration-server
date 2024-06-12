@@ -5,7 +5,7 @@
     <groupId>com.atlassian.bitbucket.plugins</groupId>
     <artifactId>bitbucket-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0-m1-SNAPSHOT</version>
 
     <name>Slack for Bitbucket Data Center</name>
     <description>This is the Slack integration for Bitbucket Data Center</description>
