@@ -45,10 +45,10 @@ jobs:
       - name: Populate plugin module by selected product
         run: bin/build/populate-plugin-by-product.sh ${{ github.event.inputs.product }}
       - name: Install JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          java-version: 8
-          distribution: temurin
+          java-version: 17
+          distribution: adopt
       - name: Log Maven settings.xml
         run: cat $HOME/.m2/settings.xml
       - name: Install Atlassian Plugin SDK
