@@ -24,33 +24,15 @@ jobs:
       # check path to bundled Maven executable; it should be then used in ATLAS_MVN
       - run: mvn -version
 
-  prepare:
-    name: Prepare Matrix
-    runs-on: ubuntu-latest
-    outputs:
-      unit-tests-matrix: ${{ steps.set-matrix.outputs.unit-tests-matrix }}
-      jira-it-matrix: ${{ steps.set-matrix.outputs.jira-it-matrix }}
-      confluence-it-matrix: ${{ steps.set-matrix.outputs.confluence-it-matrix }}
-      bitbucket-it-matrix: ${{ steps.set-matrix.outputs.bitbucket-it-matrix }}
-      # TODO: Remove these flags when new major jira (10.x) and bitbucket (9.x) are released
-      skip-jira-its: ${{ steps.set-matrix.outputs.skip-jira-its }}
-      skip-bitbucket-its: ${{ steps.set-matrix.outputs.skip-bitbucket-its }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.ref }}
-      - id: set-matrix
-        run: bin/build/prepare-matrices.sh
-
   unit-tests:
     name: Unit Tests
-    needs: prepare
     runs-on: ubuntu-20.04
     # around 800 Mb of dependencies need to be loaded; it may take long first time until it's cached
     timeout-minutes: 30
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.unit-tests-matrix) }}
+      matrix:
+        java-version: [8, 11]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -76,10 +58,16 @@ jobs:
     name: Jira
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')) && !needs.prepare.outputs.skip-jira-its
-    needs: [prepare, unit-tests]
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')
+    needs: unit-tests
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.jira-it-matrix) }}
+      matrix:
+        java-version: [8, 11, 17]
+        jira-version: [8.15.0, 9.5.0]
+        # Java 17 support is added only since Jira 9.5: https://confluence.atlassian.com/jiracore/preparing-for-jira-9-5-1167834011.html
+        exclude:
+          - java-version: 17
+            jira-version: 8.15.0
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -113,9 +101,17 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence')
-    needs: [prepare, unit-tests]
+    needs: unit-tests
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.confluence-it-matrix) }}
+      matrix:
+        # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
+        java-version: [8, 11, 17]
+        confluence-version: [7.10.0, 8.0.0]
+        exclude:
+          - java-version: 8
+            confluence-version: 8.0.0 # Confluence 8 doesn't support Java 8 anymore
+          - java-version: 17
+            confluence-version: 7.10.0
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -148,10 +144,16 @@ jobs:
     name: Bitbucket
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')) && !needs.prepare.outputs.skip-bitbucket-its
-    needs: [prepare, unit-tests]
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
+    needs: unit-tests
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.bitbucket-it-matrix) }}
+      matrix:
+        java-version: [8, 11, 17]
+        bitbucket-version: [7.6.0, 8.8.0]
+        # Bitbucket 8.8.0 is the first one that supports Java 17
+        exclude:
+          - java-version: 17
+            bitbucket-version: 7.6.0
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
