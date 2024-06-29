@@ -48,20 +48,18 @@ echo "Determined workflow name: $workflow_name"
 
 # RUN TESTS AGAINST SPECIFIC VERSIONS
 workflow_links=()
-pl_common_version=$(. ../build/get-plugin-major-version.sh common)
-if [ $pl_common_version -eq 1 ]; then
-  if [ $product_type != "confluence" ]; then
-    echo "Running workflow with params: workflow-name=$workflow_name java-version=8.0.252 product-version=$product_version"
-    first_workflow_link=$(start_workflow $workflow_name 8.0.252 $product_version)
-    echo "Pipeline URL: $first_workflow_link"
-    workflow_links+=("$first_workflow_link")
-  fi
-
-  echo "Running workflow with params: workflow-name=$workflow_name java-version=11 product-version=$product_version"
-  second_workflow_link=$(start_workflow $workflow_name 11 $product_version)
-  echo "Pipeline URL: $second_workflow_link"
-  workflow_links+=("$second_workflow_link")
+# Confluence 8+ does not support Java 8
+if [ $product_type != "confluence" ]; then
+  echo "Running workflow with params: workflow-name=$workflow_name java-version=8.0.252 product-version=$product_version"
+  first_workflow_link=$(start_workflow $workflow_name 8.0.252 $product_version)
+  echo "Pipeline URL: $first_workflow_link"
+  workflow_links+=("$first_workflow_link")
 fi
+
+echo "Running workflow with params: workflow-name=$workflow_name java-version=11 product-version=$product_version"
+second_workflow_link=$(start_workflow $workflow_name 11 $product_version)
+echo "Pipeline URL: $second_workflow_link"
+workflow_links+=("$second_workflow_link")
 
 echo "Running workflow with params: workflow-name=$workflow_name java-version=17 product-version=$product_version"
 third_workflow_link=$(start_workflow $workflow_name 17 $product_version)
