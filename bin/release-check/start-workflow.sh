@@ -9,7 +9,7 @@ product_version=${PRODUCT_VERSION:?Please set PRODUCT_VERSION.}
 
 # PREPARE PAYLOAD BODY
 if [[ -z "$GITHUB_REF" ]]; then
-  ref=master
+  ref=release-1.x
 else
   # TRANSFORM 'refs/heads/feature/issue-1' to 'feature/issue-1'
   ref=$(echo "$GITHUB_REF" | cut -d / -f 3-)
