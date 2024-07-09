@@ -22,16 +22,19 @@ jobs:
           PRODUCT="jira" \
           GH_USER=${{ secrets.GH_USER }} \
           GH_TOKEN=${{ secrets.GH_TOKEN }} \
+          GITHUB_REF=${{ matrix.branch }} \
           ./run-product-release-check.sh
       - working-directory: bin/release-check
         run: |
           PRODUCT="confluence" \
           GH_USER=${{ secrets.GH_USER }} \
           GH_TOKEN=${{ secrets.GH_TOKEN }} \
+          GITHUB_REF=${{ matrix.branch }} \
           ./run-product-release-check.sh
       - working-directory: bin/release-check
         run: |
           PRODUCT="bitbucket" \
           GH_USER=${{ secrets.GH_USER }} \
           GH_TOKEN=${{ secrets.GH_TOKEN }} \
+          GITHUB_REF=${{ matrix.branch }} \
           ./run-product-release-check.sh
