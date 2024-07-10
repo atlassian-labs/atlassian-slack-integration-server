@@ -1,6 +1,6 @@
 package com.atlassian.plugins.slack.api.client;
 
-import com.atlassian.util.concurrent.ThreadFactories;
+import io.atlassian.util.concurrent.ThreadFactories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.atlassian.util.concurrent.ThreadFactories.Type.DAEMON;
+import static io.atlassian.util.concurrent.ThreadFactories.Type.DAEMON;
 
 @Component
 public class ExecutorServiceHelper {

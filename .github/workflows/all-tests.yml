@@ -32,9 +32,8 @@ jobs:
       jira-it-matrix: ${{ steps.set-matrix.outputs.jira-it-matrix }}
       confluence-it-matrix: ${{ steps.set-matrix.outputs.confluence-it-matrix }}
       bitbucket-it-matrix: ${{ steps.set-matrix.outputs.bitbucket-it-matrix }}
-      # TODO: Remove these flags when new major jira (10.x) and bitbucket (9.x) are released
+      # TODO: Remove these flags when new major jira (10.x) is released
       skip-jira-its: ${{ steps.set-matrix.outputs.skip-jira-its }}
-      skip-bitbucket-its: ${{ steps.set-matrix.outputs.skip-bitbucket-its }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -148,7 +147,7 @@ jobs:
     name: Bitbucket
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')) && !needs.prepare.outputs.skip-bitbucket-its
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
     needs: [prepare, unit-tests]
     strategy:
       matrix: ${{ fromJSON(needs.prepare.outputs.bitbucket-it-matrix) }}

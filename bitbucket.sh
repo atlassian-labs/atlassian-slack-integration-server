@@ -23,10 +23,10 @@ Examples:
   ./bitbucket.sh clean run    -> cleans all compiled files but the Bitbucket home directory, compiles everything, and runs Bitbucket in development mode
 "
 
-# check java 8
+# check java 17
 javaVersion=`java -version 2>&1 | head -n 1 | cut -d\" -f 2`
 javaCompilerVersion=`javac -version 2>&1 | head -n 1 | cut -d\" -f 2`
-[[ "$javaVersion" != "1.8."* && "$javaVersion" != "11."* || "$javaCompilerVersion" != *"1.8."* && "$javaCompilerVersion" != *"11."* ]] && echo "Java 8 expected" && exit 1
+[[ "$javaVersion" != "17."* || "$javaCompilerVersion" != *"17."* ]] && echo "Java 17 expected" && exit 1
 
 # compute parameters
 purge=$([[ "$*" == *"purge"* ]] && echo "yes" || echo "no")
