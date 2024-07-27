@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -35,6 +36,7 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
 @PrepareForTest({DefaultTaskBuilder.class, SendNotificationTask.class})
+@PowerMockIgnore({"javax.*", "org.xml.*", "org.w3c.*"})
 @RunWith(PowerMockRunner.class)
 public class DefaultTaskBuilderTest {
     @Mock

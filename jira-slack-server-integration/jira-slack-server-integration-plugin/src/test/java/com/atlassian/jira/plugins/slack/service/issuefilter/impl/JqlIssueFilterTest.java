@@ -37,7 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @PrepareForTest({JqlIssueFilter.class, JqlQueryBuilder.class})
-@PowerMockIgnore("javax.*")
+@PowerMockIgnore({"javax.*", "org.xml.*", "org.w3c.*"})
 @RunWith(PowerMockRunner.class)
 public class JqlIssueFilterTest {
     @Mock
