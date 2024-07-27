@@ -31,7 +31,7 @@ jobs:
           echo 'Release version [${{ github.event.inputs.release-version }}].'
           echo 'Next development version [${{ github.event.inputs.next-development-version }}].'
       - name: Check out the code from selected branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
       - name: Configure git for operations performed during the release
@@ -45,7 +45,7 @@ jobs:
       - name: Populate plugin module by selected product
         run: bin/build/populate-plugin-by-product.sh ${{ github.event.inputs.product }}
       - name: Install JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 8
           distribution: temurin
@@ -55,7 +55,7 @@ jobs:
         run: bin/build/install-plugin-sdk.sh
       - run: bin/build/override-plugin-sdk-maven.sh
       - name: Unpack cached Maven dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-release
