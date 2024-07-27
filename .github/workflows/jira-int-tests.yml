@@ -23,21 +23,21 @@ jobs:
     timeout-minutes: 30
     steps:
       - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: ${{ github.event.inputs.java-version }}
           distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/override-plugin-sdk-maven.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository/com/atlassian/jira
           key: maven-integration-jira-${{ github.event.inputs.product-version }}
@@ -46,7 +46,7 @@ jobs:
           VERSION=${{ github.event.inputs.product-version }} \
           TESTKIT_VERSION=${{ github.event.inputs.testkit-version }} \
           bin/build/run-jira-its.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: webdriver-screenshots-jira-${{ github.event.inputs.product-version }}-java-${{ github.event.inputs.java-version }}
