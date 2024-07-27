@@ -24,32 +24,15 @@ jobs:
       # check path to bundled Maven executable; it should be then used in ATLAS_MVN
       - run: mvn -version
 
-  prepare:
-    name: Prepare Matrix
-    runs-on: ubuntu-latest
-    outputs:
-      unit-tests-matrix: ${{ steps.set-matrix.outputs.unit-tests-matrix }}
-      jira-it-matrix: ${{ steps.set-matrix.outputs.jira-it-matrix }}
-      confluence-it-matrix: ${{ steps.set-matrix.outputs.confluence-it-matrix }}
-      bitbucket-it-matrix: ${{ steps.set-matrix.outputs.bitbucket-it-matrix }}
-      # TODO: Remove these flags when new major jira (10.x) is released
-      skip-jira-its: ${{ steps.set-matrix.outputs.skip-jira-its }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.ref }}
-      - id: set-matrix
-        run: bin/build/prepare-matrices.sh
-
   unit-tests:
     name: Unit Tests
-    needs: prepare
     runs-on: ubuntu-20.04
     # around 800 Mb of dependencies need to be loaded; it may take long first time until it's cached
     timeout-minutes: 30
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.unit-tests-matrix) }}
+      matrix:
+        java-version: [17]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -75,10 +58,13 @@ jobs:
     name: Jira
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')) && !needs.prepare.outputs.skip-jira-its
-    needs: [prepare, unit-tests]
+    # Disabled until Jira version is available
+    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')) && false
+    needs: unit-tests
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.jira-it-matrix) }}
+      matrix:
+        java-version: [17]
+        jira-version: [10.0.0]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -112,9 +98,12 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence')
-    needs: [prepare, unit-tests]
+    needs: unit-tests
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.confluence-it-matrix) }}
+      matrix:
+        # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
+        java-version: [17]
+        confluence-version: [9.0.0-m72]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -148,9 +137,11 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
-    needs: [prepare, unit-tests]
+    needs: unit-tests
     strategy:
-      matrix: ${{ fromJSON(needs.prepare.outputs.bitbucket-it-matrix) }}
+      matrix:
+        java-version: [17]
+        bitbucket-version: [9.0.0-eap03]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4

@@ -12,15 +12,25 @@ if [ "$latest_releases" = "" ]; then
   exit
 fi
 
-# TAKE AND CHECKS LATEST COMPATIBLE VERSION ONLY, MEANING THE GREATEST REVISION VERSION
-pl_product_version=$(. ../get-plugin-major-version.sh "$PRODUCT")
-product_compat_version_regex=$(jq -r --arg pl "$pl_product_version" --arg p "$PRODUCT" '.[$p].[$pl]' ./plugin-product-compat-matrix.json)
-latest_version=$(echo "$latest_releases" | grep -oE "$product_compat_version_regex" | tail -1)
+case $PRODUCT in
+  jira)
+    version_regex="10\\.[0-9]+\\.[0-9]+"
+    ;;
+  confluence|bitbucket)
+    version_regex="9\\.[0-9]+\\.[0-9]+"
+    ;;
+  *)
+    echo "Invalid product"
+    exit 1
+    ;;
+esac
+
+latest_version=$(echo "$latest_releases" | grep -oE "$version_regex" | tail -1)
 
 if [ "$latest_version" = "" ]; then
   echo "Could not find latest versions"
   echo "Product [$PRODUCT]"
-  echo "Compatible version pattern [$product_compat_version_regex]"
+  echo "Compatible version pattern [$version_regex]"
   exit
 fi
 
