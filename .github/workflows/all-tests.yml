@@ -103,7 +103,7 @@ jobs:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
         java-version: [17]
-        confluence-version: [9.0.0-m72]
+        confluence-version: [9.0.0-rc2]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -141,7 +141,7 @@ jobs:
     strategy:
       matrix:
         java-version: [17]
-        bitbucket-version: [9.0.0-eap03]
+        bitbucket-version: [9.0.0-eap09]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
