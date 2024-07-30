@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - run: echo 'Github event inputs [${{ toJson(github.event.inputs) }}].'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
       # Dec 13, 2022
@@ -28,18 +28,18 @@ jobs:
       # install last supported git - 2.37.4; remove this trick once Bitbucket implements support for latest git
       # https://confluence.atlassian.com/bitbucketserver/supported-platforms-776640981.html#Supportedplatforms-dvcsDVCS
       - run: bin/build/install-supported-git.sh
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: ${{ github.event.inputs.java-version }}
           distribution: adopt
       - run: bin/build/install-plugin-sdk.sh
       - run: bin/build/override-plugin-sdk-maven.sh
       - run: bin/build/install-int-test-libs.sh
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-unit
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository/com/atlassian/bitbucket
           key: maven-integration-bitbucket-${{ github.event.inputs.product-version }}
@@ -47,7 +47,7 @@ jobs:
       - run: |
           VERSION=${{ github.event.inputs.product-version }} \
           bin/build/run-bitbucket-its.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: webdriver-screenshots-bitbucket-${{ github.event.inputs.product-version }}-java-${{ github.event.inputs.java-version }}
