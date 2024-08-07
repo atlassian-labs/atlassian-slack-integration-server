@@ -200,9 +200,12 @@ public class DefaultAttachmentBuilderTest {
         when(localeManager.getSiteDefaultLocale()).thenReturn(Locale.ENGLISH);
         when(timeZoneManager.getDefaultTimeZone()).thenReturn(TimeZone.getTimeZone("America/Chicago"));
 
-        String result = target.getSlackPrettyTime(1551985533000L);
+        // `DateTimeFormatter` whitespace separator may change among JDKs
+        // Since `equals` method compares each character by its ascii value for equality,
+        // horizontal whitespace character (\\h) is replaced with a space for consistency
+        String result = target.getSlackPrettyTime(1551985533000L).replaceAll("\\h", " ");
 
-        assertThat(result, is("<!date^" + (1551985533L) + "^{time}|1:05\u202fPM>"));
+        assertThat(result, is("<!date^" + (1551985533L) + "^{time}|1:05 PM>"));
     }
 
     @Test
