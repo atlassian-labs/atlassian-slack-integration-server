@@ -48,7 +48,7 @@
         <bitbucket.api.version>9.0.0-eap09</bitbucket.api.version>
         <bitbucket.version>9.0.0-eap09</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <bitbucket.amps.version>8.16.1</bitbucket.amps.version>
+        <bitbucket.amps.version>9.0.4</bitbucket.amps.version>
         <platform.version>7.0.5</platform.version>
     </properties>
 
