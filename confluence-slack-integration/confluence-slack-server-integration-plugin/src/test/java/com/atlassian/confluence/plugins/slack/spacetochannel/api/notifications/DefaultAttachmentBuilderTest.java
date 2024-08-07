@@ -202,7 +202,7 @@ public class DefaultAttachmentBuilderTest {
 
         String result = target.getSlackPrettyTime(1551985533000L);
 
-        assertThat(result, is("<!date^" + (1551985533L) + "^{time}|1:05 PM>"));
+        assertThat(result, is("<!date^" + (1551985533L) + "^{time}|1:05\u202fPM>"));
     }
 
     @Test

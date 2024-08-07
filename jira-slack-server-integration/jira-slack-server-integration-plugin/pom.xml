@@ -657,7 +657,7 @@
         <profile>
             <id>jvm17</id>
             <activation>
-                <jdk>17</jdk>
+                <jdk>[17,)</jdk>
             </activation>
             <properties>
                 <!-- Needed to start Jira on JDK 17 -->
