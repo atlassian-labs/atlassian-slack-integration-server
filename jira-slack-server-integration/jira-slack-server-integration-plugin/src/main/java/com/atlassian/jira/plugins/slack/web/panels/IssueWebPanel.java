@@ -1,6 +1,6 @@
 package com.atlassian.jira.plugins.slack.web.panels;
 
-import com.atlassian.plugin.web.model.WebPanel;
+import com.atlassian.plugin.web.api.model.WebPanel;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 
 import java.io.IOException;

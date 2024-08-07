@@ -1,4 +1,4 @@
-#* @vtlvariable name="webResourceManager" type="com.atlassian.plugin.webresource.api.WebResourceManager" *#
+#* @vtlvariable name="webResourceManager" type="com.atlassian.webresource.api.WebResourceManager" *#
 #* @vtlvariable name="pageBuilderService" type="com.atlassian.webresource.api.assembler.PageBuilderService" *#
 #* @vtlvariable name="webInterfaceManager" type="com.atlassian.plugin.web.WebInterfaceManager" *#
 #* @vtlvariable name="i18n" type="com.atlassian.sal.api.message.I18nResolver" *#

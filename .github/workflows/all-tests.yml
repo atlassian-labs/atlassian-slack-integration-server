@@ -58,13 +58,12 @@ jobs:
     name: Jira
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    # Disabled until Jira version is available
-    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')) && false
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')
     needs: unit-tests
     strategy:
       matrix:
         java-version: [17]
-        jira-version: [10.0.0]
+        jira-version: [10.0.0-m0009]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4

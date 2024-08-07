@@ -790,4 +790,9 @@
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </servlet-filter>
+
+    <velocity-allowlist key="velocity-allowlist-slack-plugin">
+        <method>com.atlassian.jira.plugins.slack.spi.impl.JiraSlackPluginResourceProvider#getPluginKey()</method>
+    </velocity-allowlist>
+
 </atlassian-plugin>
