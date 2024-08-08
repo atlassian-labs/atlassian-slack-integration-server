@@ -45,8 +45,9 @@
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
         <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
-        <bitbucket.api.version>9.0.0-eap09</bitbucket.api.version>
-        <bitbucket.version>9.0.0-eap09</bitbucket.version>
+        <bitbucket.rest.api.version>9.0.0-eap09</bitbucket.rest.api.version>
+        <bitbucket.api.version>9.0.0</bitbucket.api.version>
+        <bitbucket.version>9.0.0</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
         <bitbucket.amps.version>9.0.4</bitbucket.amps.version>
         <platform.version>7.0.5</platform.version>
@@ -127,13 +128,13 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-rest-api</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.rest.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-rest-model</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.rest.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
