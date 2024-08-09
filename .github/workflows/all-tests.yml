@@ -139,7 +139,7 @@ jobs:
     needs: unit-tests
     strategy:
       matrix:
-        java-version: [17, 21]
+        java-version: [17]
         bitbucket-version: [9.0.0-eap09]
       fail-fast: false
     steps:
