@@ -8,8 +8,6 @@ if [[ ${XVFB_ENABLE} != false ]] ; then
     export DISPLAY=:20
 fi
 
-# TODO: Remove -Denforcer.skip=true after moving from milestone versions
-
 atlas-mvn --batch-mode verify \
   ${VERSION_ARG} \
   -Dut.test.skip=true \
@@ -20,6 +18,5 @@ atlas-mvn --batch-mode verify \
   -Dfailsafe.rerunFailingTestsCount=${RETRY_COUNT:-2} \
   -Dfailsafe.forkedProcessExitTimeoutInSeconds=360 \
   -Dfailsafe.exitTimeout=360 \
-  -Denforcer.skip=true \
   -pl confluence-slack-integration/confluence-slack-server-integration-plugin \
   "$@"
