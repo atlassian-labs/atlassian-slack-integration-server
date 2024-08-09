@@ -32,7 +32,7 @@ jobs:
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        java-version: [17]
+        java-version: [17, 21]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -62,7 +62,7 @@ jobs:
     needs: unit-tests
     strategy:
       matrix:
-        java-version: [17]
+        java-version: [17, 21]
         jira-version: [10.0.0-m0009]
       fail-fast: false
     steps:
@@ -101,7 +101,7 @@ jobs:
     strategy:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
-        java-version: [17]
+        java-version: [17, 21]
         confluence-version: [9.0.0-rc2]
       fail-fast: false
     steps:
