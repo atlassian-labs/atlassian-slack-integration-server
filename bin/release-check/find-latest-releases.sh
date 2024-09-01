@@ -32,7 +32,7 @@ pac_search_query="https://packages.atlassian.com/maven/${GROUP}/${ARTIFACT}/mave
 search_response=$(curl -s "${pac_search_query}")
 
 # PARSE RESPONSE AND GET AN ARRAY OF VERSIONS THAT CONTAIN ONLY NUMBERS (EXCLUDES SNAPSHOTS AND MILESTONE RELEASES)
-latest_releases=$(echo "$search_response" | grep -oE '<version>[0-9][0-9]?\.[0-9]+\.[0-9]+</version>' | grep -oE '[0-9]\.[0-9]+\.[0-9]+')
+latest_releases=$(echo "$search_response" | grep -oE '<version>[0-9][0-9]?\.[0-9]+\.[0-9]+</version>' | grep -oE '[0-9][0-9]?\.[0-9]+\.[0-9]+')
 
 echo "$latest_releases"
 
