@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix:
         java-version: [17, 21]
-        jira-version: [10.0.0-m0010]
+        jira-version: [10.0.0]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
