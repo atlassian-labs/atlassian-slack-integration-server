@@ -395,6 +395,12 @@
                     <!-- Give Java more heap to make Jira faster -->
                     <jvmArgs>${jvm17.opens} -Xmx2g</jvmArgs>
 
+                    <banningExcludes>
+                        <exclude>com.atlassian.security:atlassian-secure-random</exclude>
+                        <exclude>commons-codec:commons-codec</exclude>
+                        <exclude>com.google.code.gson:gson</exclude>
+                    </banningExcludes>
+
                     <pluginArtifacts>
                         <pluginArtifact>
                             <groupId>com.atlassian.jira</groupId>
@@ -640,7 +646,7 @@
     </build>
 
     <properties>
-        <jira.amps.version>8.10.4</jira.amps.version>
+        <jira.amps.version>9.0.3</jira.amps.version>
         <project.root.directory>${project.basedir}/../..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
@@ -651,7 +657,7 @@
         <profile>
             <id>jvm17</id>
             <activation>
-                <jdk>17</jdk>
+                <jdk>[17,)</jdk>
             </activation>
             <properties>
                 <!-- Needed to start Jira on JDK 17 -->

@@ -45,10 +45,11 @@
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
         <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
-        <bitbucket.api.version>9.0.0-eap09</bitbucket.api.version>
-        <bitbucket.version>9.0.0-eap09</bitbucket.version>
+        <bitbucket.rest.api.version>9.0.0-eap09</bitbucket.rest.api.version>
+        <bitbucket.api.version>9.0.0</bitbucket.api.version>
+        <bitbucket.version>9.0.0</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <bitbucket.amps.version>8.16.1</bitbucket.amps.version>
+        <bitbucket.amps.version>9.0.4</bitbucket.amps.version>
         <platform.version>7.0.5</platform.version>
     </properties>
 
@@ -127,13 +128,13 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-rest-api</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.rest.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-rest-model</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.rest.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -293,7 +294,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
 
@@ -336,6 +337,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.18</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -600,7 +607,7 @@
         <profile>
             <id>jvm17</id>
             <activation>
-                <jdk>17</jdk>
+                <jdk>[17,)</jdk>
             </activation>
             <properties>
                 <!-- Needed to start Bitbucket on JDK 17 -->

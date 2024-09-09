@@ -17,8 +17,8 @@ Links to the official documentation are specified on Marketplace pages.
 Supported products. See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
 * `master`/`dev` branch
   * Jira: 10+ (not released yet) on JDK 17.
-  * Confluence: 9+ (not released yet) on JDK 17.
-  * Bitbucket: 9+ (not released yet) on JDK 17.
+  * Confluence: 9+ on JDK 17.
+  * Bitbucket: 9+ on JDK 17.
 
 * `release-1.x` branch
   * Jira: 8.15.0 (EOL date: 2 Feb 2023) JDK 8, 11 - 9.5.0 (EOL date: 6 Dec 2024) on JDK 8, 11, 17.
@@ -138,12 +138,12 @@ See [all-tests.yml](.github/workflows/all-tests.yml) for more details. A specifi
 Note: all integration test jobs in default workflow (`all-tests.yml`) are dependent on unit tests, so to run integration tests
 for specific product pass the respective job's name along with `unit-test` to `jobs` parameter. For example: `unit-tests,integration-tests-jira-8`.
 
-Integration tests for arbitrary verions of the the product and JVM may be run manually using 
+Integration tests for arbitrary versions of the product and JVM may be run manually using 
 [jira-int-tests.yml](.github/workflows/jira-int-tests.yml), [confluence-int-tests.yml](.github/workflows/confluence-int-tests.yml)
 and [bitbucket-int-tests.yml](.github/workflows/bitbucket-int-tests.yml).
 
 ## Releasing
-Release workflow allows to publish new releases to [Atlassian Artifactory](https://packages.atlassian.com/). 
+Release workflow allows to publish new releases to [GitHub Packages](https://github.com/orgs/atlassian-labs/packages?repo_name=atlassian-slack-integration-server). 
 This action should be usually be run by repo maintainer only. See workflow configuration in [release.yml](.github/workflows/release.yml).
 
 # Contributions

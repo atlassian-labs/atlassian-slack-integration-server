@@ -7,15 +7,12 @@ trap 'set +ex' EXIT
 BB_NGROK="$(curl -s "http://127.0.0.1:4040/api/tunnels" | \
   jq -r '.tunnels[] | select(.proto == "https") | select (.config.addr|endswith("'"7990"'")) | .public_url[8:]')"
 
-# TODO: Remove -Denforcer.skip=true after moving from milestone versions
-
 (
     cd "$( dirname "${BASH_SOURCE[0]}")/.." ;
 
     # set env var BB_NGROK to enable HTTPS
 
     atlas-mvn bitbucket:debug \
-        -Denforcer.skip=true \
         -Datlassian.dev.mode=true \
         -Dmaven.test.skip=true \
         -Dlogging.level.com.atlassian.bitbucket.plugins.slack=TRACE \

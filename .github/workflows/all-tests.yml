@@ -32,7 +32,7 @@ jobs:
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        java-version: [17]
+        java-version: [17, 21]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -58,12 +58,11 @@ jobs:
     name: Jira
     runs-on: ubuntu-20.04
     timeout-minutes: 30
-    # Disabled until Jira version is available
-    if: (github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')) && false
+    if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')
     needs: unit-tests
     strategy:
       matrix:
-        java-version: [17]
+        java-version: [17, 21]
         jira-version: [10.0.0]
       fail-fast: false
     steps:
@@ -102,8 +101,8 @@ jobs:
     strategy:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
-        java-version: [17]
-        confluence-version: [9.0.0-rc2]
+        java-version: [17, 21]
+        confluence-version: [9.0.1]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -141,7 +140,7 @@ jobs:
     strategy:
       matrix:
         java-version: [17]
-        bitbucket-version: [9.0.0-eap09]
+        bitbucket-version: [9.0.0]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4

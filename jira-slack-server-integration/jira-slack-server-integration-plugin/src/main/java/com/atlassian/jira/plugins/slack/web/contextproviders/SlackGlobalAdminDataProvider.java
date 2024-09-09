@@ -98,7 +98,7 @@ public class SlackGlobalAdminDataProvider implements ContextProvider {
                 .build();
 
         // We pass new JiraWebActionSupport() so the template has access to i18n
-        final JiraWebActionSupport fakeAction = new JiraWebActionSupport();
+        final JiraWebActionSupport fakeAction = new JiraWebActionSupport() {};
         ActionContext.getValueStack().pushValue(fakeAction);
         return projectField.getCreateHtml(null, operationContext, fakeAction, null, displayParameters);
     }

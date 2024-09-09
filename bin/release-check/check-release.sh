@@ -47,12 +47,30 @@ esac
 echo "Determined workflow name: $workflow_name"
 
 # RUN TESTS AGAINST SPECIFIC VERSIONS
+workflow_links=()
+# Bitbucket 9+ does not support Java 21
+if [ $product_type != "bitbucket" ]; then
+  echo "Running workflow with params: workflow-name=$workflow_name java-version=21 product-version=$product_version"
+  first_workflow_link=$(start_workflow $workflow_name 21 $product_version)
+  echo "Pipeline URL: $first_workflow_link"
+  workflow_links+=("$first_workflow_link")
+fi
+
 echo "Running workflow with params: workflow-name=$workflow_name java-version=17 product-version=$product_version"
-workflow_link=$(start_workflow $workflow_name 17 $product_version)
-echo "Pipeline URL: $workflow_link"
+second_workflow_link=$(start_workflow $workflow_name 17 $product_version)
+echo "Pipeline URL: $second_workflow_link"
+workflow_links+=("$second_workflow_link")
+
+# Join elements with a multi-character delimiter
+function join_by {
+  local d=${1-} f=${2-}
+  if shift 2; then
+    printf %s "$f" "${@/#/$d}"
+  fi
+}
 
 # CREATE NEW ISSUE FOR RELEASE
 echo "Creating a new issue"
-new_issue_url=$(RELEASE_LABEL="$release_label" WORKFLOW_LINKS="$workflow_link" . ./create-issue.sh)
+new_issue_url=$(RELEASE_LABEL="$release_label" WORKFLOW_LINKS="$(join_by ', ' ${workflow_links[@]})" . ./create-issue.sh)
 
 echo "New ticket created: $new_issue_url"
