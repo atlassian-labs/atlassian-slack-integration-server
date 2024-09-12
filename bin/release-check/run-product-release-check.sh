@@ -14,10 +14,10 @@ fi
 
 case $PRODUCT in
   jira)
-    version_regex="[0-9]\\.[0-9]+\\.[0-9]+"
+    version_regex="^[0-9]\\.[0-9]+\\.[0-9]+$"
     ;;
   confluence|bitbucket)
-    version_regex="[0-8]\\.[0-9]+\\.[0-9]+"
+    version_regex="^[0-8]\\.[0-9]+\\.[0-9]+$"
     ;;
   *)
     echo "Invalid product"
