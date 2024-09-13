@@ -58,28 +58,29 @@ require([
 
     function getTemplate() {
         var issueKey = Meta.get("issue-key");
-        if (issueKey) {
-            var $issuePanel = $("#slack-issue-panel");
-            var $spinner = $("#slack-issue-panel-spinner");
-            var $errors = $("#slack-issue-panel-errors");
-            $spinner.spin();
-            return $.ajax({
-                url: wrmContextPath() + "/slack/issuepanel/data/" + issueKey,
-                cache: false,
-                dataType: 'json',
-                type: "GET"
-            }).done(function (data) {
-                var template = JIRA.Templates.Slack.Project.IssuePanel.slackPanel(data);
-                $issuePanel.html(template);
-
-                issuePanelView = createIssuePanelView();
-                issuePanelView.on("ready", evaluateImmediateActions);
-            }).fail(function () {
-                $errors.append(formatter.I18n.getText("jira.plugins.slack.viewissue.panel.error.getting.data"));
-            }).always(function() {
-                $spinner.spinStop();
-            });
+        var $issuePanel = $("#slack-issue-panel");
+        if (!issueKey || !$issuePanel.length) {
+            return;
         }
+        var $spinner = $("#slack-issue-panel-spinner");
+        var $errors = $("#slack-issue-panel-errors");
+        $spinner.spin();
+        return $.ajax({
+            url: wrmContextPath() + "/slack/issuepanel/data/" + issueKey,
+            cache: false,
+            dataType: 'json',
+            type: "GET"
+        }).done(function (data) {
+            var template = JIRA.Templates.Slack.Project.IssuePanel.slackPanel(data);
+            $issuePanel.html(template);
+
+            issuePanelView = createIssuePanelView();
+            issuePanelView.on("ready", evaluateImmediateActions);
+        }).fail(function () {
+            $errors.append(formatter.I18n.getText("jira.plugins.slack.viewissue.panel.error.getting.data"));
+        }).always(function() {
+            $spinner.spinStop();
+        });
     }
 
     $(function () {
