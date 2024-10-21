@@ -8,6 +8,7 @@ import com.atlassian.bitbucket.event.pull.PullRequestEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestOpenedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestRescopedEvent;
 import com.atlassian.bitbucket.event.pull.PullRequestReviewersUpdatedEvent;
+import com.atlassian.bitbucket.event.pull.PullRequestUpdatedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryForkedEvent;
 import com.atlassian.bitbucket.event.repository.RepositoryRefsChangedEvent;
 import com.atlassian.bitbucket.plugins.slack.notification.NotificationPublisher;
@@ -18,6 +19,7 @@ import com.atlassian.bitbucket.plugins.slack.notification.configuration.Personal
 import com.atlassian.bitbucket.plugins.slack.notification.renderer.SlackNotificationRenderer;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestParticipant;
+import com.atlassian.bitbucket.repository.Ref;
 import com.atlassian.bitbucket.repository.RefChange;
 import com.atlassian.bitbucket.repository.RefChangeType;
 import com.atlassian.bitbucket.repository.Repository;
@@ -29,6 +31,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest.ChatPostMessageRequestBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -83,7 +86,18 @@ public class BitbucketNotificationEventListener {
             PullRequestRescopedEvent rescopedEvent = (PullRequestRescopedEvent) event;
             // no changes for target PR
             if (!Optional.ofNullable(rescopedEvent.getAddedCommits()).filter(commits -> commits.getTotal() > 0).isPresent() &&
-                !Optional.ofNullable(rescopedEvent.getRemovedCommits()).filter(commits -> commits.getTotal() > 0).isPresent()) {
+                    !Optional.ofNullable(rescopedEvent.getRemovedCommits()).filter(commits -> commits.getTotal() > 0).isPresent()) {
+                return;
+            }
+        }
+
+        if (event instanceof PullRequestUpdatedEvent) {
+            PullRequestUpdatedEvent updatedEvent = (PullRequestUpdatedEvent) event;
+            PullRequest pullRequest = updatedEvent.getPullRequest();
+            // no changes for source PR
+            if (StringUtils.equals(updatedEvent.getPreviousDescription(), pullRequest.getDescription()) &&
+                    StringUtils.equals(updatedEvent.getPreviousTitle(), pullRequest.getTitle()) &&
+                    equalsToBranch(updatedEvent)) {
                 return;
             }
         }
@@ -175,6 +189,14 @@ public class BitbucketNotificationEventListener {
         return result;
     }
 
+    private boolean equalsToBranch(final PullRequestUpdatedEvent updatedEvent) {
+        Ref previousToRef = updatedEvent.getPreviousToBranch();
+        if (previousToRef == null) {
+            return true;
+        }
+        return previousToRef.getId().equals(updatedEvent.getPreviousToBranch().getId());
+    }
+
     @EventListener
     public void onEvent(final RepositoryRefsChangedEvent event) {
         RepositoryNotificationTypes.byEventClass(event.getClass()).ifPresent(notificationType ->
@@ -189,9 +211,9 @@ public class BitbucketNotificationEventListener {
                             Collections::emptySet,
                             options -> correctedType == RepositoryNotificationTypes.FILE_EDITED
                                     ? ofNullable(slackNotificationRenderer.getFileEditedMessage(
-                                            (FileEditedEvent) event, refChange, options.getVerbosity()))
+                                    (FileEditedEvent) event, refChange, options.getVerbosity()))
                                     : ofNullable(slackNotificationRenderer.getPushMessage(event, refChange,
-                                            options.getVerbosity())));
+                                    options.getVerbosity())));
                 }));
     }
 
