@@ -25,12 +25,7 @@
         <jira.version>10.0.0</jira.version>
         <testkit.version>10.0.3</testkit.version>
         <jira.test.unit.version>${jira.version}</jira.test.unit.version>
-
-        <!-- This is the version the plugin is compiled against -->
-        <jira.compile.version>10.0.0</jira.compile.version>
-
         <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
-
         <jira.data.version>${jira.version}</jira.data.version>
         <jira-project-config.version>${jira.version}</jira-project-config.version>
         <triggers.version>2.3.8</triggers.version>
@@ -53,7 +48,7 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-api</artifactId>
-                <version>${jira.compile.version}</version>
+                <version>${jira.version}</version>
                 <exclusions>
                     <!-- Old version of the Jackson bundled into Jira. We bundle newer Jackson implementation -->
                     <exclusion>
@@ -73,7 +68,7 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-core</artifactId>
-                <version>${jira.compile.version}</version>
+                <version>${jira.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>fugue</artifactId>

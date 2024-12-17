@@ -50,7 +50,6 @@
         <junit.version>4.13.2</junit.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <joda-time.version>2.3</joda-time.version>
-        <commons-lang3.version>3.8</commons-lang3.version>
         <commons-codec.version>1.11</commons-codec.version>
         <ao.version>6.0.0</ao.version>
         <okhttp.version>4.10.0</okhttp.version>
@@ -60,7 +59,8 @@
         <powermock.version>2.0.2</powermock.version>
 
         <slack.common.version>2.0.0</slack.common.version>
-        <platform.version>7.0.0</platform.version>
+        <platform.version>7.2.6</platform.version>
+        <amps.version>9.1.11</amps.version>
         <jvm17.opens />
     </properties>
 
@@ -253,11 +253,6 @@
                         <groupId>net.java.dev.activeobjects</groupId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
