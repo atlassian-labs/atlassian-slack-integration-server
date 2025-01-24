@@ -35,22 +35,21 @@
         <project.scm.id>github</project.scm.id>
 
         <!-- dependency versions -->
-        <atlassian.spring.scanner.version>5.0.0</atlassian.spring.scanner.version>
+        <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
-        <atlassian.selenium.version>3.0.0</atlassian.selenium.version>
+        <atlassian.selenium.version>3.6.0</atlassian.selenium.version>
         <commons-codec.version>1.11</commons-codec.version>
         <slack.common.version>2.0.0</slack.common.version>
 
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
         <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
-        <bitbucket.rest.api.version>9.0.0-eap09</bitbucket.rest.api.version>
-        <bitbucket.api.version>9.0.0</bitbucket.api.version>
+        <bitbucket.rest.api.version>9.0.0-plat-7-m20</bitbucket.rest.api.version>
         <bitbucket.version>9.0.0</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <bitbucket.amps.version>9.0.4</bitbucket.amps.version>
-        <platform.version>7.0.5</platform.version>
+        <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
+        <platform.version>7.2.6</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -116,13 +115,13 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-ao-common</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-api</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -140,19 +139,19 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-git-api</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-util</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-scm-common</artifactId>
-            <version>${bitbucket.api.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -342,7 +341,7 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.18</version>
+            <version>1.14.19</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -473,6 +472,7 @@
                     <instanceId>bitbucket</instanceId>
                     <productVersion>${bitbucket.version}</productVersion>
                     <productDataVersion>${bitbucket.data.version}</productDataVersion>
+                    <server>localhost</server>
                     <skipITs>${it.test.skip}</skipITs>
                     <skipUTs>${ut.test.skip}</skipUTs>
                     <noWebapp>${app.startup.skip}</noWebapp>
@@ -484,6 +484,7 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
+                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <!-- It allows to connect to Bitbucket embedded database while it is running -->
                     <jvmArgs>${jvm17.opens} -Djdbc.url=jdbc:h2:${project.build.directory}/bitbucket/home/shared/data/db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE</jvmArgs>
@@ -507,6 +508,7 @@
                         <!-- Discovery is disabled by default -->
                         <discovery.test.mode>true</discovery.test.mode>
                         <atlassian.test.target.dir>${project.build.directory}/webdriverTests</atlassian.test.target.dir>
+                        <atlassian.authentication.legacy.mode>true</atlassian.authentication.legacy.mode>
                     </systemPropertyVariables>
 
                     <instructions>

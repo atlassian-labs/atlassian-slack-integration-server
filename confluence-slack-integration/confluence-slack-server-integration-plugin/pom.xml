@@ -21,14 +21,10 @@
 
         <project.root.directory>${project.basedir}/..</project.root.directory>
 
-        <!-- version of Confluence libraries used to compile plugin code -->
-        <confluence.api.version>9.0.1</confluence.api.version>
-
-        <!-- version of Confluence used in integration tests -->
-        <confluence.version>9.0.1</confluence.version>
+        <confluence.version>9.0.3</confluence.version>
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
-        <confluence.amps.version>9.0.4</confluence.amps.version>
+        <confluence.amps.version>${amps.version}</confluence.amps.version>
         <jvm17.opens />
     </properties>
 
@@ -87,7 +83,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence</artifactId>
-            <version>${confluence.api.version}</version>
+            <version>${confluence.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -263,34 +259,8 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-webdriver-pageobjects</artifactId>
-            <version>11.5.2</version>
+            <version>12.2.6</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>junit</artifactId>
-                    <groupId>junit</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>junit-dep</artifactId>
-                    <groupId>junit</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.ws.rs</groupId>
-                    <artifactId>jsr311-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.atlassian.plugins</groupId>
-                    <artifactId>atlassian-plugins-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -314,6 +284,7 @@
                 <configuration>
                     <productVersion>${confluence.version}</productVersion>
                     <productDataVersion>${confluence.data.version}</productDataVersion>
+                    <server>localhost</server>
                     <skipITs>${it.test.skip}</skipITs>
                     <skipUTs>${ut.test.skip}</skipUTs>
                     <noWebapp>${app.startup.skip}</noWebapp>
@@ -325,10 +296,12 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
+                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
+                        <exclude>net.bytebuddy:byte-buddy</exclude>
                     </banningExcludes>
 
                     <!-- Custom logging config to show logs from plugin classes by default -->
@@ -354,6 +327,7 @@
                         <synchrony.proxy.enabled>false</synchrony.proxy.enabled>
                         <!-- This disables the Post Upgrade Landing Page, which we never want showing up in tests -->
                         <atlassian.darkfeature.pulp>false</atlassian.darkfeature.pulp>
+                        <atlassian.authentication.legacy.mode>true</atlassian.authentication.legacy.mode>
                     </systemPropertyVariables>
                     <instructions>
                         <CONF_COMM />
