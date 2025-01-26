@@ -10,7 +10,7 @@
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>4.0.1</version>
+    <version>4.0.2-SNAPSHOT</version>
 
     <name>Slack for Jira Data Center</name>
     <description>This is the Slack plugin for Jira Data Center</description>
@@ -690,7 +690,7 @@
         <connection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</connection>
         <developerConnection>scm:git:https://github.com/atlassian-labs/atlassian-slack-integration-server.git</developerConnection>
         <url>https://github.com/atlassian-labs/atlassian-slack-integration-server.git</url>
-        <tag>jira-slack-server-integration-plugin-4.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
