@@ -3,10 +3,9 @@ package com.atlassian.plugins.slack.rest;
 import com.atlassian.plugins.rest.api.security.annotation.AnonymousSiteAccess;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -20,8 +19,7 @@ public class SlackSettingsRedirectResource {
     private final ApplicationProperties applicationProperties;
 
     @Inject
-    @Autowired
-    public SlackSettingsRedirectResource(@Qualifier("salApplicationProperties") final ApplicationProperties applicationProperties) {
+    public SlackSettingsRedirectResource(@Named("salApplicationProperties") final ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
     }
 

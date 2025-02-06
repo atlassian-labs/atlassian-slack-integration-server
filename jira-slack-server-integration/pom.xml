@@ -63,6 +63,10 @@
                         <groupId>com.google.javascript</groupId>
                         <artifactId>closure-compiler</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>commons-httpclient</groupId>
+                        <artifactId>commons-httpclient</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -77,6 +81,14 @@
                     <exclusion>
                         <artifactId>jackson-mapper-asl</artifactId>
                         <groupId>org.codehaus.jackson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-httpclient</groupId>
+                        <artifactId>commons-httpclient</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.ehcache</groupId>
+                        <artifactId>ehcache</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -132,6 +144,12 @@
                 <groupId>com.atlassian.jira.tests</groupId>
                 <artifactId>jira-testkit-client</artifactId>
                 <version>${testkit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-httpclient</groupId>
+                        <artifactId>commons-httpclient</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.httpclient</groupId>

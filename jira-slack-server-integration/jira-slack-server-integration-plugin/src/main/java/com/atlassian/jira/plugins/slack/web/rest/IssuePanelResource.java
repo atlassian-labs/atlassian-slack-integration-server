@@ -20,10 +20,9 @@ import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -56,11 +55,10 @@ public class IssuePanelResource {
     private final SlackClientProvider slackClientProvider;
 
     @Inject
-    @Autowired
     public IssuePanelResource(final PluginConfigurationManager pluginConfigurationManager,
                               final SlackLinkAccessManager slackLinkAccessManager,
-                              @Qualifier("salUserManager") final UserManager userManager,
-                              @Qualifier("jiraUserManager") final com.atlassian.jira.user.util.UserManager jiraUserManager,
+                              @Named("salUserManager") final UserManager userManager,
+                              @Named("jiraUserManager") final com.atlassian.jira.user.util.UserManager jiraUserManager,
                               final IssueManager issueManager,
                               final PermissionManager permissionManager,
                               final GlobalPermissionManager globalPermissionManager,

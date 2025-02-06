@@ -16,10 +16,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -49,10 +48,9 @@ public class ConfigurationRestService {
     private final JiraSettingsService jiraSettingsService;
 
     @Inject
-    @Autowired
     public ConfigurationRestService(final PluginConfigurationManager pluginConfigurationManager,
                                     final ProjectConfigurationManager projectConfigurationManager,
-                                    @Qualifier("salUserManager") final UserManager userManager,
+                                    @Named("salUserManager") final UserManager userManager,
                                     final ProjectManager projectManager,
                                     final PermissionManager permissionManager,
                                     final JiraAuthenticationContext context,
