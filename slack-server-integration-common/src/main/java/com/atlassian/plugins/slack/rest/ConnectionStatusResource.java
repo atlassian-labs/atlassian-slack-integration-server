@@ -14,8 +14,8 @@ import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.atlassian.sal.api.message.I18nResolver;
+import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -111,15 +111,15 @@ public class ConnectionStatusResource {
     @GET
     public Response getDisconnected(@Context final HttpServletRequest request) {
         List<SlackUser> disconnectedUsers = slackUserManager.findDisconnected();
-        UserProfile currentUserProfile = userManager.getRemoteUser();
-        String currentUserKey = currentUserProfile.getUserKey().getStringValue();
+        UserKey currentUser = userManager.getRemoteUserKey();
+        String currentUserKey = currentUser.getStringValue();
         Optional<String> disconnectedSlackUserId = disconnectedUsers.stream()
                 .filter(user -> user.getUserKey().equals(currentUserKey))
                 .map(SlackUser::getSlackUserId)
                 .findFirst();
 
         List<SlackLink> disconnectedLinks = slackLinkManager.findDisconnected();
-        boolean isGlobalAdmin = slackLinkAccessManager.hasAccess(currentUserProfile, request);
+        boolean isGlobalAdmin = slackLinkAccessManager.hasAccess(currentUser, request);
         boolean isAnyLinkDisconnected = !disconnectedLinks.isEmpty() && isGlobalAdmin;
 
         return Response.ok(new DisconnectedTokensDto(disconnectedSlackUserId.orElse(null), isAnyLinkDisconnected))

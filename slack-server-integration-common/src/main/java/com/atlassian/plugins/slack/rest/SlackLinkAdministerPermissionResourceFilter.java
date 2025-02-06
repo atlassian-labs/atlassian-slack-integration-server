@@ -2,7 +2,6 @@ package com.atlassian.plugins.slack.rest;
 
 import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -39,7 +38,6 @@ public class SlackLinkAdministerPermissionResourceFilter implements ContainerReq
     }
 
     private boolean hasAccess(final ContainerRequestContext containerRequest) {
-        UserProfile remoteUser = userManager.getRemoteUser();
-        return slackLinkAccessManager.hasAccess(remoteUser, containerRequest);
+        return slackLinkAccessManager.hasAccess(userManager.getRemoteUserKey(), containerRequest);
     }
 }

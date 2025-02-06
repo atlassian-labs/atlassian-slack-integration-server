@@ -5,8 +5,8 @@ import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.plugins.slack.spi.impl.AbstractSlackLinkAccessManager;
+import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,34 +40,34 @@ public class ConfluenceSlackLinkAccessManager extends AbstractSlackLinkAccessMan
         this.userAccessor = userAccessor;
     }
 
-    private boolean hasAccess(UserProfile userProfile, Optional<Space> space) {
+    private boolean hasAccess(UserKey userKey, Optional<Space> space) {
         if (!space.isPresent()) {
             return false;
         }
 
-        User user = getUserByProfile(userProfile);
+        User user = getUserByProfile(userKey);
         return isSpaceAdmin(user, space.get());
     }
 
     @Override
-    public boolean hasAccess(UserProfile userProfile, ContainerRequestContext request) {
-        if (super.hasAccess(userProfile, request)) {
+    public boolean hasAccess(UserKey userKey, ContainerRequestContext request) {
+        if (super.hasAccess(userKey, request)) {
             return true;
         }
 
         Optional<Space> space = getSpace(request);
 
-        return hasAccess(userProfile, space);
+        return hasAccess(userKey, space);
     }
 
     @Override
-    public boolean hasAccess(UserProfile userProfile, HttpServletRequest request) {
-        if (super.hasAccess(userProfile, request)) {
+    public boolean hasAccess(UserKey userKey, HttpServletRequest request) {
+        if (super.hasAccess(userKey, request)) {
             return true;
         }
         Optional<Space> space = getSpace(request);
 
-        return hasAccess(userProfile, space);
+        return hasAccess(userKey, space);
     }
 
     private Optional<Space> getSpace(ContainerRequestContext request) {
@@ -104,7 +104,7 @@ public class ConfluenceSlackLinkAccessManager extends AbstractSlackLinkAccessMan
         return permissionManager.hasPermission(user, ADMINISTER, space);
     }
 
-    private User getUserByProfile(UserProfile userProfile) {
-        return userAccessor.getExistingUserByKey(userProfile.getUserKey());
+    private User getUserByProfile(UserKey userKey) {
+        return userAccessor.getExistingUserByKey(userKey);
     }
 }

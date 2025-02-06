@@ -11,8 +11,8 @@ import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.spi.SlackRoutesProviderFactory;
 import com.atlassian.plugins.slack.user.SlackUserManager;
+import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +70,10 @@ public class NotificationConfigurationContextBuilder {
 
         if (link != null) {
             contextBuilder.put("link", link);
-            UserProfile userProfile = userManager.getRemoteUser();
-            if (userProfile != null) {
+            UserKey userKey = userManager.getRemoteUserKey();
+            if (userKey != null) {
                 SlackClient client = slackClientProvider.withLink(link);
-                slackUserManager.getByTeamIdAndUserKey(link.getTeamId(), userProfile.getUserKey().getStringValue())
+                slackUserManager.getByTeamIdAndUserKey(link.getTeamId(), userKey.getStringValue())
                         .flatMap(slackUser -> {
                             contextBuilder.put("slackUserId", slackUser.getSlackUserId());
                             return client.getUserInfo(slackUser.getSlackUserId()).toOptional();

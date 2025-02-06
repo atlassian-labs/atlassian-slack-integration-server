@@ -18,6 +18,6 @@ public abstract class AbstractAdminServlet extends AbstractPermissionCheckingSer
     }
 
     protected boolean checkAccess(final HttpServletRequest request) {
-        return slackLinkAccessManager.hasAccess(userManager.getRemoteUser(), request);
+        return slackLinkAccessManager.hasAccess(userManager.getRemoteUserKey(), request);
     }
 }

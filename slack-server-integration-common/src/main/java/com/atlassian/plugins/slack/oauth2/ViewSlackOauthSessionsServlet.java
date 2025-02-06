@@ -123,7 +123,7 @@ public class ViewSlackOauthSessionsServlet extends AbstractPermissionCheckingSer
 
     @Override
     protected boolean checkAccess(final HttpServletRequest request) {
-        return userManager.getRemoteUser() != null;
+        return userManager.getRemoteUserKey() != null;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.atlassian.plugins.slack.spi.impl;
 import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -17,26 +16,25 @@ public abstract class AbstractSlackLinkAccessManager implements SlackLinkAccessM
     }
 
     @Override
-    public boolean hasAccess(UserProfile userProfile, ContainerRequestContext request) {
-        return hasAccess(userProfile);
+    public boolean hasAccess(UserKey userKey, ContainerRequestContext request) {
+        return hasAccess(userKey);
     }
 
     @Override
-    public boolean hasAccess(UserProfile userProfile, HttpServletRequest request) {
-        return hasAccess(userProfile);
+    public boolean hasAccess(UserKey userKey, HttpServletRequest request) {
+        return hasAccess(userKey);
     }
 
     @Override
-    public boolean isSiteAdmin(UserProfile userProfile) {
-        if (userProfile == null) {
+    public boolean isSiteAdmin(UserKey userKey) {
+        if (userKey == null) {
             return false;
         }
 
-        UserKey userKey = userProfile.getUserKey();
         return (userManager.isAdmin(userKey) || userManager.isSystemAdmin(userKey));
     }
 
-    private boolean hasAccess(UserProfile userProfile) {
-        return isSiteAdmin(userProfile);
+    private boolean hasAccess(UserKey userKey) {
+        return isSiteAdmin(userKey);
     }
 }

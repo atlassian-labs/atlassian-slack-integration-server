@@ -1,6 +1,6 @@
 package com.atlassian.plugins.slack.spi;
 
-import com.atlassian.sal.api.user.UserProfile;
+import com.atlassian.sal.api.user.UserKey;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -13,27 +13,27 @@ public interface SlackLinkAccessManager {
      * Returns true if the given user has access to add a link
      * given the request.
      *
-     * @param userProfile - the logged in user
-     * @param request     - the request
+     * @param userKey - the key of logged-in user
+     * @param request - the request
      * @return true if the given user has access to add a link given the request.
      */
-    boolean hasAccess(UserProfile userProfile, ContainerRequestContext request);
+    boolean hasAccess(UserKey userKey, ContainerRequestContext request);
 
     /**
      * Returns true if the given user has access to add a link
      * given the request.
      *
-     * @param userProfile - the logged in user
-     * @param request     - the request
+     * @param userKey - the key of logged-in user
+     * @param request - the request
      * @return true if the given user has access to add a link given the request.
      */
-    boolean hasAccess(UserProfile userProfile, HttpServletRequest request);
+    boolean hasAccess(UserKey userKey, HttpServletRequest request);
 
     /**
      * Returns true if the given user is a site administrator
      *
-     * @param userProfile - - the logged in user
+     * @param userKey - the key of logged-in user
      * @return true if the given user is a site administrator
      */
-    boolean isSiteAdmin(UserProfile userProfile);
+    boolean isSiteAdmin(UserKey userKey);
 }

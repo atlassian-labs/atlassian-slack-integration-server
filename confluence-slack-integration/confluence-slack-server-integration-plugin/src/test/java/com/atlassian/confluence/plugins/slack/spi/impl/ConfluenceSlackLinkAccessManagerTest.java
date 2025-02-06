@@ -8,7 +8,6 @@ import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,8 +46,6 @@ public class ConfluenceSlackLinkAccessManagerTest {
     private UserAccessor userAccessor;
 
     @Mock
-    private UserProfile userProfile;
-    @Mock
     private ConfluenceUser user;
     @Mock
     private Space space;
@@ -67,9 +64,8 @@ public class ConfluenceSlackLinkAccessManagerTest {
     @Test
     public void hasAccess_containerRequest_grantAccessForAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(true);
-        when(userProfile.getUserKey()).thenReturn(userKey);
 
-        boolean result = target.hasAccess(userProfile, containerRequest);
+        boolean result = target.hasAccess(userKey, containerRequest);
 
         assertThat(result, is(true));
     }
@@ -78,9 +74,8 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_containerRequest_grantAccessForSysAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(true);
-        when(userProfile.getUserKey()).thenReturn(userKey);
 
-        boolean result = target.hasAccess(userProfile, containerRequest);
+        boolean result = target.hasAccess(userKey, containerRequest);
 
         assertThat(result, is(true));
     }
@@ -89,7 +84,6 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_containerRequest_grantAccessForSpaceAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
-        when(userProfile.getUserKey()).thenReturn(userKey);
         UriInfo mockUriInfo = mock(UriInfo.class);
         when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
         when(mockUriInfo.getQueryParameters()).thenReturn(map);
@@ -98,7 +92,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
         when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
 
-        boolean result = target.hasAccess(userProfile, containerRequest);
+        boolean result = target.hasAccess(userKey, containerRequest);
 
         assertThat(result, is(true));
     }
@@ -107,7 +101,6 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_containerRequest_notGrantAccessForNonSpaceAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
-        when(userProfile.getUserKey()).thenReturn(userKey);
         UriInfo mockUriInfo = mock(UriInfo.class);
         when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
         when(mockUriInfo.getQueryParameters()).thenReturn(map);
@@ -116,7 +109,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
         when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(false);
 
-        boolean result = target.hasAccess(userProfile, containerRequest);
+        boolean result = target.hasAccess(userKey, containerRequest);
 
         assertThat(result, is(false));
     }
@@ -125,14 +118,13 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_containerRequest_notGrantAccessForNonExistingSpace() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
-        when(userProfile.getUserKey()).thenReturn(userKey);
         UriInfo mockUriInfo = mock(UriInfo.class);
         when(containerRequest.getUriInfo()).thenReturn(mockUriInfo);
         when(mockUriInfo.getQueryParameters()).thenReturn(map);
         when(map.getFirst("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(null);
 
-        boolean result = target.hasAccess(userProfile, containerRequest);
+        boolean result = target.hasAccess(userKey, containerRequest);
 
         assertThat(result, is(false));
     }
@@ -140,9 +132,8 @@ public class ConfluenceSlackLinkAccessManagerTest {
     @Test
     public void hasAccess_servletRequest_grantAccessForAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(true);
-        when(userProfile.getUserKey()).thenReturn(userKey);
 
-        boolean result = target.hasAccess(userProfile, httpServletRequest);
+        boolean result = target.hasAccess(userKey, httpServletRequest);
 
         assertThat(result, is(true));
     }
@@ -151,9 +142,8 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_servletRequest_grantAccessForSysAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(true);
-        when(userProfile.getUserKey()).thenReturn(userKey);
 
-        boolean result = target.hasAccess(userProfile, httpServletRequest);
+        boolean result = target.hasAccess(userKey, httpServletRequest);
 
         assertThat(result, is(true));
     }
@@ -162,13 +152,12 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_servletRequest_grantAccessForSpaceAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
-        when(userProfile.getUserKey()).thenReturn(userKey);
         when(httpServletRequest.getParameter("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
         when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
 
-        boolean result = target.hasAccess(userProfile, httpServletRequest);
+        boolean result = target.hasAccess(userKey, httpServletRequest);
 
         assertThat(result, is(true));
     }
@@ -177,13 +166,12 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_servletRequest_notGrantAccessForNonSpaceAdmin() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
-        when(userProfile.getUserKey()).thenReturn(userKey);
         when(httpServletRequest.getParameter("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
         when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(false);
 
-        boolean result = target.hasAccess(userProfile, httpServletRequest);
+        boolean result = target.hasAccess(userKey, httpServletRequest);
 
         assertThat(result, is(false));
     }
@@ -192,11 +180,10 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_servletRequest_notGrantAccessForNonExistingSpace() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
-        when(userProfile.getUserKey()).thenReturn(userKey);
         when(httpServletRequest.getParameter("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(null);
 
-        boolean result = target.hasAccess(userProfile, httpServletRequest);
+        boolean result = target.hasAccess(userKey, httpServletRequest);
 
         assertThat(result, is(false));
     }
@@ -205,7 +192,6 @@ public class ConfluenceSlackLinkAccessManagerTest {
     public void hasAccess_servletRequest_grantAccessForSpaceKeyInSession() {
         when(userManager.isAdmin(userKey)).thenReturn(false);
         when(userManager.isSystemAdmin(userKey)).thenReturn(false);
-        when(userProfile.getUserKey()).thenReturn(userKey);
         when(httpServletRequest.getParameter("key")).thenReturn(null);
         when(httpServletRequest.getSession()).thenReturn(session);
         when(session.getAttribute(FROM_SPACE_ATTRIBUTE_KEY)).thenReturn(true);
@@ -214,7 +200,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
         when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
 
-        boolean result = target.hasAccess(userProfile, httpServletRequest);
+        boolean result = target.hasAccess(userKey, httpServletRequest);
 
         assertThat(result, is(true));
     }

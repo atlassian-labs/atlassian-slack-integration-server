@@ -13,7 +13,6 @@ import com.atlassian.plugins.slack.spi.SlackRoutesProviderFactory;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import com.github.seratch.jslack.api.model.User;
 import com.google.common.collect.ImmutableMap;
 import io.atlassian.fugue.Either;
@@ -56,8 +55,6 @@ public class NotificationConfigurationContextBuilderTest {
     @Mock
     SlackLink slackLink;
     @Mock
-    UserProfile userProfile;
-    @Mock
     SlackClient slackClient;
     @Mock
     SlackUser slackUser;
@@ -75,16 +72,16 @@ public class NotificationConfigurationContextBuilderTest {
     void addSlackViewContext() {
         List<SlackLink> links = new ArrayList<>();
         String teamId = "someTeamId";
-        String userKey = "someUserKey";
+        String userKeyStr = "someUserKey";
         String slackUserId = "someSlackUserId";
         String slackUserName = "someSlackUserRealName";
+        UserKey stubUserKey = new UserKey(userKeyStr);
         when(slackLinkManager.getLinks()).thenReturn(links);
         when(slackLinkManager.getLinkByTeamId(teamId)).thenReturn(Either.right(slackLink));
         when(slackLink.getTeamId()).thenReturn(teamId);
-        when(userManager.getRemoteUser()).thenReturn(userProfile);
-        when(userProfile.getUserKey()).thenReturn(new UserKey(userKey));
+        when(userManager.getRemoteUserKey()).thenReturn(stubUserKey);
         when(slackClientProvider.withLink(slackLink)).thenReturn(slackClient);
-        when(slackUserManager.getByTeamIdAndUserKey(teamId, userKey)).thenReturn(Optional.of(slackUser));
+        when(slackUserManager.getByTeamIdAndUserKey(teamId, userKeyStr)).thenReturn(Optional.of(slackUser));
         when(slackUser.getSlackUserId()).thenReturn(slackUserId);
         when(slackClient.getUserInfo(slackUserId)).thenReturn(Either.right(user));
         when(user.getRealName()).thenReturn(slackUserName);

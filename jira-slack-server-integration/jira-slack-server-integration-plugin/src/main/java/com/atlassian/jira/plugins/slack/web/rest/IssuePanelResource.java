@@ -18,6 +18,7 @@ import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.LimitedSlackLinkDto;
 import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
+import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,7 @@ public class IssuePanelResource {
     @Path("/hide")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response hidePanel(@Context HttpServletRequest httpRequest) {
-        if (!slackLinkAccessManager.hasAccess(userManager.getRemoteUser(), httpRequest)) {
+        if (!slackLinkAccessManager.hasAccess(userManager.getRemoteUserKey(), httpRequest)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
@@ -105,16 +106,17 @@ public class IssuePanelResource {
     @Path("/data/{issueId}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response panelData(@PathParam("issueId") String issueId) {
-        if (userManager.getRemoteUser() == null) {
+        final UserKey userKey = userManager.getRemoteUserKey();
+        if (userKey == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        final ApplicationUser applicationUser = jiraUserManager.getUserByKey(
-                userManager.getRemoteUser().getUserKey().getStringValue());
-        final Issue issue = issueManager.getIssueByKeyIgnoreCase(issueId);
 
+        final Issue issue = issueManager.getIssueByKeyIgnoreCase(issueId);
         if (issue == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        final ApplicationUser applicationUser = jiraUserManager.getUserByKey(userKey.getStringValue());
         if (!permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, issue, applicationUser)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }

@@ -222,8 +222,8 @@ public class DefaultSlackClient implements SlackClient {
 
     @Override
     public Optional<SlackClient> withRemoteUserTokenIfAvailable() {
-        return Optional.ofNullable(userManager.getRemoteUser())
-                .flatMap(user -> withUserTokenIfAvailable(user.getUserKey().getStringValue()));
+        return Optional.ofNullable(userManager.getRemoteUserKey())
+                .flatMap(userKey -> withUserTokenIfAvailable(userKey.getStringValue()));
     }
 
     @Override
@@ -231,7 +231,7 @@ public class DefaultSlackClient implements SlackClient {
         return withRemoteUserTokenIfAvailable()
                 .map(Either::<UserNotLinkedException, SlackClient>right)
                 .orElseGet(() -> Either.left(
-                        new UserNotLinkedException(userManager.getRemoteUser().getUserKey().getStringValue())));
+                        new UserNotLinkedException(userManager.getRemoteUserKey().getStringValue())));
     }
 
     @Override

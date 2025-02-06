@@ -70,7 +70,7 @@ public class SlackIssueMentionsResource {
                 errorResponse(issueKey),
                 issue -> issueMentionService.getIssueMentions(issue.getId())
                         .map(mentions -> responseFactory.createResponse(
-                                mentions, userManager.getRemoteUser().getUserKey().getStringValue()))
+                                mentions, userManager.getRemoteUserKey().getStringValue()))
                         .fold(errorResponse(issue.getKey()), load -> Response.ok(load).build())
         );
     }
@@ -82,7 +82,7 @@ public class SlackIssueMentionsResource {
                 errorResponse(issueKey),
                 issue -> issueMentionService.getIssueMentions(issue.getId())
                         .map(mentions -> responseFactory.createResponse(
-                                mentions, userManager.getRemoteUser().getUserKey().getStringValue()))
+                                mentions, userManager.getRemoteUserKey().getStringValue()))
                         .map(mentionViews -> ImmutableMap.<String, Long>builder()
                                 .put("channelCount", mentionViews.stream()
                                         .map(IssueMentionViewResponseFactory.IssueMentionViewItem::getChannel)

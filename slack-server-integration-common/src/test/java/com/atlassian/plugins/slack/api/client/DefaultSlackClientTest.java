@@ -10,7 +10,6 @@ import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.atlassian.plugins.slack.util.ResponseSupplier;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.request.auth.AuthTestRequest;
@@ -157,9 +156,8 @@ public class DefaultSlackClientTest {
     @Test
     public void withRemoteUser_shouldCreateClientWithCurrentlyLoggedInUser() {
         String userKey = "someUserKey";
-        UserProfile profile = mock(UserProfile.class);
-        when(userManager.getRemoteUser()).thenReturn(profile);
-        when(profile.getUserKey()).thenReturn(new UserKey(userKey));
+        UserKey stubUserKey = new UserKey(userKey);
+        when(userManager.getRemoteUserKey()).thenReturn(stubUserKey);
         SlackUser newUser = mock(SlackUser.class);
         when(newUser.getUserToken()).thenReturn(USER_TOKEN);
         when(slackUserManager.getByTeamIdAndUserKey(TEAM_ID, userKey)).thenReturn(Optional.of(newUser));

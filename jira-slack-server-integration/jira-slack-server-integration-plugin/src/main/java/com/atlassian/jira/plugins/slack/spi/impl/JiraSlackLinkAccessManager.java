@@ -7,8 +7,8 @@ import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
 import com.atlassian.plugins.slack.spi.impl.AbstractSlackLinkAccessManager;
+import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -40,29 +40,29 @@ public class JiraSlackLinkAccessManager extends AbstractSlackLinkAccessManager i
         this.jiraUserManager = jiraUserManager;
     }
 
-    private boolean hasAccess(final UserProfile userProfile, final Optional<Project> project) {
+    private boolean hasAccess(final UserKey userKey, final Optional<Project> project) {
         return project
-                .filter(project1 -> isProjectAdmin(getUserByProfile(userProfile), project1))
+                .filter(project1 -> isProjectAdmin(getUserByProfile(userKey), project1))
                 .isPresent();
 
     }
 
     @Override
-    public boolean hasAccess(final UserProfile userProfile, final ContainerRequestContext request) {
-        if (super.hasAccess(userProfile, request)) {
+    public boolean hasAccess(final UserKey userKey, final ContainerRequestContext request) {
+        if (super.hasAccess(userKey, request)) {
             return true;
         }
 
-        return hasAccess(userProfile, getProject(request));
+        return hasAccess(userKey, getProject(request));
     }
 
     @Override
-    public boolean hasAccess(final UserProfile userProfile, final HttpServletRequest request) {
-        if (super.hasAccess(userProfile, request)) {
+    public boolean hasAccess(final UserKey userKey, final HttpServletRequest request) {
+        if (super.hasAccess(userKey, request)) {
             return true;
         }
 
-        return hasAccess(userProfile, getProject(request));
+        return hasAccess(userKey, getProject(request));
     }
 
     private Optional<Project> getProject(final ContainerRequestContext request) {
@@ -92,7 +92,7 @@ public class JiraSlackLinkAccessManager extends AbstractSlackLinkAccessManager i
         return permissionManager.hasPermission(ProjectPermissions.ADMINISTER_PROJECTS, project, user);
     }
 
-    private ApplicationUser getUserByProfile(final UserProfile userProfile) {
-        return jiraUserManager.getUserByKeyEvenWhenUnknown(userProfile.getUserKey().getStringValue());
+    private ApplicationUser getUserByProfile(final UserKey userKey) {
+        return jiraUserManager.getUserByKeyEvenWhenUnknown(userKey.getStringValue());
     }
 }

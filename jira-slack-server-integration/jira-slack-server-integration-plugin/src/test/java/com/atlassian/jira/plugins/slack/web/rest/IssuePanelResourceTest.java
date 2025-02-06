@@ -7,7 +7,6 @@ import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -33,10 +32,6 @@ public class IssuePanelResourceTest {
     PermissionManager permissionManager;
 
     @Mock
-    UserProfile userProfile;
-//    @Mock
-//    UserKey userKey;
-    @Mock
     ApplicationUser applicationUser;
     @Mock
     MutableIssue mutableIssue;
@@ -51,10 +46,8 @@ public class IssuePanelResourceTest {
     public void panelData_shouldForbidAccessForUnauthorizedUser() {
         String issueId = "some-issue-id";
         String userKeyStr = "some-user-key";
-        when(userManager.getRemoteUser()).thenReturn(userProfile);
         UserKey stubUserKey = new UserKey(userKeyStr);
-        when(userProfile.getUserKey()).thenReturn(stubUserKey);
-//        when(userKey.getStringValue()).thenReturn(userKeyStr);
+        when(userManager.getRemoteUserKey()).thenReturn(stubUserKey);
         when(jiraUserManager.getUserByKey(userKeyStr)).thenReturn(applicationUser);
         when(issueManager.getIssueByKeyIgnoreCase(issueId)).thenReturn(mutableIssue);
         when(permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, mutableIssue, applicationUser))

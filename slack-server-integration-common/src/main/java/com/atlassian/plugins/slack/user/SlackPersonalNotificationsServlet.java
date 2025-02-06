@@ -76,7 +76,7 @@ public class SlackPersonalNotificationsServlet extends AbstractPermissionCheckin
         pageBuilderService.assembler().resources().requireWebResource(slackPluginResourceProvider.getPluginKey() + ":slack-personal-settings-resources");
         response.setContentType("text/html;charset=UTF-8");
 
-        final UserKey userKey = userManager.getRemoteUser().getUserKey();
+        final UserKey userKey = userManager.getRemoteUserKey();
 
         final List<String> notificationKeys = slackPluginResourceProvider.getPersonalConfigurationKeys()
                 .stream()
@@ -130,7 +130,7 @@ public class SlackPersonalNotificationsServlet extends AbstractPermissionCheckin
 
     @Override
     protected boolean checkAccess(final HttpServletRequest request) {
-        return userManager.getRemoteUser() != null;
+        return userManager.getRemoteUserKey() != null;
     }
 
     @Override

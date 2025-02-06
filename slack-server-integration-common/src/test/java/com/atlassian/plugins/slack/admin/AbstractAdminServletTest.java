@@ -1,8 +1,8 @@
 package com.atlassian.plugins.slack.admin;
 
 import com.atlassian.plugins.slack.spi.SlackLinkAccessManager;
+import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
-import com.atlassian.sal.api.user.UserProfile;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class AbstractAdminServletTest {
     @Mock
     private HttpServletResponse servletResponse;
     @Mock
-    private UserProfile userProfile;
+    private UserKey userKey;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -55,8 +55,8 @@ public class AbstractAdminServletTest {
 
     @Test
     public void service_shouldRejectUserWithNoPermissions() throws IOException, ServletException {
-        when(userManager.getRemoteUser()).thenReturn(userProfile);
-        when(slackLinkAccessManager.hasAccess(userProfile, servletRequest)).thenReturn(false);
+        when(userManager.getRemoteUserKey()).thenReturn(userKey);
+        when(slackLinkAccessManager.hasAccess(userKey, servletRequest)).thenReturn(false);
 
         abstractAdminServlet.service(servletRequest, servletResponse);
 
@@ -65,8 +65,8 @@ public class AbstractAdminServletTest {
 
     @Test
     public void service_shouldAccepUserWithPermissions() throws IOException, ServletException {
-        when(userManager.getRemoteUser()).thenReturn(userProfile);
-        when(slackLinkAccessManager.hasAccess(userProfile, servletRequest)).thenReturn(true);
+        when(userManager.getRemoteUserKey()).thenReturn(userKey);
+        when(slackLinkAccessManager.hasAccess(userKey, servletRequest)).thenReturn(true);
         when(servletRequest.getMethod()).thenReturn("get");
 
         abstractAdminServlet.service(servletRequest, servletResponse);
