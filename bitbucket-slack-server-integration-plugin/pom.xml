@@ -47,8 +47,10 @@
         <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
         <bitbucket.rest.api.version>9.0.0-plat-7-m20</bitbucket.rest.api.version>
         <bitbucket.version>9.0.0</bitbucket.version>
-        <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
+        <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements -->
+        <bitbucket.page.objects.version>9.0.0</bitbucket.page.objects.version>
         <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
+        <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
         <platform.version>7.2.6</platform.version>
     </properties>
 
@@ -402,7 +404,7 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-page-objects</artifactId>
-            <version>${bitbucket.version}</version>
+            <version>${bitbucket.page.objects.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
