@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Atlassian Logo (left) -->
+  <g transform="translate(20, 10)">
+    <path d="M40,0 C17.909,0 0,17.909 0,40 C0,62.091 17.909,80 40,80 C62.091,80 80,62.091 80,40 C80,17.909 62.091,0 40,0" fill="#0052CC"/>
+    <path d="M38.32,15.873 C38.32,15.873 25.949,47.282 39.891,64.321 C41.205,65.835 43.401,65.875 44.761,64.401 C58.066,49.795 47.333,15.873 47.333,15.873 L38.32,15.873 Z" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- Integration Arrow -->
+  <path d="M120,40 L280,40" stroke="#253858" stroke-width="4" stroke-dasharray="8,4"/>
+  <polygon points="275,35 285,40 275,45" fill="#253858"/>
+  
+  <!-- Slack Logo (right) -->
+  <g transform="translate(300, 10)">
+    <rect x="10" y="10" width="20" height="20" rx="4" fill="#E01E5A"/>
+    <rect x="40" y="10" width="20" height="20" rx="4" fill="#2EB67D"/>
+    <rect x="10" y="40" width="20" height="20" rx="4" fill="#ECB22E"/>
+    <rect x="40" y="40" width="20" height="20" rx="4" fill="#36C5F0"/>
+  </g>
+</svg>
