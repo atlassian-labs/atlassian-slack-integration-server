@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <!-- Base circle -->
+    <circle cx="24" cy="24" r="22" fill="#DE350B"/>
+    
+    <!-- Stylized A for Atlassian -->
+    <path d="M15.5 32L24 16L32.5 32" stroke="white" stroke-width="4" fill="none"/>
+    
+    <!-- Slack hash symbol with disconnect indicator -->
+    <g transform="translate(18, 20)" fill="white">
+        <rect x="0" y="0" width="12" height="3" rx="1.5"/>
+        <rect x="0" y="5" width="12" height="3" rx="1.5"/>
+    </g>
+    
+    <!-- Disconnect indicator (!) -->
+    <g fill="white">
+        <rect x="22" y="18" width="4" height="8" rx="2"/>
+        <circle cx="24" cy="30" r="2"/>
+    </g>
+</svg>
