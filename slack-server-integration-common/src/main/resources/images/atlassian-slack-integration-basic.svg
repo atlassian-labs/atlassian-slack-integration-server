@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+    <!-- Atlassian chevron -->
+    <path d="M40,90 L20,50 L30,20 L50,60 L70,20 L80,50 L60,90 Z" 
+          fill="#0052CC" />
+    <!-- Slack hash symbol -->
+    <g transform="translate(35,35)" fill="#E01E5A">
+        <rect x="15" y="0" width="8" height="30" rx="4"/>
+        <rect x="0" y="15" width="30" height="8" rx="4"/>
+    </g>
+</svg>
