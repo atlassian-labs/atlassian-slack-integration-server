@@ -5,7 +5,7 @@
     <groupId>com.atlassian.bitbucket.plugins</groupId>
     <artifactId>bitbucket-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>5.0.2-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
 
     <name>Slack for Bitbucket Data Center</name>
     <description>This is the Slack integration for Bitbucket Data Center</description>
@@ -18,8 +18,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <jvm17.opens />
 
         <!-- default properties. copied from parent POM in order to allow to resolve plugin plugin dependencies during BBS build -->
@@ -44,14 +44,9 @@
 
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
-        <bitbucket.rest.api.version>9.0.0-plat-7-m20</bitbucket.rest.api.version>
-        <bitbucket.version>9.0.0</bitbucket.version>
-        <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements -->
-        <bitbucket.page.objects.version>9.0.0</bitbucket.page.objects.version>
-        <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
-        <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <platform.version>7.2.6</platform.version>
+        <bitbucket.version>10.0.0-jakarta-m1</bitbucket.version>
+        <bitbucket.amps.version>9.3.0</bitbucket.amps.version>
+        <platform.version>8.0.0-m01</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -135,14 +130,14 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-api</artifactId>
-            <version>${bitbucket.rest.api.version}</version>
+            <artifactId>bitbucket-rest-v2-api</artifactId>
+            <version>${bitbucket.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-model</artifactId>
-            <version>${bitbucket.rest.api.version}</version>
+            <artifactId>bitbucket-rest-v2-model</artifactId>
+            <version>${bitbucket.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -278,6 +273,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
@@ -404,7 +404,7 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-page-objects</artifactId>
-            <version>${bitbucket.page.objects.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -478,7 +478,7 @@
                 <configuration>
                     <instanceId>bitbucket</instanceId>
                     <productVersion>${bitbucket.version}</productVersion>
-                    <productDataVersion>${bitbucket.data.version}</productDataVersion>
+                    <productDataVersion>${bitbucket.version}</productDataVersion>
                     <server>localhost</server>
                     <skipITs>${it.test.skip}</skipITs>
                     <skipUTs>${ut.test.skip}</skipUTs>

@@ -5,9 +5,9 @@ import com.atlassian.plugins.slack.api.json.JsonableJacksonService;
 import com.atlassian.sal.api.web.context.HttpContext;
 import com.atlassian.webresource.api.data.WebResourceDataProvider;
 import com.google.common.collect.ImmutableMap;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class LinkErrorDataProvider implements WebResourceDataProvider {

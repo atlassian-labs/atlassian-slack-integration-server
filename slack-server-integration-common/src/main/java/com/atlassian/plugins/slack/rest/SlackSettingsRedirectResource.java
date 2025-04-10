@@ -3,15 +3,14 @@ package com.atlassian.plugins.slack.rest;
 import com.atlassian.plugins.rest.api.security.annotation.AnonymousSiteAccess;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
-import static javax.ws.rs.core.Response.Status.MOVED_PERMANENTLY;
+import static jakarta.ws.rs.core.Response.Status.MOVED_PERMANENTLY;
 
 @Path("/settings")
 @AnonymousSiteAccess

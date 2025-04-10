@@ -24,8 +24,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <project.root.directory>${project.basedir}</project.root.directory>
         <plugin.parent.directory>${project.root.directory}</plugin.parent.directory>
@@ -58,8 +58,8 @@
         <powermock.version>2.0.2</powermock.version>
 
         <slack.common.version>2.0.0</slack.common.version>
-        <platform.version>7.2.6</platform.version>
-        <amps.version>9.1.11</amps.version>
+        <platform.version>8.0.0-m01</platform.version>
+        <amps.version>9.3.0</amps.version>
         <jvm17.opens />
     </properties>
 

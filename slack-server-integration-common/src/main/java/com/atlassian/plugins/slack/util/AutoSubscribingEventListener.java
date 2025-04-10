@@ -1,10 +1,9 @@
 package com.atlassian.plugins.slack.util;
 
 import com.atlassian.event.api.EventPublisher;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 @RequiredArgsConstructor
 public class AutoSubscribingEventListener {
