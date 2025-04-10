@@ -36,21 +36,17 @@
 
         <!-- AMPS related properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
+        <bitbucket.amps.version>9.5.0</bitbucket.amps.version>
 
         <!-- Bitbucket API version used during the build -->
-        <bitbucket.api.version>9.0.0</bitbucket.api.version>
-        <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
-        <bitbucket.rest.api.version>9.0.0-plat-7-m20</bitbucket.rest.api.version>
+        <bitbucket.api.version>10.0.0-jakarta-m1</bitbucket.api.version>
 
         <!-- Bitbucket version used for integration tests; can be overridden to test against different versions -->
-        <bitbucket.version>9.0.0</bitbucket.version>
+        <bitbucket.version>10.0.0-jakarta-m1</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements -->
-        <bitbucket.page.objects.version>9.0.0</bitbucket.page.objects.version>
 
         <!-- Platform version used for dependency management -->
-        <platform.version>7.2.6</platform.version>
+        <platform.version>8.0.0</platform.version>
 
         <!-- Dependency versions -->
         <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
@@ -142,14 +138,14 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-api</artifactId>
-            <version>${bitbucket.rest.api.version}</version>
+            <artifactId>bitbucket-rest-v2-api</artifactId>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-model</artifactId>
-            <version>${bitbucket.rest.api.version}</version>
+            <artifactId>bitbucket-rest-v2-model</artifactId>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -285,6 +281,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
@@ -411,7 +412,7 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-page-objects</artifactId>
-            <version>${bitbucket.page.objects.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
