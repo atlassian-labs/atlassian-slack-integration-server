@@ -17,9 +17,9 @@ import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import io.atlassian.fugue.Either;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -51,7 +51,7 @@ public class SlackOAuth2Resource {
     public SlackOAuth2Resource(final Oauth2AuthoriseService oauth2AuthoriseService,
                                final XsrfTokenGenerator tokenGenerator,
                                final SlackLinkManager slackLinkManager,
-                               @Qualifier("salUserManager") final UserManager userManager,
+                               @Named("salUserManager") final UserManager userManager,
                                final I18nResolver i18nResolver,
                                final SlackConnectionService slackConnectionService) {
         this.oauth2AuthoriseService = oauth2AuthoriseService;

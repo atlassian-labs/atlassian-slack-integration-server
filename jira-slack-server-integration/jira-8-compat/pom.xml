@@ -43,6 +43,12 @@
             <artifactId>jira-core</artifactId>
             <version>8.0.0</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -55,7 +61,6 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.18</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

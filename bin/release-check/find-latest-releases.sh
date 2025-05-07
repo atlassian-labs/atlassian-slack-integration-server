@@ -28,7 +28,7 @@ case $product_type in
 esac
 
 # SEARCH PAC
-pac_search_query="https://packages.atlassian.com/maven/${GROUP}/${ARTIFACT}/maven-metadata.xml" #get xml
+pac_search_query="https://maven.artifacts.atlassian.com/${GROUP}/${ARTIFACT}/maven-metadata.xml" #get xml
 search_response=$(curl -s "${pac_search_query}")
 
 # PARSE RESPONSE AND GET AN ARRAY OF VERSIONS THAT CONTAIN ONLY NUMBERS (EXCLUDES SNAPSHOTS AND MILESTONE RELEASES)

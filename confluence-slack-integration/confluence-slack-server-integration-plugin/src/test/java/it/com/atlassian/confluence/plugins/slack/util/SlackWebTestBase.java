@@ -11,6 +11,7 @@ import com.atlassian.webdriver.testing.rule.WindowSizeRule;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -59,7 +60,7 @@ public abstract class SlackWebTestBase extends SlackFunctionalTestBase {
         for (WebElement flag : flags) {
             try {
                 flag.findElement(By.className("aui-close-button")).click();
-            } catch (NoSuchElementException e) {
+            } catch (NoSuchElementException | ElementNotInteractableException e) {
                 // ignore intentionally; the flag is already closed
             }
         }

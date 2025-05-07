@@ -50,9 +50,7 @@
         <junit.version>4.13.2</junit.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <joda-time.version>2.3</joda-time.version>
-        <commons-lang3.version>3.8</commons-lang3.version>
         <commons-codec.version>1.11</commons-codec.version>
-        <ao.version>6.0.0</ao.version>
         <okhttp.version>4.10.0</okhttp.version>
 
         <atlassian-user.version>3.0</atlassian-user.version>
@@ -60,7 +58,8 @@
         <powermock.version>2.0.2</powermock.version>
 
         <slack.common.version>2.0.0</slack.common.version>
-        <platform.version>7.0.0</platform.version>
+        <platform.version>7.3.9</platform.version>
+        <amps.version>9.1.11</amps.version>
         <jvm17.opens />
     </properties>
 
@@ -118,6 +117,13 @@
             <dependency>
                 <groupId>com.atlassian.platform.dependencies</groupId>
                 <artifactId>platform-internal-api</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-bundled-plugins</artifactId>
                 <version>${platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -243,22 +249,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <dependency>
-                <groupId>com.atlassian.activeobjects</groupId>
-                <artifactId>activeobjects-plugin</artifactId>
-                <version>${ao.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>activeobjects</artifactId>
-                        <groupId>net.java.dev.activeobjects</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
-            </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>

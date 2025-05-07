@@ -9,7 +9,6 @@ echo "========================"
 
 if [ "$latest_releases" = "" ]; then
   echo "Could not find latest versions"
-  exit
 fi
 
 case $PRODUCT in

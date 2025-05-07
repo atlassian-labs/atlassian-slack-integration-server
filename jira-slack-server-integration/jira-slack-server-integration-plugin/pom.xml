@@ -10,7 +10,7 @@
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.3-SNAPSHOT</version>
 
     <name>Slack for Jira Data Center</name>
     <description>This is the Slack plugin for Jira Data Center</description>
@@ -376,6 +376,7 @@
                     <instanceId>jira</instanceId>
                     <productVersion>${jira.version}</productVersion>
                     <productDataVersion>${jira.data.version}</productDataVersion>
+                    <server>localhost</server>
                     <skipITs>${it.test.skip}</skipITs>
                     <skipUTs>${ut.test.skip}</skipUTs>
                     <noWebapp>${app.startup.skip}</noWebapp>
@@ -387,6 +388,7 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
+                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <!-- Custom logging config to show logs from plugin classes by default -->
                     <log4jProperties>src/main/resources/log4j.properties</log4jProperties>
@@ -399,6 +401,7 @@
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
                         <exclude>commons-codec:commons-codec</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
+                        <exclude>net.bytebuddy:byte-buddy</exclude>
                     </banningExcludes>
 
                     <pluginArtifacts>
@@ -428,6 +431,7 @@
                         <!-- Discovery is disabled by default -->
                         <discovery.test.mode>true</discovery.test.mode>
                         <atlassian.test.target.dir>${project.build.directory}/webdriverTests</atlassian.test.target.dir>
+                        <atlassian.authentication.legacy.mode>true</atlassian.authentication.legacy.mode>
                     </systemPropertyVariables>
 
                     <instructions>
@@ -646,7 +650,7 @@
     </build>
 
     <properties>
-        <jira.amps.version>9.0.3</jira.amps.version>
+        <jira.amps.version>${amps.version}</jira.amps.version>
         <project.root.directory>${project.basedir}/../..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>

@@ -26,6 +26,7 @@ import static com.github.seratch.jslack.api.methods.Methods.CHAT_POST_MESSAGE;
 import static com.github.seratch.jslack.api.methods.Methods.CONVERSATIONS_INVITE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
@@ -61,8 +62,11 @@ public class ConfigurationWebTest extends SlackWebTestBase {
         });
 
         assertThat(server.requestHistoryForTest(), hasHit(CHAT_POST_MESSAGE, contains(
-                requestEntityProperty(ChatPostMessageRequest::getText, containsString(
-                        "set Confluence notifications from space *<http://example.com/context/display/IT?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258c3BhY2U%3D|IT Space>* to appear in this channel."))
+                requestEntityProperty(ChatPostMessageRequest::getText, anyOf(
+                        containsString("set Confluence notifications from space *<http://example.com/context/display/IT?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258c3BhY2U%3D|IT Space>* to appear in this channel."),
+                        // Since Confluence 9.1 there is enabled `confluence.readable.url` feature causing Space#getUrlPath() to return `spaces/{space_name}/overview`
+                        containsString("set Confluence notifications from space *<http://example.com/context/spaces/IT/overview?atlLinkOrigin=c2xhY2staW50ZWdyYXRpb258c3BhY2U%3D|IT Space>* to appear in this channel.")
+                ))
         )));
 
         assertThat(server.requestHistoryForTest(), hasHit(CONVERSATIONS_INVITE, contains(allOf(
