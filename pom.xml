@@ -58,7 +58,7 @@
         <powermock.version>2.0.2</powermock.version>
 
         <slack.common.version>2.0.0</slack.common.version>
-        <platform.version>7.2.6</platform.version>
+        <platform.version>7.3.9</platform.version>
         <amps.version>9.1.11</amps.version>
         <jvm17.opens />
     </properties>
