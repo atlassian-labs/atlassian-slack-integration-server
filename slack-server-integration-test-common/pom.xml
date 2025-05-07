@@ -48,32 +48,32 @@
             <artifactId>atlassian-webdriver-core</artifactId>
             <version>${atlassian.selenium.version}</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.collections</groupId>
-                    <artifactId>google-collections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jsr305</artifactId>
-                    <groupId>com.atlassian.bundles</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>fugue</artifactId>
-                    <groupId>com.atlassian.fugue</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.collections</groupId>
-                    <artifactId>google-collections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-htmlunit-driver</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-lang</artifactId>
-                    <groupId>commons-lang</groupId>
-                </exclusion>
-            </exclusions>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.google.collections</groupId>-->
+<!--                    <artifactId>google-collections</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>jsr305</artifactId>-->
+<!--                    <groupId>com.atlassian.bundles</groupId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>fugue</artifactId>-->
+<!--                    <groupId>com.atlassian.fugue</groupId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.google.collections</groupId>-->
+<!--                    <artifactId>google-collections</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.seleniumhq.selenium</groupId>-->
+<!--                    <artifactId>selenium-htmlunit-driver</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>commons-lang</artifactId>-->
+<!--                    <groupId>commons-lang</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>com.atlassian.selenium</groupId>
