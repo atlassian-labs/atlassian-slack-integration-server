@@ -254,6 +254,18 @@
             <artifactId>confluence-webdriver-pageobjects</artifactId>
             <version>13.1.1</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.atlassian.confluence</groupId>
+                    <artifactId>confluence-rest-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.confluence</groupId>
+            <artifactId>confluence-rest-client</artifactId>
+            <version>9.0.3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
