@@ -248,17 +248,11 @@
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>slack-server-integration-test-common</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.atlassian.selenium</groupId>
-                    <artifactId>atlassian-webdriver-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-webdriver-pageobjects</artifactId>
-            <version>12.2.6</version>
+            <version>13.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

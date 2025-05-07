@@ -13,7 +13,7 @@
     <name>Integration Tests Common module</name>
 
     <properties>
-        <atlassian.selenium.version>3.2.6</atlassian.selenium.version>
+        <atlassian.selenium.version>3.8.0</atlassian.selenium.version>
     </properties>
 
     <dependencies>
