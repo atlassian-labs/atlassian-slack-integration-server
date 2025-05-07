@@ -271,7 +271,17 @@
                     <groupId>com.atlassian.plugins.rest</groupId>
                     <artifactId>atlassian-rest-common</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.atlassian.selenium</groupId>
+                    <artifactId>atlassian-webdriver-core</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-webdriver-core</artifactId>
+            <version>3.8.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
