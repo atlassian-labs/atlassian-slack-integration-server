@@ -20,7 +20,7 @@
         <project.root.directory>${project.basedir}/..</project.root.directory>
 
         <!-- Jira version used for integration tests; can be overridden to test against different versions -->
-        <jira.version>10.0.0</jira.version>
+        <jira.version>10.7.0</jira.version>
         <jira.data.version>${jira.version}</jira.data.version>
 
         <!-- Dependencies and plugins that must align with the running Jira during integration tests -->
@@ -31,7 +31,7 @@
         <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
 
         <!-- Jira API version used during the build -->
-        <jira.api.version>10.0.0</jira.api.version>
+        <jira.api.version>10.7.0</jira.api.version>
         <!-- Dependencies that must align with the API version used during the build -->
         <jira-project-config.version>${jira.api.version}</jira-project-config.version>
 
