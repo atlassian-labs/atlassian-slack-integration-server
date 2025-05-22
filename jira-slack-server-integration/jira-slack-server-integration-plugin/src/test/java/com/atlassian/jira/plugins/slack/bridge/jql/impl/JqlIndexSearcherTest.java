@@ -1,12 +1,10 @@
 package com.atlassian.jira.plugins.slack.bridge.jql.impl;
 
 import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.index.IssueIndexingParams;
-import com.atlassian.jira.issue.index.IssueIndexingService;
-import com.atlassian.jira.issue.search.SearchProvider;
-import com.atlassian.jira.issue.search.SearchQuery;
+import com.atlassian.jira.search.issue.IssueDocumentSearchService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.query.Query;
+import java.util.concurrent.Callable;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,16 +14,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.concurrent.Callable;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class JqlIndexSearcherTest {
     @Mock
-    private SearchProvider searchProvider;
+    private IssueDocumentSearchService issueDocumentSearchService;
 
     @Mock
     private ApplicationUser applicationUser;
@@ -45,7 +40,7 @@ public class JqlIndexSearcherTest {
 
     @Test
     public void doesIssueMatchQuery_shouldReturnTrueIfSearchCountGreaterThanZero() throws Exception {
-        when(searchProvider.getHitCount(SearchQuery.create(query, applicationUser))).thenReturn(1L);
+        when(issueDocumentSearchService.getHitCount(applicationUser, query, false)).thenReturn(1L);
 
         boolean result = target.doesIssueMatchQuery(issue, applicationUser, query);
 
@@ -54,7 +49,7 @@ public class JqlIndexSearcherTest {
 
     @Test
     public void doesIssueMatchQuery_shouldReturnFalseIfSearchCountIsZero() throws Exception {
-        when(searchProvider.getHitCount(SearchQuery.create(query, applicationUser))).thenReturn(0L);
+        when(issueDocumentSearchService.getHitCount(applicationUser, query, false)).thenReturn(0L);
 
         boolean result = target.doesIssueMatchQuery(issue, applicationUser, query);
 
@@ -63,7 +58,7 @@ public class JqlIndexSearcherTest {
 
     @Test
     public void doesIssueMatchQuery_shouldReturnTrueIfSearchCountOverrideSecurityGreaterThanZero() throws Exception {
-        when(searchProvider.getHitCount(SearchQuery.create(query, null).overrideSecurity(true))).thenReturn(1L);
+        when(issueDocumentSearchService.getHitCount(null, query, true)).thenReturn(1L);
 
         boolean result = target.doesIssueMatchQuery(issue, null, query);
 
@@ -72,7 +67,7 @@ public class JqlIndexSearcherTest {
 
     @Test
     public void doesIssueMatchQuery_shouldReturnFalseIfSearchOverrideSecurityCountIsZero() throws Exception {
-        when(searchProvider.getHitCount(SearchQuery.create(query, applicationUser))).thenReturn(0L);
+        when(issueDocumentSearchService.getHitCount(applicationUser, query, false)).thenReturn(0L);
 
         boolean result = target.doesIssueMatchQuery(issue, null, query);
 
