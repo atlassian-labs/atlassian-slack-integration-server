@@ -22,7 +22,7 @@
         <aui.version>5.1.3</aui.version>
 
         <!-- this is the version we will run integration tests against -->
-        <jira.version>10.0.0</jira.version>
+        <jira.version>10.7.0-QR-20250522042702</jira.version>
         <testkit.version>10.0.3</testkit.version>
         <jira.test.unit.version>${jira.version}</jira.test.unit.version>
         <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
