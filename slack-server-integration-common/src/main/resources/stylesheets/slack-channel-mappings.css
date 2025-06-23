@@ -1,0 +1,164 @@
+/* Import global CSS variables */
+@import "slack-global.css";
+
+:root {
+  --selected-background: var(--pale-blue-color);
+  --icon-colour: var(--medium-gray-color);
+  --icon-colour-hover: var(--charcoal-color);
+  --shaded: var(--light-gray-color);
+  --error-colour: var(--warm-red-color);
+  --form-label-text-colour: var(--medium-gray-color);
+  --icon-height: 16px;
+  --has-arrow-field-width: 300px;
+}
+
+/* Text overflow utility class to replace the mixin */
+.text-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slack-channel-mappings {
+  /* Makes sure that the arrows are aligned in the form and the table */
+}
+
+.slack-channel-mappings .mapping-arrow {
+  position: absolute;
+  right: 10px;
+  color: var(--icon-colour);
+}
+
+.slack-channel-mappings .has-arrow {
+  position: relative;
+  padding-right: 40px;
+  width: var(--has-arrow-field-width);
+  box-sizing: border-box;
+}
+
+.mapping-origin-label {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The entity to channel mapping form */
+.slack-channel-mapping-form {
+  width: 100%;
+  padding: 20px 10px 20px 0;
+}
+
+/* Keeps the form elements aligned */
+.slack-channel-mapping-form .mapping-origin-label {
+  line-height: 2.14; /* Calculated from (30.0 / 14.0) */
+  font-weight: bold;
+}
+
+.slack-channel-mapping-form .mapping-arrow,
+.slack-channel-mapping-form .aui-button,
+.slack-channel-mapping-form .select2-container,
+.slack-channel-mapping-form .mapping-origin-label {
+  vertical-align: middle;
+}
+
+.slack-channel-mapping-form .has-arrow {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.slack-channel-mapping-form .mapping-arrow {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+}
+
+.slack-channel-mapping-form .mapping-arrow + .aui-select2-container {
+  margin-left: 10px;
+}
+
+.slack-channel-mapping-form .aui-button {
+  margin-left: 20px;
+}
+
+/* The channel mapping table */
+.slack-channel-mapping-list .header {
+  border-top: var(--default-border);
+}
+
+/* Makes sure the arrow is aligned vertically */
+.slack-channel-mapping-list .mapping-arrow {
+  margin-top: 2px; /* Calculated from ((20px - var(--icon-height)) / 2px) */
+}
+
+.slack-channel-mapping-list .slack-team-mapping-field,
+.slack-channel-mapping-list .slack-channel-mapping-field,
+.slack-channel-mapping-list .mapping-origin-label {
+  vertical-align: middle;
+}
+
+.slack-channel-mapping-list .inline-toolbar ul {
+  margin-top: 0;
+  padding: 0;
+  float: right;
+}
+
+.slack-channel-mapping-list .inline-toolbar ul li {
+  display: inline;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.slack-channel-mapping-list .inline-toolbar .aui-iconfont-remove {
+  color: var(--icon-colour);
+}
+
+.slack-channel-mapping-list .inline-toolbar .aui-iconfont-remove:hover {
+  color: var(--icon-colour-hover);
+}
+
+.slack-channel-mapping-list .slack-notification-types,
+.slack-channel-mapping-list .slack-options {
+  margin: 0;
+}
+
+.slack-channel-mapping-list .slack-notification-types li,
+.slack-channel-mapping-list .slack-options li {
+  line-height: 30px;
+}
+
+.slack-channel-mapping-list .slack-notification-types input,
+.slack-channel-mapping-list .slack-options input {
+  margin: 0 5px 0 0;
+}
+
+/* A single entity to channel mapping */
+.slack-channel-config .edit,
+.slack-channel-config .edit-menu {
+  display: none;
+}
+
+.slack-channel-config.edit-active .edit {
+  display: table-cell;
+}
+
+.slack-channel-config.edit-active .edit-menu {
+  display: block;
+}
+
+.slack-channel-config.edit-active .summary {
+  border-bottom: 0;
+}
+
+.slack-channel-config.edit-active .summary td {
+  font-weight: bold;
+}
+
+.slack-channel-config.edit-active .summary td.inline-toolbar {
+  font-weight: normal;
+}
+
+.slack-channel-config.edit-active .summary-menu {
+  display: none;
+}

@@ -1,0 +1,42 @@
+/* Import global CSS variables */
+@import "global.css";
+
+:root {
+  --icon-colour: var(--medium-gray-color);
+  --icon-colour-hover: var(--charcoal-color);
+}
+
+.slack-issue-panel .confirm-remaining-accounts-sidebar {
+  margin: 10px 0;
+}
+
+.slack-issue-panel .aui-iconfont-remove-label {
+  color: var(--icon-colour);
+}
+
+.slack-issue-panel #slack-dedicated-channel-section .buttons-container span {
+  margin-left: 10px;
+}
+
+.slack-issue-panel #slack-dedicated-channel-section .buttons-container .aui-message {
+  margin: 10px 0 0 0;
+}
+
+.slack-issue-panel #slack-dedicated-channel-section .slack-dedicated-channel .trash-dedicated-channel {
+  padding-left: 10px;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.slack-issue-panel #slack-dedicated-channel-section .slack-dedicated-channel:hover .trash-dedicated-channel {
+  visibility: visible;
+}
+
+/* Replace the transition mixin with direct CSS properties */
+.slack-issue-panel #slack-dedicated-channel-section .slack-dedicated-channel:hover .trash-dedicated-channel {
+  -webkit-transition: opacity 1000ms ease-in-out;
+  -moz-transition: opacity 1000ms ease-in-out;
+  -ms-transition: opacity 1000ms ease-in-out;
+  -o-transition: opacity 1000ms ease-in-out;
+  transition: opacity 1000ms ease-in-out;
+}
