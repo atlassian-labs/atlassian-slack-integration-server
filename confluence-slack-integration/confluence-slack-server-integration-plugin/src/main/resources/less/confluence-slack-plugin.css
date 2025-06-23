@@ -1,0 +1,82 @@
+:root {
+  --toolbar-height: 35px;
+  --pale-blue-color: #ebf2f9;
+}
+
+.slack-configuration-page {
+  width: 800px;
+}
+
+.slack-configuration-page .slack-integration-steps {
+  margin: 0;
+  width: 100%;
+}
+
+.slack-configuration-page .slack-integration-steps .steps-complete {
+  display: none;
+}
+
+.slack-configuration-page .slack-integration-steps.complete .steps-complete {
+  display: table-cell;
+}
+
+.slack-configuration-page .slack-integration-steps.complete .steps-in-progress {
+  display: none;
+}
+
+.slack-configuration-page .slack-integration-step {
+  width: 33%;
+}
+
+.slack-configuration-page .slack-integration-admin {
+  margin: 0;
+}
+
+.slack-configuration-page .slack-integration-admin-image {
+  width: 200px;
+}
+
+.slack-configuration-page .slack-integration-admin-content h5.slack-integration-admin-content-title {
+  margin: 0 0 10px;
+  line-height: 1;
+}
+
+.slack-configuration-page .slack-integration-admin-content p + p {
+  margin-top: 0;
+}
+
+#dropdown-team-selector .selected a:not(:hover) {
+  background-color: var(--pale-blue-color);
+}
+
+#dropdown-team-selector .selected {
+  font-weight: bold;
+}
+
+.slack-configuration-toolbar {
+  float: right;
+  height: var(--toolbar-height);
+  line-height: 2.5; /* Calculated from (35.0 / 14.0) */
+  text-align: right;
+}
+
+.slack-configuration-title {
+  margin: 0 0 20px;
+}
+
+#admin-body-content .slack-space-to-channel-messages {
+  margin-top: 10px;
+}
+
+#admin-body-content #slack-space-to-channel-configuration {
+  margin-top: -52px;
+}
+
+#admin-body-content .slack-configuration-toolbar {
+  position: inherit;
+  float: unset;
+}
+
+#admin-body-content .slack-configuration-title {
+  display: none;
+}

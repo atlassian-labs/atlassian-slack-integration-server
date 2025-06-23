@@ -1,0 +1,32 @@
+.slack-jira-configure {
+  max-width: 1000px;
+}
+
+.slack-configuration-title {
+  margin-top: 0;
+}
+
+.slack-configuration-toolbar {
+  float: right;
+}
+
+.slack-configuration-toolbar > a,
+.slack-configuration-toolbar button {
+  margin-left: 10px;
+}
+
+.slack-notification-config-column {
+  float: left;
+}
+
+.slack-notification-config-column .notification-option-label {
+  margin-right: 10px;
+}
+
+.slack-notification-config-column.options {
+  margin-left: 20px;
+}
+
+.slack-notification-config-column.options .notification-option-checkbox {
+  margin-right: 7px;
+}
