@@ -23,7 +23,9 @@
 
         <!-- this is the version we will run integration tests against -->
         <jira.version>10.0.0</jira.version>
-        <testkit.version>10.0.3</testkit.version>
+        <testkit.version>10.3.5</testkit.version>
+        <!-- jira-testkit-client 10.3.5 transitively brings publicly unavailable jira-rest-api version -->
+        <jira.rest.api.version>10.5.1</jira.rest.api.version>
         <jira.test.unit.version>${jira.version}</jira.test.unit.version>
         <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
         <jira.data.version>${jira.version}</jira.data.version>
@@ -149,7 +151,16 @@
                         <groupId>commons-httpclient</groupId>
                         <artifactId>commons-httpclient</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.atlassian.jira</groupId>
+                        <artifactId>jira-rest-api</artifactId>
+                    </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.jira</groupId>
+                <artifactId>jira-rest-api</artifactId>
+                <version>${jira.rest.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.httpclient</groupId>
