@@ -1,0 +1,11 @@
+#slack-content header {
+  margin: 20px 0 10px 20px;
+}
+
+#slack-content table td {
+  vertical-align: middle;
+}
+
+#slack-content .aui-page-panel {
+  border-style: none;
+}
