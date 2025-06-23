@@ -37,9 +37,6 @@
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
 
         <resource type="download"
                   name="slack-feature/personal-notifications/personal-notifications.js"
@@ -48,8 +45,8 @@
                   name="slack-feature/personal-notifications/personal-notifications.soy"
                   location="slack-feature/personal-notifications/personal-notifications.soy"/>
         <resource type="download"
-                  name="slack-feature/personal-notifications/personal-notifications.less.css"
-                  location="slack-feature/personal-notifications/personal-notifications.less"/>
+                  name="slack-feature/personal-notifications/personal-notifications.css"
+                  location="slack-feature/personal-notifications/personal-notifications.css"/>
     </web-resource>
 
     <!-- global admin -->
@@ -101,13 +98,10 @@
 
     <!-- Global and util resources that should be included everywhere TODO delete? -->
     <web-resource key="global" name="slack-global-resources">
-        <transformation extension="less">
-            <transformer key="less-transformer"/>
-        </transformation>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
 
         <resource type="download" name="slack.js" location="js/slack-base.js"/>
-        <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.less"/>
+        <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.css"/>
     </web-resource>
 
     <!-- Project configuration -->
@@ -136,9 +130,6 @@
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
 
         <resource type="download" name="slack-feature-channelmapping-querymodule.js" location="js/slack-feature/channelmapping/querymodule.js"/>
         <resource type="download" name="slack-feature-channelmapping-mapping-setting.js" location="js/slack-feature/channelmapping/mapping-setting.js"/>
@@ -149,7 +140,7 @@
         <resource type="download" name="slack-feature-channelmapping-channelmapping-init.js" location="js/slack-feature/channelmapping/channelmapping-init.js"/>
 
         <resource type="download" name="slack-feature-channelmapping-channelmapping-client-soy.js" location="slack-soy/channelmapping/channelmapping-client.soy"/>
-        <resource type="download" name="slack-feature-channelmapping-channelmapping.css" location="js/slack-feature/channelmapping/channelmapping.less"/>
+        <resource type="download" name="slack-feature-channelmapping-channelmapping.css" location="js/slack-feature/channelmapping/channelmapping.css"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:global</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-widget-criteria-resources</dependency>
@@ -172,15 +163,12 @@
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
 
         <resource type="download" name="slack-widget-channelselector-channelmapping-service.js" location="js/slack-widget/channelselector/channelmapping-service.js"/>
         <resource type="download" name="slack-widget-channelselector-channelselector-view.js" location="js/slack-widget/channelselector/channelselector-view.js"/>
 
-        <resource type="download" name="slack-widget-channelselector-channelselector.css" location="slack-less/widget/channelselector/channelselector.less"/>
-        <resource type="download" name="slack-widget-channelselector-teamselector.less" location="slack-less/widget/channelselector/teamselector.less"/>
+        <resource type="download" name="slack-widget-channelselector-channelselector.css" location="slack-less/widget/channelselector/channelselector.css"/>
+        <resource type="download" name="slack-widget-channelselector-teamselector.css" location="slack-less/widget/channelselector/teamselector.css"/>
 
         <resource type="download" name="slack-widget-channelselector-channelselector-client-soy.js" location="slack-soy/widget/channelselector/channelselector-client.soy"/>
         <resource name="slack-issuepanel-client-soy.js" type="download" location="slack-soy/issuepanel/issuepanel-client.soy"/>
@@ -204,7 +192,7 @@
     <web-resource key="slack-project-config-resources">
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:feature-channelmapping-resources</dependency>
         <resource type="download" name="slack-settings.js" location="js/slack-feature/settings/slack-settings.js"/>
-        <resource type="download" name="slack-settings.css" location="css/slack-settings.less"/>
+        <resource type="download" name="slack-settings.css" location="css/slack-settings.css"/>
         <resource type="download" name="images/slack-autoconvert-preview.png" location="images/slack-autoconvert-preview.png"/>
         <context>jira.plugin.slack.project.configure</context>
     </web-resource>
@@ -362,13 +350,10 @@
 
     <!-- Global install -->
     <web-resource key="slack-jira-global-configuration-resources" name="Slack global configuration resources">
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
 
-        <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.less"/>
+        <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.css"/>
         <resource type="download" name="slack-settings.js" location="js/slack-feature/settings/slack-settings.js"/>
-        <resource type="download" name="slack-settings.css" location="css/slack-settings.less"/>
+        <resource type="download" name="slack-settings.css" location="css/slack-settings.css"/>
         <resource type="download" name="images/slack-autoconvert-preview.png" location="images/slack-autoconvert-preview.png"/>
 
         <context>slack-global-configuration-install</context>
@@ -424,9 +409,6 @@
         <transformation extension="js">
             <transformer key="jsI18n"/>
         </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
@@ -435,7 +417,7 @@
         <resource name="slack-issuepanel-client.soy" type="soy" location="slack-soy/issuepanel/issuepanel-client.soy"/>
         <resource name="slack-issuepanel-soy.js" type="download" location="slack-soy/issuepanel/issuepanel.soy"/>
         <resource name="slack-issuepanel-client-soy.js" type="download" location="slack-soy/issuepanel/issuepanel-client.soy"/>
-        <resource name="slack-issuepanel.css" type="download" location="slack-less/issuepanel.less"/>
+        <resource name="slack-issuepanel.css" type="download" location="slack-less/issuepanel.css"/>
         <resource name="slack-dedicatedchannel.js" type="download" location="js/slack-feature/issuepanel/dedicatedchannel.js"/>
         <resource name="slack-dedicatedchannel-view.js" type="download" location="js/slack-feature/issuepanel/dedicatedchannel-view.js"/>
         <resource name="slack-issuemention.js" type="download" location="js/slack-feature/issuepanel/issuemention.js"/>
@@ -486,11 +468,8 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
 
-        <resource type="download" name="slack-update-banner.css" location="slack-less/banner/update-banner.less"/>
+        <resource type="download" name="slack-update-banner.css" location="slack-less/banner/update-banner.css"/>
         <resource type="download" name="slack-update-slack-link-banner.js" location="js/banner/update-slack-link-banner.js" />
         <resource type="download" name="slack-update-slack-link-banner-client-soy.js" location="slack-soy/banner/update-slack-link-banner.soy" />
 
@@ -517,10 +496,6 @@
             </transformer>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
         <resource type="download" name="images/slack-logo.svg" location="images/slack-logo.svg">
             <param name="content-type" value="image/svg+xml"/>
@@ -529,7 +504,7 @@
             <param name="content-type" value="image/svg+xml"/>
         </resource>
         <resource type="download" name="js/slack-fuse.min.js" location="js/slack-fuse.min.js"/>
-        <resource type="download" name="slack-less/migrate-to-slack.less.css" location="slack-less/migrate-to-slack.less"/>
+        <resource type="download" name="slack-less/migrate-to-slack.css" location="slack-less/migrate-to-slack.css"/>
         <resource type="download" name="js/migrate-to-slack.js" location="js/migrate-to-slack.js" />
         <resource type="download" name="slack-soy/migrate-to-slack.soy.js" location="slack-soy/migrate-to-slack.soy"/>
 
@@ -576,13 +551,8 @@
     </web-panel>
 
     <web-resource key="slack-global">
-        <transformation extension="less">
-            <!-- lessTransformer is the legacy name for Jira, we can change it to less-transformer once we drop older version of Jira -->
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
-        <resource name="slack-global.css" type="download" location="stylesheets/slack-global.less"/>
+        <resource name="slack-global.css" type="download" location="stylesheets/slack-global.css"/>
 
         <dependency>com.atlassian.auiplugin:ajs</dependency>
     </web-resource>
@@ -597,12 +567,8 @@
             </transformer>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
-        <resource type="download" name="stylesheets/slack-main.css" location="stylesheets/slack-main.less"/>
+        <resource type="download" name="stylesheets/slack-main.css" location="stylesheets/slack-main.css"/>
         <resource type="download" name="admin/configure-slack.js" location="admin/configure-slack.js"/>
         <resource type="download" name="configure-slack.soy.js" location="admin/configure-slack.soy"/>
 
@@ -645,12 +611,8 @@
     </web-resource>
 
     <web-resource name="Slack Common Resources" key="base-slack-common-resources">
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
-        <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.less"/>
+        <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.css"/>
 
         <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-user-link-support</dependency>
@@ -685,12 +647,8 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
-        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.less"/>
+        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.css"/>
         <resource type="soy" name="slack-feature/integrationsteps/integrationsteps.soy" location="slack-feature/integrationsteps/integrationsteps.soy"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-global</dependency>
@@ -702,10 +660,6 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
         <transformation extension="soy">
             <transformer key="soyTransformer">
@@ -717,7 +671,7 @@
         <resource type="soy" name="slack-feature/connectionstatus/connectionstatus.soy" location="slack-feature/connectionstatus/connectionstatus.soy"/>
 
         <resource type="download" name="slack-feature/connectionstatus/connectionstatus.js" location="slack-feature/connectionstatus/connectionstatus.js"/>
-        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.less"/>
+        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.css"/>
 
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
@@ -752,12 +706,9 @@
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-user-link-support</dependency>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
 
         <resource name="oauth2/view-slack-oauth-sessions.soy" type="soy" location="oauth2/view-slack-oauth-sessions.soy"/>
-        <resource name="oauth2/view-slack-oauth-sessions.less.css" type="download" location="oauth2/view-slack-oauth-sessions.less"/>
+        <resource name="oauth2/view-slack-oauth-sessions.css" type="download" location="oauth2/view-slack-oauth-sessions.css"/>
     </web-resource>
 
     <servlet name="View OAuth Slack Servlet" key="slack-view-oauth-servlet"
