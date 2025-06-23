@@ -1,0 +1,179 @@
+/* Import global CSS variables */
+@import "../../stylesheets/slack-global.css";
+
+/*
+ * Wizard style progress indicator
+ */
+:root {
+  --step-number-diameter: 32px;
+  --large-border-radius: 5px;
+}
+
+.slack-server-integration-steps-container {
+  text-align: center;
+}
+
+.slack-server-integration-steps-container .slack-not-linked {
+  margin: 40px 0;
+}
+
+.slack-server-integration-steps-container #slack-install {
+  margin-top: 30px;
+}
+
+.slack-server-integration-steps {
+  display: table;
+  margin: 30px 0;
+  padding: 0;
+  counter-reset: step;
+}
+
+.slack-server-integration-steps .slack-server-integration-step {
+  display: table-cell;
+  position: relative;
+  padding: 0 10px 0 calc(var(--step-number-diameter) + 10px);
+}
+
+.slack-server-integration-steps .slack-server-integration-step:before {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: var(--step-number-diameter);
+  line-height: 2.29; /* Calculated from (32.0 / 14.0) */
+  width: var(--step-number-diameter);
+  background: var(--cheeto-orange-color);
+  border-radius: calc(var(--step-number-diameter) / 2);
+  text-align: center;
+  color: var(--white-color);
+  counter-increment: step;
+  content: counter(step);
+}
+
+.slack-server-integration-steps .slack-server-integration-step.checked:before {
+  background: var(--green-color);
+  font-weight: bold;
+  content: '\2713';
+}
+
+.slack-server-integration-steps .slack-server-integration-step:first-child {
+  min-width: 150px;
+}
+
+.slack-server-integration-steps .slack-server-integration-step:last-child {
+  padding-right: 0;
+}
+
+.slack-server-integration-steps .slack-server-integration-step .slack-server-integration-step-title {
+  line-height: 1;
+  color: var(--medium-gray-color);
+}
+
+.slack-server-integration-steps .slack-server-integration-step .slack-server-integration-step-content {
+  margin-top: 10px;
+}
+
+.slack-server-integration-steps.start {
+  margin: 0 auto;
+  width: 600px;
+  border: var(--default-border);
+  border-radius: var(--large-border-radius);
+  padding: 20px;
+  text-align: left;
+}
+
+.slack-server-integration-steps.start .slack-server-integration-step {
+  width: 33%;
+}
+
+.slack-server-integration-steps .steps-complete {
+  display: none;
+}
+
+.slack-server-integration-steps .slack-server-integration-step {
+  padding-right: 30px;
+}
+
+.slack-server-integration-steps.complete .steps-complete {
+  display: table-cell;
+}
+
+.slack-server-integration-steps.complete .steps-in-progress {
+  display: none;
+}
+
+.slack-server-integration-admin {
+  margin: 20px 0 20px 0;
+}
+
+.slack-server-integration-admin-image {
+  width: 150px;
+}
+
+.slack-server-integration-admin-content {
+  vertical-align: middle !important;
+}
+
+.slack-server-integration-admin-content-title {
+  margin: 0 0 10px;
+  line-height: 1;
+}
+
+.slack-server-integration-admin-content p + p {
+  margin-top: 0;
+}
+
+.slack-reinstall .aui-icon-wait {
+  display: none;
+}
+
+.slack-scopes-warning-container {
+  padding-top: 10px;
+}
+
+.slack-scopes-warning {
+  margin-top: 10px;
+}
+
+/* Follow the same styles as the Confluence discovery dialog */
+.slack-invite-user-help.aui-inline-dialog .contents {
+  border-color: var(--cheeto-orange-color);
+  border-width: 2px;
+}
+
+.slack-invite-user-help.aui-inline-dialog .contents h4:first-child {
+  color: #707070;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.slack-invite-user-help.aui-inline-dialog .contents .helptip-body {
+  margin: 5px 0 0 0;
+}
+
+.slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow::after,
+.slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow::before {
+  border-color: var(--cheeto-orange-color) transparent;
+}
+
+.slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow::after {
+  border-bottom-color: #ffffff;
+  top: 2px;
+}
+
+.slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow.aui-bottom-arrow::after {
+  border-top-color: #ffffff;
+  top: -2px;
+}
+
+.slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow::after,
+.slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow::before {
+  border-color: transparent var(--cheeto-orange-color);
+}
+
+.slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow::after {
+  border-color: transparent #ffffff transparent transparent;
+  right: -2px;
+  top: 0px;
+}
