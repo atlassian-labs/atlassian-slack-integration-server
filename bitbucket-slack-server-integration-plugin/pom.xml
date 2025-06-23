@@ -38,7 +38,7 @@
         <atlassian.spring.scanner.version>2.1.7</atlassian.spring.scanner.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
-        <atlassian.selenium.version>3.0.0</atlassian.selenium.version>
+        <atlassian.selenium.version>3.3.3</atlassian.selenium.version>
         <atlassian-json-api.version>0.9</atlassian-json-api.version>
         <atlassian-concurrent.version>3.0.0</atlassian-concurrent.version>
         <commons-codec.version>1.11</commons-codec.version>
