@@ -23,11 +23,6 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
-            <artifactId>jira-8-compat</artifactId>
-            <version>${slack.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
             <artifactId>jira-service-desk-compat-main</artifactId>
             <version>${slack.common.version}</version>
         </dependency>
