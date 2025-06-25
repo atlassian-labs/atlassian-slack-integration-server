@@ -1,19 +1,9 @@
-/* Import global CSS variables */
-@import "slack-global.css";
-
 :root {
-  --heading-colour: var(--blue-color);
-  --alert-colour: var(--warm-red-color);
-  --alert-text: var(--white-color);
-  --warning-colour: var(--yellow-color);
-  --info-text-colour: var(--medium-gray-color);
-  --disabled-colour: var(--ash-gray-color);
   --step-number-diameter: 32px;
-  --large-border-radius: 5px;
 }
 
 #slack-server-failure .slack-failure-marker {
-  color: var(--warning-colour);
+  color: var(--ds-text-warning);
 }
 
 #slack-server-failure .details {
@@ -29,7 +19,7 @@
 }
 
 #slack-configure h2 {
-  color: var(--heading-colour);
+  color: var(--ds-text);
   margin-top: 0;
 }
 
@@ -59,7 +49,7 @@
 #slack-uninstalling button,
 #slack-installed button {
   margin-top: 20px;
-  color: var(--info-text-colour);
+  color: var(--ds-text-subtlest);
 }
 
 #slack-installing p,
@@ -79,8 +69,8 @@
 }
 
 #slack-remove-link-dialog .dialog-title {
-  background-color: var(--alert-colour);
-  color: var(--alert-text);
+  background-color: var(--ds-background-danger-bold);
+  color: var(--ds-text-inverse);
 }
 
 .slack-install-form #slack-btf-install {
@@ -121,10 +111,6 @@
   margin: 0;
 }
 
-.slack-connect-edit-page {
-  /* width: 500px; */
-}
-
 /* integration steps */
 .slack-server-connections-steps {
   display: table;
@@ -148,16 +134,16 @@
   height: var(--step-number-diameter);
   line-height: 2.29; /* Calculated from (32.0 / 14.0) */
   width: var(--step-number-diameter);
-  background: var(--cheeto-orange-color);
+  background: var(--ds-background-warning-bold);
   border-radius: calc(var(--step-number-diameter) / 2);
   text-align: center;
-  color: var(--white-color);
+  color: var(--ds-text-inverse);
   counter-increment: step;
   content: counter(step);
 }
 
 .slack-server-connections-steps .slack-server-connections-step.checked:before {
-  background: var(--green-color);
+  background: var(--ds-text-success);
   font-weight: bold;
   content: '\2713';
 }

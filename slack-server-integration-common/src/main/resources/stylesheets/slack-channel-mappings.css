@@ -1,32 +1,6 @@
-/* Import global CSS variables */
-@import "slack-global.css";
-
 :root {
-  --selected-background: var(--pale-blue-color);
-  --icon-colour: var(--medium-gray-color);
-  --icon-colour-hover: var(--charcoal-color);
-  --shaded: var(--light-gray-color);
-  --error-colour: var(--warm-red-color);
-  --form-label-text-colour: var(--medium-gray-color);
   --icon-height: 16px;
   --has-arrow-field-width: 300px;
-}
-
-/* Text overflow utility class to replace the mixin */
-.text-overflow-ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.slack-channel-mappings {
-  /* Makes sure that the arrows are aligned in the form and the table */
-}
-
-.slack-channel-mappings .mapping-arrow {
-  position: absolute;
-  right: 10px;
-  color: var(--icon-colour);
 }
 
 .slack-channel-mappings .has-arrow {
@@ -34,6 +8,17 @@
   padding-right: 40px;
   width: var(--has-arrow-field-width);
   box-sizing: border-box;
+}
+
+/* Makes sure that the arrows are aligned in the form and the table */
+.slack-channel-mappings .mapping-arrow,
+.slack-channel-mapping-form .mapping-arrow,
+.slack-channel-mapping-list .mapping-arrow {
+  right: var(--ds-space-100);
+  position: absolute;
+  top: 50%;
+  color: var(--ds-icon-subtle);
+  margin-top: calc(-1 * var(--aui-icon-size) / 2);
 }
 
 .mapping-origin-label {
@@ -68,12 +53,6 @@
   margin-left: 10px;
 }
 
-.slack-channel-mapping-form .mapping-arrow {
-  display: inline-block;
-  height: 30px;
-  line-height: 30px;
-}
-
 .slack-channel-mapping-form .mapping-arrow + .aui-select2-container {
   margin-left: 10px;
 }
@@ -85,11 +64,6 @@
 /* The channel mapping table */
 .slack-channel-mapping-list .header {
   border-top: var(--default-border);
-}
-
-/* Makes sure the arrow is aligned vertically */
-.slack-channel-mapping-list .mapping-arrow {
-  margin-top: 2px; /* Calculated from ((20px - var(--icon-height)) / 2px) */
 }
 
 .slack-channel-mapping-list .slack-team-mapping-field,
@@ -111,11 +85,11 @@
 }
 
 .slack-channel-mapping-list .inline-toolbar .aui-iconfont-remove {
-  color: var(--icon-colour);
+  color: var(--ds-text);
 }
 
 .slack-channel-mapping-list .inline-toolbar .aui-iconfont-remove:hover {
-  color: var(--icon-colour-hover);
+  color: var(--ds-icon);
 }
 
 .slack-channel-mapping-list .slack-notification-types,

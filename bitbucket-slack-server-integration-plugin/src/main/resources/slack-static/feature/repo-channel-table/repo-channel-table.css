@@ -1,23 +1,13 @@
-/* Import global CSS from Atlassian UI */
-@import "webstatic:/static/global.css";
-
 :root {
   --arrow-size: 30px;
   --page-width: 800px;
-  --base-spacing: 10px; /* Assumed value based on common practices */
-  --double-spacing: 20px; /* Assumed value based on common practices */
 }
 
 .has-arrow {
   box-sizing: border-box;
-  padding-right: calc(var(--arrow-size) + var(--base-spacing));
+  padding-right: calc(var(--arrow-size) + var(--ds-space-100));
   position: relative;
   width: 300px;
-}
-
-.has-arrow .mapping-arrow {
-  right: var(--base-spacing);
-  position: absolute;
 }
 
 .slack-channel-mapping-list {
@@ -73,7 +63,7 @@
 }
 
 .slack-channel-mapping-list .notifications-heading {
-  margin: 0 0 var(--base-spacing) var(--base-spacing);
+  margin: 0 0 var(--ds-space-100) var(--ds-space-100);
 }
 
 .slack-channel-mapping-list .notifications {
@@ -84,7 +74,7 @@
 
 .slack-channel-mapping-list .notifications > li {
   display: inline-block;
-  padding-left: var(--base-spacing);
+  padding-left: var(--ds-space-100);
   vertical-align: top;
   padding-right: 100px;
 }
@@ -102,7 +92,7 @@
 }
 
 .slack-channel-mapping-list .notifications hr {
-  border: 0.5px solid #eee;
+  border: 0.5px solid var(--ds-border);
   margin: 3px auto;
 }
 
@@ -110,7 +100,7 @@
 .slack-channel-mapping-list .option-group {
   display: inline-block;
   margin: 0;
-  padding-left: var(--base-spacing);
+  padding-left: var(--ds-space-100);
 }
 
 .slack-channel-mapping-list .notification-group > li,
@@ -120,7 +110,7 @@
 
 .slack-channel-mapping-list .notification-group .notification-option-label,
 .slack-channel-mapping-list .option-group .notification-option-label {
-  margin-right: var(--base-spacing);
+  margin-right: var(--ds-space-100);
 }
 
 .slack-channel-mapping-list .channel-name {

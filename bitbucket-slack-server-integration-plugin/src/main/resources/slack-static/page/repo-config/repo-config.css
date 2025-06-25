@@ -1,15 +1,11 @@
-/* Import global CSS */
-@import "webstatic:/static/global.css";
-@import "../bitbucket-slack-plugin.css";
-
 :root {
   --arrow-size: 30px;
-  --base-spacing: 10px; /* Assumed value based on common practices */
-  --double-spacing: 20px; /* Assumed value based on common practices */
+  --base-spacing: 10px;
+  --double-spacing: 20px;
 }
 
 .error-message {
-  color: var(--error-text-color); /* Assuming this is defined in global CSS */
+  color: var(--ds-text-danger);
   margin-top: 5px;
 }
 
@@ -29,10 +25,6 @@
 .slack-repo-mapping-form .has-arrow .mapping-origin-label {
   line-height: var(--arrow-size);
   vertical-align: middle;
-}
-
-.slack-repo-mapping-form .has-arrow .mapping-arrow {
-  height: var(--arrow-size);
 }
 
 .slack-config-header {

@@ -1,10 +1,3 @@
-/* Import global CSS variables */
-@import "global.css";
-
-:root {
-  --icon-colour: var(--medium-gray-color);
-}
-
 button.migrate-to-slack {
   vertical-align: bottom;
   padding: 4px;
@@ -33,7 +26,7 @@ button.migrate-to-slack .slack-logo-image.migrated {
 }
 
 #migrate-to-slack-dialog .dialog-errors {
-  color: var(--warm-red-color);
+  color: var(--ds-text-danger);
   padding: 5px 20px;
 }
 
@@ -63,7 +56,7 @@ button.migrate-to-slack .slack-logo-image.migrated {
 }
 
 #migrate-to-slack-dialog form.slack-channel-select-form .mapping-arrow {
-  color: var(--icon-colour);
+  color: var(--ds-icon-subtle);
 }
 
 #migrate-to-slack-dialog form.slack-channel-select-form .aui-item {
@@ -74,9 +67,9 @@ button.migrate-to-slack .slack-logo-image.migrated {
 #migrate-to-slack-dialog form.slack-channel-select-form .room-name {
   padding: 4px;
   margin-top: 11px;
-  border: 1px solid var(--divider-color);
+  border: var(--default-border);
   border-radius: 3px;
-  background-color: var(--light-gray-color);
+  background-color: var(--ds-background-neutral);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

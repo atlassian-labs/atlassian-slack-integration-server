@@ -1,16 +1,9 @@
 :root {
-  --default-border: 1px solid #ccc;
-  --selected-background: #e6f0fa; /* Replace with actual value of @paleBlueColor */
-  --icon-colour: #888888; /* Replace with actual value of @mediumGrayColor */
-  --icon-colour-hover: #333333; /* Replace with actual value of @charcoalColor */
-  --shaded: #f5f5f5; /* Replace with actual value of @lightGrayColor */
-  --error-colour: #e74c3c; /* Replace with actual value of @warmRedColor */
-  --form-label-text-colour: #888888; /* Replace with actual value of @mediumGrayColor */
   --cell-width: 250px;
 }
 
 #dropdown-team-selector .selected a:not(:hover) {
-  background-color: var(--selected-background);
+  background-color: var(--ds-background-selected);
 }
 #dropdown-team-selector .selected {
   font-weight: bold;
@@ -87,10 +80,10 @@
   float: right;
 }
 #slack-channel-configuration table .inline-toolbar .aui-iconfont-delete {
-  color: var(--icon-colour);
+  color: var(--ds-text);
 }
 #slack-channel-configuration table .inline-toolbar .aui-iconfont-delete:hover {
-  color: var(--icon-colour-hover);
+  color: var(--ds-icon);
 }
 #slack-channel-configuration table .inline-toolbar .trash-channel-mapping .aui-icon {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAcCAYAAAB75n/uAAAAAXNSR0IArs4c6QAAAWJJREFUSA3tVj1uwjAUrk3FVC4Q9RwkB+iAWJgyUqkjS5IbECqxJ5nYKlCvUHXp2A7JzAHoGVgAKTGfIxw5KK4phAGEJcvv/9nfi19M7tSDuK4bEEJeYNKqMFsyxt7CMPSgYxX6XERUCsdxupTSD5VekneDIPiU+BJ5X+IkBsHbO3aEAL6kyknP87hsiGliKhNQKCtHlmVAgK2gXFcaHCgktm03DcN4B9Y9+DQP9PvLrFQbiuB9BLdrCs4TtxDPAYQdzlDA8MiJugcgzmuorEHdCS83XnHRcLGG+Pb9U48C7P0oikYiztlrcMUJcD8W6EGErxxPHS8w31+vGKL9ox7L3yDSIneDSAtR0U3xBnrGr26q9dAYoJsO0E0nwqyoQZqmX0J47Ip2wpDgR/ZvCCZJkqVpmmuc4knI/rvCF5uPZrJfkYAL4zj+tizrF+QDNmPAQfkwk4JsQM8xX9Ecx5I8J7eeHn3WhK1k5gAAAABJRU5ErkJggg==) no-repeat center center transparent;
@@ -142,7 +135,7 @@
 }
 #slack-channel-configuration table .group ul.issue-events .criteria-list button {
   margin-left: 20px;
-  border-color: #cccccc;
+  border-color: var(--ds-border);
 }
 #slack-channel-configuration table .group ul.transition-criteria {
   display: inline-block;
@@ -156,8 +149,8 @@ button.criteria-selector {
   margin-top: 10px;
 }
 #slack-remove-link .remove-warning {
-  background-color: var(--error-colour);
-  color: #fff;
+  background-color: var(--ds-background-danger-bold);
+  color: var(--ds-text-inverse);
 }
 .query-component.slack-styled .search-container .criteria-list li {
   display: none;
@@ -176,7 +169,7 @@ button.criteria-selector {
 .query-component.slack-styled .search-container .criteria-list li button {
   margin-left: 12px;
   height: 30px;
-  border-color: #cccccc;
+  border-color: var(--ds-border);
 }
 .query-component.slack-styled .search-container .criteria-list li:first-child button {
   margin-left: 0;
@@ -199,5 +192,5 @@ button.criteria-selector {
 .aui-list .slack-login-dropdown-footer a,
 .aui-list .slack-login-dropdown-footer a:hover {
   text-decoration: none;
-  color: #3572b0;
+  color: var(--ds-link);
 }
