@@ -2,15 +2,15 @@
 @import "global.css";
 
 html {
-  background: white;
+  background: var(--ds-surface);
 }
 
 body {
-  background: white;
+  background: var(--ds-surface);
 }
 
 #footer-logo {
-  background: white;
+  background: var(--ds-surface);
 }
 
 .config-in-slack {
@@ -49,11 +49,11 @@ body {
 }
 
 .config-in-slack .slack-config-notifications-instructions-text .aui-icon {
-  color: var(--medium-gray-color);
+  color: var(--ds-text-subtlest);
 }
 
 .config-in-slack .slack-config-notifications-instructions-text .aui-icon-description {
-  color: var(--medium-gray-color);
+  color: var(--ds-text-subtlest);
 }
 
 .config-in-slack .slack-config-notifications-instructions-text .slack-config-notifications-instructions-text-counter {
@@ -61,10 +61,10 @@ body {
   height: 24px;
   line-height: 1.71; /* Calculated from (24.0 / 14.0) */
   width: 24px;
-  background: var(--bright-blue-color);
+  background: var(--ds-icon-brand);
   border-radius: 12px; /* Calculated from (24px / 2px) */
   text-align: center;
-  color: white;
+  color: var(--ds-text-inverse);
   margin-right: 10px;
 }
 

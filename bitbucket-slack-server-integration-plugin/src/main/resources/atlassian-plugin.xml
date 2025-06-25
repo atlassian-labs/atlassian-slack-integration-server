@@ -112,6 +112,7 @@
         <dependency>${plugin.key}:repo-channel-table</dependency>
         <dependency>${plugin.key}:slack-channel-selector</dependency>
         <dependency>${plugin.key}:base-slack-common-resources</dependency>
+        <dependency>${plugin.key}:slack-css</dependency>
 
         <context>bitbucket.page.repo.slack.settings</context>
     </client-resource>
@@ -128,6 +129,7 @@
         <dependency>${plugin.key}:repo-channel-table</dependency>
         <dependency>${plugin.key}:slack-channel-selector</dependency>
         <dependency>${plugin.key}:base-slack-common-resources</dependency>
+        <dependency>${plugin.key}:slack-css</dependency>
 
         <context>slack-global-configuration</context>
         <context>slack-global-configuration-install</context>
@@ -287,6 +289,7 @@
         <!-- to show connection status tooltip on channel mapping page -->
         <dependency>com.atlassian.auiplugin:aui-inline-dialog2</dependency>
     </web-resource>
+
     <!-- JS and styles for configuration pages -->
     <web-resource name="Slack Link Screen Resources" key="slack-base-link-resources">
         <transformation extension="js">
@@ -311,6 +314,7 @@
         <context>admin</context>
         <context>atl.admin</context>
     </web-resource>
+
     <!-- JS for Workspace connection page -->
     <web-resource name="Connect to Slack Workspace" key="slack-connect-workspace-resources">
         <transformation extension="js">
@@ -334,6 +338,7 @@
             <param name="content-type" value="image/svg+xml"/>
         </resource>
     </web-resource>
+
     <!-- User OAuth flow redirecting links JS -->
     <web-resource key="slack-user-link-support">
         <transformation extension="js">
@@ -357,6 +362,7 @@
         <resource type="download" name="cookie/js.cookie.js" location="cookie/js.cookie.js"/>
         <resource type="download" name="links/slack-links.js" location="links/slack-links.js"/>
     </web-resource>
+
     <!-- Channel mapping styles -->
     <web-resource name="Slack Common Resources" key="base-slack-common-resources">
         
