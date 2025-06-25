@@ -1,6 +1,3 @@
-/* Import global CSS variables */
-@import "../../stylesheets/slack-global.css";
-
 /*
  * Wizard style progress indicator
  */
@@ -42,16 +39,16 @@
   height: var(--step-number-diameter);
   line-height: 2.29; /* Calculated from (32.0 / 14.0) */
   width: var(--step-number-diameter);
-  background: var(--cheeto-orange-color);
+  background: var(--ds-background-warning-bold);
   border-radius: calc(var(--step-number-diameter) / 2);
   text-align: center;
-  color: var(--white-color);
+  color: var(--ds-text-inverse);
   counter-increment: step;
   content: counter(step);
 }
 
 .slack-server-integration-steps .slack-server-integration-step.checked:before {
-  background: var(--green-color);
+  background: var(--ds-text-success);
   font-weight: bold;
   content: '\2713';
 }
@@ -137,7 +134,7 @@
 
 /* Follow the same styles as the Confluence discovery dialog */
 .slack-invite-user-help.aui-inline-dialog .contents {
-  border-color: var(--cheeto-orange-color);
+  border-color: var(--ds-background-warning-bold);
   border-width: 2px;
 }
 
@@ -154,7 +151,7 @@
 
 .slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow::after,
 .slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow::before {
-  border-color: var(--cheeto-orange-color) transparent;
+  border-color: var(--ds-background-warning-bold) transparent;
 }
 
 .slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow::after {
@@ -169,7 +166,7 @@
 
 .slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow::after,
 .slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow::before {
-  border-color: transparent var(--cheeto-orange-color);
+  border-color: transparent var(--ds-background-warning-bold);
 }
 
 .slack-invite-user-help.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow::after {

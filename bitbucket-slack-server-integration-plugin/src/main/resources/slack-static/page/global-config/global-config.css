@@ -1,12 +1,6 @@
-/* Import global CSS */
-@import "webstatic:/static/global.css";
-@import "../bitbucket-slack-plugin.css";
-
 :root {
   --arrow-size: 30px;
   --page-width: 800px;
-  --base-spacing: 10px; /* Assumed value based on common practices */
-  --double-spacing: 20px; /* Assumed value based on common practices */
 }
 
 .slack-configuration-page {
@@ -14,7 +8,7 @@
 }
 
 .slack-bitbucket-configure-more {
-  margin-top: var(--double-spacing);
+  margin-top: var(--ds-space-200);
 }
 
 .slack-setup-additional-channels {
@@ -27,19 +21,15 @@
 }
 
 .slack-repo-mapping-form #slack-repo-to-channel-add {
-  margin-left: var(--base-spacing);
+  margin-left: var(--ds-space-100);
 }
 
 .slack-repo-mapping-form .has-arrow {
   display: inline-block;
-  margin-left: var(--base-spacing);
+  margin-left: var(--ds-space-100);
 }
 
 .slack-repo-mapping-form .has-arrow .mapping-origin-label {
   line-height: var(--arrow-size);
   vertical-align: middle;
-}
-
-.slack-repo-mapping-form .has-arrow .mapping-arrow {
-  height: var(--arrow-size);
 }
