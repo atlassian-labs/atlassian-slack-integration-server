@@ -45,13 +45,13 @@
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
         <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
-        <bitbucket.rest.api.version>9.0.0-plat-7-m20</bitbucket.rest.api.version>
-        <bitbucket.version>9.0.0</bitbucket.version>
+        <bitbucket.rest.api.version>10.0.0-m8</bitbucket.rest.api.version>
+        <bitbucket.version>10.0.0-m8</bitbucket.version>
         <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements -->
-        <bitbucket.page.objects.version>9.0.0</bitbucket.page.objects.version>
-        <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
+        <bitbucket.page.objects.version>10.0.0-m8</bitbucket.page.objects.version>
+        <bitbucket.amps.version>9.3.6</bitbucket.amps.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <platform.version>7.2.6</platform.version>
+        <platform.version>8.0.0-m16</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -135,13 +135,13 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-api</artifactId>
+            <artifactId>bitbucket-rest-v2-api</artifactId>
             <version>${bitbucket.rest.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-model</artifactId>
+            <artifactId>bitbucket-rest-v2-model</artifactId>
             <version>${bitbucket.rest.api.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -348,7 +348,7 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.19</version>
+            <version>1.17.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -438,7 +438,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>2.42</version>
             <scope>test</scope>
         </dependency>
         <dependency>

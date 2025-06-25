@@ -1,6 +1,6 @@
 package com.atlassian.plugins.slack.admin;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 public interface XsrfTokenGenerator {

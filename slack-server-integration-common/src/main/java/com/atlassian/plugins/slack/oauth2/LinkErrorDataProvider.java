@@ -7,7 +7,7 @@ import com.atlassian.webresource.api.data.WebResourceDataProvider;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class LinkErrorDataProvider implements WebResourceDataProvider {
