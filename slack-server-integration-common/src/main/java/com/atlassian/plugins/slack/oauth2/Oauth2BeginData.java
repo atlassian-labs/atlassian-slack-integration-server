@@ -2,7 +2,7 @@ package com.atlassian.plugins.slack.oauth2;
 
 import com.atlassian.sal.api.user.UserKey;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public final class Oauth2BeginData {
     private final HttpServletRequest servletRequest;

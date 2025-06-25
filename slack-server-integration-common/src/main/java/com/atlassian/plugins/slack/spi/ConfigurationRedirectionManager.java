@@ -1,6 +1,6 @@
 package com.atlassian.plugins.slack.spi;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Optional;
 

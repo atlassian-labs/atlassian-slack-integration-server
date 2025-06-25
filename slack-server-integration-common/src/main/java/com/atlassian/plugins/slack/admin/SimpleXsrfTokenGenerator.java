@@ -4,8 +4,8 @@ import com.atlassian.security.random.DefaultSecureTokenGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Component
 public class SimpleXsrfTokenGenerator implements XsrfTokenGenerator {

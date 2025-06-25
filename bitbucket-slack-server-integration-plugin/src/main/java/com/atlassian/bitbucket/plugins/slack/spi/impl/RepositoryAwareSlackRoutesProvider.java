@@ -5,7 +5,7 @@ import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public class RepositoryAwareSlackRoutesProvider implements SlackRoutesProvider {
