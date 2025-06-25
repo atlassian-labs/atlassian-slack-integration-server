@@ -1,0 +1,189 @@
+:root {
+  --step-number-diameter: 32px;
+}
+
+#slack-server-failure .slack-failure-marker {
+  color: var(--ds-text-warning);
+}
+
+#slack-server-failure .details {
+  margin-left: 20px;
+}
+
+#slack-configure {
+  margin-top: 0;
+}
+
+#slack-configure #slack-install {
+  margin: 20px 0 10px;
+}
+
+#slack-configure h2 {
+  color: var(--ds-text);
+  margin-top: 0;
+}
+
+#jira #slack-configuration-panel {
+  margin: 0px;
+}
+
+#jira #slack-configuration-panel .slack-user {
+  font-weight: 700;
+}
+
+#slack-installing,
+#slack-uninstalling,
+#slack-installed {
+  max-width: 800px;
+  text-align: center;
+  margin-top: 80px;
+}
+
+#slack-installing h5,
+#slack-uninstalling h5,
+#slack-installed h5 {
+  margin-bottom: 10px;
+}
+
+#slack-installing button,
+#slack-uninstalling button,
+#slack-installed button {
+  margin-top: 20px;
+  color: var(--ds-text-subtlest);
+}
+
+#slack-installing p,
+#slack-uninstalling p,
+#slack-installed p {
+  margin: 0;
+}
+
+#slack-installing .slack-install-message,
+#slack-uninstalling .slack-install-message {
+  height: 80px;
+}
+
+#slack-remove-link-dialog {
+  /* TODO CONFDEV-28519 ADG 2 - Evil hacks to make this look ADG 2 */
+  border: 0;
+}
+
+#slack-remove-link-dialog .dialog-title {
+  background-color: var(--ds-background-danger-bold);
+  color: var(--ds-text-inverse);
+}
+
+.slack-install-form #slack-btf-install {
+  display: none;
+}
+
+.slack-install-form #btf-error {
+  display: none;
+}
+
+.slack-install-form.slack-btf #slack-install {
+  display: none;
+}
+
+.slack-install-form.slack-btf #slack-btf-install {
+  display: block;
+}
+
+.slack-install-form.slack-btf #btf-error {
+  display: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.slack-credentials-input {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #f5f5f5;
+}
+
+.slack-connect-workspace-submit-container {
+  padding: 0;
+  margin: 0;
+}
+
+/* integration steps */
+.slack-server-connections-steps {
+  display: table;
+  margin: 30px 0;
+  padding: 0;
+  counter-reset: step;
+}
+
+.slack-server-connections-steps .slack-server-connections-step {
+  display: block;
+  position: relative;
+  padding: 0 10px 0 calc(var(--step-number-diameter) + 10px);
+  margin-top: 30px;
+}
+
+.slack-server-connections-steps .slack-server-connections-step:before {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: var(--step-number-diameter);
+  line-height: 2.29; /* Calculated from (32.0 / 14.0) */
+  width: var(--step-number-diameter);
+  background: var(--ds-background-warning-bold);
+  border-radius: calc(var(--step-number-diameter) / 2);
+  text-align: center;
+  color: var(--ds-text-inverse);
+  counter-increment: step;
+  content: counter(step);
+}
+
+.slack-server-connections-steps .slack-server-connections-step.checked:before {
+  background: var(--ds-text-success);
+  font-weight: bold;
+  content: '\2713';
+}
+
+.slack-server-connections-steps .slack-server-connections-step:first-child {
+  margin-top: 0;
+}
+
+.slack-server-connections-steps .slack-server-connections-step .slack-server-connections-step-title {
+  font-weight: bold;
+}
+
+.slack-server-connections-steps .slack-server-connections-step .slack-server-connections-step-content {
+  margin-top: 10px;
+}
+
+.slack-server-connections-steps .slack-server-connections-step .slack-server-connections-step-content .radio {
+  display: inline-block;
+  padding-right: 72px;
+}
+
+.slack-server-connections-steps .slack-server-connections-step .slack-server-connections-step-content .active-tooltip {
+  padding-right: 8px;
+}
+
+.slack-server-connections-steps .slack-server-connections-step .slack-server-connections-step-content #slack-go-to {
+  margin-top: 10px;
+}
+
+.slack-server-connections-steps .slack-server-connections-step .slack-server-connections-step-content #slack-paste-credentials {
+  margin-bottom: 10px;
+}
+
+.slack-server-connections-steps.start {
+  margin: 0;
+  width: 700px;
+  padding: 20px;
+  text-align: left;
+}
+
+.slack-server-connections-steps.start .slack-server-connections-step {
+  width: 600px;
+}

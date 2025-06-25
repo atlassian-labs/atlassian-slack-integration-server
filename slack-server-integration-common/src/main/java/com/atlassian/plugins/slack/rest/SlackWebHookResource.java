@@ -100,7 +100,15 @@ public class SlackWebHookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @AnonymousSiteAccess
     @SlackSignatureVerifying
-    public Response webEvent(@Context final HttpServletRequest request, final JsonNode eventPayload) {
+    public Response webEvent(@Context final HttpServletRequest request) {
+        final JsonNode eventPayload;
+        try {
+            eventPayload = OBJECT_MAPPER.readTree(request.getReader());
+        } catch (IOException e) {
+            log.error("Failed to parse event payload", e);
+            throw new RuntimeException(e);
+        }
+
         if (TYPE_URL_VERIFICATION.equals(eventPayload.path(EVENT_TYPE).asText())) {
             return Response
                     .ok(eventPayload.path("challenge").asText())

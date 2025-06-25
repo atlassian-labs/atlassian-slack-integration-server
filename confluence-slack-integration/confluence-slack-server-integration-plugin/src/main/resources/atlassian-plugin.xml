@@ -48,9 +48,7 @@
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
+        
 
         <resource type="download"
                   name="slack-feature/personal-notifications/personal-notifications.js"
@@ -59,8 +57,8 @@
                   name="slack-feature/personal-notifications/personal-notifications.soy"
                   location="slack-feature/personal-notifications/personal-notifications.soy"/>
         <resource type="download"
-                  name="slack-feature/personal-notifications/personal-notifications.less.css"
-                  location="slack-feature/personal-notifications/personal-notifications.less"/>
+                  name="slack-feature/personal-notifications/personal-notifications.css"
+                  location="slack-feature/personal-notifications/personal-notifications.css"/>
     </web-resource>
 
     <!-- Space config -->
@@ -113,14 +111,11 @@
     </web-resource>
 
     <web-resource key="slack-global-css-resources" name="Slack CSS and related resources">
-        <transformation extension="less">
-            <transformer key="less-transformer"/>
-        </transformation>
 
         <resource name="confluence-slack-space-to-channel-notifications-plugin.css" type="download"
-                  location="less/confluence-slack-space-to-channel-notifications-plugin.less"/>
+                  location="less/confluence-slack-space-to-channel-notifications-plugin.css"/>
         <resource name="confluence-slack-plugin.css" type="download"
-                  location="less/confluence-slack-plugin.less"/>
+                  location="less/confluence-slack-plugin.css"/>
 
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:base-slack-common-resources</dependency>
@@ -320,12 +315,8 @@
     </web-panel>
 
     <web-resource key="slack-global">
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
-        <resource name="slack-global.css" type="download" location="stylesheets/slack-global.less"/>
+        <resource name="slack-global.css" type="download" location="stylesheets/slack-global.css"/>
 
         <dependency>com.atlassian.auiplugin:ajs</dependency>
     </web-resource>
@@ -340,12 +331,8 @@
             </transformer>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
 
-        <resource type="download" name="stylesheets/slack-main.css" location="stylesheets/slack-main.less"/>
+        <resource type="download" name="stylesheets/slack-main.css" location="stylesheets/slack-main.css"/>
         <resource type="download" name="admin/configure-slack.js" location="admin/configure-slack.js"/>
         <resource type="download" name="configure-slack.soy.js" location="admin/configure-slack.soy"/>
 
@@ -388,12 +375,9 @@
     </web-resource>
 
     <web-resource name="Slack Common Resources" key="base-slack-common-resources">
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
-        <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.less"/>
+        <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.css"/>
 
         <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-user-link-support</dependency>
@@ -446,12 +430,9 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
-        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.less"/>
+        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.css"/>
         <resource type="soy" name="slack-feature/integrationsteps/integrationsteps.soy" location="slack-feature/integrationsteps/integrationsteps.soy"/>
 
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-global</dependency>
@@ -463,10 +444,7 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
         <transformation extension="soy">
             <transformer key="soyTransformer">
@@ -478,7 +456,7 @@
         <resource type="soy" name="slack-feature/connectionstatus/connectionstatus.soy" location="slack-feature/connectionstatus/connectionstatus.soy"/>
 
         <resource type="download" name="slack-feature/connectionstatus/connectionstatus.js" location="slack-feature/connectionstatus/connectionstatus.js"/>
-        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.less"/>
+        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.css"/>
 
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
@@ -513,12 +491,10 @@
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-user-link-support</dependency>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
+        
 
         <resource name="oauth2/view-slack-oauth-sessions.soy" type="soy" location="oauth2/view-slack-oauth-sessions.soy"/>
-        <resource name="oauth2/view-slack-oauth-sessions.less.css" type="download" location="oauth2/view-slack-oauth-sessions.less"/>
+        <resource name="oauth2/view-slack-oauth-sessions.css" type="download" location="oauth2/view-slack-oauth-sessions.css"/>
     </web-resource>
 
     <web-resource name="Slack status resource" key="slack-status-resources">
@@ -528,9 +504,7 @@
         <transformation extension="js">
             <transformer key="jsI18n"/>
         </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
+        
         <transformation extension="soy">
             <transformer key="soyTransformer">
                 <functions>com.atlassian.confluence.plugins.soy:soy-core-functions</functions>
@@ -538,7 +512,7 @@
         </transformation>
 
         <resource name="confluence-slack-status.js" type="download" location="js/confluence-slack-status.js"/>
-        <resource name="confluence-status.less.css" type="download" location="less/confluence-status.less"/>
+        <resource name="confluence-status.css" type="download" location="less/confluence-status.css"/>
         <resource type="download" name="images/" location="images/"/>
         <resource type="download" name="confluence-slack-user-link.soy.js" location="templates/confluence-slack-user-link.soy" />
         <condition class="com.atlassian.plugins.slack.api.condition.IsSlackEnabledUrlReadingCondition"/>
