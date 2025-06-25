@@ -1,7 +1,3 @@
-:root {
-  --pale-blue-color: #ebf2f9;
-}
-
 .slack-configuration-page {
   width: 800px;
 }
@@ -45,7 +41,7 @@
 }
 
 #dropdown-team-selector .selected a:not(:hover) {
-  background-color: var(--pale-blue-color);
+  background-color: var(--ds-background-selected);
 }
 
 #dropdown-team-selector .selected {
