@@ -60,16 +60,6 @@ function(
     };
 
     /**
-     * Make a query with an empty result set
-     * @returns {*}
-     */
-    function makeEmptyQuery() {
-        return window.Select2.query.local({
-            results: []
-        });
-    }
-
-    /**
      * Builds the query function that is passed to select2.
      *
      * @param opts
@@ -77,15 +67,9 @@ function(
      */
     var makeQueryFn = function (opts) {
         var search = makeSearchFn();
-        var emptyQuery = makeEmptyQuery();
 
-        // Show suggestions until you typed at least 2 characters, then search.
         return function (query) {
-            if (query.term.length >= 1) {
-                search(query);
-            } else {
-                emptyQuery(query);
-            }
+            search(query);
         }
     };
 
@@ -111,9 +95,15 @@ function(
                     }
                     return $.fn.select2.defaults.formatNoMatches.apply(this, arguments)
                 },
-
+                minimumInputLength: 0,
+                minimumResultsForSearch: 0,
                 multiple: opts.multiple === true,
-                query: makeQueryFn(opts)
+                query: makeQueryFn(opts),
+                 // Show suggestions until you typed at least 2 characters, then search.
+                minimumInputLength: 2,
+                // Show search box even if there are no results
+                minimumResultsForSearch: 0,
+                allowClear: true,
             }, opts.select2Options);
         }
     };
