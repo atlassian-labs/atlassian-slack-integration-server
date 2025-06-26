@@ -1,0 +1,54 @@
+:root {
+  --arrow-size: 30px;
+  --base-spacing: 10px;
+  --double-spacing: 20px;
+}
+
+.error-message {
+  color: var(--ds-text-danger);
+  margin-top: 5px;
+}
+
+.slack-integration-admin {
+  margin-bottom: var(--double-spacing);
+}
+
+.slack-repo-mapping-form .aui-button {
+  margin-left: var(--base-spacing);
+}
+
+.slack-repo-mapping-form .has-arrow {
+  display: inline-block;
+  margin-left: var(--base-spacing);
+}
+
+.slack-repo-mapping-form .has-arrow .mapping-origin-label {
+  line-height: var(--arrow-size);
+  vertical-align: middle;
+}
+
+.slack-config-header {
+  padding-bottom: var(--base-spacing);
+}
+
+.slack-needs-oauth,
+.slack-needs-link {
+  text-align: center;
+}
+
+.slack-needs-oauth .aui-button,
+.slack-needs-link .aui-button {
+  margin-top: var(--base-spacing);
+}
+
+.slack-needs-oauth .slack-landing-image {
+  height: 266px;
+}
+
+.slack-needs-link .slack-landing-image {
+  height: 342px;
+}
+
+.slack-configuration-toolbar {
+  height: 3px;
+}

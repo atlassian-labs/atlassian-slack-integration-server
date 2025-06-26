@@ -38,15 +38,15 @@
         <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
-        <atlassian.selenium.version>3.6.0</atlassian.selenium.version>
+        <atlassian.selenium.version>4.0.0-m004</atlassian.selenium.version>
         <commons-codec.version>1.11</commons-codec.version>
         <slack.common.version>2.0.0</slack.common.version>
 
         <!-- product properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.version>10.0.0-jakarta-m1</bitbucket.version>
+        <bitbucket.version>10.0.0-m8</bitbucket.version>
         <bitbucket.amps.version>9.3.0</bitbucket.amps.version>
-        <platform.version>8.0.0-m01</platform.version>
+        <platform.version>8.0.0-m16</platform.version>
     </properties>
 
     <dependencyManagement>
@@ -438,7 +438,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>2.42</version>
             <scope>test</scope>
         </dependency>
         <dependency>

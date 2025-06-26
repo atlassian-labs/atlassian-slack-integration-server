@@ -1,0 +1,11 @@
+#slack-content header {
+  margin: 20px 0 10px 20px;
+}
+
+#slack-content fieldset {
+  margin-bottom: 16px;
+}
+
+#slack-content .aui-page-panel {
+  border-style: none;
+}
