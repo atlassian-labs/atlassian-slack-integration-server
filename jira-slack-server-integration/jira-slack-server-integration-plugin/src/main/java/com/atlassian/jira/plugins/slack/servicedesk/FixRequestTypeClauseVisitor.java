@@ -1,4 +1,4 @@
-package com.atlassian.jira.plugins.slack.compat;
+package com.atlassian.jira.plugins.slack.servicedesk;
 
 import com.atlassian.jira.project.Project;
 import com.atlassian.query.clause.AndClause;

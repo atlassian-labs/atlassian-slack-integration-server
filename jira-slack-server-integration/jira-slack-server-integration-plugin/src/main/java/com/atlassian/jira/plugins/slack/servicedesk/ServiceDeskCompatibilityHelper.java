@@ -1,4 +1,4 @@
-package com.atlassian.jira.plugins.slack.compat;
+package com.atlassian.jira.plugins.slack.servicedesk;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.project.Project;
@@ -39,13 +39,12 @@ public abstract class ServiceDeskCompatibilityHelper {
         Optional<String> portalName = portal.map(Portal::getName);
         Optional<String> portalKey = portal.map(port -> invokeMethodNoException(port, "getKey"));
 
-        Map<String, String> requestTypeNameToKey = requestTypes.map(reqTypes -> reqTypes.stream()
+        return requestTypes.map(reqTypes -> reqTypes.stream()
                 .collect(Collectors.toMap(
                         type -> String.format("%s (%s)", type.getName(), portalName.orElse("")),
                         type -> String.format("%s/%s", portalKey.orElse(""), invokeMethodNoException(type, "getKey")),
                         (key1, key2) -> key1)
                 )).orElse(Collections.emptyMap());
-        return requestTypeNameToKey;
     }
 
     private <T> T invokeMethodNoException(final Object target, final String methodName, final Object... args) {

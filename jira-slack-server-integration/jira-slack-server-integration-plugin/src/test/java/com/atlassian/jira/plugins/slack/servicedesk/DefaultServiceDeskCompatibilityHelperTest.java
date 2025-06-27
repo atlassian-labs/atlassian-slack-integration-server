@@ -1,4 +1,4 @@
-package com.atlassian.jira.plugins.slack.compat;
+package com.atlassian.jira.plugins.slack.servicedesk;
 
 import com.atlassian.jira.junit.rules.AvailableInContainer;
 import com.atlassian.jira.junit.rules.MockitoContainer;
@@ -27,12 +27,12 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class ServiceDesk4CompatibilityHelperTest {
+public class DefaultServiceDeskCompatibilityHelperTest {
     @Mock
     @AvailableInContainer
     ServiceDeskManager serviceDeskManager;
@@ -64,7 +64,7 @@ public class ServiceDesk4CompatibilityHelperTest {
     public MockitoContainer mockitoContainer = new MockitoContainer(this);
 
     @InjectMocks
-    ServiceDesk4CompatibilityHelper target;
+    DefaultServiceDeskCompatibilityHelper target;
 
     @Test
     public void getServiceDeskForProjectReturnsServiceDesk() {

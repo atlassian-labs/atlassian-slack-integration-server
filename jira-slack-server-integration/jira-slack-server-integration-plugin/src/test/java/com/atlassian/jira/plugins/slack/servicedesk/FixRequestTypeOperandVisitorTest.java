@@ -1,4 +1,4 @@
-package com.atlassian.jira.plugins.slack.compat;
+package com.atlassian.jira.plugins.slack.servicedesk;
 
 import com.atlassian.jira.project.Project;
 import com.atlassian.query.operand.Operand;
@@ -15,13 +15,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.*")
+@PowerMockIgnore({"javax.*", "org.xml.*", "org.w3c.*", "com.sun.org.apache.xerces.*", "com.sun.org.apache.xpath.internal.*"})
 @PrepareForTest({ServiceDeskCompatibilityDispatcher.class})
 public class FixRequestTypeOperandVisitorTest {
     @Mock
@@ -34,7 +34,7 @@ public class FixRequestTypeOperandVisitorTest {
     FixRequestTypeOperandVisitor target;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         target = new FixRequestTypeOperandVisitor(project);
     }
 

@@ -1,4 +1,4 @@
-package com.atlassian.jira.plugins.slack.compat;
+package com.atlassian.jira.plugins.slack.servicedesk;
 
 import com.atlassian.query.clause.AndClause;
 import com.atlassian.query.clause.Clause;
@@ -21,16 +21,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.*")
+@PowerMockIgnore({"javax.*", "org.xml.*", "org.w3c.*", "com.sun.org.apache.xerces.*", "com.sun.org.apache.xpath.internal.*"})
 @PrepareForTest({FixRequestTypeClauseVisitor.class, FixRequestTypeOperandVisitor.class, ServiceDeskCompatibilityDispatcher.class})
 public class FixRequestTypeClauseVisitorTest {
     @Mock
@@ -44,7 +44,7 @@ public class FixRequestTypeClauseVisitorTest {
     FixRequestTypeClauseVisitor target;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         target = new FixRequestTypeClauseVisitor(null);
     }
 

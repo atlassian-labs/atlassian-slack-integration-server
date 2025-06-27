@@ -1,4 +1,4 @@
-package com.atlassian.jira.plugins.slack.compat;
+package com.atlassian.jira.plugins.slack.servicedesk;
 
 import com.atlassian.annotations.VisibleForTesting;
 import com.atlassian.jira.project.Project;
@@ -48,7 +48,7 @@ public class ServiceDeskCompatibilityDispatcher {
             String returnedClassName = getServiceDeskForProjectMethod.getReturnType().getName();
 
             if ("com.atlassian.servicedesk.api.ServiceDesk".equals(returnedClassName)) {
-                helper = ServiceDesk4CompatibilityHelper.getInstance();
+                helper = DefaultServiceDeskCompatibilityHelper.getInstance();
             } else {
                 log.error("Failed to create a ServiceDeskCompatibilityHelper because of unexpected method signature [{}]",
                         getServiceDeskForProjectMethod);

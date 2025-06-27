@@ -1,4 +1,4 @@
-package com.atlassian.jira.plugins.slack.compat;
+package com.atlassian.jira.plugins.slack.servicedesk;
 
 import com.atlassian.annotations.VisibleForTesting;
 import com.atlassian.jira.component.ComponentAccessor;
@@ -24,15 +24,15 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Optional;
 
 @Slf4j
-public class ServiceDesk4CompatibilityHelper extends ServiceDeskCompatibilityHelper {
-    private static final ServiceDesk4CompatibilityHelper INSTANCE = new ServiceDesk4CompatibilityHelper();
+public class DefaultServiceDeskCompatibilityHelper extends ServiceDeskCompatibilityHelper {
+    private static final DefaultServiceDeskCompatibilityHelper INSTANCE = new DefaultServiceDeskCompatibilityHelper();
 
-    public static ServiceDesk4CompatibilityHelper getInstance() {
+    public static DefaultServiceDeskCompatibilityHelper getInstance() {
         return INSTANCE;
     }
 
     @VisibleForTesting
-    ServiceDesk4CompatibilityHelper() {
+    DefaultServiceDeskCompatibilityHelper() {
     }
 
     @Override
