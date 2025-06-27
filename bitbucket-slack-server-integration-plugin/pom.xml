@@ -491,7 +491,6 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
-                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <!-- It allows to connect to Bitbucket embedded database while it is running -->
                     <jvmArgs>${jvm17.opens} -Djdbc.url=jdbc:h2:${project.build.directory}/bitbucket/home/shared/data/db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE</jvmArgs>
@@ -502,6 +501,24 @@
                         <exclude>com.atlassian.fugue:fugue</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
                     </banningExcludes>
+
+                    <includedFeModuleManifests>
+                        <includedFeModuleManifest>${project.basedir}/package.json</includedFeModuleManifest>
+                    </includedFeModuleManifests>
+                    <feManifestAssociations>
+                        <feManifestAssociation>
+                            <packageName>@atlassian/dc.bitbucket.atlassian-slack-integration-server.bitbucket-slack-server-integration-plugin</packageName>
+                            <manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest>
+                                <outputDirectoryFiles>
+                                    slack-static/feature/channel-selector/bitbucket-slack-repository-to-channel-admin-repository-picker.js,
+                                    slack-static/feature/channel-selector/bitbucket-slack-repository-to-channel-internal-service.js,
+                                    slack-static/feature/channel-selector/bitbucket-slack-repository-to-channel-internal-ui.js,
+                                    slack-static/feature/repo-channel-table/analytics.js,
+                                    slack-static/feature/repo-channel-table/is-notification-enabled.js
+                                </outputDirectoryFiles>
+                            </manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest>
+                        </feManifestAssociation>
+                    </feManifestAssociations>
 
                     <systemPropertyVariables>
                         <plugin.resource.directories>

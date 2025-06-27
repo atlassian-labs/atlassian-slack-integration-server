@@ -295,7 +295,6 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
-                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
@@ -311,6 +310,24 @@
                     <!-- remove the option when Java 17 support is needed -->
                     <jvmArgs>${jvm17.opens} -Xmx2g</jvmArgs>
                     <jvmDebugPort>5006</jvmDebugPort>
+
+                    <includedFeModuleManifests>
+                        <includedFeModuleManifest>${project.basedir}/package.json</includedFeModuleManifest>
+                    </includedFeModuleManifests>
+                    <feManifestAssociations>
+                        <feManifestAssociation>
+                            <packageName>@atlassian/dc.confluence.atlassian-slack-integration-server.confluence-slack-server-integration-plugin</packageName>
+                            <manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest>
+                                <outputDirectoryFiles>
+                                    js/confluence-read-only-mode-warning.js,
+                                    js/confluence-slack-status.js,
+                                    js/spacetochannel/confluence-slack-space-to-channel-admin-space-picker.js,
+                                    js/spacetochannel/confluence-slack-space-to-channel-internal-service.js,
+                                    js/spacetochannel/confluence-slack-space-to-channel-internal-ui.js
+                                </outputDirectoryFiles>
+                            </manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest>
+                        </feManifestAssociation>
+                    </feManifestAssociations>
 
                     <systemPropertyVariables combine.children="append">
                         <plugin.resource.directories>
