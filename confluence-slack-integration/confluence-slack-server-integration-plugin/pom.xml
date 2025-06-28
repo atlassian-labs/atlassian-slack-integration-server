@@ -15,17 +15,21 @@
     <description>This is the Slack integration for Confluence Data Center</description>
 
     <properties>
-        <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
+        <project.root.directory>${project.basedir}/..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
+        <jvm17.opens />
 
-        <project.root.directory>${project.basedir}/..</project.root.directory>
+        <!-- AMPS related properties -->
+        <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
+        <confluence.amps.version>${amps.version}</confluence.amps.version>
 
+        <!-- Confluence version used for integration tests; can be overridden to test against different versions -->
         <confluence.version>9.0.3</confluence.version>
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
-        <confluence.amps.version>${amps.version}</confluence.amps.version>
-        <jvm17.opens />
+        <!-- Confluence API version used during the build -->
+        <confluence.api.version>9.0.3</confluence.api.version>
     </properties>
 
     <dependencies>
@@ -83,7 +87,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence</artifactId>
-            <version>${confluence.version}</version>
+            <version>${confluence.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
