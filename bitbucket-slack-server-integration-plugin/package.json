@@ -1,0 +1,10 @@
+{
+  "name": "@atlassian/dc.bitbucket.atlassian-slack-integration-server.bitbucket-slack-server-integration-plugin",
+  "author": "Atlassian Pty Ltd",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:atlassian-labs/atlassian-slack-integration-server.git",
+    "directory": "bitbucket-slack-server-integration-plugin"
+  }
+}

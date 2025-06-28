@@ -388,7 +388,6 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
-                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <!-- Custom logging config to show logs from plugin classes by default -->
                     <log4jProperties>src/main/resources/log4j.properties</log4jProperties>
@@ -416,6 +415,16 @@
                             <version>${testkit.version}</version>
                         </pluginArtifact>
                     </pluginArtifacts>
+
+                    <includedFeModuleManifests>
+                        <includedFeModuleManifest>${project.basedir}/package.json</includedFeModuleManifest>
+                    </includedFeModuleManifests>
+                    <feManifestAssociations>
+                        <feManifestAssociation>
+                            <packageName>@atlassian/dc.jira.atlassian-slack-integration-server.jira-slack-server-integration-plugin</packageName>
+                            <outputDirectoryFilesDeclaration>${project.basedir}/fe-associations-declaration.json</outputDirectoryFilesDeclaration>
+                        </feManifestAssociation>
+                    </feManifestAssociations>
 
                     <systemPropertyVariables>
                         <plugin.resource.directories>
@@ -654,7 +663,7 @@
         <project.root.directory>${project.basedir}/../..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
-        <jvm17.opens />
+        <jvm17.opens/>
     </properties>
 
     <profiles>

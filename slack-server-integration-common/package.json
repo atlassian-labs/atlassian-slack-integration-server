@@ -1,0 +1,10 @@
+{
+  "name": "@atlassian/dc.shared.atlassian-slack-integration-server.slack-server-integration-common",
+  "author": "Atlassian Pty Ltd",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:atlassian-labs/atlassian-slack-integration-server.git",
+    "directory": "slack-server-integration-common"
+  }
+}
