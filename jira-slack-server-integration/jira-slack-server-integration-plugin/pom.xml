@@ -22,16 +22,6 @@
             <artifactId>slack-server-integration-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>jira-8-compat</artifactId>
-            <version>${slack.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>jira-service-desk-compat-main</artifactId>
-            <version>${slack.common.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.seratch</groupId>
             <artifactId>jslack</artifactId>
         </dependency>
@@ -85,6 +75,11 @@
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-admin-project-config-plugin</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.servicedesk</groupId>
+            <artifactId>jira-servicedesk-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -14,8 +14,6 @@
 
     <modules>
         <module>jira-slack-server-integration-plugin</module>
-        <module>jira-8-compat</module>
-        <module>jira-service-desk-compat</module>
     </modules>
 
     <properties>
@@ -109,6 +107,11 @@
                         <groupId>com.atlassian.plugin</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.servicedesk</groupId>
+                <artifactId>jira-servicedesk-api</artifactId>
+                <version>${jira.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
