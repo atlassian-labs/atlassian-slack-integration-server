@@ -1,0 +1,23 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#f8f9fa" stroke="#e9ecef" stroke-width="2"/>
+  
+  <!-- Left platform (Atlassian) -->
+  <rect x="15" y="45" width="25" height="30" rx="4" fill="#0052CC"/>
+  
+  <!-- Right platform (Slack) -->
+  <rect x="80" y="45" width="25" height="30" rx="4" fill="#2EB67D"/>
+  
+  <!-- Bridge connecting elements -->
+  <path d="M40 52 Q60 40 80 52" stroke="#6B73FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M40 60 Q60 48 80 60" stroke="#6B73FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M40 68 Q60 80 80 68" stroke="#6B73FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Connection nodes -->
+  <circle cx="40" cy="52" r="3" fill="#0052CC"/>
+  <circle cx="40" cy="60" r="3" fill="#0052CC"/>
+  <circle cx="40" cy="68" r="3" fill="#0052CC"/>
+  <circle cx="80" cy="52" r="3" fill="#2EB67D"/>
+  <circle cx="80" cy="60" r="3" fill="#2EB67D"/>
+  <circle cx="80" cy="68" r="3" fill="#2EB67D"/>
+</svg>

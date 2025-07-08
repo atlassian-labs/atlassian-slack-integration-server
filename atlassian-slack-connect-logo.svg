@@ -1,0 +1,27 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="60" cy="60" r="55" fill="#f8f9fa" stroke="#e9ecef" stroke-width="2"/>
+  
+  <!-- Left interlocking piece (Atlassian) -->
+  <path d="M20 45 L50 45 L50 55 L40 55 L40 75 L30 75 L30 55 L20 55 Z" fill="#0052CC"/>
+  <rect x="20" y="55" width="10" height="10" fill="#0052CC"/>
+  
+  <!-- Right interlocking piece (Slack) -->
+  <path d="M70 45 L100 45 L100 55 L90 55 L90 75 L80 75 L80 55 L70 55 Z" fill="#2EB67D"/>
+  <rect x="90" y="55" width="10" height="10" fill="#2EB67D"/>
+  
+  <!-- Connection mechanism -->
+  <rect x="45" y="52.5" width="30" height="5" rx="2.5" fill="#6B73FF"/>
+  <rect x="47.5" y="50" width="5" height="10" rx="2.5" fill="#6B73FF"/>
+  <rect x="67.5" y="50" width="5" height="10" rx="2.5" fill="#6B73FF"/>
+  
+  <!-- Integration indicators -->
+  <circle cx="35" cy="40" r="2" fill="#0052CC" opacity="0.6"/>
+  <circle cx="45" cy="40" r="2" fill="#0052CC" opacity="0.6"/>
+  <circle cx="75" cy="40" r="2" fill="#2EB67D" opacity="0.6"/>
+  <circle cx="85" cy="40" r="2" fill="#2EB67D" opacity="0.6"/>
+  
+  <!-- Data sync arrows -->
+  <path d="M55 35 L65 35 M62 32 L65 35 L62 38" stroke="#6B73FF" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M65 85 L55 85 M58 82 L55 85 L58 88" stroke="#6B73FF" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>
