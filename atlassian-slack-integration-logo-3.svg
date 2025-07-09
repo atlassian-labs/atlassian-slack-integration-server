@@ -1,0 +1,20 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="60" cy="60" r="58" fill="#ffffff" stroke="#e9ecef" stroke-width="2"/>
+  
+  <!-- Interlocking rings representing integration -->
+  <circle cx="45" cy="60" r="20" fill="none" stroke="#0052CC" stroke-width="6" opacity="0.8"/>
+  <circle cx="75" cy="60" r="20" fill="none" stroke="#4A154B" stroke-width="6" opacity="0.8"/>
+  
+  <!-- Central connection point -->
+  <circle cx="60" cy="60" r="8" fill="#36B37E"/>
+  
+  <!-- Small accent dots -->
+  <circle cx="45" cy="40" r="3" fill="#0052CC"/>
+  <circle cx="45" cy="80" r="3" fill="#0052CC"/>
+  <circle cx="75" cy="40" r="3" fill="#4A154B"/>
+  <circle cx="75" cy="80" r="3" fill="#4A154B"/>
+  
+  <!-- Integration symbol in center -->
+  <path d="M55 60 L60 55 L65 60 L60 65 Z" fill="#ffffff"/>
+</svg>

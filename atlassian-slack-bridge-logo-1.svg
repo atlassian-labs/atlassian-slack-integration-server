@@ -1,0 +1,24 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#f8f9fa" stroke="#e9ecef" stroke-width="2"/>
+  
+  <!-- Left node (Atlassian) -->
+  <circle cx="35" cy="60" r="12" fill="#0052CC"/>
+  
+  <!-- Right node (Slack) -->
+  <circle cx="85" cy="60" r="12" fill="#4A154B"/>
+  
+  <!-- Connection bridge -->
+  <rect x="47" y="56" width="26" height="8" rx="4" fill="#36B37E"/>
+  
+  <!-- Data flow indicators -->
+  <circle cx="52" cy="60" r="2" fill="#ffffff">
+    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0s"/>
+  </circle>
+  <circle cx="60" cy="60" r="2" fill="#ffffff">
+    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
+  <circle cx="68" cy="60" r="2" fill="#ffffff">
+    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1s"/>
+  </circle>
+</svg>

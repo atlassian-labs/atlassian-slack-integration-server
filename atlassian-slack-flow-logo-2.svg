@@ -1,0 +1,24 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="120" height="120" rx="20" fill="#f8f9fa"/>
+  
+  <!-- Left hexagon (Atlassian) -->
+  <polygon points="30,45 45,37 45,53" fill="#0052CC"/>
+  <polygon points="30,75 45,67 45,83" fill="#0052CC"/>
+  
+  <!-- Right rounded squares (Slack) -->
+  <rect x="75" y="40" width="15" height="15" rx="3" fill="#4A154B"/>
+  <rect x="75" y="65" width="15" height="15" rx="3" fill="#4A154B"/>
+  
+  <!-- Flow lines -->
+  <path d="M45 45 Q60 45 75 47" stroke="#36B37E" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M45 75 Q60 75 75 73" stroke="#36B37E" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Reverse flow -->
+  <path d="M75 55 Q60 55 45 57" stroke="#ECB22E" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  
+  <!-- Flow direction indicators -->
+  <polygon points="70,45 75,47 70,49" fill="#36B37E"/>
+  <polygon points="70,73 75,75 70,77" fill="#36B37E"/>
+  <polygon points="50,55 45,57 50,59" fill="#ECB22E"/>
+</svg>
