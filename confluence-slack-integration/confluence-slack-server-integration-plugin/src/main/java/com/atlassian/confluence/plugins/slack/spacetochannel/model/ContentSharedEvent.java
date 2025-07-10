@@ -4,9 +4,9 @@ import com.atlassian.confluence.plugins.slack.spacetochannel.api.notifications.C
 import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.github.seratch.jslack.api.model.Attachment;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class ContentSharedEvent implements ConfluenceSlackEvent, ChannelContext {

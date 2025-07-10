@@ -2,10 +2,10 @@ package com.atlassian.confluence.plugins.slack.util;
 
 import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.confluence.user.ConfluenceUser;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.function.Supplier;
 
