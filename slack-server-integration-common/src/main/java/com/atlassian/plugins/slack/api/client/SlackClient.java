@@ -14,8 +14,8 @@ import com.github.seratch.jslack.api.model.Message;
 import com.github.seratch.jslack.api.model.User;
 import com.github.seratch.jslack.api.model.dialog.Dialog;
 import io.atlassian.fugue.Either;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

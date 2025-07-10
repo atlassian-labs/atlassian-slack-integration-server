@@ -4,8 +4,8 @@ import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.SlackLinkDto;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import io.atlassian.fugue.Either;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 public interface SlackConnectionService {
