@@ -3,9 +3,9 @@ package com.atlassian.confluence.plugins.slack.spi.impl;
 import com.atlassian.plugins.slack.api.routes.SlackRoutesProvider;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
+import jakarta.ws.rs.core.UriBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public class SpaceAwareSlackRoutesProvider implements SlackRoutesProvider {

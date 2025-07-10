@@ -17,6 +17,7 @@ import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.descriptor.NotificationTypeService;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
 import com.atlassian.sal.api.user.UserKey;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.Optional;
 

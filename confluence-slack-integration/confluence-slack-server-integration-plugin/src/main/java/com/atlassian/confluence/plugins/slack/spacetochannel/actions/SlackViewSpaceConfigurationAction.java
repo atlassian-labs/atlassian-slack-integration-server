@@ -16,15 +16,15 @@ import com.atlassian.plugins.slack.api.routes.SlackRoutesProvider;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.spi.SlackRoutesProviderFactory;
 import com.atlassian.plugins.slack.user.SlackUserManager;
-import com.atlassian.xwork.PermittedMethods;
+import com.atlassian.struts.httpmethod.PermittedMethods;
 import com.github.seratch.jslack.api.model.User;
 import com.google.common.collect.ImmutableMap;
-import com.opensymphony.xwork.Action;
 import lombok.RequiredArgsConstructor;
+import org.apache.struts2.action.Action;
 
 import java.util.List;
 
-import static com.atlassian.xwork.HttpMethod.GET;
+import static com.atlassian.struts.httpmethod.HttpMethod.GET;
 import static com.google.common.collect.Lists.newArrayList;
 
 @RequiredArgsConstructor
