@@ -25,11 +25,12 @@
         <confluence.amps.version>${amps.version}</confluence.amps.version>
 
         <!-- Confluence version used for integration tests; can be overridden to test against different versions -->
-        <confluence.version>9.0.3</confluence.version>
+        <confluence.version>10.0.0-m126</confluence.version>
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
         <!-- Confluence API version used during the build -->
-        <confluence.api.version>9.0.3</confluence.api.version>
+        <confluence.api.version>10.0.0-m126</confluence.api.version>
+<!--        <confluence.api.version>9.0.3</confluence.api.version>-->
     </properties>
 
     <dependencies>
@@ -57,18 +58,20 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
+            <artifactId>hibernate-core-jakarta</artifactId>
+            <scope>provided</scope>
             <version>5.6.15.Final</version>
         </dependency>
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <scope>provided</scope>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
+            <version>1.11.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-collections</groupId>
@@ -76,12 +79,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>opensymphony</groupId>
-            <artifactId>xwork</artifactId>
-            <version>1.0.3.6</version>
-        </dependency>
-
 
         <!-- Runtime dependencies -->
         <dependency>
@@ -146,6 +143,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <scope>provided</scope>
@@ -176,8 +178,18 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.atlassian.crowd</groupId>
+            <artifactId>crowd-events</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>io.atlassian.fugue</groupId>
             <artifactId>fugue</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -237,7 +249,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>2.42</version>
+            <version>3.1.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -397,18 +409,18 @@
 
                             com.google.common.base,
                             com.google.common.collect,
-                            javax.annotation,
-                            javax.inject,
+                            jakarta.annotation,
+                            jakarta.inject,
                             javax.naming,
                             javax.net,
                             javax.net.ssl,
                             javax.security.auth.x500,
-                            javax.servlet,
-                            javax.servlet.http,
-                            javax.ws.rs*;version="[2.0.0,3.0.0)",
-                            javax.xml.bind.annotation,
-                            javax.xml.stream,
-                            javax.xml.transform,
+                            jakarta.servlet,
+                            jakarta.servlet.http,
+                            jakarta.ws.rs*;version="[2.0.0,3.0.0)",
+                            jakarta.xml.bind.annotation,
+                            jakarta.xml.stream,
+                            jakarta.xml.transform,
                             javax.persistence,
                             org.apache.commons.lang3,
                             org.apache.commons.lang3.text,
@@ -518,7 +530,7 @@
             <plugin>
                 <groupId>com.atlassian.plugin</groupId>
                 <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
-                <version>5.0.0</version>
+                <version>6.0.0</version>
                 <executions>
                     <execution>
                         <goals>

@@ -22,6 +22,8 @@ import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserKey;
 import com.github.seratch.jslack.api.model.User;
 import io.atlassian.fugue.Either;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +33,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -121,8 +121,8 @@ public class SlackViewSpaceConfigurationActionTest {
         }
 
         @Override
-        protected HttpServletRequest getCurrentRequest() {
-            return request;
+        protected HttpServletRequest getActiveRequest() {
+            return SlackViewSpaceConfigurationActionTest.this.request;
         }
     }
 

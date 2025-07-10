@@ -1,12 +1,12 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.actions;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Collections;
 
 import static com.atlassian.confluence.plugins.slack.spacetochannel.actions.SlackViewSpaceInstallationAction.CONTEXT_ATTRIBUTE_LABEL;
@@ -29,7 +29,7 @@ public class SlackViewSpaceInstallationActionTest {
 
     class SlackViewSpaceInstallationActionMock extends SlackViewSpaceInstallationAction {
         @Override
-        protected HttpServletRequest getCurrentRequest() {
+        protected HttpServletRequest getActiveRequest() {
             HttpServletRequest req = mock(HttpServletRequest.class);
             when(req.getSession()).thenReturn(session);
             when(session.getAttribute(CONTEXT_ATTRIBUTE_LABEL)).thenReturn(Collections.emptyMap());
