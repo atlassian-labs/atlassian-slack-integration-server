@@ -1,8 +1,8 @@
 package com.atlassian.plugins.slack.soy;
 
 import com.atlassian.soy.renderer.SoyServerFunction;
+import jakarta.ws.rs.core.UriBuilder;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
