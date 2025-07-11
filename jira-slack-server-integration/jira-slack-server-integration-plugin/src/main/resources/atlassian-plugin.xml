@@ -101,7 +101,7 @@
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
 
         <resource type="download" name="slack.js" location="js/slack-base.js"/>
-        <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.css"/>
+        <resource type="download" name="slack-configure.css" location="slack-css/slack-configure.css"/>
     </web-resource>
 
     <!-- Project configuration -->
@@ -167,8 +167,8 @@
         <resource type="download" name="slack-widget-channelselector-channelmapping-service.js" location="js/slack-widget/channelselector/channelmapping-service.js"/>
         <resource type="download" name="slack-widget-channelselector-channelselector-view.js" location="js/slack-widget/channelselector/channelselector-view.js"/>
 
-        <resource type="download" name="slack-widget-channelselector-channelselector.css" location="slack-less/widget/channelselector/channelselector.css"/>
-        <resource type="download" name="slack-widget-channelselector-teamselector.css" location="slack-less/widget/channelselector/teamselector.css"/>
+        <resource type="download" name="slack-widget-channelselector-channelselector.css" location="slack-css/widget/channelselector/channelselector.css"/>
+        <resource type="download" name="slack-widget-channelselector-teamselector.css" location="slack-css/widget/channelselector/teamselector.css"/>
 
         <resource type="download" name="slack-widget-channelselector-channelselector-client-soy.js" location="slack-soy/widget/channelselector/channelselector-client.soy"/>
         <resource name="slack-issuepanel-client-soy.js" type="download" location="slack-soy/issuepanel/issuepanel-client.soy"/>
@@ -351,7 +351,7 @@
     <!-- Global install -->
     <web-resource key="slack-jira-global-configuration-resources" name="Slack global configuration resources">
 
-        <resource type="download" name="slack-configure.css" location="slack-less/slack-configure.css"/>
+        <resource type="download" name="slack-configure.css" location="slack-css/slack-configure.css"/>
         <resource type="download" name="slack-settings.js" location="js/slack-feature/settings/slack-settings.js"/>
         <resource type="download" name="slack-settings.css" location="css/slack-settings.css"/>
         <resource type="download" name="images/slack-autoconvert-preview.png" location="images/slack-autoconvert-preview.png"/>
@@ -417,7 +417,7 @@
         <resource name="slack-issuepanel-client.soy" type="soy" location="slack-soy/issuepanel/issuepanel-client.soy"/>
         <resource name="slack-issuepanel-soy.js" type="download" location="slack-soy/issuepanel/issuepanel.soy"/>
         <resource name="slack-issuepanel-client-soy.js" type="download" location="slack-soy/issuepanel/issuepanel-client.soy"/>
-        <resource name="slack-issuepanel.css" type="download" location="slack-less/issuepanel.css"/>
+        <resource name="slack-issuepanel.css" type="download" location="slack-css/issuepanel.css"/>
         <resource name="slack-dedicatedchannel.js" type="download" location="js/slack-feature/issuepanel/dedicatedchannel.js"/>
         <resource name="slack-dedicatedchannel-view.js" type="download" location="js/slack-feature/issuepanel/dedicatedchannel-view.js"/>
         <resource name="slack-issuemention.js" type="download" location="js/slack-feature/issuepanel/issuemention.js"/>
@@ -469,7 +469,7 @@
         </transformation>
 
 
-        <resource type="download" name="slack-update-banner.css" location="slack-less/banner/update-banner.css"/>
+        <resource type="download" name="slack-update-banner.css" location="slack-css/banner/update-banner.css"/>
         <resource type="download" name="slack-update-slack-link-banner.js" location="js/banner/update-slack-link-banner.js" />
         <resource type="download" name="slack-update-slack-link-banner-client-soy.js" location="slack-soy/banner/update-slack-link-banner.soy" />
 
@@ -504,7 +504,7 @@
             <param name="content-type" value="image/svg+xml"/>
         </resource>
         <resource type="download" name="js/slack-fuse.min.js" location="js/slack-fuse.min.js"/>
-        <resource type="download" name="slack-less/migrate-to-slack.css" location="slack-less/migrate-to-slack.css"/>
+        <resource type="download" name="slack-css/migrate-to-slack.css" location="slack-css/migrate-to-slack.css"/>
         <resource type="download" name="js/migrate-to-slack.js" location="js/migrate-to-slack.js" />
         <resource type="download" name="slack-soy/migrate-to-slack.soy.js" location="slack-soy/migrate-to-slack.soy"/>
 
