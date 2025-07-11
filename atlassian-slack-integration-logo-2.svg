@@ -1,0 +1,17 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for better visibility -->
+  <circle cx="60" cy="60" r="58" fill="none" stroke="#f0f0f0" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Interlocking hexagons representing integration -->
+  <!-- Left hexagon (Atlassian) -->
+  <polygon points="45,35 65,35 75,55 65,75 45,75 35,55" fill="#0052CC" opacity="0.85"/>
+  
+  <!-- Right hexagon (Slack) overlapping -->
+  <polygon points="55,45 75,45 85,65 75,85 55,85 45,65" fill="#4A154B" opacity="0.85"/>
+  
+  <!-- Intersection highlight -->
+  <polygon points="55,45 65,35 75,45 65,55 55,55 45,55" fill="#2EB67D" opacity="0.9"/>
+  
+  <!-- Central connection point -->
+  <circle cx="60" cy="55" r="4" fill="#ffffff" opacity="0.9"/>
+</svg>

@@ -1,0 +1,23 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for better visibility -->
+  <circle cx="60" cy="60" r="58" fill="none" stroke="#f0f0f0" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Left square representing Atlassian products -->
+  <rect x="20" y="45" width="30" height="30" fill="#0052CC" rx="6" opacity="0.9"/>
+  
+  <!-- Right rounded square representing Slack -->
+  <rect x="70" y="45" width="30" height="30" fill="#4A154B" rx="12" opacity="0.9"/>
+  
+  <!-- Bidirectional flow arrows -->
+  <!-- Arrow going right -->
+  <path d="M52 55 L62 55 L58 51 M62 55 L58 59" stroke="#2EB67D" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Arrow going left -->
+  <path d="M68 65 L58 65 L62 61 M58 65 L62 69" stroke="#2EB67D" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Data flow dots -->
+  <circle cx="54" cy="55" r="1.5" fill="#2EB67D" opacity="0.7"/>
+  <circle cx="57" cy="55" r="1.5" fill="#2EB67D" opacity="0.5"/>
+  <circle cx="63" cy="65" r="1.5" fill="#2EB67D" opacity="0.7"/>
+  <circle cx="66" cy="65" r="1.5" fill="#2EB67D" opacity="0.5"/>
+</svg>

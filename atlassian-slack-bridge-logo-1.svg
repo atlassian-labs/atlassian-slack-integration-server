@@ -1,0 +1,18 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for better visibility -->
+  <circle cx="60" cy="60" r="58" fill="none" stroke="#f0f0f0" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Left circle representing Atlassian -->
+  <circle cx="35" cy="60" r="18" fill="#0052CC" opacity="0.9"/>
+  
+  <!-- Right circle representing Slack -->
+  <circle cx="85" cy="60" r="18" fill="#4A154B" opacity="0.9"/>
+  
+  <!-- Bridge/connection element -->
+  <rect x="45" y="56" width="30" height="8" fill="#2EB67D" rx="4"/>
+  
+  <!-- Small connecting dots for visual flow -->
+  <circle cx="53" cy="60" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="60" cy="60" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="67" cy="60" r="2" fill="#ffffff" opacity="0.8"/>
+</svg>
