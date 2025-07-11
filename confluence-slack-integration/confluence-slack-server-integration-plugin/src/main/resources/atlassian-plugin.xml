@@ -113,9 +113,9 @@
     <web-resource key="slack-global-css-resources" name="Slack CSS and related resources">
 
         <resource name="confluence-slack-space-to-channel-notifications-plugin.css" type="download"
-                  location="less/confluence-slack-space-to-channel-notifications-plugin.css"/>
+                  location="css/confluence-slack-space-to-channel-notifications-plugin.css"/>
         <resource name="confluence-slack-plugin.css" type="download"
-                  location="less/confluence-slack-plugin.css"/>
+                  location="css/confluence-slack-plugin.css"/>
 
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
         <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:base-slack-common-resources</dependency>
@@ -512,7 +512,7 @@
         </transformation>
 
         <resource name="confluence-slack-status.js" type="download" location="js/confluence-slack-status.js"/>
-        <resource name="confluence-status.css" type="download" location="less/confluence-status.css"/>
+        <resource name="confluence-status.css" type="download" location="css/confluence-status.css"/>
         <resource type="download" name="images/" location="images/"/>
         <resource type="download" name="confluence-slack-user-link.soy.js" location="templates/confluence-slack-user-link.soy" />
         <condition class="com.atlassian.plugins.slack.api.condition.IsSlackEnabledUrlReadingCondition"/>
