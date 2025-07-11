@@ -2,8 +2,8 @@ package com.atlassian.bitbucket.plugins.slack.notification.configuration;
 
 import com.atlassian.bitbucket.repository.Repository;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Map;

@@ -1,9 +1,9 @@
 package com.atlassian.bitbucket.plugins.slack.notification.configuration;
 
 import com.google.common.collect.Sets;
+import jakarta.annotation.Nonnull;
 import lombok.EqualsAndHashCode;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Set;
 

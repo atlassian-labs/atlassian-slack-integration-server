@@ -3,9 +3,8 @@ package com.atlassian.bitbucket.plugins.slack.event;
 import com.atlassian.bitbucket.event.repository.RepositoryEvent;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.event.api.AsynchronousPreferred;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
-
-import javax.annotation.Nonnull;
 
 /**
  * Event that is raised when a {@link Repository} is linked to a Slack channel.
