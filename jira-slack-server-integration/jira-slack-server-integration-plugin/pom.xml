@@ -636,20 +636,6 @@
                     <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>com.atlassian.lesscss</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile-less</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
