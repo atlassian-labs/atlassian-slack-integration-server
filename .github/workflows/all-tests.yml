@@ -32,7 +32,7 @@ jobs:
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        java-version: [17, 21]
+        java-version: [21]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -62,8 +62,8 @@ jobs:
     needs: unit-tests
     strategy:
       matrix:
-        java-version: [17, 21]
-        jira-version: [10.0.0]
+        java-version: [21]
+        jira-version: [11.0.0-m0011]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -101,8 +101,8 @@ jobs:
     strategy:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
-        java-version: [17, 21]
-        confluence-version: [9.0.1]
+        java-version: [21]
+        confluence-version: [10.0.0-m126]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -139,18 +139,13 @@ jobs:
     needs: unit-tests
     strategy:
       matrix:
-        java-version: [17]
-        bitbucket-version: [9.0.0]
+        java-version: [21]
+        bitbucket-version: [10.0.0-eap1]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      # Dec 13, 2022
-      # latest Bitbucket 8.6.1 doesn't support latest git 2.38.1 installed on the Ubuntu 20 image Github provides
-      # install last supported git - 2.37.4; remove this trick once Bitbucket implements support for latest git
-      # https://confluence.atlassian.com/bitbucketserver/supported-platforms-776640981.html#Supportedplatforms-dvcsDVCS
-      - run: bin/build/install-supported-git.sh
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
