@@ -39,22 +39,22 @@
         <bitbucket.amps.version>9.5.0</bitbucket.amps.version>
 
         <!-- Bitbucket API version used during the build -->
-        <bitbucket.api.version>10.0.0-m8</bitbucket.api.version>
+        <bitbucket.api.version>10.0.0-eap1</bitbucket.api.version>
 
         <!-- Bitbucket version used for integration tests; can be overridden to test against different versions -->
-        <bitbucket.version>10.0.0-m8</bitbucket.version>
+        <bitbucket.version>10.0.0-eap1</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
 
         <!-- Platform version used for dependency management -->
         <platform.version>8.0.0</platform.version>
 
         <!-- Dependency versions -->
-        <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
-        <atlassian.selenium.version>4.0.0-m004</atlassian.selenium.version>
+        <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
+        <atlassian.selenium.version>4.0.0-m008</atlassian.selenium.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
         <commons-codec.version>1.11</commons-codec.version>
-        <slack.common.version>2.0.0</slack.common.version>
+        <slack.common.version>3.0.0</slack.common.version>
     </properties>
 
     <dependencyManagement>
