@@ -30,7 +30,6 @@
 
         <!-- Confluence API version used during the build -->
         <confluence.api.version>10.0.0-m126</confluence.api.version>
-<!--        <confluence.api.version>9.0.3</confluence.api.version>-->
     </properties>
 
     <dependencies>
@@ -274,7 +273,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-webdriver-pageobjects</artifactId>
-            <version>12.2.6</version>
+            <version>15.0.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
