@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 30
     steps:
-      # don't log password as part of the a whole inputs object
+      # don't log password as part of the whole inputs object
       - name: Log job parameters
         run: |
           echo "Actor: [$GITHUB_ACTOR]"
