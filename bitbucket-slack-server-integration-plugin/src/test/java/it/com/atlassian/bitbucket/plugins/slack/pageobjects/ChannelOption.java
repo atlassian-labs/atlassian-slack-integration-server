@@ -4,10 +4,9 @@ import com.atlassian.pageobjects.PageBinder;
 import com.atlassian.pageobjects.elements.PageElement;
 import com.atlassian.webdriver.bitbucket.element.IdOption;
 import com.google.inject.Inject;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.openqa.selenium.By;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class ChannelOption extends IdOption {
     @Inject

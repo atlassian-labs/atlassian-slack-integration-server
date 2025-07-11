@@ -2,9 +2,9 @@ package com.atlassian.bitbucket.plugins.slack.notification.configuration;
 
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.util.BuilderSupport;
+import jakarta.annotation.Nonnull;
 import lombok.EqualsAndHashCode;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

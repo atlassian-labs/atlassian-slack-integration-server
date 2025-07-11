@@ -2,9 +2,8 @@ package com.atlassian.bitbucket.plugins.slack.model;
 
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
+import jakarta.annotation.Nullable;
 import lombok.Value;
-
-import javax.annotation.Nullable;
 
 @Value
 public class NotificationRenderingOptions {
