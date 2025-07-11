@@ -35,11 +35,11 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.model.Attachment;
 import com.github.seratch.jslack.api.model.Attachment.AttachmentBuilder;
 import com.github.seratch.jslack.api.model.Field;
+import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
