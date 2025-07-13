@@ -54,6 +54,7 @@
         <okhttp.version>4.10.0</okhttp.version>
 
         <atlassian-user.version>3.0</atlassian-user.version>
+        <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
         <hamcrest-core.version>1.3</hamcrest-core.version>
         <powermock.version>2.0.2</powermock.version>
 
@@ -190,13 +191,7 @@
             <dependency>
                 <groupId>com.atlassian.ozymandias</groupId>
                 <artifactId>atlassian-plugin-point-safety</artifactId>
-                <version>0.15</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>fugue</artifactId>
-                        <groupId>com.atlassian.fugue</groupId>
-                    </exclusion>
-                </exclusions>
+                <version>${atlassian.plugin.point.safety.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
