@@ -1,4 +1,4 @@
-<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+<atlassian-plugin key="${plugin.key}" name="${project.name}" plugins-version="2">
     <plugin-info>
         <description>${project.description}</description>
         <version>${project.version}</version>
@@ -79,9 +79,9 @@
 
     <web-resource key="slack-resources" name="Slack Soy Resources">
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
-        <dependency>${project.groupId}.${project.artifactId}:slack-global-soy-resources</dependency>
-        <dependency>${project.groupId}.${project.artifactId}:slack-global-js-resources</dependency>
-        <dependency>${project.groupId}.${project.artifactId}:slack-global-css-resources</dependency>
+        <dependency>${plugin.key}:slack-global-soy-resources</dependency>
+        <dependency>${plugin.key}:slack-global-js-resources</dependency>
+        <dependency>${plugin.key}:slack-global-css-resources</dependency>
         <dependency>confluence.web.resources:aui-iconfont-confluence-overrides</dependency>
 
         <context>slack-global-configuration-install</context>
@@ -105,7 +105,7 @@
         <resource type="download" name="confluence-read-only-mode-warning.js"
                   location="js/confluence-read-only-mode-warning.js"/>
 
-        <dependency>${project.groupId}.${project.artifactId}:amd</dependency>
+        <dependency>${plugin.key}:amd</dependency>
         <dependency>com.atlassian.auiplugin:aui-experimental-spinner</dependency>
         <dependency>com.atlassian.auiplugin:aui-message</dependency>
     </web-resource>
@@ -117,8 +117,8 @@
         <resource name="confluence-slack-plugin.css" type="download"
                   location="css/confluence-slack-plugin.css"/>
 
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:base-slack-common-resources</dependency>
+        <dependency>${plugin.key}:slack-integration-steps-resources</dependency>
+        <dependency>${plugin.key}:base-slack-common-resources</dependency>
         <dependency>com.atlassian.plugins.atlassian-help-tips:common</dependency>
 
         <resource type="download" name="images/public_channel.png" location="images/public_channel.png"/>
@@ -136,8 +136,8 @@
         <resource type="soy" name="space" location="templates/slack-space-config.soy"/>
         <resource type="soy" name="global" location="templates/slack-global-config.soy"/>
 
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-soy-resources</dependency>
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
+        <dependency>${plugin.key}:slack-soy-resources</dependency>
+        <dependency>${plugin.key}:slack-integration-steps-resources</dependency>
     </web-resource>
 
     <web-resource key="slack-global-soy-resources" name="Slack Soy Resources">
@@ -338,7 +338,7 @@
 
         <dependency>com.atlassian.auiplugin:aui-experimental-spinner</dependency>
         <dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-global</dependency>
+        <dependency>${plugin.key}:slack-global</dependency>
 
         <context>admin</context>
         <context>atl.admin</context>
@@ -351,7 +351,7 @@
 
         <resource type="download" name="slack-admin/connect/connect-workspace.js" location="admin/connect/connect-workspace.js"/>
 
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-base-link-resources</dependency>
+        <dependency>${plugin.key}:slack-base-link-resources</dependency>
     </web-resource>
 
     <web-resource name="Manage Slack Workspaces" key="manage-workspaces-resources">
@@ -361,7 +361,7 @@
 
         <resource type="download" name="slack-admin/manage/manage-workspaces.js" location="admin/manage/manage-workspaces.js"/>
 
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-base-link-resources</dependency>
+        <dependency>${plugin.key}:slack-base-link-resources</dependency>
     </web-resource>
 
     <web-resource key="slack-user-link-support">
@@ -380,7 +380,7 @@
         <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.css"/>
 
         <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-user-link-support</dependency>
+        <dependency>${plugin.key}:slack-user-link-support</dependency>
     </web-resource>
 
     <web-resource name="Slack Links Support" key="slack-links-support">
@@ -435,8 +435,8 @@
         <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.css"/>
         <resource type="soy" name="slack-feature/integrationsteps/integrationsteps.soy" location="slack-feature/integrationsteps/integrationsteps.soy"/>
 
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-global</dependency>
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-connection-status-resources</dependency>
+        <dependency>${plugin.key}:slack-global</dependency>
+        <dependency>${plugin.key}:slack-connection-status-resources</dependency>
     </web-resource>
 
     <web-resource name="Slack Connection Status resources" key="slack-connection-status-resources">
@@ -458,7 +458,7 @@
         <resource type="download" name="slack-feature/connectionstatus/connectionstatus.js" location="slack-feature/connectionstatus/connectionstatus.js"/>
         <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.css"/>
 
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-global</dependency>
+        <dependency>${plugin.key}:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
         <dependency>com.atlassian.auiplugin:aui-inline-dialog2</dependency>
     </web-resource>
@@ -489,7 +489,7 @@
 
     <web-resource key="slack-view-oauth-resources">
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
-        <dependency>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin:slack-user-link-support</dependency>
+        <dependency>${plugin.key}:slack-user-link-support</dependency>
 
         
 
@@ -544,4 +544,9 @@
             <param-value>true</param-value>
         </init-param>
     </servlet-filter>
+
+    <velocity-allowlist key="velocity-allowlist-slack-plugin">
+        <method>com.atlassian.confluence.plugins.slack.spi.impl.ConfluenceSlackPluginResourceProvider#getPluginKey()</method>
+    </velocity-allowlist>
+
 </atlassian-plugin>
