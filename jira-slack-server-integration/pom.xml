@@ -99,6 +99,10 @@
                         <groupId>jndi</groupId>
                         <artifactId>jndi</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.atlassian.gadgets</groupId>
+                        <artifactId>atlassian-gadgets-spi</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
