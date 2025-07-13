@@ -51,6 +51,7 @@
         <!-- Dependency versions -->
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
         <atlassian.selenium.version>4.0.0-m008</atlassian.selenium.version>
+        <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
         <commons-codec.version>1.11</commons-codec.version>
@@ -118,7 +119,7 @@
         <dependency>
             <groupId>com.atlassian.ozymandias</groupId>
             <artifactId>atlassian-plugin-point-safety</artifactId>
-            <version>0.15</version>
+            <version>${atlassian.plugin.point.safety.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -504,7 +505,6 @@
 
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
-                        <exclude>com.atlassian.fugue:fugue</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
                     </banningExcludes>
 
