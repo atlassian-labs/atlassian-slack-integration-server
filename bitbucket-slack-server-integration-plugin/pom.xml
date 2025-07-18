@@ -591,7 +591,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>3.5.3</version>
                 <configuration>
                     <argLine>${jvm17.opens}</argLine>
                     <skipTests>${ut.test.skip}</skipTests>
@@ -604,7 +604,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>3.5.3</version>
                 <configuration>
                     <argLine>${jvm17.opens}</argLine>
                     <trimStackTrace>false</trimStackTrace>
@@ -614,7 +614,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
                     <filesets>
