@@ -3,12 +3,12 @@ package com.atlassian.jira.plugins.slack.web.rest;
 import com.atlassian.jira.plugins.slack.system.PluginInfoSource;
 import com.atlassian.plugins.rest.api.security.annotation.UnrestrictedAccess;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Rest Endpoint that will let us validate the configuration of the plugin
