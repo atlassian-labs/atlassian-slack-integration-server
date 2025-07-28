@@ -20,18 +20,18 @@
         <project.root.directory>${project.basedir}/..</project.root.directory>
 
         <!-- Jira version used for integration tests; can be overridden to test against different versions -->
-        <jira.version>10.7.0</jira.version>
+        <jira.version>11.0.0-m0012</jira.version>
         <jira.data.version>${jira.version}</jira.data.version>
 
         <!-- Dependencies and plugins that must align with the running Jira during integration tests -->
-        <testkit.version>10.3.5</testkit.version>
-        <!-- jira-testkit-client 10.3.5 transitively brings publicly unavailable jira-rest-api version -->
-        <jira.rest.api.version>10.5.1</jira.rest.api.version>
+        <testkit.version>11.5.2</testkit.version>
+        <!-- jira-testkit-client 11.5.2 transitively brings publicly unavailable jira-rest-api version -->
+        <jira.rest.api.version>11.0.0-m0012</jira.rest.api.version>
         <jira.test.unit.version>${jira.version}</jira.test.unit.version>
         <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
 
         <!-- Jira API version used during the build -->
-        <jira.api.version>10.7.0</jira.api.version>
+        <jira.api.version>11.0.0-m0012</jira.api.version>
         <!-- Dependencies that must align with the API version used during the build -->
         <jira-project-config.version>${jira.api.version}</jira-project-config.version>
 

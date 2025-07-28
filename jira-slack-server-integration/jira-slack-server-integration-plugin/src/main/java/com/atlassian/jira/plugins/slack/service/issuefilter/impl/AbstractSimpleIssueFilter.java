@@ -4,7 +4,7 @@ import com.atlassian.jira.plugins.slack.model.dto.MultipleValue;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.service.issuefilter.IssueFilter;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * This simple issue filter does everything with simple strings and multiple value string

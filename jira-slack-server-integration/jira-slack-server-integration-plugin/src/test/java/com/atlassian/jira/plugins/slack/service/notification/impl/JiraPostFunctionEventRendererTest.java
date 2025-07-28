@@ -126,7 +126,7 @@ public class JiraPostFunctionEventRendererTest {
 
         SlackNotification notif = testRender();
 
-        assertThat(notif.getMessageRequest().getText(), is("UN"));
+        assertThat(notif.getMessageRequest().getText(), is("$user.displayName"));
         assertThat(notif.getMessageRequest().getAttachments(), hasSize(1));
         assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
     }
@@ -223,7 +223,7 @@ public class JiraPostFunctionEventRendererTest {
 
         final ChatPostMessageRequest message = result.right().get().build();
         assertThat(message.getText(), is("UN, IK, Project, DONE, H, Task, "
-                + "CR, AS, REP, act, TODO, INPROG, Summary, F1: 3, bar, F3: [empty]"));
+                + "CR, AS, REP, act, TODO, INPROG, $issue.summary, F1: 3, $customFields.custom_field_2.value, F3: [empty]"));
         assertThat(message.getAttachments(), hasSize(1));
         assertThat(message.getAttachments().get(0), sameInstance(attachment));
     }
