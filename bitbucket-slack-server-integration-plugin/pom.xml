@@ -50,7 +50,7 @@
 
         <!-- Dependency versions -->
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
-        <atlassian.selenium.version>4.0.0-m008</atlassian.selenium.version>
+        <atlassian.selenium.version>4.0.0</atlassian.selenium.version>
         <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
