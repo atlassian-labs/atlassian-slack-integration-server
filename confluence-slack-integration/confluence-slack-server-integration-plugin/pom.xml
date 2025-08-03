@@ -373,6 +373,8 @@
                         <Import-Package>
                             org.springframework.osgi.*;resolution:="optional",
                             org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            com.atlassian.confluence.plugin.descriptor.web.conditions,
+                            com.atlassian.confluence.plugin.descriptor.web.urlreadingconditions,
                             *;resolution:="optional"
                         </Import-Package>
                         <Spring-Context>*</Spring-Context>
