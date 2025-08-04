@@ -3,9 +3,8 @@ package it.com.atlassian.jira.plugins.slack.pageobjects;
 import com.atlassian.pageobjects.PageBinder;
 import com.atlassian.pageobjects.elements.PageElement;
 import com.atlassian.pageobjects.elements.query.Poller;
+import jakarta.inject.Inject;
 import org.openqa.selenium.By;
-
-import javax.inject.Inject;
 
 public class ConfigurationSection {
     private static final String ADD_BUTTON_ID = "slack-project-to-channel-add";

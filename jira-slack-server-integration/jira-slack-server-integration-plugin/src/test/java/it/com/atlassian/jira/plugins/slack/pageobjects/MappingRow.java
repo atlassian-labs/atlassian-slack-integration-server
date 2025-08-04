@@ -5,11 +5,11 @@ import com.atlassian.pageobjects.elements.PageElement;
 import com.atlassian.pageobjects.elements.query.Conditions;
 import com.atlassian.pageobjects.elements.query.TimedCondition;
 import com.atlassian.pageobjects.elements.query.TimedQuery;
+import jakarta.inject.Inject;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.openqa.selenium.By;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

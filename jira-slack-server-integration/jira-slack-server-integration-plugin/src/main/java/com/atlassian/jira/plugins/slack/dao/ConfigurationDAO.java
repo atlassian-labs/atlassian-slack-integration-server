@@ -2,9 +2,9 @@ package com.atlassian.jira.plugins.slack.dao;
 
 import com.atlassian.jira.plugins.slack.model.ProjectConfiguration;
 import com.atlassian.plugins.slack.api.ConversationKey;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**

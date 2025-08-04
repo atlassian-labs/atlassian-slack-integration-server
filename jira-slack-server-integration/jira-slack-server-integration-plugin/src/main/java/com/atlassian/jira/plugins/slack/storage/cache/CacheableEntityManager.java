@@ -1,6 +1,7 @@
 package com.atlassian.jira.plugins.slack.storage.cache;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
+
 import java.util.Optional;
 
 /**

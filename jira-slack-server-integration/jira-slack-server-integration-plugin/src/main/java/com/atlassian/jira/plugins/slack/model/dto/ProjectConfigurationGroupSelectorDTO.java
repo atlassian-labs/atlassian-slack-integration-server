@@ -1,8 +1,7 @@
 package com.atlassian.jira.plugins.slack.model.dto;
 
 import com.atlassian.jira.plugins.slack.model.ProjectConfigurationGroupSelector;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ProjectConfigurationGroupSelectorDTO implements ProjectConfigurationGroupSelector {
     private final long projectId;

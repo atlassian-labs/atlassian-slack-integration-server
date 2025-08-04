@@ -1,9 +1,8 @@
 package com.atlassian.jira.plugins.slack.model.event;
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-
-import javax.annotation.Nullable;
 
 @Value
 @EqualsAndHashCode(callSuper = true)

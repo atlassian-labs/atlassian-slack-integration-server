@@ -21,8 +21,8 @@ import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.sal.api.user.UserManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;

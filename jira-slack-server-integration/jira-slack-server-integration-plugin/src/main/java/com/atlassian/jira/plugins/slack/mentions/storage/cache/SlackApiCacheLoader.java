@@ -3,8 +3,8 @@ package com.atlassian.jira.plugins.slack.mentions.storage.cache;
 import com.atlassian.cache.CacheLoader;
 import com.atlassian.jira.plugins.slack.storage.cache.CacheableEntity;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -3,10 +3,9 @@ package com.atlassian.jira.plugins.slack.mentions.storage.json;
 import com.atlassian.jira.plugins.slack.model.mentions.IssueMention;
 import com.atlassian.jira.plugins.slack.storage.json.JsonPropertyStoreStorageStrategy;
 import com.atlassian.jira.plugins.slack.storage.json.JsonStoreFactory;
+import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Nonnull;
 
 /**
  * A store for Slack issue mentions

@@ -12,10 +12,10 @@ import it.com.atlassian.jira.plugins.slack.pageobjects.ProjectConfigurationPage;
 import it.com.atlassian.jira.plugins.slack.util.FlakyWebTestKiller;
 import it.com.atlassian.jira.plugins.slack.util.JiraFuncTestData;
 import it.com.atlassian.jira.plugins.slack.util.SlackWebTestBase;
+import jakarta.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 

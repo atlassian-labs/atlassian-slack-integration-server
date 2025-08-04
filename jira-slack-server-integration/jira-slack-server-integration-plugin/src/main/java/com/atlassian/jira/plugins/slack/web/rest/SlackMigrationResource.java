@@ -4,9 +4,9 @@ import com.atlassian.plugins.slack.api.client.SlackClient;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.SlackChannelDTO;
+import jakarta.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
