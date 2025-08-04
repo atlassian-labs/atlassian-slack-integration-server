@@ -27,13 +27,9 @@
         <testkit.version>11.5.2</testkit.version>
         <!-- jira-testkit-client 11.5.2 transitively brings publicly unavailable jira-rest-api version -->
         <jira.rest.api.version>11.0.0-m0012</jira.rest.api.version>
-        <jira.test.unit.version>${jira.version}</jira.test.unit.version>
-        <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
 
         <!-- Jira API version used during the build -->
         <jira.api.version>11.0.0-m0012</jira.api.version>
-        <!-- Dependencies that must align with the API version used during the build -->
-        <jira-project-config.version>${jira.api.version}</jira-project-config.version>
 
         <!-- Other dependencies -->
         <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
@@ -108,7 +104,7 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-admin-project-config-plugin</artifactId>
-                <version>${jira-project-config.version}</version>
+                <version>${jira.api.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>atlassian-spring-scanner-runtime</artifactId>
@@ -119,7 +115,7 @@
             <dependency>
                 <groupId>com.atlassian.servicedesk</groupId>
                 <artifactId>jira-servicedesk-api</artifactId>
-                <version>${jira.version}</version>
+                <version>${jira.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
@@ -151,12 +147,12 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>atlassian-jira-pageobjects</artifactId>
-                <version>${jira.pageobjects.version}</version>
+                <version>${jira.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-tests</artifactId>
-                <version>${jira.test.unit.version}</version>
+                <version>${jira.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira.tests</groupId>
