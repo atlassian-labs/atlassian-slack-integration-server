@@ -29,7 +29,7 @@
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
         <!-- Confluence API version used during the build -->
-        <confluence.api.version>10.0.0-m126</confluence.api.version>
+        <confluence.api.version>10.0.0-rc2</confluence.api.version>
     </properties>
 
     <dependencies>
