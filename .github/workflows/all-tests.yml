@@ -140,7 +140,7 @@ jobs:
     strategy:
       matrix:
         java-version: [21]
-        bitbucket-version: [10.0.0-eap1]
+        bitbucket-version: [10.0.0-eap3]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
