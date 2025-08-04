@@ -6,8 +6,7 @@ import com.atlassian.jira.plugins.slack.storage.cache.CacheableEntity;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.seratch.jslack.api.model.User;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.PUBLIC_ONLY;
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -6,8 +6,8 @@ import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.github.seratch.jslack.api.model.Conversation;
 import io.atlassian.fugue.Pair;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class MentionChannelCacheLoader extends SlackApiCacheLoader<ChannelKey, MentionChannel, Pair<Conversation, SlackLink>> {

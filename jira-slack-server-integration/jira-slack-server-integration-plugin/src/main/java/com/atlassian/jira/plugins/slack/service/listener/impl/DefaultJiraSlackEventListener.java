@@ -29,11 +29,11 @@ import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
 import com.atlassian.sal.api.user.UserKey;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

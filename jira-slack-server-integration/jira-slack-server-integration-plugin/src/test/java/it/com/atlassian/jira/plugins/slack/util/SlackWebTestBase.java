@@ -12,6 +12,7 @@ import com.atlassian.plugins.slack.test.UserCredentials;
 import com.atlassian.plugins.slack.test.client.TestClientExtension;
 import com.atlassian.plugins.slack.test.mockserver.SlackMockServerExtension;
 import com.atlassian.webdriver.testing.annotation.WindowSize;
+import jakarta.inject.Inject;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -21,7 +22,6 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
 import java.util.Collections;
 
 import static com.atlassian.plugins.slack.test.TestChannels.PUBLIC;

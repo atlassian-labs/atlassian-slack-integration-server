@@ -3,8 +3,7 @@ package com.atlassian.jira.plugins.slack.manager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Used to send plain issue details messages

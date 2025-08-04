@@ -5,10 +5,10 @@ import com.atlassian.cache.CacheLoader;
 import com.atlassian.cache.CacheManager;
 import com.atlassian.cache.CacheSettingsBuilder;
 import com.google.common.collect.ImmutableList;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
