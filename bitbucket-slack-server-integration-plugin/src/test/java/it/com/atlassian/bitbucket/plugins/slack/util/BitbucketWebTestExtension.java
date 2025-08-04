@@ -5,6 +5,7 @@ import com.atlassian.pageobjects.Page;
 import com.atlassian.pageobjects.ProductInstance;
 import com.atlassian.pageobjects.TestedProductFactory;
 import com.atlassian.webdriver.bitbucket.BitbucketTestedProduct;
+import com.atlassian.webdriver.bitbucket.page.BitbucketLegacyLoginPage;
 import com.atlassian.webdriver.bitbucket.page.BitbucketLoginPage;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -43,6 +44,6 @@ public class BitbucketWebTestExtension implements BeforeAllCallback {
     }
 
     public <P extends Page> P loginAs(String username, String password, Class<P> page, Object... args) {
-        return product.visit(BitbucketLoginPage.class).login(username, password, page, args);
+        return product.visit(BitbucketLegacyLoginPage.class).login(username, password, page, args);
     }
 }
