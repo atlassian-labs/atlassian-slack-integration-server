@@ -276,6 +276,13 @@
             <version>15.0.2</version>
             <scope>test</scope>
         </dependency>
+        <!-- Transitive confluence-rest-client-jakarta from confluence-webdriver-pageobjects:15.0.2 is publicly unavailable -->
+        <dependency>
+            <groupId>com.atlassian.confluence</groupId>
+            <artifactId>confluence-rest-client-jakarta</artifactId>
+            <version>${confluence.api.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
