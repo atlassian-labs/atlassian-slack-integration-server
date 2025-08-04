@@ -240,8 +240,8 @@
     </web-item>
 
     <!-- Dynamic module types: allow plugins injecting notifications from Confluence events -->
-    <module-type key="slack-notification-type" class="com.atlassian.plugins.slack.api.descriptor.SlackNotificationDescriptor"/>
-    <module-type key="slack-notification-context" class="com.atlassian.plugins.slack.api.descriptor.SlackNotificationContextDescriptor"/>
+    <!-- Key: slack-notification-type Factory: com.atlassian.plugins.slack.api.descriptor.factory.SlackNotificationDescriptorFactory -->
+    <!-- Key: slack-channel-context Factory: com.atlassian.plugins.slack.api.descriptor.factory.SlackNotificationContextDescriptorFactory -->
 
     <slack-notification-context key="slack-space-context" class="com.atlassian.confluence.plugins.slack.spacetochannel.notifications.SpaceNotificationContext"
             value="space"/>

@@ -25,7 +25,7 @@
         <confluence.amps.version>${amps.version}</confluence.amps.version>
 
         <!-- Confluence version used for integration tests; can be overridden to test against different versions -->
-        <confluence.version>10.0.0-m126</confluence.version>
+        <confluence.version>10.0.0-rc2</confluence.version>
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
         <!-- Confluence API version used during the build -->
@@ -373,6 +373,7 @@
                         <Import-Package>
                             org.springframework.osgi.*;resolution:="optional",
                             org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            com.atlassian.plugin.osgi.bridge.external,
                             com.atlassian.confluence.plugin.descriptor.web.conditions,
                             com.atlassian.confluence.plugin.descriptor.web.urlreadingconditions,
                             *;resolution:="optional"

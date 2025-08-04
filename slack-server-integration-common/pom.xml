@@ -201,6 +201,11 @@
             <artifactId>atlassian-util-concurrent</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>atlassian-plugins-osgi</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Test dependencies-->
         <dependency>
