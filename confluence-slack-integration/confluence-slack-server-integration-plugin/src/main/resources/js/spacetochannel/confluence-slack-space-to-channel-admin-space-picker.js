@@ -87,7 +87,6 @@ function(
          * @returns {void|*}
          */
         build: function (opts) {
-            console.log('admin-space-picker.build', JSON.stringify(opts));
             return _.extend({
                 placeholder: AJS.I18n.getText("confluence-ui-components.space-picker.placeholder"),
 
