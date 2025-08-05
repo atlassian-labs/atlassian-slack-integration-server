@@ -15,7 +15,7 @@
 
     <modules>
         <module>slack-server-integration-common</module>
-<!--        <module>jira-slack-server-integration</module>-->
+        <module>jira-slack-server-integration</module>
         <module>confluence-slack-integration</module>
         <module>bitbucket-slack-server-integration-plugin</module>
         <module>slack-server-integration-test-common</module>
