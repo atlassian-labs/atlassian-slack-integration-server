@@ -48,7 +48,7 @@
         <!-- Dependencies -->
         <mockito-core.version>2.25.0</mockito-core.version>
         <junit.version>4.13.2</junit.version>
-        <junit.jupiter.version>5.7.1</junit.jupiter.version>
+        <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <joda-time.version>2.3</joda-time.version>
         <commons-codec.version>1.11</commons-codec.version>
         <okhttp.version>4.10.0</okhttp.version>
@@ -60,7 +60,7 @@
 
         <slack.common.version>3.0.0</slack.common.version>
         <platform.version>8.0.0</platform.version>
-        <amps.version>9.5.0</amps.version>
+        <amps.version>9.5.4</amps.version>
         <jvm17.opens />
     </properties>
 
@@ -206,19 +206,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
                 <version>${junit.jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-                <version>${junit.jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-migrationsupport</artifactId>
-                <version>${junit.jupiter.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
