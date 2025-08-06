@@ -189,6 +189,12 @@
                 <artifactId>httpcore</artifactId>
                 <version>${httpclient-core.version}</version>
             </dependency>
+            <!-- Override transitive dependencies -->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>3.0.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
