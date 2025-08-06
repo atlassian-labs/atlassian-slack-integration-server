@@ -104,6 +104,15 @@
                         <groupId>com.atlassian.gadgets</groupId>
                         <artifactId>atlassian-gadgets-spi</artifactId>
                     </exclusion>
+                    <!-- opensaml 5 unavailable publicly -->
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml-saml-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml-saml-impl</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
