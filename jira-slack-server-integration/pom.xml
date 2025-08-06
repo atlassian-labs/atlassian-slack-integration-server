@@ -153,6 +153,17 @@
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>atlassian-jira-pageobjects</artifactId>
                 <version>${jira.version}</version>
+                <exclusions>
+                    <!-- Exclude browser dependencies since transitive ones are publicly unavailable -->
+                    <exclusion>
+                        <groupId>com.atlassian.browsers</groupId>
+                        <artifactId>chrome</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.atlassian.browsers</groupId>
+                        <artifactId>chrome-profile</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
