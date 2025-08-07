@@ -31,7 +31,6 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 import java.util.Set;
@@ -49,7 +48,7 @@ import static jakarta.ws.rs.core.Response.Status.FORBIDDEN;
 @ReadOnlyAccessAllowed
 @Path("/config/{spaceKey}")
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SpaceToChannelConfigurationResource {
     private final SpaceManager spaceManager;
     private final PermissionManager permissionManager;
