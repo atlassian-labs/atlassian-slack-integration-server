@@ -16,10 +16,6 @@ import com.atlassian.jira.user.ApplicationUser;
 import com.google.common.base.Strings;
 import io.atlassian.fugue.Either;
 import jakarta.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
@@ -29,6 +25,9 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.function.Function;
 
 @Path("/mapping/{projectKey}")
@@ -44,7 +43,6 @@ public class ProjectConfigurationResource {
     private final JiraAuthenticationContext authenticationContext;
 
     @Inject
-    @Autowired
     public ProjectConfigurationResource(final ProjectConfigurationManager projectConfigurationManager,
                                         final ProjectManager projectManager,
                                         final PermissionManager permissionManager,

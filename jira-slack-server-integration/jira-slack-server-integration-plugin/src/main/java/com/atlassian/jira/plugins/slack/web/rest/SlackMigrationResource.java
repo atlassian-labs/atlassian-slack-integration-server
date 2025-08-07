@@ -5,13 +5,12 @@ import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.SlackChannelDTO;
 import jakarta.inject.Inject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,7 +21,6 @@ public class SlackMigrationResource {
     private final SlackClientProvider slackClientProvider;
 
     @Inject
-    @Autowired
     public SlackMigrationResource(final SlackLinkManager slackLinkManager,
                                   final SlackClientProvider slackClientProvider) {
         this.slackLinkManager = slackLinkManager;

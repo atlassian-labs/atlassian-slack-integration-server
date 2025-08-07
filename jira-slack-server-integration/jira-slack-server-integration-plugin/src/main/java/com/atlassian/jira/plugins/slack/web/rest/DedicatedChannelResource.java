@@ -8,10 +8,6 @@ import com.atlassian.jira.plugins.slack.model.DedicatedChannelInfo;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.PermissionManager;
 import jakarta.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -21,6 +17,9 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Optional;
 
 @Path("/dedicatedchannel")
@@ -35,7 +34,6 @@ public class DedicatedChannelResource {
     private final JiraAuthenticationContext jiraAuthenticationContext;
 
     @Inject
-    @Autowired
     public DedicatedChannelResource(final DedicatedChannelManager dedicatedChannelManager,
                                     final IssueManager issueManager,
                                     final PermissionManager permissionManager,
