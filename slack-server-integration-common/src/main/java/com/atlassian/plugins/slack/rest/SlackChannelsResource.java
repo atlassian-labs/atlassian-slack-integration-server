@@ -21,7 +21,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
 
@@ -29,7 +28,7 @@ import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 
 @ReadOnlyAccessAllowed
 @Path("channels")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SlackChannelsResource {
     private final SlackClientProvider slackClientProvider;
     private final EventPublisher eventPublisher;

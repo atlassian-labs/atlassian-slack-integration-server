@@ -22,7 +22,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
 
@@ -40,7 +39,6 @@ public class SlackLinkResource {
     private final SlackClientProvider slackClientProvider;
 
     @Inject
-    @Autowired
     public SlackLinkResource(final SlackConnectionService slackConnectionService,
                              final SlackLinkManager slackLinkManager,
                              final I18nResolver i18nResolver,

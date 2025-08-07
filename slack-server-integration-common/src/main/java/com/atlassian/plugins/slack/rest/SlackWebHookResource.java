@@ -46,7 +46,6 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Map;
@@ -61,7 +60,7 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
  */
 @ReadOnlyAccessAllowed
 @Path("/")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SlackWebHookResource {
     public static final String EVENT_TYPE = "type";
     public static final String TYPE_URL_VERIFICATION = "url_verification";
