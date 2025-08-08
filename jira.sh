@@ -6,7 +6,6 @@ Arguments:
   - run       compile the common module, the Jira plugin, and start up Jira for development
   - pack      compile the Jira plugin ('pack' is skipped if 'run' is passed)
   - common    compile common module
-  - compat    compile Jira 8 and JSD compatibility modules
   - clean     clear compiled files, except Jira home directory ('clean' is skipped if 'purge' is passed)
   - purge     clear all compiled files, including Jira home directory with database and everything
   - deps      clean the plugin's embedded dependencies, forcing them to be rebuild in the next compilation
@@ -35,8 +34,6 @@ pack=$([[ "$*" == *"pack"* || "$empty" == "yes" ]] && ([[ "$run" == "yes" ]] && 
 
 common=$([[ "$*" == *"common"* || "$empty" == "yes" || "$run" == "yes" ]] && echo "yes" || echo "no") # enabled by default or when run is passed
 
-compat=$([[ "$*" == *"compat"* ]] && echo "yes" || echo "no")
-
 deps=$([[ "$*" == *"deps"* ]] && echo "yes" || echo "no") # it cleans dependencies when building the plugin
 
 ngrok=$([[ "$*" == *"ngrok"* ]] && echo "yes" || echo "no") # update jira with ngrok url
@@ -55,7 +52,6 @@ export PLUGIN="jira-slack-server-integration/jira-slack-server-integration-plugi
     ([[ "$clean" != "yes" ]] || atlas-mvn clean) && \
     ([[ "$purge" != "yes" ]] || (rm -rf ${PLUGIN}/target && atlas-mvn clean)) && \
     ([[ "$common" != "yes" ]] || ./bin/pack-common.sh) && \
-    ([[ "$compat" != "yes" ]] || ./bin/pack-compat-jira.sh) && \
     ([[ "$deps" != "yes" ]] || (rm -f ${PLUGIN}/target/dependency-maven-plugin-markers/*.marker && rm -rf ${PLUGIN}/target/classes)) && \
     ([[ "$pack" != "yes" ]] || ./bin/pack-plugin.sh) && \
     ([[ "$run" != "yes" ]] || ./bin/run-jira.sh) && \

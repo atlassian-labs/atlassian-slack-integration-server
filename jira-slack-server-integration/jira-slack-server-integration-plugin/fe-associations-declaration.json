@@ -1,0 +1,36 @@
+{
+  "packageName": "@atlassian/dc.jira.atlassian-slack-integration-server.jira-slack-server-integration-plugin",
+  "manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest": {
+    "outputDirectoryFiles": [
+      "js/banner/update-slack-link-banner.js",
+      "js/initSlackChannelPickers.js",
+      "js/jira-slack-status.js",
+      "js/lib/backbone-amd.js",
+      "js/migrate-to-slack.js",
+      "js/mute-bulk-edit-notifications-toggle.js",
+      "js/slack-base.js",
+      "js/slack-feature/channelmapping/channelmapping-init.js",
+      "js/slack-feature/channelmapping/channelmapping-page.js",
+      "js/slack-feature/channelmapping/mapping-collection.js",
+      "js/slack-feature/channelmapping/mapping-setting.js",
+      "js/slack-feature/channelmapping/mapping-view.js",
+      "js/slack-feature/channelmapping/mapping.js",
+      "js/slack-feature/channelmapping/querymodule.js",
+      "js/slack-feature/issuepanel/dedicatedchannel-view.js",
+      "js/slack-feature/issuepanel/dedicatedchannel.js",
+      "js/slack-feature/issuepanel/issuemention-view.js",
+      "js/slack-feature/issuepanel/issuemention.js",
+      "js/slack-feature/issuepanel/issuepanel-init.js",
+      "js/slack-feature/issuepanel/issuepanel-view.js",
+      "js/slack-feature/settings/slack-settings.js",
+      "js/slack-fuse.min.js",
+      "js/slack-jql-autocomplete.js",
+      "js/slack-notification-editor.js",
+      "js/slack-notification-preview.js",
+      "js/slack-widget/channelselector/channelmapping-service.js",
+      "js/slack-widget/channelselector/channelselector-view.js",
+      "js/slack-widget/criteria/criteria.js",
+      "js/slackdown.js"
+    ]
+  }
+}

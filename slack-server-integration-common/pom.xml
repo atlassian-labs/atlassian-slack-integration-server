@@ -281,6 +281,36 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>amps-maven-plugin</artifactId>
+                <version>${amps.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-fe-module-manifests</id>
+                        <goals>
+                            <goal>copy-fe-module-manifests</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-fe-manifest-associations</id>
+                        <goals>
+                            <goal>report-fe-manifest-associations</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includedFeModuleManifests>
+                        <includedFeModuleManifest>${project.basedir}/package.json</includedFeModuleManifest>
+                    </includedFeModuleManifests>
+                    <feManifestAssociations>
+                        <feManifestAssociation>
+                            <packageName>@atlassian/dc.shared.atlassian-slack-integration-server.slack-server-integration-common</packageName>
+                            <outputDirectoryFilesDeclaration>${project.basedir}/fe-associations-declaration.json</outputDirectoryFilesDeclaration>
+                        </feManifestAssociation>
+                    </feManifestAssociations>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.atlassian.lesscss</groupId>
                 <artifactId>lesscss-maven-plugin</artifactId>
                 <executions>

@@ -10,7 +10,7 @@
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>4.0.4-SNAPSHOT</version>
+    <version>4.0.5-SNAPSHOT</version>
 
     <name>Slack for Jira Data Center</name>
     <description>This is the Slack plugin for Jira Data Center</description>
@@ -20,16 +20,6 @@
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>slack-server-integration-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>jira-8-compat</artifactId>
-            <version>${slack.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>jira-service-desk-compat-main</artifactId>
-            <version>${slack.common.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.seratch</groupId>
@@ -85,6 +75,11 @@
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-admin-project-config-plugin</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.servicedesk</groupId>
+            <artifactId>jira-servicedesk-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -388,7 +383,6 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
-                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <!-- Custom logging config to show logs from plugin classes by default -->
                     <log4jProperties>src/main/resources/log4j.properties</log4jProperties>
@@ -416,6 +410,16 @@
                             <version>${testkit.version}</version>
                         </pluginArtifact>
                     </pluginArtifacts>
+
+                    <includedFeModuleManifests>
+                        <includedFeModuleManifest>${project.basedir}/package.json</includedFeModuleManifest>
+                    </includedFeModuleManifests>
+                    <feManifestAssociations>
+                        <feManifestAssociation>
+                            <packageName>@atlassian/dc.jira.atlassian-slack-integration-server.jira-slack-server-integration-plugin</packageName>
+                            <outputDirectoryFilesDeclaration>${project.basedir}/fe-associations-declaration.json</outputDirectoryFilesDeclaration>
+                        </feManifestAssociation>
+                    </feManifestAssociations>
 
                     <systemPropertyVariables>
                         <plugin.resource.directories>

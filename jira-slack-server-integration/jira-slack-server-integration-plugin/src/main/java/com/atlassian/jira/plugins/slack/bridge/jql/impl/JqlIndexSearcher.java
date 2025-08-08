@@ -7,7 +7,7 @@ import com.atlassian.jira.issue.search.SearchProvider;
 import com.atlassian.jira.issue.search.SearchQuery;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.plugins.slack.bridge.jql.JqlSearcher;
-import com.atlassian.jira.plugins.slack.compat.FixRequestTypeClauseVisitor;
+import com.atlassian.jira.plugins.slack.servicedesk.FixRequestTypeClauseVisitor;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.query.Query;
@@ -66,7 +66,7 @@ public class JqlIndexSearcher implements JqlSearcher {
 
         Query fixedQuery = query;
         if (visitor.isClauseChanged()) {
-            log.debug("JQL query before fixing a request type: [{}]", query.toString());
+            log.debug("JQL query before fixing a request type: [{}]", query);
             fixedQuery = JqlQueryBuilder.newBuilder()
                     .where()
                     .addClause(fixedWhereClause)

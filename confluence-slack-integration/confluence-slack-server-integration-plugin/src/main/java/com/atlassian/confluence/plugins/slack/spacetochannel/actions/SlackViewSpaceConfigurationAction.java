@@ -21,6 +21,7 @@ import com.github.seratch.jslack.api.model.User;
 import com.google.common.collect.ImmutableMap;
 import com.opensymphony.xwork.Action;
 import lombok.RequiredArgsConstructor;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class SlackViewSpaceConfigurationAction extends AbstractSpaceAdminAction 
         return Action.SUCCESS;
     }
 
-    @SuppressWarnings("unused")
+    @StrutsParameter
     public void setTeamId(final String teamId) {
         this.teamId = teamId;
     }

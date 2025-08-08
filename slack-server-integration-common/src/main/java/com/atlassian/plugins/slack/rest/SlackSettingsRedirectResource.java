@@ -1,6 +1,6 @@
 package com.atlassian.plugins.slack.rest;
 
-import com.atlassian.plugins.rest.api.security.annotation.AnonymousSiteAccess;
+import com.atlassian.plugins.rest.api.security.annotation.UnrestrictedAccess;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 
@@ -14,7 +14,7 @@ import javax.ws.rs.core.UriBuilder;
 import static javax.ws.rs.core.Response.Status.MOVED_PERMANENTLY;
 
 @Path("/settings")
-@AnonymousSiteAccess
+@UnrestrictedAccess
 public class SlackSettingsRedirectResource {
     private final ApplicationProperties applicationProperties;
 

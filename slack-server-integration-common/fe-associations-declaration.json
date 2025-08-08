@@ -1,0 +1,18 @@
+{
+  "packageName": "@atlassian/dc.shared.atlassian-slack-integration-server.slack-server-integration-common",
+  "manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest": {
+    "outputDirectoryFiles": [
+      "admin/configure-slack.js",
+      "admin/connect/connect-workspace.js",
+      "cookie/js.cookie.js",
+      "links/slack-links.js",
+      "oauth2/bitbucket-slack-link-error.js",
+      "oauth2/confluence-slack-link-error.js",
+      "oauth2/jira-slack-link-error.js",
+      "slack-feature/connectionstatus/connectionstatus.js",
+      "slack-feature/personal-notifications/personal-notifications.js",
+      "token/token-status.js",
+      "user/slack-user-link.js"
+    ]
+  }
+}
