@@ -24,7 +24,7 @@
         <jira.amps.version>${amps.version}</jira.amps.version>
 
         <!-- Jira version used for integration tests; can be overridden to test against different versions -->
-        <jira.version>11.0.0-m0015</jira.version>
+        <jira.version>11.0.0</jira.version>
         <jira.data.version>${jira.version}</jira.data.version>
 
         <!-- Dependencies and plugins that must align with the running Jira during integration tests -->
@@ -33,7 +33,7 @@
         <jira.rest.api.version>${jira.version}</jira.rest.api.version>
 
         <!-- Jira API version used during the build -->
-        <jira.api.version>11.0.0-m0015</jira.api.version>
+        <jira.api.version>11.0.0</jira.api.version>
 
         <!-- Other dependencies -->
         <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
