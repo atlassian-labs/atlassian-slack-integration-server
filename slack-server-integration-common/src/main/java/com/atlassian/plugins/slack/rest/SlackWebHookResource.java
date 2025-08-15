@@ -3,7 +3,7 @@ package com.atlassian.plugins.slack.rest;
 import com.atlassian.annotations.security.XsrfProtectionExcluded;
 import com.atlassian.confluence.compat.api.service.accessmode.ReadOnlyAccessAllowed;
 import com.atlassian.event.api.EventPublisher;
-import com.atlassian.plugins.rest.api.security.annotation.AnonymousSiteAccess;
+import com.atlassian.plugins.rest.api.security.annotation.UnrestrictedAccess;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.SlackLink;
 import com.atlassian.plugins.slack.api.events.SlackActionAnalyticEvent;
@@ -98,7 +98,7 @@ public class SlackWebHookResource {
     @POST
     @Path("/event")
     @Consumes(MediaType.APPLICATION_JSON)
-    @AnonymousSiteAccess
+    @UnrestrictedAccess
     @SlackSignatureVerifying
     public Response webEvent(@Context final HttpServletRequest request) {
         final JsonNode eventPayload;
@@ -175,7 +175,7 @@ public class SlackWebHookResource {
     @Path("/command")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @AnonymousSiteAccess
+    @UnrestrictedAccess
     @XsrfProtectionExcluded
     @SlackSignatureVerifying
     public Response slashCommand(
@@ -231,7 +231,7 @@ public class SlackWebHookResource {
     @Path("/action")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @AnonymousSiteAccess
+    @UnrestrictedAccess
     @XsrfProtectionExcluded
     @SlackSignatureVerifying
     public Response action(@FormParam("payload") String payload) {

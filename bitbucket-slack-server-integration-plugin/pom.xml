@@ -5,7 +5,7 @@
     <groupId>com.atlassian.bitbucket.plugins</groupId>
     <artifactId>bitbucket-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>5.0.3-SNAPSHOT</version>
+    <version>5.0.4-SNAPSHOT</version>
 
     <name>Slack for Bitbucket Data Center</name>
     <description>This is the Slack integration for Bitbucket Data Center</description>
@@ -22,7 +22,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <jvm17.opens />
 
-        <!-- default properties. copied from parent POM in order to allow to resolve plugin plugin dependencies during BBS build -->
+        <!-- default properties. copied from parent POM in order to allow to resolve plugin dependencies during BBS build -->
         <it.test.skip>true</it.test.skip>
         <ut.test.skip>false</ut.test.skip>
         <app.startup.skip>false</app.startup.skip>
@@ -34,24 +34,31 @@
         <!-- Use credentials of 'github' server from settings.xml during the release -->
         <project.scm.id>github</project.scm.id>
 
-        <!-- dependency versions -->
-        <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
-        <junit.jupiter.version>5.7.1</junit.jupiter.version>
-        <mockito-core.version>2.25.0</mockito-core.version>
-        <atlassian.selenium.version>3.6.0</atlassian.selenium.version>
-        <commons-codec.version>1.11</commons-codec.version>
-        <slack.common.version>2.0.0</slack.common.version>
-
-        <!-- product properties -->
+        <!-- AMPS related properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
+        <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
+
+        <!-- Bitbucket API version used during the build -->
+        <bitbucket.api.version>9.0.0</bitbucket.api.version>
         <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
         <bitbucket.rest.api.version>9.0.0-plat-7-m20</bitbucket.rest.api.version>
+
+        <!-- Bitbucket version used for integration tests; can be overridden to test against different versions -->
         <bitbucket.version>9.0.0</bitbucket.version>
+        <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
         <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements -->
         <bitbucket.page.objects.version>9.0.0</bitbucket.page.objects.version>
-        <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
-        <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
+
+        <!-- Platform version used for dependency management -->
         <platform.version>7.2.6</platform.version>
+
+        <!-- Dependency versions -->
+        <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
+        <atlassian.selenium.version>3.6.0</atlassian.selenium.version>
+        <junit.jupiter.version>5.7.1</junit.jupiter.version>
+        <mockito-core.version>2.25.0</mockito-core.version>
+        <commons-codec.version>1.11</commons-codec.version>
+        <slack.common.version>2.0.0</slack.common.version>
     </properties>
 
     <dependencyManagement>
@@ -124,13 +131,13 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-ao-common</artifactId>
-            <version>${bitbucket.version}</version>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-api</artifactId>
-            <version>${bitbucket.version}</version>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -148,19 +155,19 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-git-api</artifactId>
-            <version>${bitbucket.version}</version>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-util</artifactId>
-            <version>${bitbucket.version}</version>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-scm-common</artifactId>
-            <version>${bitbucket.version}</version>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -491,7 +498,6 @@
                     <skipManifestValidation>true</skipManifestValidation>
                     <forceUpdateCheck>false</forceUpdateCheck>
                     <skipAllPrompts>true</skipAllPrompts>
-                    <verifyFeManifestAssociationsFailOnUndeclaredFiles>false</verifyFeManifestAssociationsFailOnUndeclaredFiles>
 
                     <!-- It allows to connect to Bitbucket embedded database while it is running -->
                     <jvmArgs>${jvm17.opens} -Djdbc.url=jdbc:h2:${project.build.directory}/bitbucket/home/shared/data/db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE</jvmArgs>
@@ -502,6 +508,24 @@
                         <exclude>com.atlassian.fugue:fugue</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
                     </banningExcludes>
+
+                    <includedFeModuleManifests>
+                        <includedFeModuleManifest>${project.basedir}/package.json</includedFeModuleManifest>
+                    </includedFeModuleManifests>
+                    <feManifestAssociations>
+                        <feManifestAssociation>
+                            <packageName>@atlassian/dc.bitbucket.atlassian-slack-integration-server.bitbucket-slack-server-integration-plugin</packageName>
+                            <manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest>
+                                <outputDirectoryFiles>
+                                    slack-static/feature/channel-selector/bitbucket-slack-repository-to-channel-admin-repository-picker.js,
+                                    slack-static/feature/channel-selector/bitbucket-slack-repository-to-channel-internal-service.js,
+                                    slack-static/feature/channel-selector/bitbucket-slack-repository-to-channel-internal-ui.js,
+                                    slack-static/feature/repo-channel-table/analytics.js,
+                                    slack-static/feature/repo-channel-table/is-notification-enabled.js
+                                </outputDirectoryFiles>
+                            </manuallyVerifiedEveryFileHasItsDependenciesDeclaredInTheManifest>
+                        </feManifestAssociation>
+                    </feManifestAssociations>
 
                     <systemPropertyVariables>
                         <plugin.resource.directories>

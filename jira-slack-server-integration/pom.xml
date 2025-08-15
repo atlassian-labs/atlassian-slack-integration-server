@@ -14,29 +14,32 @@
 
     <modules>
         <module>jira-slack-server-integration-plugin</module>
-        <module>jira-8-compat</module>
-        <module>jira-service-desk-compat</module>
     </modules>
 
     <properties>
-        <aui.version>5.1.3</aui.version>
+        <project.root.directory>${project.basedir}/..</project.root.directory>
 
-        <!-- this is the version we will run integration tests against -->
+        <!-- Jira version used for integration tests; can be overridden to test against different versions -->
         <jira.version>10.0.0</jira.version>
+        <jira.data.version>${jira.version}</jira.data.version>
+
+        <!-- Dependencies and plugins that must align with the running Jira during integration tests -->
         <testkit.version>10.3.5</testkit.version>
         <!-- jira-testkit-client 10.3.5 transitively brings publicly unavailable jira-rest-api version -->
         <jira.rest.api.version>10.5.1</jira.rest.api.version>
         <jira.test.unit.version>${jira.version}</jira.test.unit.version>
         <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
-        <jira.data.version>${jira.version}</jira.data.version>
-        <jira-project-config.version>${jira.version}</jira-project-config.version>
+
+        <!-- Jira API version used during the build -->
+        <jira.api.version>10.0.0</jira.api.version>
+        <!-- Dependencies that must align with the API version used during the build -->
+        <jira-project-config.version>${jira.api.version}</jira-project-config.version>
+
+        <!-- Other dependencies -->
+        <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
         <triggers.version>2.3.8</triggers.version>
         <httpclient.version>0.15.0</httpclient.version>
         <httpclient-core.version>4.3.2</httpclient-core.version>
-
-        <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
-
-        <project.root.directory>${project.basedir}/..</project.root.directory>
     </properties>
 
     <dependencyManagement>
@@ -92,6 +95,10 @@
                         <groupId>net.sf.ehcache</groupId>
                         <artifactId>ehcache</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>jndi</groupId>
+                        <artifactId>jndi</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -104,6 +111,11 @@
                         <groupId>com.atlassian.plugin</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.servicedesk</groupId>
+                <artifactId>jira-servicedesk-api</artifactId>
+                <version>${jira.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
