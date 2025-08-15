@@ -19,7 +19,7 @@ import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.xwork.PermittedMethods;
 import com.github.seratch.jslack.api.model.User;
 import com.google.common.collect.ImmutableMap;
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 import lombok.RequiredArgsConstructor;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 

@@ -76,12 +76,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>opensymphony</groupId>
-            <artifactId>xwork</artifactId>
-            <version>1.0.3.6</version>
-        </dependency>
-
 
         <!-- Runtime dependencies -->
         <dependency>

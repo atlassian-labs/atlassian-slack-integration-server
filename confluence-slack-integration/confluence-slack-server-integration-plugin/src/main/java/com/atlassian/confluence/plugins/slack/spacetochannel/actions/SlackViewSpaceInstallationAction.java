@@ -2,7 +2,7 @@ package com.atlassian.confluence.plugins.slack.spacetochannel.actions;
 
 import com.atlassian.confluence.spaces.actions.AbstractSpaceAdminAction;
 import com.atlassian.xwork.PermittedMethods;
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
