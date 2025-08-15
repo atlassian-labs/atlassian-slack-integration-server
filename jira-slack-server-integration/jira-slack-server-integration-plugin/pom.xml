@@ -250,10 +250,29 @@
             <artifactId>atlassian-jira-pageobjects</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Override atlassian-selenium dependencies from atlassian-jira-pageobjects -->
         <dependency>
             <groupId>com.atlassian.selenium</groupId>
             <artifactId>atlassian-webdriver-core</artifactId>
-            <version>3.3.3</version>
+            <version>${atlassian.selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-pageobjects-api</artifactId>
+            <version>${atlassian.selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-pageobjects-elements</artifactId>
+            <version>${atlassian.selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-pageobjects-elements-aui</artifactId>
+            <version>${atlassian.selenium.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

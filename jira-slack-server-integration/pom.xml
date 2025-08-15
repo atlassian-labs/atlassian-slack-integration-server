@@ -38,6 +38,7 @@
         <httpclient-core.version>4.3.2</httpclient-core.version>
 
         <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
+        <atlassian.selenium.version>3.3.3</atlassian.selenium.version>
 
         <project.root.directory>${project.basedir}/..</project.root.directory>
     </properties>
