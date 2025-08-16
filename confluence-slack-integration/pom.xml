@@ -6,7 +6,7 @@
     <parent>
         <artifactId>atlassian-slack-server-integration-parent</artifactId>
         <groupId>com.atlassian.plugins</groupId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>confluence-slack-integration</artifactId>

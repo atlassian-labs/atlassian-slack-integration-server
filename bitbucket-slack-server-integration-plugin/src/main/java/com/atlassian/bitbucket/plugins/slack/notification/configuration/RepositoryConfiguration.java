@@ -1,8 +1,8 @@
 package com.atlassian.bitbucket.plugins.slack.notification.configuration;
 
 import com.atlassian.bitbucket.repository.Repository;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**

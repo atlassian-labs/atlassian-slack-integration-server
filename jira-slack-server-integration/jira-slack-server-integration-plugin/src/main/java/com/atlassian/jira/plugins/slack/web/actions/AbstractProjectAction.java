@@ -23,11 +23,11 @@ import com.atlassian.seraph.util.RedirectUtils;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 import com.github.seratch.jslack.api.model.User;
 import com.google.common.collect.ImmutableMap;
+import jakarta.annotation.Nullable;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

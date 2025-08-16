@@ -2,9 +2,9 @@ package it.com.atlassian.jira.plugins.slack.pageobjects;
 
 import com.atlassian.pageobjects.PageBinder;
 import com.atlassian.pageobjects.elements.PageElement;
+import jakarta.inject.Inject;
 import org.openqa.selenium.By;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -5,8 +5,8 @@ import com.atlassian.jira.plugins.slack.model.mentions.MentionUser;
 import com.atlassian.plugins.slack.api.client.SlackClientProvider;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.github.seratch.jslack.api.model.User;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class MentionUserCacheLoader extends SlackApiCacheLoader<UserId, MentionUser, User> {

@@ -1,0 +1,151 @@
+:root {
+  --large-border-radius: 5px;
+}
+
+#slack-space-to-channel-messages .aui-message {
+  margin: 0 0 10px;
+}
+
+#slack-remove-link .remove-warning {
+  background-color: var(--ds-background-danger-bold);
+  color: var(--ds-text-inverse);
+}
+
+#slack-space-to-channel-configuration {
+  max-width: 800px;
+}
+
+#slack-space-to-channel-configuration .slack-notification-types,
+#slack-space-to-channel-configuration .slack-options {
+  padding: 0;
+}
+
+#slack-space-to-channel-configuration .slack-notification-types:after,
+#slack-space-to-channel-configuration .slack-options:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+#slack-space-to-channel-configuration .slack-notification-types li,
+#slack-space-to-channel-configuration .slack-options li {
+  margin: 0 20px 0 0;
+  padding: 0;
+  float: left;
+  list-style: none;
+}
+
+#slack-space-to-channel-configuration .slack-hidden-channel {
+  font-style: italic;
+}
+
+#slack-space-to-channel-configuration .slack-scopes-warning-container {
+  display: table-row;
+}
+
+#slack-space-to-channel-configuration .slack-scopes-warning-container .slack-scopes-warning {
+  width: 600px;
+  margin-top: 20px;
+}
+
+#slack-space-to-channel-configuration .slack-channel-muted-label {
+  margin-left: 10px;
+}
+
+#slack-confluence-configure {
+  max-width: 1000px;
+  text-align: center;
+}
+
+#slack-confluence-configure .slack-not-linked {
+  margin: 20px 0;
+  width: 200px;
+}
+
+#slack-confluence-configure .slack-integration-steps {
+  margin: 0 auto;
+  width: 600px;
+  border: var(--default-border);
+  border-radius: var(--large-border-radius);
+  padding: 20px;
+  text-align: left;
+}
+
+.select2-slack-channel-dropdown .slack-private-channel-footer {
+  border-top: var(--default-border);
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.select2-slack-channel-dropdown .slack-private-channel-footer h5 {
+  margin-left: 10px;
+}
+
+.select2-slack-channel-dropdown .slack-private-channel-footer p {
+  margin: 0;
+}
+
+.select2-slack-channel-dropdown .slack-private-channel-footer p a.slack-user-link {
+  color: var(--ds-link);
+}
+
+.select2-slack-channel-dropdown .slack-private-channel-footer p a.slack-user-link:hover {
+  background-color: var(--ds-background-neutral-hovered);
+}
+
+.select2-slack-channel-dropdown .slack-private-channel-footer p a.slack-user-link:active {
+  background: transparent;
+}
+
+/* Icons */
+.select2-slack-channel-dropdown .aui-icon.aui-icon-small {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  background-repeat: none;
+  background-size: 16px;
+}
+
+.select2-slack-channel-dropdown .aui-icon.aui-icon-small.private-channel {
+  background-image: url("images/private_channel.png");
+}
+
+.select2-slack-channel-dropdown .aui-icon.aui-icon-small.public-channel {
+  background-image: url("images/public_channel.png");
+}
+
+.select2-slack-channel-dropdown .select2-highlighted .aui-icon.aui-icon-small.private-channel {
+  background-image: url("images/private_channel_active.png");
+}
+
+.select2-slack-channel-dropdown .select2-highlighted .aui-icon.aui-icon-small.public-channel {
+  background-image: url("images/public_channel_active.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+  .select2-slack-channel-dropdown .aui-icon.aui-icon-small.private-channel {
+    background-image: url("images/private_channel@2x.png");
+  }
+  
+  .select2-slack-channel-dropdown .aui-icon.aui-icon-small.public-channel {
+    background-image: url("images/public_channel@2x.png");
+  }
+  
+  .select2-slack-channel-dropdown .select2-highlighted .aui-icon.aui-icon-small.private-channel {
+    background-image: url("images/private_channel_active@2x.png");
+  }
+  
+  .select2-slack-channel-dropdown .select2-highlighted .aui-icon.aui-icon-small.public-channel {
+    background-image: url("images/public_channel_active@2x.png");
+  }
+}
+
+.create-new-channel-in-slack-option .aui-lozenge {
+  float: right;
+  margin-top: 2px;
+}
+
+#slack-space-to-channel-add-mapping-spinner {
+  display: inline-block;
+  margin-left: 20px;
+}

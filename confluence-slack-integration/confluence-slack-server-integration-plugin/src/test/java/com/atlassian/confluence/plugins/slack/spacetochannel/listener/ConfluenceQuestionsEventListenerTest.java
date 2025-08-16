@@ -2,6 +2,8 @@ package com.atlassian.confluence.plugins.slack.spacetochannel.listener;
 
 import com.atlassian.confluence.content.CustomContentEntityObject;
 import com.atlassian.confluence.content.event.PluginContentCreatedEvent;
+import com.atlassian.confluence.core.BodyContent;
+import com.atlassian.confluence.core.BodyType;
 import com.atlassian.confluence.plugins.slack.spacetochannel.api.notifications.AttachmentBuilder;
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.QuestionEvent;
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.QuestionType;
@@ -23,6 +25,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,7 +79,10 @@ public class ConfluenceQuestionsEventListenerTest {
     public void questionsEvent_shouldCallExpectedMethodsForAnswer() {
         when(event.getContent()).thenReturn(customContentEntityObject);
         when(customContentEntityObject.getSpace()).thenReturn(space);
-        when(customContentEntityObject.getBodyAsStringWithoutMarkup()).thenReturn("bd");
+        BodyContent bodyContent = mock(BodyContent.class);
+        when(bodyContent.getBodyType()).thenReturn(BodyType.WIKI);
+        when(bodyContent.getBody()).thenReturn("bd");
+        when(customContentEntityObject.getBodyContent()).thenReturn(bodyContent);
         when(customContentEntityObject.getCreator()).thenReturn(confluenceUser);
         when(customContentEntityObject.getPluginModuleKey()).thenReturn(QuestionType.ANSWER.pluginModuleKey());
         when(attachmentBuilder.pageLink(customContentEntityObject)).thenReturn("l");

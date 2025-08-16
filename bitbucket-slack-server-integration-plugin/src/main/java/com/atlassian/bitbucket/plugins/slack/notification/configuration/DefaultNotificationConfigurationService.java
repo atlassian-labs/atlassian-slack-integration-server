@@ -17,11 +17,11 @@ import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.ChannelToNotify;
 import com.atlassian.plugins.slack.settings.SlackSettingService;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

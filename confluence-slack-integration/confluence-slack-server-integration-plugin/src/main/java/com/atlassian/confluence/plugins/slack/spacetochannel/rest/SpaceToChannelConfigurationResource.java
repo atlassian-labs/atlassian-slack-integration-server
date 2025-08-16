@@ -21,24 +21,24 @@ import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.descriptor.NotificationTypeService;
 import com.atlassian.plugins.slack.api.notification.NotificationType;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import java.util.Optional;
 import java.util.Set;
 
 import static com.atlassian.confluence.security.Permission.ADMINISTER;
 import static com.atlassian.confluence.security.PermissionManager.TARGET_APPLICATION;
+import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
+import static jakarta.ws.rs.core.Response.Status.FORBIDDEN;
 
 /**
  * Resources for updating space to channel mappings for a space.
@@ -48,7 +48,7 @@ import static com.atlassian.confluence.security.PermissionManager.TARGET_APPLICA
 @ReadOnlyAccessAllowed
 @Path("/config/{spaceKey}")
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SpaceToChannelConfigurationResource {
     private final SpaceManager spaceManager;
     private final PermissionManager permissionManager;
@@ -67,7 +67,7 @@ public class SpaceToChannelConfigurationResource {
 
         final Space space = spaceManager.getSpace(spaceKey);
         if (!isSpaceAdmin(space)) {
-            return Response.status(Status.FORBIDDEN).build();
+            return Response.status(FORBIDDEN).build();
         }
 
         final Optional<NotificationType> spaceToChannelNotificationOption =
@@ -103,7 +103,7 @@ public class SpaceToChannelConfigurationResource {
         } else {
             String message = "Unable to convert '" + notificationName + "' to an enum of type SpaceToChannelNotification";
             log.debug(message);
-            return Response.status(Status.BAD_REQUEST).entity(message).build();
+            return Response.status(BAD_REQUEST).entity(message).build();
         }
     }
 
@@ -115,7 +115,7 @@ public class SpaceToChannelConfigurationResource {
                                        @PathParam("notificationName") String notificationName) {
 
         if (!isSpaceAdmin(spaceKey)) {
-            return Response.status(Status.FORBIDDEN).build();
+            return Response.status(FORBIDDEN).build();
         }
 
         final Optional<NotificationType> spaceToChannelNotificationOption =
@@ -155,7 +155,7 @@ public class SpaceToChannelConfigurationResource {
         } else {
             String message = "Unable to convert '" + notificationName + "' to an enum of type SpaceToChannelNotification";
             log.debug(message);
-            return Response.status(Status.BAD_REQUEST).entity(message).build();
+            return Response.status(BAD_REQUEST).entity(message).build();
         }
     }
 
@@ -167,11 +167,11 @@ public class SpaceToChannelConfigurationResource {
             @PathParam("channelId") String channelId) {
 
         if (!isSpaceAdmin(spaceKey)) {
-            return Response.status(Status.FORBIDDEN).build();
+            return Response.status(FORBIDDEN).build();
         }
 
         Optional<SpaceToChannelSettings> settingsOption = slackSpaceToChannelService.getSpaceToChannelSettings(spaceKey, channelId);
-        if (!settingsOption.isPresent()) {
+        if (settingsOption.isEmpty()) {
             // This is ok, if a another user has done it and the current user has a stale config page.
             return Response.ok().build();
         }

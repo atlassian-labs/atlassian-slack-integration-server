@@ -1,0 +1,11 @@
+:root {
+  --default-border: 1px solid var(--ds-border);
+}
+
+.slack-server-integration-admin.aui-group > .aui-item > h6:first-child {
+  margin-top: 0;
+}
+
+#slack-invite-form, #slack-login-form {
+  margin-top: 10px;
+}

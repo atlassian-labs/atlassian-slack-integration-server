@@ -9,12 +9,12 @@ import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
 import com.atlassian.sal.api.user.UserKey;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 

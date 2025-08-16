@@ -1,6 +1,8 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.api.notifications;
 
 import com.atlassian.confluence.content.CustomContentEntityObject;
+import com.atlassian.confluence.core.BodyContent;
+import com.atlassian.confluence.core.BodyType;
 import com.atlassian.confluence.core.ContentEntityObject;
 import com.atlassian.confluence.core.SpaceContentEntityObject;
 import com.atlassian.confluence.languages.LocaleManager;
@@ -35,6 +37,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -340,8 +343,11 @@ public class DefaultAttachmentBuilderTest {
         when(customContentEntityObject.getCreator()).thenReturn(confluenceUser);
         when(customContentEntityObject.getPluginModuleKey()).thenReturn(QuestionType.ANSWER.pluginModuleKey());
         when(customContentEntityObject.getParent()).thenReturn(customContentEntityObjectParent);
-        when(customContentEntityObject.getBodyAsStringWithoutMarkup()).thenReturn("ac");
         when(customContentEntityObject.getType()).thenReturn("page");
+        BodyContent bodyContent = mock(BodyContent.class);
+        when(bodyContent.getBodyType()).thenReturn(BodyType.WIKI);
+        when(bodyContent.getBody()).thenReturn("ac");
+        when(customContentEntityObject.getBodyContent()).thenReturn(bodyContent);
         when(customContentEntityObjectParent.getDisplayTitle()).thenReturn("page <");
         when(space.getDisplayTitle()).thenReturn("space <");
         when(space.getUrlPath()).thenReturn(PATH);

@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.atlassian.plugins</groupId>
         <artifactId>atlassian-slack-server-integration-parent</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>jira-slack-server-integration</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <name>Jira Slack Integration Modules</name>
 
     <modules>
@@ -19,27 +19,28 @@
     <properties>
         <project.root.directory>${project.basedir}/..</project.root.directory>
 
+        <!-- AMPS related properties -->
+        <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
+        <jira.amps.version>${amps.version}</jira.amps.version>
+
         <!-- Jira version used for integration tests; can be overridden to test against different versions -->
-        <jira.version>10.0.0</jira.version>
+        <jira.version>11.0.0</jira.version>
         <jira.data.version>${jira.version}</jira.data.version>
 
         <!-- Dependencies and plugins that must align with the running Jira during integration tests -->
-        <testkit.version>10.3.5</testkit.version>
-        <!-- jira-testkit-client 10.3.5 transitively brings publicly unavailable jira-rest-api version -->
-        <jira.rest.api.version>10.5.1</jira.rest.api.version>
-        <jira.test.unit.version>${jira.version}</jira.test.unit.version>
-        <jira.pageobjects.version>${jira.version}</jira.pageobjects.version>
+        <testkit.version>11.5.2</testkit.version>
+        <!-- jira-testkit-client 11.5.2 transitively brings publicly unavailable jira-rest-api version -->
+        <jira.rest.api.version>${jira.version}</jira.rest.api.version>
 
         <!-- Jira API version used during the build -->
-        <jira.api.version>10.0.0</jira.api.version>
-        <!-- Dependencies that must align with the API version used during the build -->
-        <jira-project-config.version>${jira.api.version}</jira-project-config.version>
+        <jira.api.version>11.0.0</jira.api.version>
 
         <!-- Other dependencies -->
         <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
         <triggers.version>2.3.8</triggers.version>
         <httpclient.version>0.15.0</httpclient.version>
         <httpclient-core.version>4.3.2</httpclient-core.version>
+        <guice.version>7.0.0</guice.version>
     </properties>
 
     <dependencyManagement>
@@ -53,7 +54,7 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-api</artifactId>
-                <version>${jira.version}</version>
+                <version>${jira.api.version}</version>
                 <exclusions>
                     <!-- Old version of the Jackson bundled into Jira. We bundle newer Jackson implementation -->
                     <exclusion>
@@ -77,7 +78,7 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-core</artifactId>
-                <version>${jira.version}</version>
+                <version>${jira.api.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>fugue</artifactId>
@@ -99,12 +100,25 @@
                         <groupId>jndi</groupId>
                         <artifactId>jndi</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.atlassian.gadgets</groupId>
+                        <artifactId>atlassian-gadgets-spi</artifactId>
+                    </exclusion>
+                    <!-- opensaml 5 unavailable publicly -->
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml-saml-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml-saml-impl</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-admin-project-config-plugin</artifactId>
-                <version>${jira-project-config.version}</version>
+                <version>${jira.api.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>atlassian-spring-scanner-runtime</artifactId>
@@ -115,7 +129,7 @@
             <dependency>
                 <groupId>com.atlassian.servicedesk</groupId>
                 <artifactId>jira-servicedesk-api</artifactId>
-                <version>${jira.version}</version>
+                <version>${jira.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
@@ -147,12 +161,23 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>atlassian-jira-pageobjects</artifactId>
-                <version>${jira.pageobjects.version}</version>
+                <version>${jira.version}</version>
+                <exclusions>
+                    <!-- Exclude browser dependencies since transitive ones are publicly unavailable -->
+                    <exclusion>
+                        <groupId>com.atlassian.browsers</groupId>
+                        <artifactId>chrome</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.atlassian.browsers</groupId>
+                        <artifactId>chrome-profile</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-tests</artifactId>
-                <version>${jira.test.unit.version}</version>
+                <version>${jira.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira.tests</groupId>
@@ -183,6 +208,12 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>${httpclient-core.version}</version>
+            </dependency>
+            <!-- Override transitive dependencies -->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>3.0.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

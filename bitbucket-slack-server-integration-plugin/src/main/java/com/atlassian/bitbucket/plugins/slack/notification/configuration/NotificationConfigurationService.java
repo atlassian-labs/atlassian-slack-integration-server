@@ -4,8 +4,8 @@ import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequest;
 import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.notification.ChannelToNotify;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**

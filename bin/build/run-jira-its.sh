@@ -17,6 +17,7 @@ atlas-mvn --batch-mode verify \
   -Dut.test.skip=true \
   -Dit.test.skip=false \
   -Dxvfb.enable=${XVFB_ENABLE:-true} \
+  -Dwebdriver.browser=firefox \
   -Datlassian.plugins.enable.wait=300 \
   -Dserver=${HOST_NAME:-localhost} \
   -Dfailsafe.rerunFailingTestsCount=${RETRY_COUNT:-2} \

@@ -47,14 +47,14 @@ import com.github.seratch.jslack.api.methods.request.chat.ChatPostEphemeralReque
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.model.Attachment;
 import io.atlassian.fugue.Pair;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -205,7 +205,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
                             .map(this::findContentFrom)
                             .filter(Optional::isPresent)
                             .map(Optional::get)
-                            .collect(Collectors.toList());
+                            .toList();
 
             // direct message to bot without valid page links; act like a slash command
             final SlackLink slackLink = slackEvent.getSlackEvent().getSlackLink();

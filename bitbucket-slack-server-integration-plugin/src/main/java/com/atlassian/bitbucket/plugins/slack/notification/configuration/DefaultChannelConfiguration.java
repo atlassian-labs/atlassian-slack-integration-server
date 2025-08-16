@@ -1,8 +1,8 @@
 package com.atlassian.bitbucket.plugins.slack.notification.configuration;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;

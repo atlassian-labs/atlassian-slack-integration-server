@@ -3,10 +3,13 @@
 Thank you for considering a contribution to Atlassian Slack Integration for Server project! Pull requests, issues and 
 comments are welcome. For pull requests, please:
 
-> `dev` branch contains plugins compatible with Confluence 9+, Bitbucket 9+ and Jira 10+ products
+> `dev` branch contains plugins compatible with Confluence 10+, Bitbucket 10+ and Jira 11+ products
+> 
+> `release-2.x` branch contains plugins compatible with Confluence 9+, Bitbucket 9+ and Jira 10+ products
+> 
 > `release-1.x` compatible with older products versions (Confluence 7, 8; Bitbucket 8 and Jira 8, 9) 
 
-* Use `dev`/`release-1.x` as base branch for your changes and target branch for your PRs 
+* Use `dev`/`release-2.x`/`release-1.x` as base branch for your changes and target branch for your PRs 
 * Add tests for new features and bug fixes
 * Follow the existing style
 * Separate unrelated changes into multiple pull requests

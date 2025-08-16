@@ -1,0 +1,128 @@
+:root {
+  --arrow-size: 30px;
+  --page-width: 800px;
+}
+
+.has-arrow {
+  box-sizing: border-box;
+  padding-right: calc(var(--arrow-size) + var(--ds-space-100));
+  position: relative;
+  width: 300px;
+}
+
+.slack-channel-mapping-list {
+  max-width: var(--page-width);
+}
+
+.slack-channel-mapping-list .edit,
+.slack-channel-mapping-list .edit-menu {
+  display: none;
+}
+
+.slack-channel-mapping-list .expanded .edit {
+  display: table-row;
+}
+
+.slack-channel-mapping-list .expanded .edit-menu {
+  display: inline-block;
+}
+
+.slack-channel-mapping-list .expanded .summary-menu {
+  display: none;
+  white-space: nowrap;
+}
+
+.slack-channel-mapping-list .hidden-channel {
+  font-style: italic;
+}
+
+/* the selector for the hover style is a little bit to specific so we need some hacks :( */
+.slack-channel-mapping-list .expanded.expanded.expanded > tr,
+.slack-channel-mapping-list .expanded.expanded.expanded > tr:hover {
+  background-color: var(--primary-active-color); /* Assuming this is defined in the global CSS */
+}
+
+.slack-channel-mapping-list .inline-toolbar {
+  white-space: nowrap;
+}
+
+.slack-channel-mapping-list .inline-toolbar ul {
+  margin-top: 0;
+  padding: 0;
+  float: right;
+}
+
+.slack-channel-mapping-list .inline-toolbar ul li {
+  display: inline;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.slack-channel-mapping-list .menu > li {
+  float: none;
+}
+
+.slack-channel-mapping-list .notifications-heading {
+  margin: 0 0 var(--ds-space-100) var(--ds-space-100);
+}
+
+.slack-channel-mapping-list .notifications {
+  display: inline-block;
+  padding: 0;
+  margin: 0 0 0 var(--double-spacing);
+}
+
+.slack-channel-mapping-list .notifications > li {
+  display: inline-block;
+  padding-left: var(--ds-space-100);
+  vertical-align: top;
+  padding-right: 100px;
+}
+
+.slack-channel-mapping-list .notifications > li .notification-group-title,
+.slack-channel-mapping-list .notifications > li .option-group-title {
+  display: inline-block;
+  vertical-align: top;
+  color: var(--secondary-text-color); /* Assuming this is defined in the global CSS */
+}
+
+.slack-channel-mapping-list .notifications > li .notification-group-wrapper,
+.slack-channel-mapping-list .notifications > li .option-group-wrapper {
+  margin-bottom: 16px;
+}
+
+.slack-channel-mapping-list .notifications hr {
+  border: 0.5px solid var(--ds-border);
+  margin: 3px auto;
+}
+
+.slack-channel-mapping-list .notification-group,
+.slack-channel-mapping-list .option-group {
+  display: inline-block;
+  margin: 0;
+  padding-left: var(--ds-space-100);
+}
+
+.slack-channel-mapping-list .notification-group > li,
+.slack-channel-mapping-list .option-group > li {
+  list-style: none;
+}
+
+.slack-channel-mapping-list .notification-group .notification-option-label,
+.slack-channel-mapping-list .option-group .notification-option-label {
+  margin-right: var(--ds-space-100);
+}
+
+.slack-channel-mapping-list .channel-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slack-channel-mapping-list tbody[data-channel-state="NOT_FOUND"] > tr td.channel-name {
+  text-decoration: line-through;
+}
+
+#delete-mapping-dialog .display-name {
+  font-weight: bold;
+}

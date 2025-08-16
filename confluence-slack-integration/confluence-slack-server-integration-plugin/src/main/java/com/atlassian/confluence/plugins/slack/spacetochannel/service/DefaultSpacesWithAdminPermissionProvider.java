@@ -1,6 +1,6 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.service;
 
-import com.atlassian.confluence.persistence.EntityManagerProvider;
+import com.atlassian.confluence.persistence.JpaQueryFactory;
 import com.atlassian.confluence.plugins.slack.spacetochannel.model.SpaceResult;
 import com.atlassian.confluence.security.SpacePermission;
 import com.atlassian.confluence.spaces.SpaceStatus;
@@ -12,13 +12,12 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import io.atlassian.fugue.Either;
+import jakarta.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,19 +61,19 @@ public class DefaultSpacesWithAdminPermissionProvider implements SpacesWithAdmin
 
     private static final String QUERY_ORDER_LENGTH_MSSQL = " order by len(space.name) asc";
 
-    private final EntityManagerProvider entityManagerProvider;
+    private final JpaQueryFactory jpaQueryFactory;
     private final UserAccessor userAccessor;
     private final UserManager userManager;
     private final SystemInformationService systemInformationService;
 
     @Autowired
     public DefaultSpacesWithAdminPermissionProvider(
-            final EntityManagerProvider entityManagerProvider,
+            final JpaQueryFactory jpaQueryFactory,
             final SystemInformationService systemInformationService,
             final UserAccessor userAccessor,
             @Qualifier("salUserManager") final UserManager userManager) {
         this.userManager = userManager;
-        this.entityManagerProvider = entityManagerProvider;
+        this.jpaQueryFactory = jpaQueryFactory;
         this.systemInformationService = systemInformationService;
         this.userAccessor = userAccessor;
     }
@@ -85,18 +84,17 @@ public class DefaultSpacesWithAdminPermissionProvider implements SpacesWithAdmin
         Preconditions.checkNotNull(user);
         Preconditions.checkArgument(maxResults > 0);
 
-        final EntityManager entityManager = entityManagerProvider.getEntityManager();
         Query query;
 
         if (userManager.isAdmin(user.getKey())) {
-            query = entityManager.createQuery(QUERY_ADMIN + queryOrderBy());
+            query = jpaQueryFactory.createQuery(QUERY_ADMIN + queryOrderBy());
         } else {
             List<String> userGroups = userAccessor.getGroupNamesForUserName(user.getName());
 
             if (userGroups.isEmpty()) {
-                query = entityManager.createQuery(QUERY_WITH_NO_GROUPS + queryOrderBy());
+                query = jpaQueryFactory.createQuery(QUERY_WITH_NO_GROUPS + queryOrderBy());
             } else {
-                query = entityManager.createQuery(QUERY_WITH_GROUPS + queryOrderBy());
+                query = jpaQueryFactory.createQuery(QUERY_WITH_GROUPS + queryOrderBy());
                 query.setParameter("groups", filterBlanks(userGroups));
             }
 

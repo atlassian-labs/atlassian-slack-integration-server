@@ -4,7 +4,7 @@ import com.atlassian.plugins.slack.api.routes.SlackRoutesProvider;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public class ProjectAwareSlackRoutesProvider implements SlackRoutesProvider {

@@ -4,13 +4,13 @@
     <parent>
         <groupId>com.atlassian.plugins</groupId>
         <artifactId>jira-slack-server-integration</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
     </parent>
 
     <groupId>com.atlassian.jira.plugins</groupId>
     <artifactId>jira-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>4.0.5-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
 
     <name>Slack for Jira Data Center</name>
     <description>This is the Slack plugin for Jira Data Center</description>
@@ -168,7 +168,7 @@
         <dependency>
             <groupId>com.google.template.soy</groupId>
             <artifactId>soycompiler</artifactId>
-            <version>20140422.18-atlassian3</version>
+            <version>20140422.33-atlassian-1-jakarta-m001</version>
             <scope>provided</scope>
         </dependency>
 
@@ -187,7 +187,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.8.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -245,6 +244,12 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -389,7 +394,12 @@
                     <log4j2Config>src/main/resources/log4j2.xml</log4j2Config>
 
                     <!-- Give Java more heap to make Jira faster -->
-                    <jvmArgs>${jvm17.opens} -Xmx2g</jvmArgs>
+                    <jvmArgs>
+                        ${jvm17.opens}
+                        -Xmx2g
+                        <!-- Enable basic authentication for REST API -->
+                        -Dcom.atlassian.plugins.authentication.basicauth.block.requests=false
+                    </jvmArgs>
 
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
@@ -439,119 +449,14 @@
                     </systemPropertyVariables>
 
                     <instructions>
+                        <Atlassian-Plugin-Key>${plugin.key}</Atlassian-Plugin-Key>
                         <Bundle-SymbolicName>com.atlassian.jira.plugins.jira-slack-server-integration-plugin</Bundle-SymbolicName>
                         <Import-Package>
-                            org.springframework.osgi.context;resolution:=optional,
-                            org.springframework.osgi.service.exporter.support;resolution:=optional,
-                            org.springframework.osgi.service.importer.support;resolution:=optional,
-                            org.eclipse.gemini.blueprint.context;resolution:=optional,
-                            org.eclipse.gemini.blueprint.service.exporter;resolution:=optional,
-                            org.eclipse.gemini.blueprint.service.exporter.support;resolution:=optional,
-                            org.eclipse.gemini.blueprint.service.importer.support;resolution:=optional,
-
-
-                            com.atlassian.activeobjects.external,
-                            com.atlassian.analytics.api.annotations,
-                            com.atlassian.analytics.api.services,
-                            com.atlassian.annotations,
-                            com.atlassian.annotations.security,
-                            com.atlassian.applinks.api,
-                            com.atlassian.applinks.host.spi,
-                            com.atlassian.cache,
-                            com.atlassian.event.api,
-                            com.atlassian.html.encode,
-                            com.atlassian.jira.action,
-                            com.atlassian.jira.avatar,
-                            com.atlassian.jira.bc.issue.search,
-                            com.atlassian.jira.component,
-                            com.atlassian.jira.config,
-                            com.atlassian.jira.config.properties,
-                            com.atlassian.jira.event,
-                            com.atlassian.jira.event.issue,
-                            com.atlassian.jira.event.type,
-                            com.atlassian.jira.help,
-                            com.atlassian.jira.io,
-                            com.atlassian.jira.issue,
-                            com.atlassian.jira.issue.comments,
-                            com.atlassian.jira.issue.index,
-                            com.atlassian.jira.issue.issuetype,
-                            com.atlassian.jira.issue.priority,
-                            com.atlassian.jira.issue.search,
-                            com.atlassian.jira.issue.status,
-                            com.atlassian.jira.jql.builder,
-                            com.atlassian.jira.permission,
-                            com.atlassian.jira.project,
-                            com.atlassian.jira.security,
-                            com.atlassian.jira.security.xsrf,
-                            com.atlassian.jira.user,
-                            com.atlassian.jira.user.flag,
-                            com.atlassian.jira.user.util,
-                            com.atlassian.jira.util,
-                            com.atlassian.jira.web.action,
-                            com.atlassian.plugin,
-                            com.atlassian.plugin.osgi.factory,
-                            com.atlassian.plugin.web,
-                            com.atlassian.plugin.webresource,
-                            com.atlassian.plugin.servlet,
-                            com.atlassian.plugins.rest.api*
-                            com.atlassian.query,
-                            com.atlassian.query.clause,
-                            com.atlassian.query.operand,
-                            com.atlassian.sal.api,
-                            com.atlassian.sal.api.executor,
-                            com.atlassian.sal.api.lifecycle,
-                            com.atlassian.sal.api.message,
-                            com.atlassian.sal.api.pluginsettings,
-                            com.atlassian.sal.api.transaction,
-                            com.atlassian.sal.api.user,
-                            com.atlassian.sal.api.web.context,
-                            com.atlassian.seraph.util,
-                            com.atlassian.templaterenderer,
-                            com.atlassian.webresource.api,
-                            com.atlassian.webresource.spi,
-
-                            com.google.common.base,
-                            com.google.common.collect,
-                            javax.annotation,
-                            javax.inject,
-                            javax.naming,
-                            javax.net,
-                            javax.net.ssl,
-                            javax.security.auth.x500,
-                            javax.servlet,
-                            javax.servlet.http,
-                            javax.ws.rs*;version="[2.0.0,3.0.0)",
-                            javax.xml.bind.annotation,
-                            javax.xml.stream,
-                            javax.xml.transform,
-                            org.apache.commons.lang3,
-                            org.apache.commons.lang3.text,
-                            org.apache.commons.lang3.tuple,
-                            org.apache.commons.logging,
-                            org.apache.velocity,
-                            org.apache.velocity.runtime,
-                            org.apache.velocity.app.event,
-                            org.springframework.beans,
-                            org.springframework.beans.factory,
-                            org.springframework.beans.factory.annotation,
-                            org.springframework.beans.factory.config,
-                            org.springframework.beans.factory.parsing,
-                            org.springframework.beans.factory.support,
-                            org.springframework.beans.factory.xml,
-                            org.springframework.context.annotation,
-                            org.springframework.core.io,
-                            org.springframework.stereotype,
-                            org.springframework.util,
-                            org.w3c.dom,
-                            org.apache.commons.beanutils,
-                            org.ofbiz.core.entity,
-                            org.slf4j,
-                            org.xml.sax,
-                            net.java.ao,
-                            net.java.ao.schema,
-                            webwork.util,
-
-                            *;resolution:=optional
+                            org.springframework.osgi.*;resolution:="optional",
+                            org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            com.atlassian.plugin.osgi.bridge.external,
+                            com.atlassian.jira.plugin.webfragment.conditions,
+                            *;resolution:="optional"
                         </Import-Package>
                         <Spring-Context>*</Spring-Context>
                     </instructions>
@@ -573,7 +478,7 @@
             <plugin>
                 <groupId>com.atlassian.plugin</groupId>
                 <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
-                <version>5.0.0</version>
+                <version>6.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -596,7 +501,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>3.5.3</version>
                 <configuration>
                     <argLine>${jvm17.opens}</argLine>
                     <skipTests>${ut.test.skip}</skipTests>
@@ -609,7 +514,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
                     <filesets>
@@ -630,31 +535,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>3.5.3</version>
                 <configuration>
                     <argLine>${jvm17.opens}</argLine>
                     <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>com.atlassian.lesscss</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile-less</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <properties>
-        <jira.amps.version>${amps.version}</jira.amps.version>
         <project.root.directory>${project.basedir}/../..</project.root.directory>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>

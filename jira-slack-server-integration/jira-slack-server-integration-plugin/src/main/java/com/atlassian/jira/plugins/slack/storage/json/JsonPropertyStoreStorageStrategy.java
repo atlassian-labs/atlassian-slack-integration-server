@@ -3,10 +3,10 @@ package com.atlassian.jira.plugins.slack.storage.json;
 import com.atlassian.jira.plugins.slack.storage.EntityStorageStrategy;
 import com.atlassian.jira.plugins.slack.storage.StorableEntity;
 import com.google.common.collect.ImmutableList;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
