@@ -16,7 +16,7 @@ on:
 jobs:
   log-params:
     name: Log Params
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - run: echo "Github event inputs [${{ toJson(github.event.inputs) }}]."
@@ -26,7 +26,7 @@ jobs:
 
   unit-tests:
     name: Unit Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     # around 800 Mb of dependencies need to be loaded; it may take long first time until it's cached
     timeout-minutes: 30
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
@@ -56,18 +56,14 @@ jobs:
 
   integration-tests-jira:
     name: Jira
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-jira')
     needs: unit-tests
     strategy:
       matrix:
         java-version: [8, 11, 17]
-        jira-version: [8.15.0, 9.5.0]
-        # Java 17 support is added only since Jira 9.5: https://confluence.atlassian.com/jiracore/preparing-for-jira-9-5-1167834011.html
-        exclude:
-          - java-version: 17
-            jira-version: 8.15.0
+        jira-version: [9.11.0]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -98,20 +94,15 @@ jobs:
 
   integration-tests-confluence:
     name: Confluence
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-confluence')
     needs: unit-tests
     strategy:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
-        java-version: [8, 11, 17]
-        confluence-version: [7.10.0, 8.0.0]
-        exclude:
-          - java-version: 8
-            confluence-version: 8.0.0 # Confluence 8 doesn't support Java 8 anymore
-          - java-version: 17
-            confluence-version: 7.10.0
+        java-version: [11, 17]
+        confluence-version: [8.5.0]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -142,27 +133,23 @@ jobs:
 
   integration-tests-bitbucket:
     name: Bitbucket
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
     needs: unit-tests
     strategy:
       matrix:
         java-version: [8, 11, 17]
-        bitbucket-version: [7.6.0, 8.8.0]
-        # Bitbucket 8.8.0 is the first one that supports Java 17
-        exclude:
-          - java-version: 17
-            bitbucket-version: 7.6.0
+        bitbucket-version: [8.13.0]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      # Dec 13, 2022
-      # latest Bitbucket 8.6.1 doesn't support latest git 2.38.1 installed on the Ubuntu 20 image Github provides
-      # install last supported git - 2.37.4; remove this trick once Bitbucket implements support for latest git
-      # https://confluence.atlassian.com/bitbucketserver/supported-platforms-776640981.html#Supportedplatforms-dvcsDVCS
+      # Aug 17, 2025
+      # smallest supported Bitbucket 8.13.0 doesn't support latest git 2.50 installed on the Ubuntu 22 image GitHub provides
+      # install supported git - 2.40.4
+      # https://confluence.atlassian.com/bitbucketserver0813/supported-platforms-1283691098.html
       - run: bin/build/install-supported-git.sh
       - uses: actions/setup-java@v4
         with:

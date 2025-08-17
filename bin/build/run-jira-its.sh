@@ -2,17 +2,8 @@
 set -ex
 trap 'set +ex' EXIT
 
-# Version less than or equal
-# https://stackoverflow.com/a/4024263
-verlte() {
-    [  "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
-}
-
-VERSION_ARG=$([[ -z ${VERSION} ]] && echo "" || echo "-Djira.version=${VERSION} -Dproduct.version=${VERSION}")
+VERSION_ARG=$([[ -z ${VERSION} ]] && echo "" || echo "-Djira.version=${VERSION}")
 TESTKIT_VERSION_ARG=$([[ -z ${TESTKIT_VERSION} ]] && echo "" || echo "-Dtestkit.version=${TESTKIT_VERSION}")
-CONTAINER_VERSION_ARG=$([[ -z ${CONTAINER_VERSION} ]] && echo "" || echo "-Dcontainer=${TESTKIT_VERSION}")
-# override Selenium version for Jira versions starting with 8.17.1
-SELENIUM_VERSION_ARG=$([[ -z ${VERSION} ]] || verlte ${VERSION} '8.17.0' && echo "" || echo "-Datlassian.selenium.version=3.2.4")
 
 export DANGER_MODE=true
 
@@ -23,11 +14,10 @@ fi
 atlas-mvn --batch-mode verify \
   ${VERSION_ARG} \
   ${TESTKIT_VERSION_ARG} \
-  ${SELENIUM_VERSION_ARG} \
-  ${CONTAINER_VERSION_ARG} \
   -Dut.test.skip=true \
   -Dit.test.skip=false \
   -Dxvfb.enable=${XVFB_ENABLE:-true} \
+  -Dwebdriver.browser=${WEBDRIVER_BROWSER:-firefox:path=/usr/bin/firefox} \
   -Datlassian.plugins.enable.wait=300 \
   -Dserver=${HOST_NAME:-localhost} \
   -Dfailsafe.rerunFailingTestsCount=${RETRY_COUNT:-2} \
