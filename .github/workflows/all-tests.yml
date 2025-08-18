@@ -129,7 +129,7 @@ jobs:
         if: failure()
         with:
           name: webdriver-screenshots-confluence-${{ matrix.confluence-version }}-java-${{ matrix.java-version }}
-          path: confluence-slack-server-integration-plugin/target/webdriverTests/**
+          path: confluence-slack-integration/confluence-slack-server-integration-plugin/target/webdriverTests/**
 
   integration-tests-bitbucket:
     name: Bitbucket
