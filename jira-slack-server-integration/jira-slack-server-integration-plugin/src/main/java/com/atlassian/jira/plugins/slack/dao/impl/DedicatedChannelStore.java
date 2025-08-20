@@ -4,10 +4,10 @@ import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
 import com.atlassian.jira.plugins.slack.storage.json.JsonPropertyStoreStorageStrategy;
 import com.atlassian.jira.plugins.slack.storage.json.JsonStoreFactory;
 import com.atlassian.plugins.slack.api.ConversationKey;
+import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 @Component

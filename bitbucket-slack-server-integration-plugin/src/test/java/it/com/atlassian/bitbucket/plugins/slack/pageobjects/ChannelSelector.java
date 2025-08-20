@@ -2,8 +2,7 @@ package it.com.atlassian.bitbucket.plugins.slack.pageobjects;
 
 import com.atlassian.pageobjects.elements.PageElement;
 import com.atlassian.webdriver.bitbucket.element.IdSelect2;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ChannelSelector extends IdSelect2<ChannelSelector, ChannelOption> {
     /**

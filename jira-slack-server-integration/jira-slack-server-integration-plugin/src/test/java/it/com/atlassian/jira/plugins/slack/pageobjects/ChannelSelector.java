@@ -4,9 +4,8 @@ import com.atlassian.jira.pageobjects.components.DropdownSelect;
 import com.atlassian.pageobjects.elements.ElementBy;
 import com.atlassian.pageobjects.elements.PageElement;
 import com.atlassian.pageobjects.elements.query.Poller;
+import jakarta.annotation.Nonnull;
 import org.openqa.selenium.By;
-
-import javax.annotation.Nonnull;
 
 public class ChannelSelector extends DropdownSelect {
     @ElementBy(id = "slack-project-to-channel-add-select-field")

@@ -1,0 +1,79 @@
+/* Import global CSS variables */
+@import "global.css";
+
+html {
+  background: var(--ds-surface);
+}
+
+body {
+  background: var(--ds-surface);
+}
+
+#footer-logo {
+  background: var(--ds-surface);
+}
+
+.config-in-slack {
+  border: none;
+  margin: 0;
+  padding-top: 14px;
+}
+
+.config-in-slack .aui-group {
+  margin: 0;
+}
+
+.config-in-slack .aui-page-panel-content {
+  padding: 0;
+}
+
+.config-in-slack .slack-config-header {
+  color: #707070;
+}
+
+.config-in-slack .slack-config-notifications {
+  padding: 20px 0 0 0;
+}
+
+.config-in-slack .slack-config-notifications-instructions {
+  padding: 10px 0 0 0;
+}
+
+.config-in-slack .slack-config-notifications-instructions-inner {
+  padding: 10px 0 0 0;
+}
+
+.config-in-slack .slack-config-notifications-instructions-text {
+  display: table-cell;
+  padding: 10px 0 0 22px;
+}
+
+.config-in-slack .slack-config-notifications-instructions-text .aui-icon {
+  color: var(--ds-text-subtlest);
+}
+
+.config-in-slack .slack-config-notifications-instructions-text .aui-icon-description {
+  color: var(--ds-text-subtlest);
+}
+
+.config-in-slack .slack-config-notifications-instructions-text .slack-config-notifications-instructions-text-counter {
+  display: inline-block;
+  height: 24px;
+  line-height: 1.71; /* Calculated from (24.0 / 14.0) */
+  width: 24px;
+  background: var(--ds-icon-brand);
+  border-radius: 12px; /* Calculated from (24px / 2px) */
+  text-align: center;
+  color: var(--ds-text-inverse);
+  margin-right: 10px;
+}
+
+.config-in-slack .slack-config-notifications-instructions-image {
+  padding: 10px 0 0 22px;
+}
+
+.config-in-slack .slack-config-notifications-instructions-image img {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+}

@@ -1,7 +1,7 @@
 name: Release Check
 on:
   schedule:
-    # "At 04:05 on Thursday" according to https://crontab.guru/#5_4_*_*_4
+    # "At 04:05 at Thursday" according to https://crontab.guru/#5_4_*_*_4
     - cron: '5 4 * * 4'
   workflow_dispatch:
 
@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        branch: [master, release-1.x]
+        branch: [master, release-2.x, release-1.x]
     steps:
       - uses: actions/checkout@v4
         with:

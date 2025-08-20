@@ -4,8 +4,7 @@ import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.query.Query;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Bridge API for using the TemporaryIndexManager or the normal index provider in Jira

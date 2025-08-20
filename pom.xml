@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.atlassian.plugins</groupId>
     <artifactId>atlassian-slack-server-integration-parent</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <packaging>pom</packaging>
     <name>Atlassian Slack Integration for Server Project</name>
 
@@ -24,8 +24,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <project.root.directory>${project.basedir}</project.root.directory>
         <plugin.parent.directory>${project.root.directory}</plugin.parent.directory>
@@ -48,18 +48,19 @@
         <!-- Dependencies -->
         <mockito-core.version>2.25.0</mockito-core.version>
         <junit.version>4.13.2</junit.version>
-        <junit.jupiter.version>5.7.1</junit.jupiter.version>
+        <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <joda-time.version>2.3</joda-time.version>
         <commons-codec.version>1.11</commons-codec.version>
-        <okhttp.version>4.10.0</okhttp.version>
+        <okhttp.version>4.12.0</okhttp.version>
 
         <atlassian-user.version>3.0</atlassian-user.version>
+        <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
         <hamcrest-core.version>1.3</hamcrest-core.version>
         <powermock.version>2.0.2</powermock.version>
 
-        <slack.common.version>2.0.0</slack.common.version>
-        <platform.version>7.3.9</platform.version>
-        <amps.version>9.1.11</amps.version>
+        <slack.common.version>3.0.0</slack.common.version>
+        <platform.version>8.0.0</platform.version>
+        <amps.version>9.5.4</amps.version>
         <jvm17.opens />
     </properties>
 
@@ -83,11 +84,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.atlassian.lesscss</groupId>
-                    <artifactId>lesscss-maven-plugin</artifactId>
-                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -195,13 +191,7 @@
             <dependency>
                 <groupId>com.atlassian.ozymandias</groupId>
                 <artifactId>atlassian-plugin-point-safety</artifactId>
-                <version>0.15</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>fugue</artifactId>
-                        <groupId>com.atlassian.fugue</groupId>
-                    </exclusion>
-                </exclusions>
+                <version>${atlassian.plugin.point.safety.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -216,19 +206,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
                 <version>${junit.jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-                <version>${junit.jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-migrationsupport</artifactId>
-                <version>${junit.jupiter.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>

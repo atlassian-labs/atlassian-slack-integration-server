@@ -1,6 +1,6 @@
 package com.atlassian.bitbucket.plugins.slack.notification.configuration;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes the Slack channel.

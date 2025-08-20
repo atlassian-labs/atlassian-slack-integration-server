@@ -12,12 +12,11 @@ import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.api.webhooks.MemberJoinedChannelSlackEvent;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Nonnull;
 
 @Service
 public class MemberJoinedEventListener extends AutoSubscribingEventListener {

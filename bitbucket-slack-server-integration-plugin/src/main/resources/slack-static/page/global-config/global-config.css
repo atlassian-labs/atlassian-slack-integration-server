@@ -1,0 +1,35 @@
+:root {
+  --arrow-size: 30px;
+  --page-width: 800px;
+}
+
+.slack-configuration-page {
+  width: var(--page-width);
+}
+
+.slack-bitbucket-configure-more {
+  margin-top: var(--ds-space-200);
+}
+
+.slack-setup-additional-channels {
+  display: none;
+}
+
+.slack-not-linked,
+.slack-integration-admin-image {
+  width: 200px;
+}
+
+.slack-repo-mapping-form #slack-repo-to-channel-add {
+  margin-left: var(--ds-space-100);
+}
+
+.slack-repo-mapping-form .has-arrow {
+  display: inline-block;
+  margin-left: var(--ds-space-100);
+}
+
+.slack-repo-mapping-form .has-arrow .mapping-origin-label {
+  line-height: var(--arrow-size);
+  vertical-align: middle;
+}

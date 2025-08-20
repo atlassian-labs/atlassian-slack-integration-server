@@ -4,7 +4,7 @@ import com.atlassian.jira.plugins.slack.model.EventFilterType;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Issue type filters can be grouped and separated by comma If null, or "ALL" applies then everything can pass through

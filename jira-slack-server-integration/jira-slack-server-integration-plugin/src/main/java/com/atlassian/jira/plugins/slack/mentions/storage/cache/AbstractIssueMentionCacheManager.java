@@ -5,8 +5,8 @@ import com.atlassian.cache.CacheManager;
 import com.atlassian.jira.plugins.slack.storage.cache.AbstractCacheableEntityManager;
 import com.atlassian.jira.plugins.slack.storage.cache.CacheableEntity;
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 

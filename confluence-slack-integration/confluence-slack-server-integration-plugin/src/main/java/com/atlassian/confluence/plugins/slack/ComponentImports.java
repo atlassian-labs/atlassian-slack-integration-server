@@ -8,7 +8,7 @@ import com.atlassian.confluence.core.ContentPermissionManager;
 import com.atlassian.confluence.languages.LocaleManager;
 import com.atlassian.confluence.mail.notification.NotificationManager;
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.persistence.EntityManagerProvider;
+import com.atlassian.confluence.persistence.JpaQueryFactory;
 import com.atlassian.confluence.search.v2.SearchManager;
 import com.atlassian.confluence.security.PermissionManager;
 import com.atlassian.confluence.security.SpacePermissionManager;
@@ -77,7 +77,7 @@ public class ComponentImports {
     @ComponentImport
     ActiveObjects ao;
     @ComponentImport
-    EntityManagerProvider entityManagerProvider;
+    JpaQueryFactory jpaQueryFactory;
     @ComponentImport
     SystemInformationService systemInformationService;
     @ComponentImport("salUserManager")

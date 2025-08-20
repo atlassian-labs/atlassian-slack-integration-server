@@ -3,22 +3,20 @@ package com.atlassian.jira.plugins.slack.bridge.jql.impl;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.index.ThreadLocalSearcherCache;
 import com.atlassian.jira.issue.search.SearchException;
-import com.atlassian.jira.issue.search.SearchProvider;
-import com.atlassian.jira.issue.search.SearchQuery;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.plugins.slack.bridge.jql.JqlSearcher;
 import com.atlassian.jira.plugins.slack.servicedesk.FixRequestTypeClauseVisitor;
 import com.atlassian.jira.project.Project;
+import com.atlassian.jira.search.issue.IssueDocumentSearchService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Nullable;
 
 /**
  * This jql index searcher commits the issue to the FS and runs the query.
@@ -28,7 +26,7 @@ import javax.annotation.Nullable;
 public class JqlIndexSearcher implements JqlSearcher {
     private static final Logger log = LoggerFactory.getLogger(JqlIndexSearcher.class);
 
-    private final SearchProvider searchProvider;
+    private final IssueDocumentSearchService issueDocumentSearchService;
 
     @Override
     public Boolean doesIssueMatchQuery(final Issue issue,
@@ -39,11 +37,8 @@ public class JqlIndexSearcher implements JqlSearcher {
             long searchCount;
 
             Query fixedQuery = fixRequestTypeInQuery(query, issue.getProjectObject());
-            SearchQuery searchQuery = SearchQuery.create(fixedQuery, caller);
-            if (caller == null) {
-                searchQuery.overrideSecurity(true);
-            }
-            searchCount = searchProvider.getHitCount(searchQuery);
+
+            searchCount = issueDocumentSearchService.getHitCount(caller, fixedQuery, caller == null);
 
             return searchCount > 0;
         } catch (SearchException e) {
@@ -68,12 +63,12 @@ public class JqlIndexSearcher implements JqlSearcher {
         if (visitor.isClauseChanged()) {
             log.debug("JQL query before fixing a request type: [{}]", query);
             fixedQuery = JqlQueryBuilder.newBuilder()
-                    .where()
-                    .addClause(fixedWhereClause)
-                    .endWhere()
-                    .orderBy()
-                    .setSorts(query.getOrderByClause())
-                    .buildQuery();
+                .where()
+                .addClause(fixedWhereClause)
+                .endWhere()
+                .orderBy()
+                .setSorts(query.getOrderByClause())
+                .buildQuery();
             log.debug("JQL query after fixing a request type: [{}]", fixedQuery.toString());
         }
 

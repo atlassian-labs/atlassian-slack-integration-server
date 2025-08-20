@@ -4,11 +4,11 @@ import com.atlassian.plugins.slack.admin.ConfigureServlet;
 import com.atlassian.plugins.slack.api.routes.SlackRoutesProvider;
 import com.atlassian.plugins.slack.spi.ConfigurationRedirectionManager;
 import com.atlassian.plugins.slack.spi.SlackRoutesProviderFactory;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;

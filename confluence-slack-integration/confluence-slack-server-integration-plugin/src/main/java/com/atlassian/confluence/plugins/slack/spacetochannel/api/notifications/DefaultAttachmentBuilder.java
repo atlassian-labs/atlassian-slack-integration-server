@@ -1,5 +1,6 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.api.notifications;
 
+import com.atlassian.confluence.content.ContentEntityExcerpter;
 import com.atlassian.confluence.content.CustomContentEntityObject;
 import com.atlassian.confluence.core.SpaceContentEntityObject;
 import com.atlassian.confluence.languages.LocaleManager;
@@ -233,7 +234,9 @@ public class DefaultAttachmentBuilder implements AttachmentBuilder {
     private String getAnswerContent(final SpaceContentEntityObject content) {
         if (content instanceof CustomContentEntityObject
                 && QuestionType.isAnswerEvent((CustomContentEntityObject) content)) {
-            return StringUtils.abbreviate(content.getBodyAsStringWithoutMarkup(), 200);
+            return new ContentEntityExcerpter().getBodyAsStringWithoutMarkup(content)
+                    .map(body -> StringUtils.abbreviate(body, 200))
+                    .orElse(null);
         }
         return null;
     }

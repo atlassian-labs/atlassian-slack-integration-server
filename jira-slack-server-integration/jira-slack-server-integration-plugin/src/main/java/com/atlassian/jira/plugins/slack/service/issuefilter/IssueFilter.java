@@ -3,7 +3,7 @@ package com.atlassian.jira.plugins.slack.service.issuefilter;
 import com.atlassian.jira.plugins.slack.model.EventFilterType;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Issue filter that is related 1-1 with an EventFilterType

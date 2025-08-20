@@ -1,11 +1,8 @@
 package it.com.atlassian.jira.plugins.slack.util;
 
-import com.atlassian.jira.functest.framework.backdoor.Backdoor;
 import com.atlassian.jira.pageobjects.BaseJiraWebTest;
 import com.atlassian.jira.pageobjects.JiraTestedProduct;
-import com.atlassian.jira.pageobjects.setup.SingleJiraWebTestRunner;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
-import com.atlassian.pageobjects.PageBinder;
 import com.atlassian.plugins.slack.admin.InstallationCompletionData;
 import com.atlassian.plugins.slack.test.ServerDiscovery;
 import com.atlassian.plugins.slack.test.UserCredentials;
@@ -19,9 +16,7 @@ import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
 import java.util.Collections;
 
 import static com.atlassian.plugins.slack.test.TestChannels.PUBLIC;
@@ -38,7 +33,6 @@ import static it.com.atlassian.jira.plugins.slack.util.JiraFuncTestData.USER_USE
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-@RunWith(SingleJiraWebTestRunner.class)
 @WindowSize(width = 1260, height = 768)
 public abstract class SlackWebTestBase extends BaseJiraWebTest {
     protected static TestClientExtension<JiraTestClient> client;
@@ -83,11 +77,6 @@ public abstract class SlackWebTestBase extends BaseJiraWebTest {
         server.beforeEach(null);
         client.beforeEach(null);
     }
-
-    @Inject
-    protected static PageBinder pageBinder;
-    @Inject
-    protected static Backdoor backdoor;
 
     protected void connectToDummyTeamWithCustomInstall() {
         connectToDummyTeam(false);

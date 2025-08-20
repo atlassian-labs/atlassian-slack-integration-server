@@ -2,8 +2,8 @@ package com.atlassian.plugins.slack.oauth2;
 
 import com.atlassian.sal.api.user.UserKey;
 import io.atlassian.fugue.Either;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 /**

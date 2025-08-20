@@ -47,9 +47,6 @@
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
 
         <resource type="download"
                   name="slack-feature/personal-notifications/personal-notifications.js"
@@ -58,8 +55,8 @@
                   name="slack-feature/personal-notifications/personal-notifications.soy"
                   location="slack-feature/personal-notifications/personal-notifications.soy"/>
         <resource type="download"
-                  name="slack-feature/personal-notifications/personal-notifications.less.css"
-                  location="slack-feature/personal-notifications/personal-notifications.less"/>
+                  name="slack-feature/personal-notifications/personal-notifications.css"
+                  location="slack-feature/personal-notifications/personal-notifications.css"/>
     </web-resource>
 
     <!-- Resource that incorporates all other resources needed on configuration pages -->
@@ -76,10 +73,6 @@
 
     <!-- Server Soy templates -->
     <client-resource key="slack-soy-server-resources" name="Server-side Soy Resources">
-        <transformation extension="less">
-            <transformer key="less-transformer"/>
-            <transformer key="lessTransformer"/>
-        </transformation>
 
         <resource type="soy" name="slack-global-config.soy" location="slack-static/page/global-config/global-config.soy"/>
         <resource type="soy" name="slack-repo-config.soy" location="slack-static/page/repo-config/repo-config.soy"/>
@@ -89,7 +82,7 @@
         <dependency>${plugin.key}:slack-soy-resources</dependency>
         <dependency>${plugin.key}:slack-integration-steps-resources</dependency>
         <dependency>${plugin.key}:repo-channel-table</dependency>
-        <dependency>${plugin.key}:slack-less</dependency>
+        <dependency>${plugin.key}:slack-css</dependency>
         <dependency>com.atlassian.bitbucket.server.bitbucket-web:server-soy-templates</dependency>
     </client-resource>
 
@@ -119,6 +112,7 @@
         <dependency>${plugin.key}:repo-channel-table</dependency>
         <dependency>${plugin.key}:slack-channel-selector</dependency>
         <dependency>${plugin.key}:base-slack-common-resources</dependency>
+        <dependency>${plugin.key}:slack-css</dependency>
 
         <context>bitbucket.page.repo.slack.settings</context>
     </client-resource>
@@ -135,6 +129,7 @@
         <dependency>${plugin.key}:repo-channel-table</dependency>
         <dependency>${plugin.key}:slack-channel-selector</dependency>
         <dependency>${plugin.key}:base-slack-common-resources</dependency>
+        <dependency>${plugin.key}:slack-css</dependency>
 
         <context>slack-global-configuration</context>
         <context>slack-global-configuration-install</context>
@@ -250,12 +245,9 @@
     </web-resource>
     <!-- Styles from common module -->
     <web-resource key="slack-global">
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
-        <resource name="slack-global.css" type="download" location="stylesheets/slack-global.less"/>
+        <resource name="slack-global.css" type="download" location="stylesheets/slack-global.css"/>
 
         <dependency>com.atlassian.auiplugin:ajs</dependency>
     </web-resource>
@@ -265,12 +257,9 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
-        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.less"/>
+        <resource type="download" name="slack-feature/integrationsteps/integrationsteps.css" location="slack-feature/integrationsteps/integrationsteps.css"/>
         <resource type="soy" name="slack-feature/integrationsteps/integrationsteps.soy" location="slack-feature/integrationsteps/integrationsteps.soy"/>
 
         <dependency>${plugin.key}:slack-global</dependency>
@@ -282,10 +271,7 @@
             <transformer key="jsI18n"/>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
         <transformation extension="soy">
             <transformer key="soyTransformer">
@@ -297,12 +283,13 @@
         <resource type="soy" name="slack-feature/connectionstatus/connectionstatus.soy" location="slack-feature/connectionstatus/connectionstatus.soy"/>
 
         <resource type="download" name="slack-feature/connectionstatus/connectionstatus.js" location="slack-feature/connectionstatus/connectionstatus.js"/>
-        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.less"/>
+        <resource type="download" name="slack-feature/connectionstatus/connectionstatus.css" location="slack-feature/connectionstatus/connectionstatus.css"/>
 
         <dependency>${plugin.key}:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
         <dependency>com.atlassian.auiplugin:aui-inline-dialog2</dependency>
     </web-resource>
+
     <!-- JS and styles for configuration pages -->
     <web-resource name="Slack Link Screen Resources" key="slack-base-link-resources">
         <transformation extension="js">
@@ -314,12 +301,9 @@
             </transformer>
         </transformation>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
-        <resource type="download" name="stylesheets/slack-main.css" location="stylesheets/slack-main.less"/>
+        <resource type="download" name="stylesheets/slack-main.css" location="stylesheets/slack-main.css"/>
         <resource type="download" name="admin/configure-slack.js" location="admin/configure-slack.js"/>
         <resource type="download" name="configure-slack.soy.js" location="admin/configure-slack.soy"/>
 
@@ -330,6 +314,7 @@
         <context>admin</context>
         <context>atl.admin</context>
     </web-resource>
+
     <!-- JS for Workspace connection page -->
     <web-resource name="Connect to Slack Workspace" key="slack-connect-workspace-resources">
         <transformation extension="js">
@@ -353,6 +338,7 @@
             <param name="content-type" value="image/svg+xml"/>
         </resource>
     </web-resource>
+
     <!-- User OAuth flow redirecting links JS -->
     <web-resource key="slack-user-link-support">
         <transformation extension="js">
@@ -376,14 +362,12 @@
         <resource type="download" name="cookie/js.cookie.js" location="cookie/js.cookie.js"/>
         <resource type="download" name="links/slack-links.js" location="links/slack-links.js"/>
     </web-resource>
+
     <!-- Channel mapping styles -->
     <web-resource name="Slack Common Resources" key="base-slack-common-resources">
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-            <transformer key="less-transformer"/>
-        </transformation>
+        
 
-        <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.less"/>
+        <resource type="download" name="stylesheets/slack-channel-mappings.css" location="stylesheets/slack-channel-mappings.css"/>
 
         <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
         <dependency>${plugin.key}:slack-user-link-support</dependency>
@@ -416,22 +400,14 @@
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
         <dependency>${plugin.key}:slack-user-link-support</dependency>
 
-        <transformation extension="less">
-            <transformer key="lessTransformer"/>
-        </transformation>
-
         <resource name="oauth2/view-slack-oauth-sessions.soy" type="soy" location="oauth2/view-slack-oauth-sessions.soy"/>
-        <resource name="oauth2/view-slack-oauth-sessions.less.css" type="download" location="oauth2/view-slack-oauth-sessions.less"/>
+        <resource name="oauth2/view-slack-oauth-sessions.css" type="download" location="oauth2/view-slack-oauth-sessions.css"/>
     </web-resource>
 
-    <client-resource key="slack-less" name="Less styles">
-        <transformation extension="less">
-            <transformer key="less-transformer"/>
-            <transformer key="lessTransformer"/>
-        </transformation>
+    <client-resource key="slack-css" name="CSS styles">
         <resource type="download" name="images/slack-logo-16px.png" location="images/slack-logo-16px.png"/>
         <resource name="bitbucket-slack-plugin.css" type="download"
-                  location="slack-static/page/bitbucket-slack-plugin.less"/>
+                  location="slack-static/page/bitbucket-slack-plugin.css"/>
         <context>slack-user-profile-page</context>
     </client-resource>
 

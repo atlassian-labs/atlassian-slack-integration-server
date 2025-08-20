@@ -9,18 +9,16 @@ import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import com.atlassian.user.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.UriInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 import static com.atlassian.confluence.plugins.slack.spi.impl.ConfluenceConfigurationRedirectionManager.FROM_SPACE_ATTRIBUTE_KEY;
 import static com.atlassian.confluence.plugins.slack.spi.impl.ConfluenceConfigurationRedirectionManager.SPACE_ATTRIBUTE_KEY;
@@ -96,7 +94,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(map.getFirst("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
-        when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
+        when(permissionManager.hasPermission(any(ConfluenceUser.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
 
         boolean result = target.hasAccess(userProfile, containerRequest);
 
@@ -114,7 +112,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(map.getFirst("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
-        when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(false);
+        when(permissionManager.hasPermission(any(ConfluenceUser.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(false);
 
         boolean result = target.hasAccess(userProfile, containerRequest);
 
@@ -166,7 +164,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(httpServletRequest.getParameter("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
-        when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
+        when(permissionManager.hasPermission(any(ConfluenceUser.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
 
         boolean result = target.hasAccess(userProfile, httpServletRequest);
 
@@ -181,7 +179,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(httpServletRequest.getParameter("key")).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
-        when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(false);
+        when(permissionManager.hasPermission(any(ConfluenceUser.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(false);
 
         boolean result = target.hasAccess(userProfile, httpServletRequest);
 
@@ -212,7 +210,7 @@ public class ConfluenceSlackLinkAccessManagerTest {
         when(session.getAttribute(SPACE_ATTRIBUTE_KEY)).thenReturn(SPACE_KEY);
         when(spaceManager.getSpace(SPACE_KEY)).thenReturn(space);
         when(userAccessor.getExistingUserByKey(userKey)).thenReturn(user);
-        when(permissionManager.hasPermission(any(User.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
+        when(permissionManager.hasPermission(any(ConfluenceUser.class), eq(Permission.ADMINISTER), eq(space))).thenReturn(true);
 
         boolean result = target.hasAccess(userProfile, httpServletRequest);
 

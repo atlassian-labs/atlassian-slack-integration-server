@@ -1,5 +1,6 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.listener;
 
+import com.atlassian.confluence.content.ContentEntityExcerpter;
 import com.atlassian.confluence.content.CustomContentEntityObject;
 import com.atlassian.confluence.content.event.PluginContentCreatedEvent;
 import com.atlassian.confluence.plugins.slack.spacetochannel.api.notifications.AttachmentBuilder;
@@ -39,12 +40,15 @@ public class ConfluenceQuestionsEventListener extends AutoSubscribingEventListen
                     attachmentBuilder.pageLink(event.getContent()),
                     null);
         } else if (QuestionType.isAnswerEvent(event.getContent())) {
+            String eventContent = new ContentEntityExcerpter().getBodyAsStringWithoutMarkup(event.getContent())
+                    .map(body -> StringUtils.abbreviate(body, 200))
+                    .orElse(null);
             publishQuestionEvent(
                     event.getContent(),
                     QuestionType.ANSWER,
                     attachmentBuilder.pageLink(event.getContent()),
                     Attachment.builder()
-                            .text(StringUtils.abbreviate(event.getContent().getBodyAsStringWithoutMarkup(), 200))
+                            .text(eventContent)
                             .mrkdwnIn(Arrays.asList("text", "pretext"))
                             .build());
         }

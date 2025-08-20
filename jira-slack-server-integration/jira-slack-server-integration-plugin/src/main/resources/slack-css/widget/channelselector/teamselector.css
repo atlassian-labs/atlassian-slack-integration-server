@@ -1,0 +1,33 @@
+#slack-project-to-workspace-add-select-suggestions .aui-list-item-li-filler {
+  display: none;
+}
+
+#slack-project-to-workspace-add-select-suggestions .aui-lozenge {
+  float: right;
+  margin-top: 2px;
+}
+
+#slack-project-to-workspace-add-select-suggestions .aui-list-item-link {
+  padding-left: 32px;
+  background: no-repeat 10px center;
+}
+
+#slack-project-to-workspace-add-select-suggestions .active .aui-list-item-link {
+  background-color: var(--ds-background-selected);
+}
+
+.aui-list .slack-login-dropdown-footer {
+  border-left: 5px solid var(--ds-background-warning-bold);
+  padding-left: 10px;
+  margin: 10px;
+}
+
+.aui-list .slack-login-dropdown-footer.error {
+  border-left-color: var(--ds-border-danger);
+}
+
+.aui-list .slack-login-dropdown-footer a,
+.aui-list .slack-login-dropdown-footer a:hover {
+  text-decoration: none;
+  color: var(--ds-link);
+}
