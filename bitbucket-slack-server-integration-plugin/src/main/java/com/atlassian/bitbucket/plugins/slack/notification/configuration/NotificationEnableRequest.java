@@ -1,6 +1,6 @@
 package com.atlassian.bitbucket.plugins.slack.notification.configuration;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkState;
 

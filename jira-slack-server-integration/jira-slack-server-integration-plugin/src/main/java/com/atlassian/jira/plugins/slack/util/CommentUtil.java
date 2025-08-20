@@ -1,9 +1,8 @@
 package com.atlassian.jira.plugins.slack.util;
 
 import com.atlassian.jira.issue.comments.Comment;
+import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
-
-import javax.annotation.Nullable;
 
 @UtilityClass
 public class CommentUtil {

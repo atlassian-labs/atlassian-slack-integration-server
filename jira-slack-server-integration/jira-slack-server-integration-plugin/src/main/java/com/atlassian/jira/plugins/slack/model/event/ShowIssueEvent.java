@@ -2,8 +2,8 @@ package com.atlassian.jira.plugins.slack.model.event;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugins.slack.model.DedicatedChannel;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**

@@ -32,22 +32,21 @@ import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
@@ -61,7 +60,7 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
  */
 @ReadOnlyAccessAllowed
 @Path("/")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired, @Inject})
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SlackWebHookResource {
     public static final String EVENT_TYPE = "type";
     public static final String TYPE_URL_VERIFICATION = "url_verification";

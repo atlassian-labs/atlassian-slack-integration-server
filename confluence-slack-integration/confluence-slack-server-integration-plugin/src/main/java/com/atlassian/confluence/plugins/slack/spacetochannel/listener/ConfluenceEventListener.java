@@ -1,5 +1,6 @@
 package com.atlassian.confluence.plugins.slack.spacetochannel.listener;
 
+import com.atlassian.confluence.content.ContentEntityExcerpter;
 import com.atlassian.confluence.core.ContentEntityObject;
 import com.atlassian.confluence.core.SpaceContentEntityObject;
 import com.atlassian.confluence.event.events.content.ContentEvent;
@@ -95,17 +96,18 @@ public class ConfluenceEventListener extends AutoSubscribingEventListener {
             return;
         }
         final ContentEntityObject content = event.getComment().getContainer();
-        if (content instanceof SpaceContentEntityObject && !permissionChecker.doesContentHaveViewRestrictions(content)) {
-            final SpaceContentEntityObject spaceContent = (SpaceContentEntityObject) content;
-            final Space space = spaceContent.getSpace();
+        if (content instanceof SpaceContentEntityObject spaceContent
+                && !permissionChecker.doesContentHaveViewRestrictions(content)) {
+            String commentText = new ContentEntityExcerpter().getBodyAsStringWithoutMarkup(event.getComment())
+                    .orElse(null);
             personalNotificationService.notifyForComment(
                     event.getComment().getCreator(),
                     spaceContent,
                     () -> buildSimpleCommentNotification(
                             event.getComment().getCreator(),
-                            event.getComment().getBodyAsStringWithoutMarkup(),
+                            commentText,
                             spaceContent,
-                            space));
+                            spaceContent.getSpace()));
         }
     }
 

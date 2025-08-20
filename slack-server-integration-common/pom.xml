@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.atlassian.plugins</groupId>
         <artifactId>atlassian-slack-server-integration-parent</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>slack-server-integration-common</artifactId>
@@ -201,6 +201,11 @@
             <artifactId>atlassian-util-concurrent</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.atlassian.plugins</groupId>
+            <artifactId>atlassian-plugins-osgi</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Test dependencies-->
         <dependency>
@@ -273,7 +278,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>2.42</version>
+            <version>3.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -309,19 +314,6 @@
                         </feManifestAssociation>
                     </feManifestAssociations>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.atlassian.lesscss</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile-less</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

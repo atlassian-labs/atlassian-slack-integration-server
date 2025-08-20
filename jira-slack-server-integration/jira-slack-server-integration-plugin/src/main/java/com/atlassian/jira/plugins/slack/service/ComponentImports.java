@@ -16,10 +16,10 @@ import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.issue.comments.CommentManager;
 import com.atlassian.jira.issue.fields.FieldManager;
 import com.atlassian.jira.issue.index.IssueIndexingService;
-import com.atlassian.jira.issue.search.SearchProvider;
 import com.atlassian.jira.issue.watchers.WatcherManager;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.projectconfig.util.ProjectConfigRequestCache;
+import com.atlassian.jira.search.issue.IssueDocumentSearchService;
 import com.atlassian.jira.security.GlobalPermissionManager;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.PermissionManager;
@@ -61,7 +61,7 @@ public class ComponentImports {
     @ComponentImport
     I18nResolver i18nResolver;
     @ComponentImport
-    SearchProvider searchProvider;
+    IssueDocumentSearchService issueDocumentSearchService;
     @ComponentImport
     BuildUtilsInfo buildUtilsInfo;
     @ComponentImport

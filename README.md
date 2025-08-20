@@ -16,7 +16,12 @@ Links to the official documentation are specified on Marketplace pages.
 
 Supported products. See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
 * `master`/`dev` branch
-  * Jira: 10+ (not released yet) on JDK 17.
+  * Jira: 11+ on JDK 21.
+  * Confluence: 10+ on JDK 21.
+  * Bitbucket: 10+ on JDK 21.
+
+* `release-2.x` branch
+  * Jira: 10+ on JDK 17.
   * Confluence: 9+ on JDK 17.
   * Bitbucket: 9+ on JDK 17.
 
@@ -33,20 +38,19 @@ When Jira, Confluence, or Bitbucket Data Center release new versions, we will va
 
 # Installation
 
-1. Download and install [JDK 17](https://adoptium.net/en-GB/temurin/releases/?version=17). After installation `
+1. Download and install [JDK 21](https://adoptium.net/en-GB/temurin/releases/?version=21). After installation `
 java` command should be available in the terminal and `JAVA_HOME` environment variable should point to JDK installation directory.
 Running `$JAVA_HOME/bin/java -version` should print a JDK version.
-> **Note:** Use [JDK 8](https://adoptium.net/en-GB/temurin/releases/?version=8) / [JDK 11](https://adoptium.net/en-GB/temurin/releases/?version=11) if working with the `release-1.x` branch
+> **Note:** Use [JDK 17](https://adoptium.net/en-GB/temurin/releases/?version=17) if working with the `release-2.x` branch
 >
-> **Note:** Plugin can be compiled and run using **JDK 11**, but some old products may not support it.
+> **Note:** Use [JDK 8](https://adoptium.net/en-GB/temurin/releases/?version=8) / [JDK 11](https://adoptium.net/en-GB/temurin/releases/?version=11) if working with the `release-1.x` branch
 2. Download and install [Atlassian Plugin SDK](https://developer.atlassian.com/server/framework/atlassian-sdk/install-the-atlassian-sdk-on-a-linux-or-mac-system/). 
 After successful installation running `atlas-version` should print SDK version.
 3. (Optional) Install [ngrok](https://ngrok.com/) to enable Slack -> product features (slash commands, unfurling). 
 If you don't have ngrok, the plugin still can send notification to Slack in uni-directional way. 
 Slack demands HTTPS OAuth redirect URLs, so you also need to add your ngrok host to domain allowlist at
 http://localhost:2990/jira/plugins/servlet/whitelist. 
-4. Install Maven 3.8.6 or later and define path to its executable: `export ATLAS_MVN: /usr/share/apache-maven-3.8.6/bin/mvn`.
-It's needed because current versions of AMPS plugin isn't compatible with Maven bundled into the Atlassian Plugin SDK.
+4. (Optional. If you would like to use local maven) Install Maven 3.9.8 or later and define path to its executable: `export ATLAS_MVN: /usr/share/apache-maven-3.9.8/bin/mvn`.
 5. If you are setting up the project for the first time run `./jira.sh common` from the project root directory to install 
 all common modules to local Maven repository.
 6. Go to **\<product> Plugin Development** section for further steps. 
@@ -66,7 +70,7 @@ Use tool `./jira.sh` for all dev cycle:
 ./jira.sh
 
 # recompile common, compatibility modules and the plugin, and reinstall fresh plugin version
-./jira.sh common compat pack
+./jira.sh common pack
 
 # clean compilied code, but keep Jira database
 ./jira.sh clean
@@ -92,7 +96,6 @@ This is [the same link](https://confluence.atlassian.com/slack/atlassian-for-sla
 
 - [Google Closure Templates / Soy Templates](https://developers.google.com/closure/templates/docs/concepts)
 - [slackdown](https://github.com/blockmar/slackdown): parses slack messages to HTML. See also: https://api.slack.com/methods/emoji.list
-- [Jira 8: be careful when using JQL from background](https://community.developer.atlassian.com/t/migrating-apps-to-jira-8-be-careful-when-using-jql-from-background-threads/25686)
 - [Slack emoji table](https://unicodey.com/emoji-data/table.htm)
 
 # Tests

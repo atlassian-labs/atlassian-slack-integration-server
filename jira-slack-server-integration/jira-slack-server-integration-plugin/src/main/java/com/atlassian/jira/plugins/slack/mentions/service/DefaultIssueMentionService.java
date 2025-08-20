@@ -7,24 +7,23 @@ import com.atlassian.jira.plugins.slack.mentions.storage.cache.MentionChannelCac
 import com.atlassian.jira.plugins.slack.mentions.storage.json.IssueMentionStore;
 import com.atlassian.jira.plugins.slack.model.SlackIncomingMessage;
 import com.atlassian.jira.plugins.slack.model.mentions.IssueMention;
+import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.plugins.slack.api.ConversationKey;
 import com.atlassian.plugins.slack.api.events.SlackUserMappedEvent;
 import com.atlassian.plugins.slack.api.events.SlackUserUnmappedEvent;
-import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
-import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.plugins.slack.api.webhooks.ChannelDeletedSlackEvent;
 import com.atlassian.plugins.slack.event.SlackTeamUnlinkedEvent;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
+import com.atlassian.plugins.slack.util.AutoSubscribingEventListener;
 import io.atlassian.fugue.Either;
+import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
@@ -97,8 +96,7 @@ public class DefaultIssueMentionService extends AutoSubscribingEventListener imp
         final Date messageDateTime = new Date(Long.parseLong(cleanDateTimeString(message.getTs())) * 1000L);
         String text = message.getText();
         if (StringUtils.isBlank(text)) {
-            text = message.getLinks().stream()
-                    .collect(Collectors.joining(", "));
+            text = String.join(", ", message.getLinks());
         }
         final IssueMention mention = new IssueMention(
                 issue.getId(),

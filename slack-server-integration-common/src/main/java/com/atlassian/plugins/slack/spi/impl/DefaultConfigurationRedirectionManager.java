@@ -1,9 +1,9 @@
 package com.atlassian.plugins.slack.spi.impl;
 
 import com.atlassian.plugins.slack.spi.ConfigurationRedirectionManager;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Optional;
 

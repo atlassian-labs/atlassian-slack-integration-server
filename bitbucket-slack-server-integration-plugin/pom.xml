@@ -5,7 +5,7 @@
     <groupId>com.atlassian.bitbucket.plugins</groupId>
     <artifactId>bitbucket-slack-server-integration-plugin</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <version>5.0.4-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
 
     <name>Slack for Bitbucket Data Center</name>
     <description>This is the Slack integration for Bitbucket Data Center</description>
@@ -18,8 +18,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <jvm17.opens />
 
         <!-- default properties. copied from parent POM in order to allow to resolve plugin dependencies during BBS build -->
@@ -36,29 +36,28 @@
 
         <!-- AMPS related properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.amps.version>9.1.11</bitbucket.amps.version>
+        <bitbucket.amps.version>9.5.4</bitbucket.amps.version>
 
         <!-- Bitbucket API version used during the build -->
-        <bitbucket.api.version>9.0.0</bitbucket.api.version>
-        <!-- TODO: 9.0.0 bitbucket-rest-api and bitbucket-rest-model are not available yet-->
-        <bitbucket.rest.api.version>9.0.0-plat-7-m20</bitbucket.rest.api.version>
+        <bitbucket.api.version>10.0.0-eap3</bitbucket.api.version>
 
         <!-- Bitbucket version used for integration tests; can be overridden to test against different versions -->
-        <bitbucket.version>9.0.0</bitbucket.version>
+        <bitbucket.version>10.0.0-eap3</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements -->
-        <bitbucket.page.objects.version>9.0.0</bitbucket.page.objects.version>
+        <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements on login page -->
+        <bitbucket.page.objects.version>9.2.1</bitbucket.page.objects.version>
 
         <!-- Platform version used for dependency management -->
-        <platform.version>7.2.6</platform.version>
+        <platform.version>8.0.0</platform.version>
 
         <!-- Dependency versions -->
-        <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
-        <atlassian.selenium.version>3.6.0</atlassian.selenium.version>
-        <junit.jupiter.version>5.7.1</junit.jupiter.version>
+        <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
+        <atlassian.selenium.version>4.0.0</atlassian.selenium.version>
+        <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
+        <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
         <commons-codec.version>1.11</commons-codec.version>
-        <slack.common.version>2.0.0</slack.common.version>
+        <slack.common.version>3.0.0</slack.common.version>
     </properties>
 
     <dependencyManagement>
@@ -95,7 +94,13 @@
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
-                <version>4.10.0</version>
+                <version>4.12.0</version>
+            </dependency>
+            <!-- Override transitive dependencies -->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>3.0.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -106,7 +111,6 @@
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>slack-server-integration-common</artifactId>
             <version>${slack.common.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.seratch</groupId>
@@ -123,7 +127,7 @@
         <dependency>
             <groupId>com.atlassian.ozymandias</groupId>
             <artifactId>atlassian-plugin-point-safety</artifactId>
-            <version>0.15</version>
+            <version>${atlassian.plugin.point.safety.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -142,14 +146,14 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-api</artifactId>
-            <version>${bitbucket.rest.api.version}</version>
+            <artifactId>bitbucket-rest-v2-api</artifactId>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-rest-model</artifactId>
-            <version>${bitbucket.rest.api.version}</version>
+            <artifactId>bitbucket-rest-v2-model</artifactId>
+            <version>${bitbucket.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -285,6 +289,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
@@ -411,8 +420,19 @@
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-page-objects</artifactId>
-            <version>${bitbucket.page.objects.version}</version>
+            <version>${bitbucket.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <!-- Exclude browser dependencies since transitive ones are publicly unavailable -->
+                <exclusion>
+                    <groupId>com.atlassian.browsers</groupId>
+                    <artifactId>chrome</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.atlassian.browsers</groupId>
+                    <artifactId>chrome-profile</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
@@ -445,7 +465,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>2.42</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -505,7 +524,6 @@
 
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
-                        <exclude>com.atlassian.fugue:fugue</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
                     </banningExcludes>
 
@@ -592,7 +610,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>3.5.3</version>
                 <configuration>
                     <argLine>${jvm17.opens}</argLine>
                     <skipTests>${ut.test.skip}</skipTests>
@@ -605,7 +623,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>3.5.3</version>
                 <configuration>
                     <argLine>${jvm17.opens}</argLine>
                     <trimStackTrace>false</trimStackTrace>
@@ -615,7 +633,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
                     <filesets>

@@ -2,6 +2,8 @@ package com.atlassian.plugins.slack.admin;
 
 import com.atlassian.security.random.DefaultSecureTokenGenerator;
 import com.atlassian.security.random.SecureTokenGenerator;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,9 +13,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

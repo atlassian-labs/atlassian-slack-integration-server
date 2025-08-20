@@ -3,8 +3,7 @@ package com.atlassian.jira.plugins.slack.service.task.impl;
 import com.atlassian.jira.plugins.slack.model.SlackDeletedMessage;
 import com.atlassian.jira.plugins.slack.service.mentions.IssueMentionService;
 import com.atlassian.plugins.slack.api.ConversationKey;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

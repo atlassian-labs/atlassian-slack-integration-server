@@ -6,8 +6,7 @@ import com.atlassian.jira.webtest.webdriver.util.AUIBlanket;
 import com.atlassian.jira.webtest.webdriver.util.AUIFlags;
 import com.atlassian.jira.webtest.webdriver.util.AUIHelpTip;
 import com.atlassian.pageobjects.PageBinder;
-
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Flaky tests are those which unexpectedly fail sometimes. In general, it seems random but there's also a root cause.

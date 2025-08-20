@@ -11,13 +11,12 @@ import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.event.api.EventPublisher;
 import com.atlassian.plugins.slack.analytics.AnalyticsContextProvider;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import javax.ws.rs.core.Response;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
