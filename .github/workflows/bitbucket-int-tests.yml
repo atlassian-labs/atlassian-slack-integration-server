@@ -23,9 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      # Dec 13, 2022
-      # latest Bitbucket 8.6.1 doesn't support latest git 2.38.1 installed on the Ubuntu 20 image Github provides
-      # install last supported git - 2.37.4; remove this trick once Bitbucket implements support for latest git
+      # Ubuntu runners may update Git automatically, so install the Bitbucket Data Center supported Git version to avoid build failures.
       # https://confluence.atlassian.com/bitbucketserver/supported-platforms-776640981.html#Supportedplatforms-dvcsDVCS
       - run: bin/build/install-supported-git.sh
       - uses: actions/setup-java@v4
