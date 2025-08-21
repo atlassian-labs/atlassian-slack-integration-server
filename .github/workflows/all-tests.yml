@@ -146,6 +146,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
+      # Ubuntu runners may update Git automatically, so install the Bitbucket Data Center supported Git version to avoid build failures.
+      # https://confluence.atlassian.com/bitbucketserver/supported-platforms-776640981.html#Supportedplatforms-dvcsDVCS
+      - run: bin/build/install-supported-git.sh
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
