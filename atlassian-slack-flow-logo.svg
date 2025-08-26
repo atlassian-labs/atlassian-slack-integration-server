@@ -1,0 +1,27 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="120" height="120" rx="20" fill="#F8F9FA"/>
+  
+  <!-- Atlassian source -->
+  <rect x="20" y="35" width="20" height="50" rx="10" fill="#0052CC"/>
+  
+  <!-- Slack destination -->
+  <rect x="80" y="35" width="20" height="50" rx="10" fill="#4A154B"/>
+  
+  <!-- Flow streams -->
+  <path d="M 45 45 Q 60 35 75 45" stroke="#36C5F0" stroke-width="4" fill="none" opacity="0.9"/>
+  <path d="M 45 60 Q 60 50 75 60" stroke="#36C5F0" stroke-width="4" fill="none" opacity="0.7"/>
+  <path d="M 45 75 Q 60 85 75 75" stroke="#36C5F0" stroke-width="4" fill="none" opacity="0.9"/>
+  
+  <!-- Reverse flow -->
+  <path d="M 75 50 Q 60 40 45 50" stroke="#ECB22E" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M 75 70 Q 60 80 45 70" stroke="#ECB22E" stroke-width="3" fill="none" opacity="0.6"/>
+  
+  <!-- Flow direction indicators -->
+  <polygon points="72,43 78,45 72,47" fill="#36C5F0"/>
+  <polygon points="72,58 78,60 72,62" fill="#36C5F0"/>
+  <polygon points="72,73 78,75 72,77" fill="#36C5F0"/>
+  
+  <polygon points="48,48 42,50 48,52" fill="#ECB22E"/>
+  <polygon points="48,68 42,70 48,72" fill="#ECB22E"/>
+</svg>

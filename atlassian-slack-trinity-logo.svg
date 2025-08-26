@@ -1,0 +1,17 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="60" cy="60" r="55" fill="#F4F5F7" stroke="#DFE1E6" stroke-width="1"/>
+  
+  <!-- Three interconnected circles representing Jira, Confluence, Bitbucket -->
+  <circle cx="45" cy="45" r="18" fill="#0052CC" opacity="0.9"/>
+  <circle cx="75" cy="45" r="18" fill="#0052CC" opacity="0.7"/>
+  <circle cx="60" cy="75" r="18" fill="#0052CC" opacity="0.8"/>
+  
+  <!-- Central Slack connection hub -->
+  <circle cx="60" cy="55" r="12" fill="#4A154B"/>
+  
+  <!-- Connection lines -->
+  <line x1="52" y1="48" x2="68" y2="62" stroke="#36C5F0" stroke-width="3" opacity="0.8"/>
+  <line x1="68" y1="48" x2="52" y2="62" stroke="#36C5F0" stroke-width="3" opacity="0.8"/>
+  <line x1="60" y1="67" x2="60" y2="43" stroke="#36C5F0" stroke-width="3" opacity="0.8"/>
+</svg>

@@ -1,6 +1,12 @@
 
 # Atlassian Data Center Integrations for Slack
 
+<div align="center">
+  <img src="atlassian-slack-bridge-logo.svg" alt="Atlassian Slack Bridge Logo" width="120" height="120" style="margin: 10px;">
+  <img src="atlassian-slack-trinity-logo.svg" alt="Atlassian Slack Trinity Logo" width="120" height="120" style="margin: 10px;">
+  <img src="atlassian-slack-flow-logo.svg" alt="Atlassian Slack Flow Logo" width="120" height="120" style="margin: 10px;">
+</div>
+
 [![Atlassian license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
 Official plugins for Jira Data Center, Confluence Data Center, and Bitbucket Date Center that integrate with [Slack](https://slack.com/).

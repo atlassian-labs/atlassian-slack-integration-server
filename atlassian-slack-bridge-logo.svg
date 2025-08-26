@@ -1,0 +1,18 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#0052CC" opacity="0.1"/>
+  
+  <!-- Left platform (Atlassian) -->
+  <rect x="15" y="45" width="25" height="30" rx="4" fill="#0052CC"/>
+  
+  <!-- Right platform (Slack) -->
+  <rect x="80" y="45" width="25" height="30" rx="4" fill="#4A154B"/>
+  
+  <!-- Bridge/Connection -->
+  <rect x="42" y="57" width="36" height="6" rx="3" fill="#36C5F0"/>
+  
+  <!-- Data flow indicators -->
+  <circle cx="50" cy="60" r="2" fill="#36C5F0" opacity="0.8"/>
+  <circle cx="60" cy="60" r="2" fill="#36C5F0" opacity="0.6"/>
+  <circle cx="70" cy="60" r="2" fill="#36C5F0" opacity="0.8"/>
+</svg>
