@@ -1,0 +1,25 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Interlocking circles representing integration -->
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0052CC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4C9AFF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle for depth -->
+  <circle cx="60" cy="60" r="55" fill="none" stroke="#F4F5F7" stroke-width="2"/>
+  
+  <!-- Left circle (Atlassian) -->
+  <circle cx="45" cy="60" r="25" fill="url(#gradient1)" opacity="0.9"/>
+  
+  <!-- Right circle (Slack) -->
+  <circle cx="75" cy="60" r="25" fill="none" stroke="#0052CC" stroke-width="3"/>
+  
+  <!-- Central connection point -->
+  <circle cx="60" cy="60" r="8" fill="#0052CC"/>
+  
+  <!-- Subtle connection lines -->
+  <line x1="35" y1="45" x2="85" y2="75" stroke="#4C9AFF" stroke-width="2" opacity="0.6"/>
+  <line x1="35" y1="75" x2="85" y2="45" stroke="#4C9AFF" stroke-width="2" opacity="0.6"/>
+</svg>
