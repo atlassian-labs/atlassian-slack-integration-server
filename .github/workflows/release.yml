@@ -47,7 +47,7 @@ jobs:
       - name: Install JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 21
           distribution: adopt
       - name: Log Maven settings.xml
         run: cat $HOME/.m2/settings.xml
