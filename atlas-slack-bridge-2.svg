@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 128 128" role="img" aria-label="Integration bridge logo variant 2">
+  <defs>
+    <style>
+      .atl{stroke:#2684FF;fill:none;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+      .slk{stroke:#36C5F0;fill:none;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <!-- Atlassian node -->
+  <circle class="atl" cx="36" cy="64" r="20"/>
+  <!-- Slack node -->
+  <circle class="slk" cx="92" cy="64" r="20"/>
+  <!-- Bridge connector -->
+  <rect x="52" y="56" width="24" height="16" rx="8" fill="#172B4D"/>
+</svg>

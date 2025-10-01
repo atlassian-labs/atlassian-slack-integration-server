@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 128 128" role="img" aria-label="Integration bridge logo variant 1">
+  <defs>
+    <style>
+      .teal{stroke:#36C5F0;fill:none;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+      .blue{stroke:#2684FF;fill:none;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <!-- Left bracket -->
+  <path class="teal" d="M52 28H40c-12 0-12 0-12 12v48c0 12 0 12 12 12h12"/>
+  <!-- Right bracket -->
+  <path class="blue" d="M76 28h12c12 0 12 0 12 12v48c0 12 0 12-12 12H76"/>
+  <!-- Bridge connector -->
+  <rect x="52" y="56" width="24" height="16" rx="8" fill="#172B4D"/>
+</svg>

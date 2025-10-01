@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 128 128" role="img" aria-label="Integration bridge logo variant 3">
+  <defs>
+    <style>
+      .atl{stroke:#2684FF;fill:none;stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
+      .slk{stroke:#36C5F0;fill:none;stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <!-- Three Atlassian product nodes forming a cluster -->
+  <circle class="atl" cx="34" cy="64" r="10"/>
+  <circle class="atl" cx="50" cy="44" r="10"/>
+  <circle class="atl" cx="50" cy="84" r="10"/>
+  <!-- Slack node as a single destination -->
+  <circle class="slk" cx="98" cy="64" r="18"/>
+  <!-- Converging connectors -->
+  <path d="M41 64 C60 64, 70 64, 80 64" stroke="#172B4D" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M57 44 C70 50, 78 56, 86 60" stroke="#172B4D" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M57 84 C70 78, 78 72, 86 68" stroke="#172B4D" stroke-width="6" fill="none" stroke-linecap="round"/>
+</svg>

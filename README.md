@@ -1,4 +1,10 @@
 
+<p align="center">
+  <img src="atlas-slack-bridge-1.svg" height="80" alt="Logo variant 1"/>
+  <img src="atlas-slack-bridge-2.svg" height="80" alt="Logo variant 2"/>
+  <img src="atlas-slack-bridge-3.svg" height="80" alt="Logo variant 3"/>
+</p>
+
 # Atlassian Data Center Integrations for Slack
 
 [![Atlassian license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
