@@ -1,0 +1,28 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0052CC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#36C5F0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main container -->
+  <rect x="15" y="30" width="90" height="60" rx="30" fill="url(#gradient1)"/>
+  
+  <!-- Interconnected circles representing integration -->
+  <circle cx="40" cy="60" r="12" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="60" cy="45" r="8" fill="#FFFFFF" opacity="0.7"/>
+  <circle cx="60" cy="75" r="8" fill="#FFFFFF" opacity="0.7"/>
+  <circle cx="80" cy="60" r="12" fill="#FFFFFF" opacity="0.9"/>
+  
+  <!-- Connection lines -->
+  <line x1="48" y1="55" x2="72" y2="55" stroke="#0052CC" stroke-width="3" stroke-linecap="round"/>
+  <line x1="48" y1="65" x2="72" y2="65" stroke="#0052CC" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Small accent dots -->
+  <circle cx="35" cy="45" r="2" fill="#36C5F0"/>
+  <circle cx="85" cy="45" r="2" fill="#36C5F0"/>
+  <circle cx="35" cy="75" r="2" fill="#36C5F0"/>
+  <circle cx="85" cy="75" r="2" fill="#36C5F0"/>
+</svg>

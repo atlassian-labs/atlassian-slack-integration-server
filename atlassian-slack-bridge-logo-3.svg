@@ -1,0 +1,26 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="120" height="120" fill="#FFFFFF"/>
+  
+  <!-- Left hexagon (Atlassian inspired) -->
+  <polygon points="25,35 45,25 65,35 65,55 45,65 25,55" fill="#0052CC" opacity="0.8"/>
+  
+  <!-- Right rounded square (Slack inspired) -->
+  <rect x="55" y="55" width="40" height="40" rx="12" fill="#36C5F0" opacity="0.8"/>
+  
+  <!-- Integration symbol - overlapping area -->
+  <circle cx="60" cy="60" r="15" fill="#2684FF" opacity="0.6"/>
+  
+  <!-- Data flow lines -->
+  <path d="M 45 45 Q 60 50 75 75" stroke="#0052CC" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 75 45 Q 60 50 45 75" stroke="#36C5F0" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Center connection point -->
+  <circle cx="60" cy="60" r="4" fill="#FFFFFF"/>
+  
+  <!-- Small geometric accents -->
+  <rect x="30" y="40" width="4" height="4" fill="#FFFFFF" opacity="0.8"/>
+  <rect x="37" y="40" width="4" height="4" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="82" cy="67" r="2" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="82" cy="75" r="2" fill="#FFFFFF" opacity="0.8"/>
+</svg>

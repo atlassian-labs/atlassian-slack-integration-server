@@ -1,0 +1,23 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#0052CC" stroke="none"/>
+  
+  <!-- Slack-inspired hash symbol (left) -->
+  <g transform="translate(25, 45)">
+    <rect x="0" y="10" width="20" height="4" rx="2" fill="#FFFFFF"/>
+    <rect x="0" y="16" width="20" height="4" rx="2" fill="#FFFFFF"/>
+    <rect x="6" y="4" width="4" height="20" rx="2" fill="#FFFFFF"/>
+    <rect x="12" y="4" width="4" height="20" rx="2" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- Connection bridge -->
+  <rect x="50" y="57" width="20" height="6" rx="3" fill="#FFFFFF"/>
+  <circle cx="52" cy="60" r="3" fill="#36C5F0"/>
+  <circle cx="68" cy="60" r="3" fill="#36C5F0"/>
+  
+  <!-- Atlassian-inspired triangle (right) -->
+  <g transform="translate(75, 45)">
+    <polygon points="10,5 20,25 0,25" fill="#FFFFFF"/>
+    <circle cx="10" cy="18" r="3" fill="#0052CC"/>
+  </g>
+</svg>
