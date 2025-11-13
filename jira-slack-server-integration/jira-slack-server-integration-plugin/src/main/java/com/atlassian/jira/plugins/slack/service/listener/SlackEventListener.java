@@ -108,6 +108,9 @@ public class SlackEventListener extends AutoSubscribingEventListener {
     }
 
     private boolean isSupportedSubtype(@Nullable final String subtype) {
+        if(subtype == null) {
+            return false;
+        }
         return isBlank(subtype)
                 || subtype.startsWith("file_comment")
                 || subtype.startsWith("file_share")
