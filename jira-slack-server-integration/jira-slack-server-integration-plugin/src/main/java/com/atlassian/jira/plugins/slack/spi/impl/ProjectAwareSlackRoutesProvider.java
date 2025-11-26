@@ -8,8 +8,8 @@ import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public class ProjectAwareSlackRoutesProvider implements SlackRoutesProvider {
-    private static final String SLACK_PROJECT_ADMIN = "{baseUrl}/secure/ConfigureSlack.jspa";
-    private static final String SLACK_GLOBAL_ADMIN = "{baseUrl}/plugins/servlet/slack";
+    private static final String SLACK_PROJECT_ADMIN = "/secure/ConfigureSlack.jspa";
+    private static final String SLACK_GLOBAL_ADMIN = "/plugins/servlet/slack/configure";
 
     private final String projectKey;
     private final ApplicationProperties applicationProperties;
@@ -31,14 +31,12 @@ public class ProjectAwareSlackRoutesProvider implements SlackRoutesProvider {
 
     @Override
     public URI getAdminConfigurationPage() {
-        return UriBuilder.fromPath(SLACK_PROJECT_ADMIN)
+        return UriBuilder.fromUri(baseUrl()).path(SLACK_PROJECT_ADMIN)
                 .queryParam("projectKey", projectKey)
-                .build(strBaseUrl());
+                .build();
     }
 
     public URI getGlobalConfigurationPage() {
-        return UriBuilder.fromPath(SLACK_GLOBAL_ADMIN)
-                .path("configure")
-                .build(strBaseUrl());
+        return UriBuilder.fromUri(baseUrl()).path(SLACK_GLOBAL_ADMIN).build();
     };
 }
