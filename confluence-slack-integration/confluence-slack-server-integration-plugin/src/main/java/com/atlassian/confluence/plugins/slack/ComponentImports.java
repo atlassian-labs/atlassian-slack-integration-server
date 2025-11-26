@@ -35,6 +35,7 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.usersettings.UserSettingsService;
 import com.atlassian.sal.api.web.context.HttpContext;
+import com.atlassian.sal.api.websudo.WebSudoManager;
 import com.atlassian.soy.renderer.SoyTemplateRenderer;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.atlassian.webresource.api.WebResourceUrlProvider;
@@ -118,4 +119,6 @@ public class ComponentImports {
     ThreadLocalDelegateExecutorFactory threadLocalDelegateExecutorFactory;
     @ComponentImport
     NotificationManager notificationManager;
+    @ComponentImport
+    WebSudoManager webSudoManager;
 }

@@ -14,6 +14,8 @@ import com.atlassian.plugins.slack.spi.SlackPluginResourceProvider;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 import com.atlassian.sal.api.user.UserManager;
+import com.atlassian.sal.api.websudo.WebSudoManager;
+import com.atlassian.sal.api.websudo.WebSudoSessionException;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.google.common.collect.ImmutableMap;
 import io.atlassian.fugue.Either;
@@ -48,6 +50,7 @@ public class ConfigureServlet extends AbstractAdminServlet {
     private final ApplicationProperties applicationProperties;
     private final SlackPluginResourceProvider slackPluginResourceProvider;
     private final AnalyticsContextProvider analyticsContextProvider;
+    private final WebSudoManager webSudoManager;
 
     public ConfigureServlet(final TemplateRenderer templateRenderer,
                             final SlackLinkAccessManager slackLinkAccessManager,
@@ -59,7 +62,8 @@ public class ConfigureServlet extends AbstractAdminServlet {
                             final EventPublisher eventPublisher,
                             @Qualifier("salApplicationProperties") final ApplicationProperties applicationProperties,
                             final SlackPluginResourceProvider slackPluginResourceProvider,
-                            final AnalyticsContextProvider analyticsContextProvider) {
+                            final AnalyticsContextProvider analyticsContextProvider,
+                            final WebSudoManager webSudoManager) {
         super(userManager, loginRedirectionManager, slackLinkAccessManager);
         this.templateRenderer = templateRenderer;
         this.configurationRedirectionManager = configurationRedirectionManager;
@@ -69,77 +73,84 @@ public class ConfigureServlet extends AbstractAdminServlet {
         this.applicationProperties = applicationProperties;
         this.slackPluginResourceProvider = slackPluginResourceProvider;
         this.analyticsContextProvider = analyticsContextProvider;
+        this.webSudoManager = webSudoManager;
     }
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response)
             throws ServletException, IOException {
-        final String action = request.getParameter("action");
-        final String recentInstall = request.getParameter("recentInstall");
-        final String teamId = defaultString(recentInstall, request.getParameter("teamId"));
+        try {
+            webSudoManager.willExecuteWebSudoRequest(request);
 
-        HttpSession session = request.getSession();
-        Optional<URI> configurationRedirectUri = getRedirectUri(request);
+            final String action = request.getParameter("action");
+            final String recentInstall = request.getParameter("recentInstall");
+            final String teamId = defaultString(recentInstall, request.getParameter("teamId"));
 
-        if (!configurationRedirectUri.isPresent()) {
-            boolean isConfluence = ApplicationProperties.PLATFORM_CONFLUENCE.equals(applicationProperties.getPlatformId());
-            if ("add".equals(action)) {
-                Map<String, Object> context = ImmutableMap.of(
-                        "baseUrl", applicationProperties.getBaseUrl(UrlMode.ABSOLUTE),
-                        "slackPluginResourceProvider", slackPluginResourceProvider,
-                        "webInterfaceManager", webInterfaceManager,
-                        "isConfluence", isConfluence);
-                eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.current(), CommonPage.CONNECT_TEAM));
-                render(TEMPLATE_EDIT, context, response);
-            } else if ("edit".equals(action) && isNotEmpty(teamId)) {
-                final Either<Throwable, SlackLink> linkById = slackLinkManager.getLinkByTeamId(teamId);
-                if (linkById.isRight()) {
+            HttpSession session = request.getSession();
+            Optional<URI> configurationRedirectUri = getRedirectUri(request);
+
+            if (!configurationRedirectUri.isPresent()) {
+                boolean isConfluence = ApplicationProperties.PLATFORM_CONFLUENCE.equals(applicationProperties.getPlatformId());
+                if ("add".equals(action)) {
                     Map<String, Object> context = ImmutableMap.of(
-                            "webInterfaceManager", webInterfaceManager,
                             "baseUrl", applicationProperties.getBaseUrl(UrlMode.ABSOLUTE),
                             "slackPluginResourceProvider", slackPluginResourceProvider,
-                            "link", linkById.getOrNull(),
+                            "webInterfaceManager", webInterfaceManager,
                             "isConfluence", isConfluence);
-                    eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.current(), CommonPage.EDIT_TEAM));
+                    eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.current(), CommonPage.CONNECT_TEAM));
                     render(TEMPLATE_EDIT, context, response);
-                } else {
-                    response.sendError(404);
-                }
-            } else {
-                if (isNotEmpty(teamId)) {
+                } else if ("edit".equals(action) && isNotEmpty(teamId)) {
                     final Either<Throwable, SlackLink> linkById = slackLinkManager.getLinkByTeamId(teamId);
                     if (linkById.isRight()) {
                         Map<String, Object> context = ImmutableMap.of(
-                                "link", linkById.getOrNull(),
                                 "webInterfaceManager", webInterfaceManager,
+                                "baseUrl", applicationProperties.getBaseUrl(UrlMode.ABSOLUTE),
                                 "slackPluginResourceProvider", slackPluginResourceProvider,
-                                "recentInstall", defaultString(recentInstall, ""));
-                        eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.byTeamId(teamId),
-                                CommonPage.GLOBAL_CONFIG));
-                        render(TEMPLATE, context, response);
+                                "link", linkById.getOrNull(),
+                                "isConfluence", isConfluence);
+                        eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.current(), CommonPage.EDIT_TEAM));
+                        render(TEMPLATE_EDIT, context, response);
                     } else {
                         response.sendError(404);
                     }
                 } else {
-                    ImmutableMap.Builder<String, Object> context = ImmutableMap.builder();
-                    Optional<SlackLink> slackLink = slackLinkManager.getLinks().stream().findFirst();
-                    slackLink.ifPresent(link -> context.put("link", link));
-                    eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.bySlackLink(
-                            slackLink.orElse(null)), CommonPage.GLOBAL_CONFIG));
-                    context.put("webInterfaceManager", webInterfaceManager);
-                    context.put("recentInstall", defaultString(recentInstall, ""));
-                    context.put("slackPluginResourceProvider", slackPluginResourceProvider);
-                    render(TEMPLATE, context.build(), response);
+                    if (isNotEmpty(teamId)) {
+                        final Either<Throwable, SlackLink> linkById = slackLinkManager.getLinkByTeamId(teamId);
+                        if (linkById.isRight()) {
+                            Map<String, Object> context = ImmutableMap.of(
+                                    "link", linkById.getOrNull(),
+                                    "webInterfaceManager", webInterfaceManager,
+                                    "slackPluginResourceProvider", slackPluginResourceProvider,
+                                    "recentInstall", defaultString(recentInstall, ""));
+                            eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.byTeamId(teamId),
+                                    CommonPage.GLOBAL_CONFIG));
+                            render(TEMPLATE, context, response);
+                        } else {
+                            response.sendError(404);
+                        }
+                    } else {
+                        ImmutableMap.Builder<String, Object> context = ImmutableMap.builder();
+                        Optional<SlackLink> slackLink = slackLinkManager.getLinks().stream().findFirst();
+                        slackLink.ifPresent(link -> context.put("link", link));
+                        eventPublisher.publish(new PageVisitedEvent(analyticsContextProvider.bySlackLink(
+                                slackLink.orElse(null)), CommonPage.GLOBAL_CONFIG));
+                        context.put("webInterfaceManager", webInterfaceManager);
+                        context.put("recentInstall", defaultString(recentInstall, ""));
+                        context.put("slackPluginResourceProvider", slackPluginResourceProvider);
+                        render(TEMPLATE, context.build(), response);
+                    }
                 }
+            } else {
+                Map<String, Object> context = ImmutableMap.of(
+                        "webInterfaceManager", webInterfaceManager,
+                        "recentInstall", defaultString(recentInstall, ""));
+                session.setAttribute(CONTEXT_ATTRIBUTE_LABEL, context);
+                response.sendRedirect(configurationRedirectUri.get().toString());
             }
-        } else {
-            Map<String, Object> context = ImmutableMap.of(
-                    "webInterfaceManager", webInterfaceManager,
-                    "recentInstall", defaultString(recentInstall, ""));
-            session.setAttribute(CONTEXT_ATTRIBUTE_LABEL, context);
-            response.sendRedirect(configurationRedirectUri.get().toString());
+            removeEphemeralAttributesFromSession(session);
+        } catch (WebSudoSessionException wse) {
+            webSudoManager.enforceWebSudoProtection(request, response);
         }
-        removeEphemeralAttributesFromSession(session);
     }
 
     @Override

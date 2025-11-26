@@ -1,5 +1,6 @@
 package it.com.atlassian.jira.plugins.slack.functional;
 
+import com.atlassian.jira.config.properties.APKeys;
 import com.atlassian.jira.functest.rule.SkipCacheCheck;
 import it.com.atlassian.jira.plugins.slack.util.SlackFunctionalTestBase;
 import okhttp3.Response;
@@ -29,9 +30,16 @@ public class SanityCheckFuncTest extends SlackFunctionalTestBase {
 
     @Test
     public void openGlobalConfigurationPage() {
-        assertThat(
-                client.admin().visitPage("plugins/servlet/slack/configure"),
-                success(containsString("<h1>Slack integration</h1>")));
+        //websudo is tested in webdriver test ConfigurationWebTest
+        boolean originalWebSudoState = backdoor.applicationProperties().getOption(APKeys.WebSudo.IS_DISABLED);
+        try {
+            backdoor.applicationProperties().setOption(APKeys.WebSudo.IS_DISABLED, true);
+            assertThat(
+                    client.admin().visitPage("plugins/servlet/slack/configure"),
+                    success(containsString("<h1>Slack integration</h1>")));
+        } finally {
+            backdoor.applicationProperties().setOption(APKeys.WebSudo.IS_DISABLED, originalWebSudoState);
+        }
     }
 
     @Test

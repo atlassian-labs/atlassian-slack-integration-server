@@ -1,11 +1,14 @@
 package it.com.atlassian.jira.plugins.slack.web;
 
 import com.atlassian.jira.functest.rule.SkipCacheCheck;
+import com.atlassian.jira.pageobjects.config.EnableWebSudo;
+import com.atlassian.jira.pageobjects.websudo.JiraWebSudoPage;
 import com.atlassian.pageobjects.elements.query.Conditions;
 import com.atlassian.pageobjects.elements.query.Poller;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.methods.request.conversations.ConversationsInviteRequest;
 import it.com.atlassian.jira.plugins.slack.pageobjects.ConfigurationSection;
+import it.com.atlassian.jira.plugins.slack.pageobjects.GlobalConfigurationPage;
 import it.com.atlassian.jira.plugins.slack.pageobjects.MappingRow;
 import it.com.atlassian.jira.plugins.slack.pageobjects.MappingTable;
 import it.com.atlassian.jira.plugins.slack.pageobjects.ProjectConfigurationPage;
@@ -35,6 +38,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 
 @SkipCacheCheck
 public class ConfigurationWebTest extends SlackWebTestBase {
@@ -96,6 +100,19 @@ public class ConfigurationWebTest extends SlackWebTestBase {
 
         Poller.waitUntilFalse(Conditions.forSupplier(() ->
                 findMappingRow(configurationSection.getMappingTable(), PUBLIC.getId()).isPresent()));
+    }
+
+    @EnableWebSudo
+    @Test
+    public void globalConfigurationPageShouldBeProtectedByWebSudo() {
+        jira.quickLogin(ADMIN_USERNAME, ADMIN_PASSWORD);
+        jira.visitDelayed(GlobalConfigurationPage.class);
+
+        final JiraWebSudoPage websudoPage = pageBinder.bind(JiraWebSudoPage.class);
+        assertTrue(websudoPage.isAt().now());
+
+        final GlobalConfigurationPage configPage = websudoPage.confirm(ADMIN_PASSWORD, GlobalConfigurationPage.class);
+        assertTrue(configPage.isAt().now());
     }
 
     private Optional<MappingRow> findMappingRow(final MappingTable mappingTable, final String channelId) {

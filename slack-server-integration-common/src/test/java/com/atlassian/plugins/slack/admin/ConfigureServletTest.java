@@ -9,6 +9,8 @@ import com.atlassian.plugins.slack.spi.ConfigurationRedirectionManager;
 import com.atlassian.plugins.slack.spi.SlackPluginResourceProvider;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
+import com.atlassian.sal.api.websudo.WebSudoManager;
+import com.atlassian.sal.api.websudo.WebSudoSessionException;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import io.atlassian.fugue.Either;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +19,13 @@ import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.theories.Theory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -35,6 +40,7 @@ import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +64,8 @@ public class ConfigureServletTest {
     private EventPublisher eventPublisher;
     @Mock
     private AnalyticsContextProvider analyticsContextProvider;
+    @Mock
+    private WebSudoManager webSudoManager;
 
     @Mock
     private HttpServletRequest request;
@@ -89,10 +97,13 @@ public class ConfigureServletTest {
     @Test
     public void doGet_shouldRenderConnectPage_whenAddActionIsPassed() throws Exception {
         when(request.getParameter("action")).thenReturn("add");
+        InOrder inOrder = Mockito.inOrder(webSudoManager, templateRenderer);
 
         servlet.doGet(request, response);
 
-        verify(templateRenderer).render(templateNameCaptor.capture(), contextCaptor.capture(), eq(responseWriter));
+        inOrder.verify(webSudoManager).willExecuteWebSudoRequest(request);
+        inOrder.verify(templateRenderer).render(templateNameCaptor.capture(), contextCaptor.capture(), eq(responseWriter));
+        inOrder.verifyNoMoreInteractions();
         assertThat(templateNameCaptor.getValue(), is(CONNECT_TEMPLATE));
         Map<String, Object> context = contextCaptor.getValue();
         assertThat(context, hasEntry("baseUrl", BASE_URL));
@@ -164,5 +175,18 @@ public class ConfigureServletTest {
         verify(response).sendRedirect(redirectUri);
         verify(session).setAttribute(eq("context"), contextCaptor.capture());
         assertThat(contextCaptor.getValue(), hasEntry("recentInstall", recentInstallId));
+    }
+
+    @Test
+    public void doGet_redirectsToWebSudoIfCurrentlyNotInWebSudoMode() throws Exception {
+        when(request.getParameter("action")).thenReturn("add");
+        doThrow(new WebSudoSessionException("blah")).when(webSudoManager).willExecuteWebSudoRequest(request);
+        InOrder inOrder = Mockito.inOrder(webSudoManager, templateRenderer, request, response);
+
+        servlet.doGet(request, response);
+
+        inOrder.verify(webSudoManager).willExecuteWebSudoRequest(request);
+        inOrder.verify(webSudoManager).enforceWebSudoProtection(request, response);
+        inOrder.verifyNoMoreInteractions();
     }
 }
