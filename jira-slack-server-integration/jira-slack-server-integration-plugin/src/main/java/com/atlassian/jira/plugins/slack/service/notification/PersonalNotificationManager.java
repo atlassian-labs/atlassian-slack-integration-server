@@ -2,11 +2,13 @@ package com.atlassian.jira.plugins.slack.service.notification;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.comments.Comment;
-import com.atlassian.jira.issue.comments.CommentManager;
+import com.atlassian.jira.issue.comments.CommentPermissionManager;
 import com.atlassian.jira.issue.watchers.WatcherManager;
+import com.atlassian.jira.permission.ProjectPermissions;
 import com.atlassian.jira.plugins.slack.model.EventMatcherType;
 import com.atlassian.jira.plugins.slack.model.event.JiraIssueEvent;
 import com.atlassian.jira.plugins.slack.util.CommentUtil;
+import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
@@ -38,7 +40,8 @@ public class PersonalNotificationManager {
     private final SlackUserSettingsService slackUserSettingsService;
     private final WatcherManager watcherManager;
     private final SlackSettingService slackSettingService;
-    private final CommentManager commentManager;
+    private final CommentPermissionManager commentPermissionManager;
+    private final PermissionManager permissionManager;
 
     public List<NotificationInfo> getNotificationsFor(final JiraIssueEvent event) {
         if (slackSettingService.isPersonalNotificationsDisabled()) {
@@ -63,20 +66,23 @@ public class PersonalNotificationManager {
                     new UserKey(assignee.getKey()), ASSIGNED);
             // if an assignee doesn't have access to the comment, they should not get a notification
             if (isAssigneeToBeNotified
+                    && userHasAccessToIssue(issue, assignee)
                     && !(isRestrictedCommentAdded
-                        && !userHasAccessToComment(issue, comment, assignee))) {
+                        && !userHasAccessToComment(comment, assignee))) {
                 addUserNotificationIfUserIsMapped(userKeyToNotification, assignee);
             }
         }
 
-        // watchers
+        // watchers - should be permission checked
         watcherManager.getWatchersUnsorted(issue).stream()
-                .filter(watcher -> Objects.nonNull(watcher))
-                .filter(watcher -> watcher.isActive())
+                .filter(Objects::nonNull)
+                .filter(ApplicationUser::isActive)
                 .filter(watcher -> !Objects.equals(watcher, actor))
                 .filter(watcher -> slackUserSettingsService.isPersonalNotificationTypeEnabled(new UserKey(watcher.getKey()), WATCHER))
                 // if a watcher doesn't have access to the comment, they should not get a notification
-                .filter(watcher -> !(isRestrictedCommentAdded && !userHasAccessToComment(issue, comment, watcher)))
+                .filter(watcher -> !(isRestrictedCommentAdded && !userHasAccessToComment(comment, watcher)))
+                // also check is user has access to issue
+                .filter(watcher -> userHasAccessToIssue(issue, watcher))
                 .forEach(watcher -> addUserNotificationIfUserIsMapped(userKeyToNotification, watcher));
 
         return new ArrayList<>(userKeyToNotification.values());
@@ -112,9 +118,11 @@ public class PersonalNotificationManager {
                 .ifPresent(info -> userMap.put(applicationUser.getKey(), info));
     }
 
-    private boolean userHasAccessToComment(final Issue issue, final Comment targetComment, final ApplicationUser user) {
-        final List<Comment> comments = commentManager.getCommentsForUser(issue, user);
-        return comments.stream()
-                .anyMatch(comment -> Objects.equals(targetComment.getId(), comment.getId()));
+    private boolean userHasAccessToComment(final Comment targetComment, final ApplicationUser user) {
+        return commentPermissionManager.hasBrowsePermission(user, targetComment);
+    }
+
+    private boolean userHasAccessToIssue(final Issue issue, final ApplicationUser user) {
+        return permissionManager.hasPermission(ProjectPermissions.BROWSE_PROJECTS, issue, user);
     }
 }
