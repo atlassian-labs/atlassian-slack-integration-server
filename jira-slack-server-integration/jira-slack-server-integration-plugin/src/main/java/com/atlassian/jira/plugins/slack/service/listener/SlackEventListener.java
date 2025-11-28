@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.atlassian.plugins.slack.util.SlackHelper.removeSlackLinks;
@@ -144,7 +145,7 @@ public class SlackEventListener extends AutoSubscribingEventListener {
                     false,
                     false,
                     Collections.emptyList()));
-        } else if (isSupportedSubtype(slackEvent.getSubtype()) && !slackEvent.isHidden()) {
+        } else if (isSupportedSubtype(slackEvent.getSubtype()) && !slackEvent.isHidden() && !isMessageFromBot(slackEvent)) {
             final String messageText = trimToEmpty(slackEvent.getText());
             final boolean hasFoundAnyIssue = slackEventHandlerService.handleMessage(new SlackIncomingMessage(
                     slackEvent.getSlackEvent().getTeamId(),
@@ -179,6 +180,13 @@ public class SlackEventListener extends AutoSubscribingEventListener {
                 asyncExecutor.run(taskBuilder.newSendNotificationTask(commandEvent, notificationInfo, asyncExecutor));
             }
         }
+    }
+
+    private boolean isMessageFromBot(GenericMessageSlackEvent slackEvent) {
+        //slackEvent.getSlackEvent() contains the envelope with filledSlackLink, see com.atlassian.plugins.slack.rest.SlackWebHookResource.webEvent
+        String botUserId = slackEvent.getSlackEvent().getSlackLink().getBotUserId();
+        // skip if the bot is the author itself
+        return Objects.equals(botUserId, slackEvent.getUser());
     }
 
     @EventListener
