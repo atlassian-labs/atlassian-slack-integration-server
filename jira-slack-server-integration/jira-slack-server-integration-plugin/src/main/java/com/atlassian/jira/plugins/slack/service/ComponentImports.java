@@ -13,7 +13,7 @@ import com.atlassian.jira.entity.property.JsonEntityPropertyManager;
 import com.atlassian.jira.help.HelpUrls;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.IssueManager;
-import com.atlassian.jira.issue.comments.CommentManager;
+import com.atlassian.jira.issue.comments.CommentPermissionManager;
 import com.atlassian.jira.issue.fields.FieldManager;
 import com.atlassian.jira.issue.index.IssueIndexingService;
 import com.atlassian.jira.issue.search.SearchProvider;
@@ -79,7 +79,7 @@ public class ComponentImports {
     @ComponentImport
     WatcherManager watcherManager;
     @ComponentImport
-    CommentManager commentManager;
+    CommentPermissionManager commentPermissionManager;
     @ComponentImport
     JiraAuthenticationContext jiraAuthenticationContext;
     @ComponentImport
