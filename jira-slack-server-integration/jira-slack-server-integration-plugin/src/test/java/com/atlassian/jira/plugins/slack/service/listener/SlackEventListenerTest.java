@@ -315,6 +315,19 @@ public class SlackEventListenerTest {
     }
 
     @Test
+    public void messageReceived_doNothingIfMessageIsFromBotItself() {
+        when(slackEvent.getSlackLink()).thenReturn(link);
+        when(link.getBotUserId()).thenReturn("botUserId");
+        when(messageSlackEvent.getSlackEvent()).thenReturn(slackEvent);
+        when(messageSlackEvent.getUser()).thenReturn("botUserId");
+
+        target.messageReceived(messageSlackEvent);
+
+        verify(slackEventHandlerService, never()).handleMessage(any());
+        verify(taskBuilder, never()).newProcessMessageDeletionTask(any());
+    }
+
+    @Test
     public void linkShared() {
         when(linkSharedSlackEvent.getSlackEvent()).thenReturn(slackEvent);
         when(linkSharedSlackEvent.getChannel()).thenReturn("C");
