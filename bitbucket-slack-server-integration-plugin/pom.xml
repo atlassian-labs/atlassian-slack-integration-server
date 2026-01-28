@@ -36,7 +36,7 @@
 
         <!-- AMPS related properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.amps.version>9.5.4</bitbucket.amps.version>
+        <bitbucket.amps.version>9.11.1</bitbucket.amps.version>
 
         <!-- Bitbucket API version used during the build -->
         <bitbucket.api.version>10.0.0</bitbucket.api.version>
