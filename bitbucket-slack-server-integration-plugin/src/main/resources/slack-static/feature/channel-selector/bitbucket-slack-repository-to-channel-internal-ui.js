@@ -105,14 +105,14 @@ require([
         };
 
         var enableAddChannelButton = function() {
-            $('#slack-repository-to-channel-add').removeAttr('aria-disabled').removeAttr('disabled')
+            $('#slack-repository-to-channel-add').removeAttr('aria-disabled').prop('disabled', false);
         };
 
         var updateAddMappingButtonEnablement = function (channelService) {
             var addChannelButton = $('#slack-repository-to-channel-add');
             var selectedChannel = getSelectedChannel();
             if (getSelectedRepository() && selectedChannel && channelService.allowSelectionByName(selectedChannel.channelName)) {
-                addChannelButton.removeAttr('aria-disabled').removeAttr('disabled')
+                addChannelButton.removeAttr('aria-disabled').prop('disabled', false);
             } else {
                 addChannelButton.attr({
                     'aria-disabled': 'true',
@@ -259,7 +259,7 @@ require([
                     config.spinStop();
                     config.remove();
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    config.find('input').removeAttr('disabled');
+                    config.find('input').prop('disabled', false);
                     config.spinStop();
                     displayUpdateConfigurationError(jqXHR.status, jqXHR.statusText);
                 });
@@ -316,12 +316,12 @@ require([
                     var spinner = $("#slack-repository-to-channel-add-mapping-spinner").spin();
                     channelService.getOrCreateChannel(selectedChannel)
                         .done(function (channel) {
-                            addChannelButton.removeAttr('disabled');
+                            addChannelButton.prop('disabled', false);
                             spinner.spinStop();
                             addChannelMapping(channel);
                         })
                         .fail(function (newChannelName, statusCode, statusText) {
-                            addChannelButton.removeAttr('disabled');
+                            addChannelButton.prop('disabled', false);
                             spinner.spinStop();
                             displayError(AJS.I18n.getText("slack2-repository-configuration.select.channel.create.error.title", newChannelName), statusCode, statusText);
                         });
@@ -444,14 +444,14 @@ require([
             });
         }
 
-        $('#slack-repository-to-channel-add').click(addChannelMappingHandler);
+        $('#slack-repository-to-channel-add').on('click', addChannelMappingHandler);
 
         $('#slack-channel-configuration')
-                .delegate('.edit-notification', 'click', editRepositoryChannelNotificationConfigLinkHandler)
-                .delegate('.close-edit-notification', 'click', closeRepositoryChannelNotificationConfig)
-                .delegate('.trash-channel-mapping', 'click', deleteRepositoryChannelNotificationConfig)
-                .delegate('.notification-type', 'click', toggleRepositoryChannelNotificationType)
-                .delegate('.notification-option', 'click', saveRepositoryChannelOption);
+                .on('click', '.edit-notification', editRepositoryChannelNotificationConfigLinkHandler)
+                .on('click', '.close-edit-notification', closeRepositoryChannelNotificationConfig)
+                .on('click', '.trash-channel-mapping', deleteRepositoryChannelNotificationConfig)
+                .on('click', '.notification-type', toggleRepositoryChannelNotificationType)
+                .on('click', '.notification-option', saveRepositoryChannelOption);
     });
 
 });

@@ -24,7 +24,7 @@ require([
             datatype: 'json'
         }).fail(function(jqXHR, textStatus, error) {
             console.error('Failed to get Slack bulk edit mute notifications toggle value', error);
-        }).success(function(data) {
+        }).done(function(data) {
             var checkedByDefault = data.muted ? 'checked' : '';
 
             $('#bulkedit p:last').before(
@@ -35,7 +35,7 @@ require([
                 '</div>'
             );
 
-            $('#' + muteBulkNotificationsInputId).change(function (event) {
+            $('#' + muteBulkNotificationsInputId).on('change', function (event) {
                 var isChecked = $(this).is(':checked');
                 var muteLabel = isChecked ? 'mute' : 'unmute';
                 $.ajax({

@@ -9,14 +9,14 @@ require(['jquery', 'jira/lib/class'], function($, Class) {
 
             instance.$toolbar.find("div.aui-button")
                 .tooltip()
-                .click(function(e) {
+                .on('click', function(e) {
                     e.preventDefault();
                     $(this).tooltip("hide");
                     var macro = $(this).data("macro");
                     if (macro) {
                         instance.insertMacro("$" + macro);
                         instance.$editor.trigger("contentModified");
-                        instance.$editor.focus();
+                        instance.$editor.trigger('focus');
                     }
                 });
         },
@@ -68,7 +68,7 @@ require(['jquery', 'jira/lib/class'], function($, Class) {
         _setCursorPosition: function(index) {
             var input = this.$editor.get(0);
             if (input.setSelectionRange) {
-                input.focus();
+                this.$editor.trigger('focus');
                 input.setSelectionRange(index, index);
             } else if (input.createTextRange) {
                 var range = input.createTextRange();

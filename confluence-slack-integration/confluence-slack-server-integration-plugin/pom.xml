@@ -357,6 +357,13 @@
                         </feManifestAssociation>
                     </feManifestAssociations>
 
+                    <pluginArtifacts>
+                        <pluginArtifact>
+                            <groupId>com.atlassian.plugins</groupId>
+                            <artifactId>jquery</artifactId>
+                            <version>${jquery.version}</version>
+                        </pluginArtifact>
+                    </pluginArtifacts>
                     <systemPropertyVariables combine.children="append">
                         <plugin.resource.directories>
                             ${plugin.parent.directory}/slack-server-integration-common/src/main/resources,
@@ -372,6 +379,7 @@
                         <!-- This disables the Post Upgrade Landing Page, which we never want showing up in tests -->
                         <atlassian.darkfeature.pulp>false</atlassian.darkfeature.pulp>
                         <atlassian.authentication.legacy.mode>true</atlassian.authentication.legacy.mode>
+                        <atlassian.darkfeature.plugins.jquery.migrate.disable.v3>true</atlassian.darkfeature.plugins.jquery.migrate.disable.v3>
                     </systemPropertyVariables>
                     <instructions>
                         <Atlassian-Plugin-Key>${plugin.key}</Atlassian-Plugin-Key>

@@ -124,14 +124,14 @@ require([
         };
 
         var enableAddChannelButton = function() {
-            $('#slack-space-to-channel-add').removeAttr('aria-disabled').removeAttr('disabled')
+            $('#slack-space-to-channel-add').removeAttr('aria-disabled').prop('disabled', false);
         };
 
         var updateAddMappingButtonEnablement = function (channelService) {
             var addChannelButton = $('#slack-space-to-channel-add');
             var selectedChannel = getSelectedChannel();
             if (getSelectedSpace && selectedChannel && channelService.allowSelectionByName(selectedChannel.channelName)) {
-                addChannelButton.removeAttr('aria-disabled').removeAttr('disabled')
+                addChannelButton.removeAttr('aria-disabled').prop('disabled', false);
             } else {
                 addChannelButton.attr({
                     'aria-disabled': 'true',
@@ -264,7 +264,7 @@ require([
                     config.spinStop();
                     config.remove();
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    config.find('input').removeAttr('disabled');
+                    config.find('input').prop('disabled', false);
                     config.spinStop();
                     displayUpdateConfigurationError(jqXHR.status, jqXHR.statusText);
                 });
@@ -321,12 +321,12 @@ require([
                     var spinner = $("#slack-space-to-channel-add-mapping-spinner").spin();
                     channelService.getOrCreateChannel(selectedChannel)
                         .done(function (channel) {
-                            addChannelButton.removeAttr('disabled');
+                            addChannelButton.prop('disabled', false);
                             spinner.spinStop();
                             addChannelMapping(channel);
                         })
                         .fail(function (newChannelName, statusCode, statusText) {
-                            addChannelButton.removeAttr('disabled');
+                            addChannelButton.prop('disabled', false);
                             spinner.spinStop();
                             displayError(AJS.I18n.getText("slack2-space-configuration.select.channel.create.error.title", newChannelName), statusCode, statusText);
                         });
@@ -429,13 +429,13 @@ require([
             });
         }
 
-        $('#slack-space-to-channel-add').click(addChannelMappingHandler);
+        $('#slack-space-to-channel-add').on('click', addChannelMappingHandler);
 
         $('#slack-space-to-channel-configuration')
-                .delegate('.edit-notification', 'click', editSpaceChannelNotificationConfigLinkHandler)
-                .delegate('.close-edit-notification', 'click', closeSpaceChannelNotificationConfig)
-                .delegate('.trash-channel-mapping', 'click', deleteSpaceChannelNotificationConfig)
-                .delegate('.notification-type', 'click', toggleSpaceChannelNotificationType);
+                .on('click', '.edit-notification', editSpaceChannelNotificationConfigLinkHandler)
+                .on('click', '.close-edit-notification', closeSpaceChannelNotificationConfig)
+                .on('click', '.trash-channel-mapping', deleteSpaceChannelNotificationConfig)
+                .on('click', '.notification-type', toggleSpaceChannelNotificationType);
     });
 
 });

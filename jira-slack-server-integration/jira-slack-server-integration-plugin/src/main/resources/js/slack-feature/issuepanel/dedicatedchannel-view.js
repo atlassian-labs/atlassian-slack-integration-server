@@ -38,7 +38,7 @@ define("slack/feature/issuepanel/dedicatedchannel-view",
 
         close: function () {
             if (this.dialogContentReadycallback) {
-                $(document).unbind("dialogContentReady", this.dialogContentReadycallback);
+                $(document).off("dialogContentReady", this.dialogContentReadycallback);
             }
             this.unbind();
         },
@@ -167,7 +167,7 @@ define("slack/feature/issuepanel/dedicatedchannel-view",
                         enableSubmitButton: function () {
                             var selectedChannel = this.channelSelector.getSelectedChannel();
                             if (selectedChannel && selectedChannel.id !== "") {
-                                $("#slack-select-dedicated-channel-dialog-submit").removeAttr('aria-disabled').removeAttr('disabled');
+                                $("#slack-select-dedicated-channel-dialog-submit").removeAttr('aria-disabled').prop('disabled', false);
                             }
                         },
                         disableSubmitButton: function () {
@@ -207,7 +207,7 @@ define("slack/feature/issuepanel/dedicatedchannel-view",
                         }
 
                         dfd.done(function (channel) {
-                            $('#slack-select-dedicated-channel-dialog-close').click();
+                            $('#slack-select-dedicated-channel-dialog-close').trigger('click');
 
                             // The object returned by channelSelector has id, while the one returned by createChannel has channelId.
                             var channelId = channel.id || channel.channelId;
@@ -235,7 +235,7 @@ define("slack/feature/issuepanel/dedicatedchannel-view",
                     $('#slack-select-dedicated-channel-dialog-submit').on("click", submitSelectChannelDialog);
                 }
             };
-            $(document).bind("dialogContentReady", {}, self.dialogContentReadycallback);
+            $(document).on("dialogContentReady", self.dialogContentReadycallback);
         },
 
         clearError: function ($errorsContainer) {
