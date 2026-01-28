@@ -69,6 +69,7 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.11.0</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>commons-collections</groupId>
