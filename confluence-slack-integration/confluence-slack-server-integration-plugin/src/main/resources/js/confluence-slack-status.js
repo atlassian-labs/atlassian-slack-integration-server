@@ -33,12 +33,12 @@ require([
                 // When user link is in a inline popup (.ajs-content-hover class), clicks are not propagated
                 // to our root document node listener due to a Confluence script, so delegating listener does not work
                 // So here a click listener added directly to link node
-                $slackIcon.click(handleSlackUserLinkClicked);
+                $slackIcon.on('click', handleSlackUserLinkClicked);
             } else if (response.length > 1) {
                 $slackIcon = $(Confluence.Templates.Slack.User.slackIcon({
                     slackUsers: response
                 }));
-                $slackIcon.click(function(event) {
+                $slackIcon.on('click', function(event) {
                     event.preventDefault();
                 });
 
@@ -48,7 +48,7 @@ require([
                 var $slackSection = $(slackSectionMarkup);
                 var $popupMenu = $vcard.closest('.contents').find('#user-popup-menu-admin-secondary');
                 $popupMenu.append($slackSection);
-                $popupMenu.find('.slack-user-link-url').click(handleSlackUserLinkClicked);
+                $popupMenu.find('.slack-user-link-url').on('click', handleSlackUserLinkClicked);
             }
             $vcard.find('h4').append($slackIcon);
         });

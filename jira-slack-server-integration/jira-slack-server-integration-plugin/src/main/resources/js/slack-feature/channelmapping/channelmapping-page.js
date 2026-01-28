@@ -66,7 +66,7 @@ define("slack/feature/channelmapping/channelmapping-page",
                     var projectName = self.getProjectNameFromField() || '';
                     var parentheses = projectName.indexOf('(');
                     if (parentheses > 0) {
-                        projectName = $.trim(projectName.substring(0, parentheses));
+                        projectName = projectName.substring(0, parentheses).trim();
                     }
                     return projectName;
                 }
@@ -108,7 +108,7 @@ define("slack/feature/channelmapping/channelmapping-page",
             var selectedChannel = this.channelSelector.getSelectedChannel();
             var selectedProject = this.getProjectNameFromField();
             if (selectedChannel.id !== "" && selectedProject !== "") {
-                this.$("#slack-project-to-channel-add").removeAttr('aria-disabled').removeAttr('disabled');
+                this.$("#slack-project-to-channel-add").removeAttr('aria-disabled').prop('disabled', false);
             }
         },
 
