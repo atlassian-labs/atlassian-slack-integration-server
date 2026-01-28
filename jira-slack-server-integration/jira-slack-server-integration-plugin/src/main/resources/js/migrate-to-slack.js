@@ -128,7 +128,7 @@ require([
 
     function enableDialogSubmit() {
         $(dialogSubmitSelector)
-            .removeAttr('aria-disabled').removeAttr('disabled');
+            .removeAttr('aria-disabled').prop('disabled', false);
     }
 
     function disableDialogSubmit() {
@@ -312,7 +312,7 @@ require([
                 dialog.show();
             });
 
-            $(document).bind("dialogContentReady", {}, dialogContentReadyCallback);
+            $(document).on("dialogContentReady", dialogContentReadyCallback);
         });
 
     }

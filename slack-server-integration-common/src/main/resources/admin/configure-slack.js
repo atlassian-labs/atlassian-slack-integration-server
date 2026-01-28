@@ -164,7 +164,7 @@ require([
                 configure: function () {
                     Remote.serverPing()
                         .done(function () {
-                            jQuery("#slack-install").removeAttr("disabled");
+                            jQuery("#slack-install").prop("disabled", false);
                         })
                         .fail(function () {
                             jQuery("#slack-server-failure").removeClass("hidden");
@@ -195,7 +195,7 @@ require([
                                 .done(function() {
                                     Actions.navigate(baseUrl + "/plugins/servlet/slack/configure")
                                 })
-                                .error(Views.uninstallError);
+                                .fail(Views.uninstallError);
                         });
 
                     });

@@ -32,7 +32,7 @@ define("slack/feature/issuepanel/issuemention-view",
 
         close: function() {
             if (this.dialogReady) {
-                $(document).unbind("dialogContentReady", this.dialogReady);
+                $(document).off("dialogContentReady", this.dialogReady);
             }
             this.unbind();
         },
@@ -86,7 +86,7 @@ define("slack/feature/issuepanel/issuemention-view",
                         }
                     });
                 },
-                $(document).bind("dialogContentReady", {}, this.dialogReady);
+                $(document).on("dialogContentReady", this.dialogReady);
             }
 
             this.dialog.show();
