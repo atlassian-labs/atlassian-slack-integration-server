@@ -48,7 +48,7 @@
         <bitbucket.page.objects.version>9.2.1</bitbucket.page.objects.version>
 
         <!-- Platform version used for dependency management -->
-        <platform.version>8.0.0</platform.version>
+        <platform.version>8.1.14</platform.version>
 
         <!-- Dependency versions -->
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
@@ -365,7 +365,7 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.19</version>
+            <version>1.17.8</version>
             <scope>test</scope>
         </dependency>
         <dependency>
