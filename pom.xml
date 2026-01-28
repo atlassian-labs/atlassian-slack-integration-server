@@ -61,10 +61,27 @@
         <slack.common.version>3.0.0</slack.common.version>
         <platform.version>8.0.0</platform.version>
         <amps.version>9.5.4</amps.version>
+        <lombok.version>1.18.42</lombok.version>
         <jvm17.opens />
     </properties>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -240,7 +257,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.30</version>
+                <version>${lombok.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
