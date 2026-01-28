@@ -105,6 +105,13 @@
             </dependency>
             <dependency>
                 <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-deprecated-public-api</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform.dependencies</groupId>
                 <artifactId>platform-test-resources</artifactId>
                 <version>${platform.version}</version>
                 <type>pom</type>
