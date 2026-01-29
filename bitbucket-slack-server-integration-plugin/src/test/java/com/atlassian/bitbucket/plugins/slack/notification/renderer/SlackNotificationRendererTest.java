@@ -70,6 +70,7 @@ import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Answer1;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -201,7 +202,7 @@ public class SlackNotificationRendererTest {
         when(slackLinkRenderer.refLink(repository, pullRequestToRef)).thenReturn(PR_TO_BRANCH_LINK);
 
         when(i18nResolver.getText(anyString())).thenAnswer(answer(key -> key));
-        when(i18nResolver.getText(anyString(), any()))
+        when(i18nResolver.getText(anyString(), any(Serializable[].class)))
                 .thenAnswer((Answer<String>) invocation -> join(invocation.getArguments()));
         when(commitService.getCommitsBetween(any(CommitsBetweenRequest.class), any(PageRequest.class))).thenReturn(page);
         when(refService.resolveRef(any())).thenReturn(ref);
