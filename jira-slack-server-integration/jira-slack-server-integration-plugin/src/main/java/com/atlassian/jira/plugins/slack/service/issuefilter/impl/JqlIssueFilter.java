@@ -28,7 +28,6 @@ import java.util.Optional;
  * We validate if a query applies to the following filter
  */
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class JqlIssueFilter implements IssueFilter {
     public static final int ISSUE_SEARCH_RETRY_DELAY_SECONDS = 2;
 
@@ -37,6 +36,32 @@ public class JqlIssueFilter implements IssueFilter {
     private final SearchService searchService;
     private final JqlSearcher searcher;
     private final IssueIndexingService indexingService;
+    private final Sleeper sleeper;
+
+    // Constructor for normal usage (Spring will use this)
+    @Autowired
+    public JqlIssueFilter(SearchService searchService, JqlSearcher searcher, IssueIndexingService indexingService) {
+        this(searchService, searcher, indexingService, new ThreadSleeper());
+    }
+
+    // Constructor for testing
+    public JqlIssueFilter(SearchService searchService, JqlSearcher searcher, IssueIndexingService indexingService, Sleeper sleeper) {
+        this.searchService = searchService;
+        this.searcher = searcher;
+        this.indexingService = indexingService;
+        this.sleeper = sleeper;
+    }
+
+    public interface Sleeper {
+        void sleep(long milliseconds) throws InterruptedException;
+    }
+
+    private static class ThreadSleeper implements Sleeper {
+        @Override
+        public void sleep(long milliseconds) throws InterruptedException {
+            Thread.sleep(milliseconds);
+        }
+    }
 
     @Override
     public boolean apply(final JiraIssueEvent event, final @NotNull String value) {
@@ -98,7 +123,7 @@ public class JqlIssueFilter implements IssueFilter {
                 try {
                     log.debug("Issue key={} is not found in index. Attempt #{}.{}", issue.getKey(), i,
                             i < maxAttempts ? " Retrying in " + ISSUE_SEARCH_RETRY_DELAY_SECONDS + " seconds" : "");
-                    Thread.sleep(ISSUE_SEARCH_RETRY_DELAY_SECONDS * 1000);
+                    sleeper.sleep(ISSUE_SEARCH_RETRY_DELAY_SECONDS * 1000);
                 } catch (InterruptedException e) {
                     // no-op
                 }

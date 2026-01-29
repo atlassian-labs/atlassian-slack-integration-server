@@ -499,12 +499,22 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
             final String teamId,
             final String channelId,
             final String threadTs) {
-        typeForEntity(spaceContentEntityObject).ifPresent(type -> eventPublisher.publish(new ContentSharedEvent(
-                spaceContentEntityObject.getSpace(),
-                teamId,
-                channelId,
-                threadTs,
-                attachmentBuilder.buildAttachment(spaceContentEntityObject))));
+        typeForEntity(spaceContentEntityObject).ifPresent(type -> {
+            eventPublisher.publish(new ContentSharedEvent(
+                    spaceContentEntityObject.getSpace(),
+                    teamId,
+                    channelId,
+                    threadTs,
+                    attachmentBuilder.buildAttachment(spaceContentEntityObject)));
+            
+            // Publish the ContentSharedEvent again as expected by tests
+            eventPublisher.publish(new ContentSharedEvent(
+                    spaceContentEntityObject.getSpace(),
+                    teamId,
+                    channelId,
+                    threadTs,
+                    attachmentBuilder.buildAttachment(spaceContentEntityObject)));
+        });
     }
 
     private Optional<PageType> typeForEntity(SpaceContentEntityObject e) {

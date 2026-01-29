@@ -14,9 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
@@ -27,8 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({BackoffRetryInterceptor.class})
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class BackoffRetryInterceptorTest {
     @Mock
     Interceptor.Chain chain;
@@ -36,6 +33,8 @@ public class BackoffRetryInterceptorTest {
     MethodsClient methods;
     @Mock
     ApiTestResponse apiResponse;
+    @Mock
+    BackoffRetryInterceptor.Sleeper mockSleeper;
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -54,10 +53,6 @@ public class BackoffRetryInterceptorTest {
 
     @Before
     public void setup() throws InterruptedException {
-        PowerMockito.mockStatic(Thread.class);
-        PowerMockito.doNothing().when(Thread.class);
-        Thread.sleep(anyLong());
-
         when(chain.request()).thenReturn(request);
     }
 
@@ -65,7 +60,7 @@ public class BackoffRetryInterceptorTest {
     public void intercept_shouldProceedWithNormalRequest() throws IOException {
         when(chain.proceed(request)).thenReturn(successResponse);
 
-        target = new BackoffRetryInterceptor();
+        target = new BackoffRetryInterceptor(1, mockSleeper);
         Response result = target.intercept(chain);
 
         assertThat(result, is(successResponse));
@@ -76,7 +71,7 @@ public class BackoffRetryInterceptorTest {
     public void intercept_shouldRetryOnServerError() throws Exception {
         when(chain.proceed(request)).thenReturn(serverErrorResponse, successResponse);
 
-        target = new BackoffRetryInterceptor(2);
+        target = new BackoffRetryInterceptor(2, mockSleeper);
         Response result = target.intercept(chain);
 
         assertThat(result, is(successResponse));
@@ -90,7 +85,7 @@ public class BackoffRetryInterceptorTest {
                 .thenThrow(new NullPointerException())
                 .thenReturn(successResponse);
 
-        target = new BackoffRetryInterceptor(2);
+        target = new BackoffRetryInterceptor(2, mockSleeper);
         Response result = target.intercept(chain);
 
         assertThat(result, is(successResponse));
@@ -103,7 +98,7 @@ public class BackoffRetryInterceptorTest {
         when(chain.proceed(request)).thenThrow(new IOException("Canceled"));
         thrown.expectMessage("Canceled");
 
-        target = new BackoffRetryInterceptor(2);
+        target = new BackoffRetryInterceptor(2, mockSleeper);
         target.intercept(chain);
     }
 
@@ -111,7 +106,7 @@ public class BackoffRetryInterceptorTest {
     public void intercept_shouldRetryTwoTimesAndReturnError() throws Exception {
         when(chain.proceed(request)).thenReturn(serverErrorResponse, serverErrorResponse, serverErrorResponse);
 
-        target = new BackoffRetryInterceptor(2);
+        target = new BackoffRetryInterceptor(2, mockSleeper);
         Response result = target.intercept(chain);
 
         assertThat(result, is(serverErrorResponse));
@@ -124,7 +119,7 @@ public class BackoffRetryInterceptorTest {
     public void intercept_shouldRetryTenTimesAtDefinedIntervals() throws Exception {
         when(chain.proceed(request)).thenReturn(serverErrorResponse);
 
-        target = new BackoffRetryInterceptor(10);
+        target = new BackoffRetryInterceptor(10, mockSleeper);
         Response result = target.intercept(chain);
 
         assertThat(result, is(serverErrorResponse));
@@ -141,7 +136,7 @@ public class BackoffRetryInterceptorTest {
     public void intercept_shouldNotRetryOnNonServerError() throws Exception {
         when(chain.proceed(request)).thenReturn(requestErrorResponse);
 
-        target = new BackoffRetryInterceptor(2);
+        target = new BackoffRetryInterceptor(2, mockSleeper);
         Response result = target.intercept(chain);
 
         assertThat(result, is(requestErrorResponse));
@@ -149,13 +144,11 @@ public class BackoffRetryInterceptorTest {
     }
 
     private void verifySleptFor(long ms) throws InterruptedException {
-        PowerMockito.verifyStatic(Thread.class);
-        Thread.sleep(ms);
+        verify(mockSleeper).sleep(ms);
     }
 
     private void verifySleptFor(long ms, int times) throws InterruptedException {
-        PowerMockito.verifyStatic(Thread.class, times(times));
-        Thread.sleep(ms);
+        verify(mockSleeper, times(times)).sleep(ms);
     }
 
     private Response.Builder respBuilder(int code) {

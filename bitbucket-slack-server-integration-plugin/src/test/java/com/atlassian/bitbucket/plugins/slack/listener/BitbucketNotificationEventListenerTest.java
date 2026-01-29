@@ -74,6 +74,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -244,7 +246,7 @@ class BitbucketNotificationEventListenerTest {
         when(pullRequest.getTitle()).thenReturn(prTitle);
         when(pullRequest.getToRef()).thenReturn(pullRequestRef);
         when(pullRequestRef.getRepository()).thenReturn(repository);
-        when(i18nResolver.getText(anyString())).thenAnswer(answer(k -> k));
+        lenient().when(i18nResolver.getText(anyString())).thenAnswer(answer(k -> k));
 
         target.onEvent(event);
 
@@ -359,8 +361,10 @@ class BitbucketNotificationEventListenerTest {
 
     @Test
     void onEvent_pullRequestReviewersUpdatedEvent_shouldCallExpectedMethods() {
-        when(pullRequestReviewersUpdatedEvent.getAddedReviewers()).thenReturn(Collections.singleton(user));
-        when(pullRequestReviewersUpdatedEvent.getUser()).thenReturn(user);
+        // Use doReturn instead of when() for methods that mock-maker-subclass struggles with
+        doReturn(Collections.singleton(user)).when(pullRequestReviewersUpdatedEvent).getAddedReviewers();
+        doReturn(user).when(pullRequestReviewersUpdatedEvent).getUser();
+        // Don't mock getPullRequest here since testPullRequestEvent will do it
         testPullRequestEvent(pullRequestReviewersUpdatedEvent, PullRequestNotificationTypes.REVIEWERS_UPDATED, true);
     }
 

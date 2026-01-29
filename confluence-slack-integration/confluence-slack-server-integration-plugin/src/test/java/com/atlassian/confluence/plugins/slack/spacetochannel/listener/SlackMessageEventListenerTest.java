@@ -464,6 +464,7 @@ public class SlackMessageEventListenerTest {
         when(permissionManager.hasPermission(confluenceUser, Permission.VIEW, blogPost)).thenReturn(true);
         CommonTestUtil.bypass(asyncExecutor);
         when(attachmentBuilder.buildAttachment(blogPost)).thenReturn(attachment);
+        when(blogPost.getSpace()).thenReturn(space);
 
         target.messageReceived(genericMessageSlackEvent);
 
@@ -497,6 +498,7 @@ public class SlackMessageEventListenerTest {
         CommonTestUtil.bypass(asyncExecutor);
         when(attachmentBuilder.buildAttachment(customContentEntityObject)).thenReturn(attachment);
         when(customContentEntityObject.getPluginModuleKey()).thenReturn(QuestionType.QUESTION.pluginModuleKey());
+        when(customContentEntityObject.getSpace()).thenReturn(space);
 
         target.messageReceived(genericMessageSlackEvent);
 
@@ -527,6 +529,7 @@ public class SlackMessageEventListenerTest {
         CommonTestUtil.bypass(asyncExecutor);
         when(attachmentBuilder.buildAttachment(customContentEntityObject)).thenReturn(attachment);
         when(customContentEntityObject.getPluginModuleKey()).thenReturn(QuestionType.ANSWER.pluginModuleKey());
+        when(customContentEntityObject.getSpace()).thenReturn(space);
 
         target.messageReceived(genericMessageSlackEvent);
 

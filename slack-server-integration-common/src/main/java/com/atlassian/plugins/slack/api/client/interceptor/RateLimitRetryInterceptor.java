@@ -13,14 +13,28 @@ import java.io.IOException;
 @Slf4j
 public class RateLimitRetryInterceptor implements Interceptor {
     private final int retryCount;
+    private final BackoffRetryInterceptor.Sleeper sleeper;
 
     public RateLimitRetryInterceptor() {
-        this(Integer.getInteger("slack.client.rate.limit.retry.count", 3));
+        this(Integer.getInteger("slack.client.rate.limit.retry.count", 3), new ThreadSleeper());
     }
 
     @VisibleForTesting
     protected RateLimitRetryInterceptor(final int retryCount) {
+        this(retryCount, new ThreadSleeper());
+    }
+
+    @VisibleForTesting
+    protected RateLimitRetryInterceptor(final int retryCount, final BackoffRetryInterceptor.Sleeper sleeper) {
         this.retryCount = retryCount;
+        this.sleeper = sleeper;
+    }
+
+    private static class ThreadSleeper implements BackoffRetryInterceptor.Sleeper {
+        @Override
+        public void sleep(long milliseconds) throws InterruptedException {
+            Thread.sleep(milliseconds);
+        }
     }
 
     @Override
@@ -92,7 +106,7 @@ public class RateLimitRetryInterceptor implements Interceptor {
 
     private boolean waitRetryAfterTime(final String secondsStr) {
         try {
-            Thread.sleep(Long.parseLong(secondsStr) * 1000);
+            sleeper.sleep(Long.parseLong(secondsStr) * 1000);
             return true;
         } catch (Exception e) {
             log.warn("Error awaiting for Retry-After: {}", e.getMessage(), e);

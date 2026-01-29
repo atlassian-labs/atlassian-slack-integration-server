@@ -2,23 +2,21 @@ package com.atlassian.confluence.plugins.slack.util;
 
 import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.confluence.user.ConfluenceUser;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.function.Supplier;
 
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.*")
-@PrepareForTest(AuthenticatedUserThreadLocal.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ConfluenceUserImpersonatorTest {
     @Mock
     ConfluenceUser previousConfluenceUser;
@@ -27,20 +25,27 @@ public class ConfluenceUserImpersonatorTest {
     @Mock
     Supplier action;
 
+    private MockedStatic<AuthenticatedUserThreadLocal> mockedThreadLocal;
+
     @InjectMocks
     ConfluenceUserImpersonator target;
 
+    @After
+    public void tearDown() {
+        if (mockedThreadLocal != null) {
+            mockedThreadLocal.close();
+        }
+    }
+
     @Test
     public void impersonateShouldSetActiveUser() {
-        PowerMockito.mockStatic(AuthenticatedUserThreadLocal.class);
-        when(AuthenticatedUserThreadLocal.get()).thenReturn(previousConfluenceUser);
+        mockedThreadLocal = mockStatic(AuthenticatedUserThreadLocal.class);
+        mockedThreadLocal.when(AuthenticatedUserThreadLocal::get).thenReturn(previousConfluenceUser);
 
         target.impersonate(confluenceUser, action, "some cause");
 
         verify(action).get();
-        PowerMockito.verifyStatic(AuthenticatedUserThreadLocal.class);
-        AuthenticatedUserThreadLocal.set(confluenceUser);
-        PowerMockito.verifyStatic(AuthenticatedUserThreadLocal.class);
-        AuthenticatedUserThreadLocal.set(previousConfluenceUser);
+        mockedThreadLocal.verify(() -> AuthenticatedUserThreadLocal.set(confluenceUser));
+        mockedThreadLocal.verify(() -> AuthenticatedUserThreadLocal.set(previousConfluenceUser));
     }
 }

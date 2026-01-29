@@ -14,14 +14,33 @@ import java.io.IOException;
 public class BackoffRetryInterceptor implements Interceptor {
     private static final int[] RETRY_BACKOFF_DELAYS = new int[]{1, 3, 5, 8, 13, 30};
     private final int retryCount;
+    private final Sleeper sleeper;
 
     public BackoffRetryInterceptor() {
-        this(Integer.getInteger("slack.client.retry.count", 3));
+        this(Integer.getInteger("slack.client.retry.count", 3), new ThreadSleeper());
     }
 
     @VisibleForTesting
     protected BackoffRetryInterceptor(final int retryCount) {
+        this(retryCount, new ThreadSleeper());
+    }
+
+    @VisibleForTesting
+    protected BackoffRetryInterceptor(final int retryCount, final Sleeper sleeper) {
         this.retryCount = retryCount;
+        this.sleeper = sleeper;
+    }
+
+    @VisibleForTesting
+    public interface Sleeper {
+        void sleep(long milliseconds) throws InterruptedException;
+    }
+
+    private static class ThreadSleeper implements Sleeper {
+        @Override
+        public void sleep(long milliseconds) throws InterruptedException {
+            Thread.sleep(milliseconds);
+        }
     }
 
     @Override
@@ -100,7 +119,11 @@ public class BackoffRetryInterceptor implements Interceptor {
             }
 
             if (!lastAttempt) {
-                sleep(1000L * retryDelay(tryCount));
+                try {
+                    sleeper.sleep(1000L * retryDelay(tryCount));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -113,11 +136,4 @@ public class BackoffRetryInterceptor implements Interceptor {
                 : RETRY_BACKOFF_DELAYS[tryCount];
     }
 
-    private void sleep(final long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

@@ -8,16 +8,16 @@ import com.atlassian.query.operand.Operand;
 import com.atlassian.query.operand.SingleValueOperand;
 import com.atlassian.query.operator.Operator;
 import io.atlassian.fugue.Option;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer4;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Optional;
 
@@ -27,11 +27,11 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"javax.*", "org.xml.*", "org.w3c.*", "com.sun.org.apache.xerces.*", "com.sun.org.apache.xpath.internal.*"})
-@PrepareForTest({FixRequestTypeClauseVisitor.class, FixRequestTypeOperandVisitor.class, ServiceDeskCompatibilityDispatcher.class})
+@RunWith(MockitoJUnitRunner.class)
 public class FixRequestTypeClauseVisitorTest {
     @Mock
     FixRequestTypeOperandVisitor operandVisitor;
@@ -39,6 +39,9 @@ public class FixRequestTypeClauseVisitorTest {
     ServiceDeskCompatibilityDispatcher dispatcher;
     @Mock
     ServiceDeskCompatibilityHelper helper;
+
+    private MockedStatic<ServiceDeskCompatibilityDispatcher> mockedDispatcher;
+    private MockedConstruction<FixRequestTypeOperandVisitor> mockedConstructor;
 
     @InjectMocks
     FixRequestTypeClauseVisitor target;
@@ -48,6 +51,16 @@ public class FixRequestTypeClauseVisitorTest {
         target = new FixRequestTypeClauseVisitor(null);
     }
 
+    @After
+    public void tearDown() {
+        if (mockedDispatcher != null) {
+            mockedDispatcher.close();
+        }
+        if (mockedConstructor != null) {
+            mockedConstructor.close();
+        }
+    }
+
     @Test
     public void acceptInvokesOperandVisitor() throws Exception {
         SingleValueOperand reqTypeOperand = new SingleValueOperand("Req type name");
@@ -55,12 +68,13 @@ public class FixRequestTypeClauseVisitorTest {
                 new TerminalClauseImpl("Customer Request Type", Operator.EQUALS, reqTypeOperand),
                 new TerminalClauseImpl("summary", Operator.NOT_EQUALS, new SingleValueOperand("ignore")));
 
-        PowerMockito.mockStatic(FixRequestTypeOperandVisitor.class, ServiceDeskCompatibilityDispatcher.class);
-        PowerMockito.whenNew(FixRequestTypeOperandVisitor.class).withAnyArguments().thenReturn(operandVisitor);
         String typeKey = "replacedTypeKey";
-        when(operandVisitor.visit(any(SingleValueOperand.class))).thenReturn(new SingleValueOperand(typeKey));
-        when(operandVisitor.isOperandChanged()).thenReturn(true);
-        PowerMockito.when(ServiceDeskCompatibilityDispatcher.getInstance()).thenReturn(dispatcher);
+        mockedConstructor = mockConstruction(FixRequestTypeOperandVisitor.class, (mock, context) -> {
+            when(mock.visit(any(SingleValueOperand.class))).thenReturn(new SingleValueOperand(typeKey));
+            when(mock.isOperandChanged()).thenReturn(true);
+        });
+        mockedDispatcher = mockStatic(ServiceDeskCompatibilityDispatcher.class);
+        mockedDispatcher.when(ServiceDeskCompatibilityDispatcher::getInstance).thenReturn(dispatcher);
         when(dispatcher.getHelper()).thenReturn(Optional.of(helper));
         when(helper.getTerminalClauseProperty(any())).thenReturn(Option.none());
         when(helper.createTerminalClause(anyString(), any(Operator.class), any(Operand.class), any(Option.class)))

@@ -33,8 +33,6 @@ public class DefaultNotificationConfigurationServiceTest {
     private PermissionValidationService permissionService;
     @Mock
     private AnalyticsContextProvider analyticsContextProvider;
-    @Mock
-    private AnalyticsContext analyticsContext;
 
     @Mock
     private Repository repository;

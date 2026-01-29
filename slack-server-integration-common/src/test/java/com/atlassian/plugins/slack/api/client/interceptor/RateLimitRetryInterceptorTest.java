@@ -15,21 +15,19 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({RateLimitRetryInterceptor.class})
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RateLimitRetryInterceptorTest {
     @Mock
     Interceptor.Chain chain;
@@ -37,6 +35,8 @@ public class RateLimitRetryInterceptorTest {
     MethodsClient methods;
     @Mock
     ApiTestResponse apiResponse;
+    @Mock
+    BackoffRetryInterceptor.Sleeper mockSleeper;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -54,11 +54,7 @@ public class RateLimitRetryInterceptorTest {
 
     @Before
     public void setup() throws InterruptedException {
-        PowerMockito.mockStatic(Thread.class);
-        PowerMockito.doNothing().when(Thread.class);
-        Thread.sleep(anyLong());
-
-        target = new RateLimitRetryInterceptor(3);
+        target = new RateLimitRetryInterceptor(3, mockSleeper);
     }
 
     @Test
@@ -107,8 +103,7 @@ public class RateLimitRetryInterceptorTest {
 
     @Test
     public void intercept_failsFastOnRateLimitWhenSpeeInterrupted() throws IOException, InterruptedException {
-        PowerMockito.doThrow(new InterruptedException()).when(Thread.class);
-        Thread.sleep(anyLong());
+        doThrow(new InterruptedException()).when(mockSleeper).sleep(anyLong());
 
         when(chain.request()).thenReturn(postRequest);
         when(chain.proceed(postRequest)).thenReturn(rateLimitResponse1);
@@ -117,7 +112,7 @@ public class RateLimitRetryInterceptorTest {
 
         assertThat(result, is(rateLimitResponse1));
         verify(chain).proceed(postRequest);
-        verifySleptFor(10_000L);
+        verify(mockSleeper).sleep(10_000L);
     }
 
     @Test
@@ -147,8 +142,7 @@ public class RateLimitRetryInterceptorTest {
     }
 
     private void verifySleptFor(long ms) throws InterruptedException {
-        PowerMockito.verifyStatic(Thread.class);
-        Thread.sleep(ms);
+        verify(mockSleeper).sleep(ms);
     }
 
     private Response.Builder respBuilder(int code) {

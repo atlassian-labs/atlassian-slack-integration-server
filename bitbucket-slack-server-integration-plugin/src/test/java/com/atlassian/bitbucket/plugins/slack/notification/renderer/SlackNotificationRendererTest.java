@@ -87,6 +87,8 @@ import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -189,10 +191,22 @@ public class SlackNotificationRendererTest {
     @SuppressWarnings("RedundantThrows")
     @BeforeEach
     void setUp() throws Throwable {
-        when(slackLinkRenderer.userUrl(user)).thenReturn(USER_PROFILE_LINK);
-        when(slackLinkRenderer.userLink(user)).thenReturn(USER_SLACK_LINK);
-        when(slackLinkRenderer.repoLink(repository)).thenReturn(REPO_SLACK_LINK);
-        when(slackLinkRenderer.pullRequestLink(pullRequest)).thenReturn(PR_SLACK_LINK);
+        // Setup i18nResolver to return the key with comma-separated parameters - match expected test format
+        lenient().when(i18nResolver.getText(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+        lenient().when(i18nResolver.getText(anyString(), any())).thenAnswer(invocation -> 
+            invocation.getArgument(0) + "," + invocation.getArgument(1));
+        lenient().when(i18nResolver.getText(anyString(), any(), any())).thenAnswer(invocation -> 
+            invocation.getArgument(0) + "," + invocation.getArgument(1) + "," + invocation.getArgument(2));
+        lenient().when(i18nResolver.getText(anyString(), any(), any(), any())).thenAnswer(invocation -> 
+            invocation.getArgument(0) + "," + invocation.getArgument(1) + "," + invocation.getArgument(2) + "," + invocation.getArgument(3));
+        lenient().when(i18nResolver.getText(anyString(), any(), any(), any(), any())).thenAnswer(invocation -> 
+            invocation.getArgument(0) + "," + invocation.getArgument(1) + "," + invocation.getArgument(2) + "," + invocation.getArgument(3) + "," + invocation.getArgument(4));
+        lenient().when(i18nResolver.getText(anyString(), any(), any(), any(), any(), any())).thenAnswer(invocation -> 
+            invocation.getArgument(0) + "," + invocation.getArgument(1) + "," + invocation.getArgument(2) + "," + invocation.getArgument(3) + "," + invocation.getArgument(4) + "," + invocation.getArgument(5));
+        lenient().when(slackLinkRenderer.userUrl(user)).thenReturn(USER_PROFILE_LINK);
+        lenient().when(slackLinkRenderer.userLink(user)).thenReturn(USER_SLACK_LINK);
+        lenient().when(slackLinkRenderer.repoLink(repository)).thenReturn(REPO_SLACK_LINK);
+        lenient().when(slackLinkRenderer.pullRequestLink(pullRequest)).thenReturn(PR_SLACK_LINK);
         when(slackLinkRenderer.oAuthSessionsPageUrl()).thenReturn(SESSIONS_PAGE_LINK);
         when(slackLinkRenderer.slackMultilineQuote(anyString())).thenAnswer(answer(line -> ">>>" + line));
         when(slackLinkRenderer.commitLink(commit)).thenReturn(COMMIT_LINK);
@@ -537,9 +551,9 @@ public class SlackNotificationRendererTest {
 
     @Test
     void getReviewersPullRequestMessage_shouldBuildCorrectSlackMessageWhenUserRemovedHimself() {
-        when(pullRequestReviewersUpdatedEvent.getPullRequest()).thenReturn(pullRequest);
-        when(pullRequestReviewersUpdatedEvent.getUser()).thenReturn(user);
-        when(pullRequestReviewersUpdatedEvent.getRemovedReviewers()).thenReturn(Collections.singleton(user));
+        doReturn(pullRequest).when(pullRequestReviewersUpdatedEvent).getPullRequest();
+        doReturn(user).when(pullRequestReviewersUpdatedEvent).getUser();
+        doReturn(Collections.singleton(user)).when(pullRequestReviewersUpdatedEvent).getRemovedReviewers();
 
         ChatPostMessageRequest result = renderer.getReviewersPullRequestMessage(pullRequest, user, false, false).build();
 
