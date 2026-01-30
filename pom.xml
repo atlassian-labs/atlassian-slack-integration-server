@@ -46,7 +46,7 @@
         <project.scm.id>github</project.scm.id>
 
         <!-- Dependencies -->
-        <mockito-core.version>2.25.0</mockito-core.version>
+        <mockito.version>5.21.0</mockito.version>
         <junit.version>4.13.2</junit.version>
         <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <joda-time.version>2.3</joda-time.version>
@@ -215,13 +215,13 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>2.25.0</version>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>${mockito-core.version}</version>
+                <version>${mockito.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.hamcrest</groupId>
