@@ -8,21 +8,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"javax.*", "org.xml.*", "org.w3c.*", "com.sun.org.apache.xerces.*", "com.sun.org.apache.xpath.internal.*"})
-@PrepareForTest({ServiceDeskCompatibilityDispatcher.class})
+@RunWith(MockitoJUnitRunner.class)
 public class FixRequestTypeOperandVisitorTest {
     @Mock
     Project project;
@@ -43,16 +39,17 @@ public class FixRequestTypeOperandVisitorTest {
         String sdName = "someSdName";
         String sdKey = "someSdKey";
 
-        PowerMockito.mockStatic(ServiceDeskCompatibilityDispatcher.class);
-        when(ServiceDeskCompatibilityDispatcher.getInstance()).thenReturn(dispatcher);
-        when(dispatcher.isServiceDeskInstalled()).thenReturn(true);
-        when(dispatcher.getHelper()).thenReturn(Optional.of(helper));
-        when(helper.buildRequestTypeNameToKeyMap(project)).thenReturn(ImmutableMap.of(sdName, sdKey));
-        SingleValueOperand operand = new SingleValueOperand(sdName);
+        try (var mockedDispatcher = mockStatic(ServiceDeskCompatibilityDispatcher.class)) {
+            mockedDispatcher.when(ServiceDeskCompatibilityDispatcher::getInstance).thenReturn(dispatcher);
+            when(dispatcher.isServiceDeskInstalled()).thenReturn(true);
+            when(dispatcher.getHelper()).thenReturn(Optional.of(helper));
+            when(helper.buildRequestTypeNameToKeyMap(project)).thenReturn(ImmutableMap.of(sdName, sdKey));
+            SingleValueOperand operand = new SingleValueOperand(sdName);
 
-        Operand fixedOperand = operand.accept(target);
+            Operand fixedOperand = operand.accept(target);
 
-        assertThat(fixedOperand, notNullValue());
-        assertThat(fixedOperand.getDisplayString(), equalTo("\"" + sdKey + "\""));
+            assertThat(fixedOperand, notNullValue());
+            assertThat(fixedOperand.getDisplayString(), equalTo("\"" + sdKey + "\""));
+        }
     }
 }
