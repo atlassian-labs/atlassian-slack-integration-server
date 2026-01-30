@@ -153,7 +153,7 @@ public class SlackMessageEventListenerTest {
     @Captor
     private ArgumentCaptor<ChatPostEphemeralRequest> ephemeralCaptor;
     @Captor
-    private ArgumentCaptor<ContentSharedEvent> contentSharedCaptor;
+    private ArgumentCaptor<Object> contentSharedCaptor;
     @Captor
     private ArgumentCaptor<Calendar> calendar;
     @Captor
@@ -437,13 +437,14 @@ public class SlackMessageEventListenerTest {
         target.messageReceived(genericMessageSlackEvent);
 
         verify(eventPublisher, times(2)).publish(contentSharedCaptor.capture());
-        assertThat(contentSharedCaptor.getValue().getTeamId(), is(TEAM_ID));
-        assertThat(contentSharedCaptor.getValue().getChannelId(), is(CHANNEL_ID));
-        assertThat(contentSharedCaptor.getValue().getThreadTs(), is("ts"));
-        assertThat(contentSharedCaptor.getValue().getLink(), isEmptyString());
-        assertThat(contentSharedCaptor.getValue().getUser(), nullValue());
-        assertThat(contentSharedCaptor.getValue().getSpace(), is(space));
-        assertThat(contentSharedCaptor.getValue().getAttachment(), sameInstance(attachment));
+        ContentSharedEvent contentSharedEvent = (ContentSharedEvent) contentSharedCaptor.getValue();
+        assertThat(contentSharedEvent.getTeamId(), is(TEAM_ID));
+        assertThat(contentSharedEvent.getChannelId(), is(CHANNEL_ID));
+        assertThat(contentSharedEvent.getThreadTs(), is("ts"));
+        assertThat(contentSharedEvent.getLink(), isEmptyString());
+        assertThat(contentSharedEvent.getUser(), nullValue());
+        assertThat(contentSharedEvent.getSpace(), is(space));
+        assertThat(contentSharedEvent.getAttachment(), sameInstance(attachment));
     }
 
     @Test
@@ -467,15 +468,16 @@ public class SlackMessageEventListenerTest {
 
         target.messageReceived(genericMessageSlackEvent);
 
-        verify(eventPublisher, times(2)).publish(contentSharedCaptor.capture());
         assertThat(calendar.getValue().get(Calendar.DAY_OF_MONTH), is(6));
         assertThat(calendar.getValue().get(Calendar.MONTH), is(Calendar.FEBRUARY));
         assertThat(calendar.getValue().get(Calendar.YEAR), is(2019));
 
-        assertThat(contentSharedCaptor.getValue().getTeamId(), is(TEAM_ID));
-        assertThat(contentSharedCaptor.getValue().getChannelId(), is(CHANNEL_ID));
-        assertThat(contentSharedCaptor.getValue().getThreadTs(), is("ts"));
-        assertThat(contentSharedCaptor.getValue().getAttachment(), sameInstance(attachment));
+        verify(eventPublisher, times(2)).publish(contentSharedCaptor.capture());
+        ContentSharedEvent contentSharedEvent = (ContentSharedEvent) contentSharedCaptor.getValue();
+        assertThat(contentSharedEvent.getTeamId(), is(TEAM_ID));
+        assertThat(contentSharedEvent.getChannelId(), is(CHANNEL_ID));
+        assertThat(contentSharedEvent.getThreadTs(), is("ts"));
+        assertThat(contentSharedEvent.getAttachment(), sameInstance(attachment));
     }
 
     @Test
@@ -501,11 +503,11 @@ public class SlackMessageEventListenerTest {
         target.messageReceived(genericMessageSlackEvent);
 
         verify(eventPublisher, times(2)).publish(contentSharedCaptor.capture());
-
-        assertThat(contentSharedCaptor.getValue().getTeamId(), is(TEAM_ID));
-        assertThat(contentSharedCaptor.getValue().getChannelId(), is(CHANNEL_ID));
-        assertThat(contentSharedCaptor.getValue().getThreadTs(), is("ts"));
-        assertThat(contentSharedCaptor.getValue().getAttachment(), sameInstance(attachment));
+        ContentSharedEvent contentSharedEvent = (ContentSharedEvent) contentSharedCaptor.getValue();
+        assertThat(contentSharedEvent.getTeamId(), is(TEAM_ID));
+        assertThat(contentSharedEvent.getChannelId(), is(CHANNEL_ID));
+        assertThat(contentSharedEvent.getThreadTs(), is("ts"));
+        assertThat(contentSharedEvent.getAttachment(), sameInstance(attachment));
     }
 
     @Test
@@ -531,11 +533,12 @@ public class SlackMessageEventListenerTest {
         target.messageReceived(genericMessageSlackEvent);
 
         verify(eventPublisher, times(2)).publish(contentSharedCaptor.capture());
+        ContentSharedEvent contentSharedEvent = (ContentSharedEvent) contentSharedCaptor.getValue();
 
-        assertThat(contentSharedCaptor.getValue().getTeamId(), is(TEAM_ID));
-        assertThat(contentSharedCaptor.getValue().getChannelId(), is(CHANNEL_ID));
-        assertThat(contentSharedCaptor.getValue().getThreadTs(), is("ts"));
-        assertThat(contentSharedCaptor.getValue().getAttachment(), sameInstance(attachment));
+        assertThat(contentSharedEvent.getTeamId(), is(TEAM_ID));
+        assertThat(contentSharedEvent.getChannelId(), is(CHANNEL_ID));
+        assertThat(contentSharedEvent.getThreadTs(), is("ts"));
+        assertThat(contentSharedEvent.getAttachment(), sameInstance(attachment));
     }
 
     // linkShared event

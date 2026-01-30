@@ -1,5 +1,7 @@
 package com.atlassian.plugins.slack.api.client.interceptor;
 
+import com.atlassian.plugins.slack.util.DefaultSleeper;
+import com.atlassian.plugins.slack.util.Sleeper;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
@@ -12,15 +14,17 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class RateLimitRetryInterceptor implements Interceptor {
+    private final Sleeper sleeper;
     private final int retryCount;
 
     public RateLimitRetryInterceptor() {
-        this(Integer.getInteger("slack.client.rate.limit.retry.count", 3));
+        this(new DefaultSleeper(), Integer.getInteger("slack.client.rate.limit.retry.count", 3));
     }
 
     @VisibleForTesting
-    protected RateLimitRetryInterceptor(final int retryCount) {
+    public RateLimitRetryInterceptor(Sleeper sleeper, int retryCount) {
         this.retryCount = retryCount;
+        this.sleeper = sleeper;
     }
 
     @Override
@@ -92,7 +96,7 @@ public class RateLimitRetryInterceptor implements Interceptor {
 
     private boolean waitRetryAfterTime(final String secondsStr) {
         try {
-            Thread.sleep(Long.parseLong(secondsStr) * 1000);
+            sleeper.sleep(Long.parseLong(secondsStr) * 1000);
             return true;
         } catch (Exception e) {
             log.warn("Error awaiting for Retry-After: {}", e.getMessage(), e);
