@@ -4,25 +4,25 @@ import com.atlassian.security.random.DefaultSecureTokenGenerator;
 import com.atlassian.security.random.SecureTokenGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@PrepareForTest(DefaultSecureTokenGenerator.class)
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class SimpleXsrfTokenGeneratorTest {
     private static final String TOKEN = "someToken";
     private static final String TEAM = "someTeam";
@@ -36,6 +36,7 @@ public class SimpleXsrfTokenGeneratorTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
+    private MockedStatic<DefaultSecureTokenGenerator> mockedStaticGenerator;
     private SimpleXsrfTokenGenerator generator;
 
     @Before
@@ -43,8 +44,15 @@ public class SimpleXsrfTokenGeneratorTest {
         when(request.getSession(anyBoolean())).thenReturn(session);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(TOKEN)).thenReturn(TEAM);
-        mockStatic(DefaultSecureTokenGenerator.class);
+        mockedStaticGenerator = mockStatic(DefaultSecureTokenGenerator.class);
         generator = new SimpleXsrfTokenGenerator();
+    }
+
+    @After
+    public void tearDown() {
+        if (mockedStaticGenerator != null) {
+            mockedStaticGenerator.close();
+        }
     }
 
     @Test
