@@ -22,7 +22,7 @@ public class RateLimitRetryInterceptor implements Interceptor {
     }
 
     @VisibleForTesting
-    protected RateLimitRetryInterceptor(Sleeper sleeper, int retryCount) {
+    public RateLimitRetryInterceptor(Sleeper sleeper, int retryCount) {
         this.retryCount = retryCount;
         this.sleeper = sleeper;
     }

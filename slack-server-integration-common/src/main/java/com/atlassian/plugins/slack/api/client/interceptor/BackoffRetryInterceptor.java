@@ -23,7 +23,7 @@ public class BackoffRetryInterceptor implements Interceptor {
     }
 
     @VisibleForTesting
-    protected BackoffRetryInterceptor(Sleeper sleeper, int retryCount) {
+    public BackoffRetryInterceptor(Sleeper sleeper, int retryCount) {
         this.sleeper = sleeper;
         this.retryCount = retryCount;
     }

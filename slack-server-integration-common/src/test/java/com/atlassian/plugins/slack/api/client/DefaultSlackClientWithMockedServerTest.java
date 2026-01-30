@@ -10,6 +10,7 @@ import com.atlassian.plugins.slack.api.client.interceptor.RequestIdInterceptor;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.plugins.slack.util.ErrorResponse;
+import com.atlassian.plugins.slack.util.Sleeper;
 import com.atlassian.sal.api.user.UserManager;
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.methods.MethodsClient;
@@ -29,10 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -41,12 +39,10 @@ import java.util.concurrent.Callable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({DefaultSlackClientProvider.class, BackoffRetryInterceptor.class, RateLimitRetryInterceptor.class})
-@PowerMockIgnore("javax.net.ssl.*")
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DefaultSlackClientWithMockedServerTest {
     private static final String TEAM_ID = DefaultSlackClient.TEAM_DUMMY_PREFIX + "someTeamId";
     private static final String USER_TOKEN = "someUserToken";
@@ -76,25 +72,22 @@ public class DefaultSlackClientWithMockedServerTest {
     private SlackResponseCache slackResponseCache;
     @Mock
     private MethodsClient methods;
+    @Mock
+    private Sleeper sleeper;
 
     private SlackClient client;
     private MockWebServer server;
 
     @Before
     public void setUp() throws InterruptedException {
-        PowerMockito.mockStatic(Thread.class);
-        PowerMockito.doNothing().when(Thread.class);
-        Thread.sleep(anyLong());
-
         when(slackLink.getTeamId()).thenReturn(TEAM_ID);
         when(slackLink.getClientId()).thenReturn(CLIENT_ID);
-        when(slackLink.getClientSecret()).thenReturn(CLIENT_SECRET);
         when(slackLink.getBotAccessToken()).thenReturn(BOT_TOKEN);
-        when(slack.methods()).thenReturn(methods);
-        when(slackUser.getUserToken()).thenReturn(USER_TOKEN);
+        BackoffRetryInterceptor backoffRetryInterceptor = new BackoffRetryInterceptor(sleeper, 3);
+        RateLimitRetryInterceptor rateLimitRetryInterceptor = new RateLimitRetryInterceptor(sleeper, 3);
         final DefaultSlackClientProvider provider = new DefaultSlackClientProvider(slackLinkManager, slackUserManager,
                 userManager, eventPublisher, new ExecutorServiceHelper(), new RequestIdInterceptor(),
-                new BackoffRetryInterceptor(), new RateLimitRetryInterceptor(), slackResponseCache);
+                backoffRetryInterceptor, rateLimitRetryInterceptor, slackResponseCache);
         client = provider.withLink(slackLink);
     }
 
@@ -168,8 +161,7 @@ public class DefaultSlackClientWithMockedServerTest {
     }
 
     private void verifySleptFor(long ms) throws InterruptedException {
-        PowerMockito.verifyStatic(Thread.class);
-        Thread.sleep(ms);
+        verify(sleeper).sleep(ms);
     }
 
     private <T> T withHttpServer(final Callable<T> test) {
