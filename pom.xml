@@ -59,8 +59,8 @@
         <powermock.version>2.0.2</powermock.version>
 
         <slack.common.version>3.0.0</slack.common.version>
-        <platform.version>8.0.0</platform.version>
-        <amps.version>9.5.4</amps.version>
+        <platform.version>8.1.14</platform.version>
+        <amps.version>9.11.1</amps.version>
         <jvm17.opens />
     </properties>
 
@@ -99,6 +99,13 @@
             <dependency>
                 <groupId>com.atlassian.platform.dependencies</groupId>
                 <artifactId>platform-public-api</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform.dependencies</groupId>
+                <artifactId>platform-deprecated-public-api</artifactId>
                 <version>${platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
