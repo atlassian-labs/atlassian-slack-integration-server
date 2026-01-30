@@ -1,5 +1,7 @@
 package com.atlassian.plugins.slack.api.client.interceptor;
 
+import com.atlassian.plugins.slack.util.DefaultSleeper;
+import com.atlassian.plugins.slack.util.Sleeper;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
@@ -13,14 +15,16 @@ import java.io.IOException;
 @Slf4j
 public class BackoffRetryInterceptor implements Interceptor {
     private static final int[] RETRY_BACKOFF_DELAYS = new int[]{1, 3, 5, 8, 13, 30};
+    private final Sleeper sleeper;
     private final int retryCount;
 
     public BackoffRetryInterceptor() {
-        this(Integer.getInteger("slack.client.retry.count", 3));
+        this(new DefaultSleeper(), Integer.getInteger("slack.client.retry.count", 3));
     }
 
     @VisibleForTesting
-    protected BackoffRetryInterceptor(final int retryCount) {
+    protected BackoffRetryInterceptor(Sleeper sleeper, int retryCount) {
+        this.sleeper = sleeper;
         this.retryCount = retryCount;
     }
 
@@ -115,7 +119,7 @@ public class BackoffRetryInterceptor implements Interceptor {
 
     private void sleep(final long ms) {
         try {
-            Thread.sleep(ms);
+            sleeper.sleep(ms);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
