@@ -40,8 +40,8 @@ import static org.hamcrest.Matchers.empty;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 public class PersonalNotificationManagerTest {
@@ -127,7 +127,7 @@ public class PersonalNotificationManagerTest {
         List<NotificationInfo> result = target.getNotificationsFor(event);
 
         assertThat(result, empty());
-        verifyZeroInteractions(event);
+        verifyNoInteractions(event);
     }
 
     @Test
@@ -646,7 +646,7 @@ public class PersonalNotificationManagerTest {
         when(comment.getIssue()).thenReturn(issue);
         when(comment.getGroupLevel()).thenReturn("restricted!");
     }
-    
+
     private void overwriteCommentPermissionForAllCommentsForSpecificUser(Comment comment, ApplicationUser user, boolean hasPermission) {
         when(commentPermissionManager.hasBrowsePermission(user, comment)).thenReturn(hasPermission);
     }
