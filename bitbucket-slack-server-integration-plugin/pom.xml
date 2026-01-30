@@ -48,7 +48,7 @@
         <bitbucket.page.objects.version>9.2.1</bitbucket.page.objects.version>
 
         <!-- Platform version used for dependency management -->
-        <platform.version>8.0.0</platform.version>
+        <platform.version>8.1.14</platform.version>
 
         <!-- Dependency versions -->
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
@@ -58,6 +58,7 @@
         <mockito-core.version>5.21.0</mockito-core.version>
         <commons-codec.version>1.11</commons-codec.version>
         <slack.common.version>3.0.0</slack.common.version>
+        <lombok.version>1.18.42</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -316,7 +317,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -364,7 +365,7 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.19</version>
+            <version>1.17.8</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -496,6 +497,20 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>bitbucket-maven-plugin</artifactId>
