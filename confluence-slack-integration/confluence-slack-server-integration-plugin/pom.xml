@@ -373,7 +373,7 @@
                         <pluginArtifact>
                             <groupId>com.atlassian.plugins</groupId>
                             <artifactId>jquery</artifactId>
-                            <version>${jquery.version}</version>
+                            <version>${atlassian.plugin.jquery.version}</version>
                         </pluginArtifact>
                     </pluginArtifacts>
                     <systemPropertyVariables combine.children="append">

@@ -54,7 +54,7 @@
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
         <atlassian.selenium.version>4.0.0</atlassian.selenium.version>
         <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
-        <jquery.version>4.0.0-m004</jquery.version>
+        <atlassian.plugin.jquery.version>4.0.0-m004</atlassian.plugin.jquery.version>
         <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <mockito-core.version>2.25.0</mockito-core.version>
         <commons-codec.version>1.11</commons-codec.version>
@@ -550,7 +550,7 @@
                         <pluginArtifact>
                             <groupId>com.atlassian.plugins</groupId>
                             <artifactId>jquery</artifactId>
-                            <version>${jquery.version}</version>
+                            <version>${atlassian.plugin.jquery.version}</version>
                         </pluginArtifact>
                     </pluginArtifacts>
                     <systemPropertyVariables>
@@ -566,7 +566,7 @@
                         <discovery.test.mode>true</discovery.test.mode>
                         <atlassian.test.target.dir>${project.build.directory}/webdriverTests</atlassian.test.target.dir>
                         <atlassian.authentication.legacy.mode>true</atlassian.authentication.legacy.mode>
-                        <atlassian.darkfeature.plugins.jquery.migrate.disable.v3>true</atlassian.darkfeature.plugins.jquery.migrate.disable.v3>
+                        <atlassian.darkfeature.plugins.jquery.migrate.disable>true</atlassian.darkfeature.plugins.jquery.migrate.disable>
                     </systemPropertyVariables>
 
                     <instructions>
