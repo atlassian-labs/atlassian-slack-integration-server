@@ -71,6 +71,7 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.11.0</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>commons-collections</groupId>
@@ -281,6 +282,16 @@
             <artifactId>confluence-webdriver-pageobjects</artifactId>
             <version>15.0.2</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.atlassian.confluence</groupId>
+                    <artifactId>confluence-java-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.atlassian.confluence</groupId>
+                    <artifactId>confluence-rest-client-jakarta</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Transitive confluence-rest-client-jakarta from confluence-webdriver-pageobjects:15.0.2 is publicly unavailable -->
         <dependency>
@@ -328,6 +339,7 @@
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
                         <exclude>net.bytebuddy:byte-buddy</exclude>
+                        <exclude>commons-beanutils:commons-beanutils</exclude>
                     </banningExcludes>
 
                     <!-- Custom logging config to show logs from plugin classes by default -->
