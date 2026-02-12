@@ -391,7 +391,8 @@
                         <!-- This disables the Post Upgrade Landing Page, which we never want showing up in tests -->
                         <atlassian.darkfeature.pulp>false</atlassian.darkfeature.pulp>
                         <atlassian.authentication.legacy.mode>true</atlassian.authentication.legacy.mode>
-                        <atlassian.darkfeature.plugins.jquery.migrate.disable.v3>true</atlassian.darkfeature.plugins.jquery.migrate.disable.v3>
+                        <!-- Enable once products support jQuery 4 -->
+                        <!-- <atlassian.darkfeature.plugins.jquery.migrate.disable>true</atlassian.darkfeature.plugins.jquery.migrate.disable> -->
                     </systemPropertyVariables>
                     <instructions>
                         <Atlassian-Plugin-Key>${plugin.key}</Atlassian-Plugin-Key>
