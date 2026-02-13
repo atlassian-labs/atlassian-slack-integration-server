@@ -173,7 +173,7 @@ require([
                             jQuery("#slack-loading").hide();
                         });
 
-                    jQuery("#slack-install").click(function (e) {
+                    jQuery("#slack-install").on('click', function (e) {
                         e.preventDefault();
                         Actions.navigate(baseUrl + "/plugins/servlet/slack/configure?action=add")
                     });
@@ -183,7 +183,7 @@ require([
                  * Load the installed screen
                  */
                 installed: function () {
-                    jQuery("#slack-uninstall").click(function (e) {
+                    jQuery("#slack-uninstall").on('click', function (e) {
                         e.preventDefault();
                         if (jQuery(this).attr('aria-disabled')) {
                             return;

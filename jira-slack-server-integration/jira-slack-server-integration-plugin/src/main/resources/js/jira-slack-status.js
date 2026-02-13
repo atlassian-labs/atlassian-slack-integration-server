@@ -34,7 +34,7 @@ require([
                     slackUsers: response
                 }));
                 $slackIcon.on('click', function(event) {
-                    event.preventDefault();
+                    event.preventDefault(); // do not redirect to Slack - user should select team first
                 });
 
                 var slackSectionMarkup = Jira.Templates.Slack.User.teamLinks({

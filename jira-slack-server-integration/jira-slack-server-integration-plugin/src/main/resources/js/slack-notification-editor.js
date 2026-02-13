@@ -16,7 +16,7 @@ require(['jquery', 'jira/lib/class'], function($, Class) {
                     if (macro) {
                         instance.insertMacro("$" + macro);
                         instance.$editor.trigger("contentModified");
-                        instance.$editor.trigger('focus');
+                        instance.$editor.trigger("focus");
                     }
                 });
         },

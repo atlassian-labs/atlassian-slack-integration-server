@@ -72,7 +72,7 @@ require([
 
             pasteClipboard: function() {
                 Actions.getClipboardText().then(function(text) {
-                    var clipboardContent = jQuery.trim(text || "");
+                    var clipboardContent = (text || "").trim();
                     if (clipboardContent && clipboardContent.length) {
                         try {
                             var jsonContent = JSON.parse(clipboardContent);
@@ -132,10 +132,10 @@ require([
                     if (!isBasic()) {
                         return;
                     }
-                    var content = jQuery.trim(credentialsTextArea.val() || "");
+                    var content = (credentialsTextArea.val() || "").trim();
                     if (!content || !content.length) {
                         Actions.getClipboardText().then(function(text) {
-                            var clipboardContent = jQuery.trim(text || "");
+                            var clipboardContent = (text || "").trim();
                             if (clipboardContent && clipboardContent.length) {
                                 try {
                                     var jsonContent = JSON.parse(clipboardContent);
