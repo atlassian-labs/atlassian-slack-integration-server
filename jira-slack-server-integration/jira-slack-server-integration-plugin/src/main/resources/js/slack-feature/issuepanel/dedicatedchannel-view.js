@@ -173,7 +173,7 @@ define("slack/feature/issuepanel/dedicatedchannel-view",
                         disableSubmitButton: function () {
                             $('#slack-select-dedicated-channel-dialog-submit').attr({
                                 'aria-disabled': 'true',
-                                'disabled': ''
+                                'disabled': 'disabled'
                             });
                         },
                         channelSelected: function () {

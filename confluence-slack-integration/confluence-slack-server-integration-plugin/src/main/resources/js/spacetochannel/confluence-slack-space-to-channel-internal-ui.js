@@ -135,7 +135,7 @@ require([
             } else {
                 addChannelButton.attr({
                     'aria-disabled': 'true',
-                    'disabled': ''
+                    'disabled': 'disabled'
                 });
             }
         };

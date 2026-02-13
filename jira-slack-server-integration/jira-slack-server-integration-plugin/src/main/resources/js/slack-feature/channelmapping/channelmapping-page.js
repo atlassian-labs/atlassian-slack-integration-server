@@ -115,7 +115,7 @@ define("slack/feature/channelmapping/channelmapping-page",
         disableAddButton: function() {
             this.$('#slack-project-to-channel-add').attr({
                 'aria-disabled': 'true',
-                'disabled': ''
+                'disabled': 'disabled'
             });
         },
 

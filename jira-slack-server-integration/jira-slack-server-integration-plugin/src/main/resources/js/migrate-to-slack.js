@@ -134,7 +134,7 @@ require([
     function disableDialogSubmit() {
         $('#slack-migrate-select-channel-dialog-submit').attr({
             'aria-disabled': 'true',
-            'disabled': ''
+            'disabled': 'disabled'
         });
     }
 
