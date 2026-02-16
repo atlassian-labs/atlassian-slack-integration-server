@@ -109,7 +109,7 @@ require([
         }
     };
 
-    $(document).delegate('.slack-user-unlink', 'click', userUnlink);
+    $(document).on('click', '.slack-user-unlink', userUnlink);
 
     // exports
     window.Slack = window.Slack || {};

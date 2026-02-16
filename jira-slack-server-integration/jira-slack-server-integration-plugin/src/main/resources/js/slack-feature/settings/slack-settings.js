@@ -4,7 +4,7 @@ AJS.toInit(function ($) {
 
         e.preventDefault();
         clearErrorPanel();
-        var selected = $("#allowAutoConvertCheckbox").attr('checked') === "checked";
+        var selected = $("#allowAutoConvertCheckbox").prop('checked');
         var url = AJS.contextPath() + '/slack/configuration';
 
         var projectVal = $("#project-key").val();
@@ -15,19 +15,19 @@ AJS.toInit(function ($) {
 
         var guestChannelAccess = $("#allowAutoConvertInGuestChannels");
         if(guestChannelAccess.val() != undefined){
-            var issuePreviewInGuestChannels = guestChannelAccess.attr('checked') === "checked";
+            var issuePreviewInGuestChannels = guestChannelAccess.prop('checked');
             data['guestChannelEnabled'] = issuePreviewInGuestChannels;
         }
 
         var hideIssuePanel = $("#hideIssuePanel");
         if(hideIssuePanel.val() != undefined){
-            var hideIssuePanelValue = hideIssuePanel.attr('checked') === "checked";
+            var hideIssuePanelValue = hideIssuePanel.prop('checked');
             data['hideIssuePanel'] = hideIssuePanelValue;
         }
 
         var sendRestrictedCommentsToDedicated = $("#sendRestrictedCommentsToDedicated");
         if(sendRestrictedCommentsToDedicated.length){
-            var restrictedCommentsInDedicatedValue = sendRestrictedCommentsToDedicated.attr('checked') === "checked";
+            var restrictedCommentsInDedicatedValue = sendRestrictedCommentsToDedicated.prop('checked');
             data['sendRestrictedCommentsToDedicated'] = restrictedCommentsInDedicatedValue;
         }
 
@@ -37,10 +37,10 @@ AJS.toInit(function ($) {
             contentType: 'application/json',
             cache: false,
             type: "POST"
-        }).error(function(error){
+        }).fail(function(error){
             showError(error);
         }).done(function (data) {
-            $("#dialog-close-button").click();
+            $("#dialog-close-button").trigger('click');
         });
     });
 

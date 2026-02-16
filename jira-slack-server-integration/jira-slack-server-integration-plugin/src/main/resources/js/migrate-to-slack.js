@@ -128,13 +128,13 @@ require([
 
     function enableDialogSubmit() {
         $(dialogSubmitSelector)
-            .removeAttr('aria-disabled').removeAttr('disabled');
+            .removeAttr('aria-disabled').prop('disabled', false);
     }
 
     function disableDialogSubmit() {
         $('#slack-migrate-select-channel-dialog-submit').attr({
             'aria-disabled': 'true',
-            'disabled': ''
+            'disabled': 'disabled'
         });
     }
 
@@ -312,7 +312,7 @@ require([
                 dialog.show();
             });
 
-            $(document).bind("dialogContentReady", {}, dialogContentReadyCallback);
+            $(document).on("dialogContentReady", dialogContentReadyCallback);
         });
 
     }

@@ -33,7 +33,7 @@ require([
                 $slackIcon = $(Jira.Templates.Slack.User.slackIcon({
                     slackUsers: response
                 }));
-                $slackIcon.click(function(event) {
+                $slackIcon.on('click', function(event) {
                     event.preventDefault(); // do not redirect to Slack - user should select team first
                 });
 

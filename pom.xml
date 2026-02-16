@@ -55,6 +55,7 @@
 
         <atlassian-user.version>3.0</atlassian-user.version>
         <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
+        <atlassian.plugin.jquery.version>4.0.0-m004</atlassian.plugin.jquery.version>
         <hamcrest-core.version>1.3</hamcrest-core.version>
 
         <slack.common.version>3.0.0</slack.common.version>

@@ -115,7 +115,22 @@ public class TestClient {
     public class SlackLinkClient {
         public GetWorkspacesResponse fetchSlackLinks() {
             try (Response response = get(withRestUrl("connection").build())) {
-                return gson.fromJson(response.body().string(), GetWorkspacesResponse.class);
+                if (!response.isSuccessful()) {
+                    throw new RestException(response);
+                }
+                String bodyString = response.body().string();
+                if (bodyString == null || bodyString.trim().isEmpty()) {
+                    throw new RuntimeException("GET rest/slack/latest/connection returned empty body (code " + response.code() + ")");
+                }
+                String trimmed = bodyString.trim();
+                if (!trimmed.startsWith("{")) {
+                    String snippet = trimmed.length() > 200 ? trimmed.substring(0, 200) + "..." : trimmed;
+                    throw new RuntimeException("GET rest/slack/latest/connection returned non-JSON response (expected object). " +
+                            "Code: " + response.code() + ", body: " + snippet);
+                }
+                return gson.fromJson(bodyString, GetWorkspacesResponse.class);
+            } catch (RestException e) {
+                throw e;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

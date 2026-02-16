@@ -61,17 +61,12 @@ public class ChannelSelector extends DropdownSelect {
     }
 
     // fixed version of Atlassian-provided DropdownSelect.pickOption()
-    // it starts freezing in Jira 9.0
+    // it starts freezing in Jira 9.0. We avoid moveToElement() to prevent MoveTargetOutOfBoundsException
+    // when the dropdown option is below the viewport (e.g. CI viewport 1260x683); click() scrolls into view.
     private void pickOptionFixed(String optionId) {
         this.open();
         By selector = By.cssSelector(String.format(".aui-list-item-li-%s", optionId));
-        this.activateSelection(selector);
         this.getDropDownItem(selector).click();
         this.waitForClose();
-    }
-
-    private void activateSelection(By by) {
-        PageElement selection = this.elementFinder.find(by);
-        this.actions.moveToElement(selection).moveByOffset(1, 0).perform();
     }
 }

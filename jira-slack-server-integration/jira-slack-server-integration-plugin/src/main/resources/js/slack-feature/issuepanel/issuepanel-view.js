@@ -123,7 +123,7 @@ define("slack/feature/issuepanel/issuepanel-view",
 
                 var $panel = $("#slack-panel-settings");
                 $panel.removeClass("hidden");
-                $panel.click(function (event) {
+                $panel.on('click', function (event) {
                     event.preventDefault();
                     showDialog($(event.target), false);
                 });
@@ -250,8 +250,7 @@ define("slack/feature/issuepanel/issuepanel-view",
                             showDialog($panel, true);
 
                         }
-                    }).success(function (onsuccess) {
-                        // This happened in other browser or other session
+                    }).done(function (onsuccess) {
                         saveCookie(slackNativeLinksFeatureDiscovery, true)
                     });
 
@@ -261,10 +260,10 @@ define("slack/feature/issuepanel/issuepanel-view",
                         url: url + slackLinkClickedKey,
                         dataType: 'json',
                         cache: false
-                    }).success(function (data) {
+                    }).done(function (data) {
 
                         saveCookie(slackLinkClickedKey, true);
-                        validateFirstTime($panel); //We do the logic again
+                        validateFirstTime($panel);
 
                     }).fail(function (failure) {
                         saveCookie(slackLinkClickedKey, false);
@@ -277,7 +276,7 @@ define("slack/feature/issuepanel/issuepanel-view",
 
             var panel = $("#slack-remaining-accounts");
             var firstTime = true;
-            panel.click(function(event) {
+            panel.on('click', function(event) {
                 event.preventDefault();
                 showDialog($(event.target));
 

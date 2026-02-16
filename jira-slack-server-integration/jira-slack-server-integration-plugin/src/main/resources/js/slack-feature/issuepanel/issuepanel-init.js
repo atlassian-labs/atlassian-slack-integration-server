@@ -24,13 +24,13 @@ require([
         var hash = window.location.hash;
 
         if (hash === "#choose-channel") {
-            $("#slack-select-dedicated-channel").click();
+            $("#slack-select-dedicated-channel").trigger('click');
             cleanHash();
         } else if (hash === "#open-issue-mentions") {
-            $("#slack-issue-mentions-list").click();
+            $("#slack-issue-mentions-list").trigger('click');
             cleanHash();
         } else if(hash === "#delete-dedicated-channel") {
-            $(".trash-dedicated-channel").click();
+            $(".trash-dedicated-channel").trigger('click');
         }
     }
 

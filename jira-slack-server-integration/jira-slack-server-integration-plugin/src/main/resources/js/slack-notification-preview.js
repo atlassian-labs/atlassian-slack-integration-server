@@ -16,11 +16,11 @@ require(['jquery', 'jira/lib/class', 'wrm/context-path'], function($, Class, wrm
             this.$preview.html(JIRA.Templates.Slack.Notification.notificationPreview());
 
             // Poll the key field for updates
-            this.$source.focus($.proxy(this._bindSourceHook, this));
-            this.$source.blur($.proxy(this._unbindHook, this));
+            this.$source.on('focus', this._bindSourceHook.bind(this));
+            this.$source.on('blur', this._unbindHook.bind(this));
 
             // Allow for the preview to be triggered
-            this.$source.bind("contentModified", function() {
+            this.$source.on("contentModified", function() {
                 instance.renderPreview();
             });
 
