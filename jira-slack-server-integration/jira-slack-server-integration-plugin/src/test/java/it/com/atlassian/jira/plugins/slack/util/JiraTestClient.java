@@ -1,11 +1,13 @@
 package it.com.atlassian.jira.plugins.slack.util;
 
 import com.atlassian.jira.plugins.slack.model.dto.ProjectConfigurationDTO;
+import com.atlassian.jira.plugins.slack.web.rest.IssuePanelResource.IssuePanelData;
 import com.atlassian.plugins.slack.test.UserCredentials;
 import com.atlassian.plugins.slack.test.client.TestClient;
 
 public class JiraTestClient extends TestClient {
     private final NotificationsClient notifications = new NotificationsClient();
+    private final IssuePanelClient issuePanel = new IssuePanelClient();
 
     public JiraTestClient(final String baseUrl, final UserCredentials userCredentials) {
         super(baseUrl, userCredentials);
@@ -13,6 +15,19 @@ public class JiraTestClient extends TestClient {
 
     public NotificationsClient notifications() {
         return notifications;
+    }
+
+    public IssuePanelClient issuePanel() {
+        return issuePanel;
+    }
+
+    public class IssuePanelClient {
+        // GET rest/slack/latest/issuepanel/data/{issueKey} - backs the issue-view Slack panel
+        public IssuePanelData fetchData(String issueKey) {
+            return parseResponse(
+                    get(withRestUrl("issuepanel/data").addPathSegment(issueKey).build()),
+                    IssuePanelData.class);
+        }
     }
 
     public class NotificationsClient {
