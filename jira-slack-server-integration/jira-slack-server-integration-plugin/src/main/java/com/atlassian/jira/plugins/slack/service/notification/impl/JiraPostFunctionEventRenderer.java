@@ -9,6 +9,7 @@ import com.atlassian.jira.plugins.slack.model.event.PluginEvent;
 import com.atlassian.jira.plugins.slack.service.notification.AttachmentHelper;
 import com.atlassian.jira.plugins.slack.service.notification.MessageRendererException;
 import com.atlassian.jira.plugins.slack.service.notification.NotificationInfo;
+import com.atlassian.jira.plugins.slack.util.InlineOnlyIncludeEventHandler;
 import com.atlassian.jira.plugins.slack.util.JsonPrimitiveReferenceInsertionEventHandler;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
@@ -147,6 +148,8 @@ public class JiraPostFunctionEventRenderer extends AbstractEventRenderer<JiraPos
 
         EventCartridge ec = new EventCartridge();
         ec.addEventHandler(new JsonPrimitiveReferenceInsertionEventHandler());
+
+        ec.addEventHandler(new InlineOnlyIncludeEventHandler());
 
         VelocityContext vc = new VelocityContext(context);
         vc.attachEventCartridge(ec);

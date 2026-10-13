@@ -150,6 +150,44 @@ public class JiraPostFunctionEventRendererTest {
         assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
     }
 
+    @Test
+    public void doRender_ignoresIncludeDirective() {
+        when(event.isHavingErrors()).thenReturn(false);
+        when(event.getCustomMessageFormat()).thenReturn("before #include('pom.xml') after");
+        when(event.getIssue()).thenReturn(issue);
+        when(issue.getProjectObject()).thenReturn(project);
+        when(project.getKey()).thenReturn("P");
+        when(event.getActor()).thenReturn(applicationUser);
+        when(applicationUser.getDisplayName()).thenReturn("UN");
+        when(attachmentHelper.projectUrl("P")).thenReturn("purl");
+        when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
+
+        SlackNotification notif = testRender();
+
+        assertThat(notif.getMessageRequest().getText(), is("before  after"));
+        assertThat(notif.getMessageRequest().getAttachments(), hasSize(1));
+        assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
+    }
+
+    @Test
+    public void doRender_ignoresParseDirective() {
+        when(event.isHavingErrors()).thenReturn(false);
+        when(event.getCustomMessageFormat()).thenReturn("before #parse('pom.xml') after");
+        when(event.getIssue()).thenReturn(issue);
+        when(issue.getProjectObject()).thenReturn(project);
+        when(project.getKey()).thenReturn("P");
+        when(event.getActor()).thenReturn(applicationUser);
+        when(applicationUser.getDisplayName()).thenReturn("UN");
+        when(attachmentHelper.projectUrl("P")).thenReturn("purl");
+        when(attachmentHelper.buildIssueAttachment(null, issue, null)).thenReturn(attachment);
+
+        SlackNotification notif = testRender();
+
+        assertThat(notif.getMessageRequest().getText(), is("before  after"));
+        assertThat(notif.getMessageRequest().getAttachments(), hasSize(1));
+        assertThat(notif.getMessageRequest().getAttachments().get(0), sameInstance(attachment));
+    }
+
     private SlackNotification testRender() {
         when(notificationInfo.getLink()).thenReturn(link);
         when(notificationInfo.getChannelId()).thenReturn("C");
