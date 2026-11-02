@@ -15,7 +15,11 @@ or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-f
 Links to the official documentation are specified on Marketplace pages.
 
 Supported products. See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
-* `master`/`dev` branch
+* `master` branch
+  * Next major version, based on Platform 9 (in development).
+  * Until the Platform 9 migration is released, see `release-3.x` for the currently supported product versions.
+
+* `release-3.x` branch (Platform 8)
   * Jira: 11+ on JDK 21.
   * Confluence: 10+ on JDK 21.
   * Bitbucket: 10+ on JDK 21.
