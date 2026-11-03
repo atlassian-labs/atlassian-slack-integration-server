@@ -311,7 +311,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-webdriver-pageobjects</artifactId>
-            <version>15.0.2</version>
+            <version>16.0.8</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -324,7 +324,47 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Transitive confluence-rest-client-jakarta from confluence-webdriver-pageobjects:15.0.2 is publicly unavailable -->
+        <!-- Align atlassian-selenium with confluence-webdriver-pageobjects:16.x (webdriver-core 4.7.0, Selenium 4):
+             slack-server-integration-test-common otherwise pulls the 3.x pageobjects API, and the 3.x stack's Firefox 92
+             cannot parse Confluence 11 batches (ES2022 class static blocks), leaving the page without jQuery/AJS. -->
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-pageobjects-api</artifactId>
+            <version>4.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-pageobjects-elements</artifactId>
+            <version>4.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- webdriver-core 4.7.0 brings atlassian-browsers 4.3.0 (Firefox 139), whose macOS build fails to start here;
+             4.4.0 (Firefox 153) is what the Jira ITs run with -->
+        <dependency>
+            <groupId>com.atlassian.browsers</groupId>
+            <artifactId>atlassian-browsers-auto</artifactId>
+            <version>4.4.0</version>
+            <scope>test</scope>
+            <exclusions>
+                <!-- Exclude browser dependencies since transitive ones are publicly unavailable -->
+                <exclusion>
+                    <groupId>com.atlassian.browsers</groupId>
+                    <artifactId>chrome</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.atlassian.browsers</groupId>
+                    <artifactId>chrome-profile</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Used by the calendar event test stubs; previously only arrived transitively via the 3.x selenium stack -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Transitive confluence-rest-client-jakarta from confluence-webdriver-pageobjects is publicly unavailable -->
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-rest-client-jakarta</artifactId>
@@ -404,13 +444,9 @@
                         </feManifestAssociation>
                     </feManifestAssociations>
 
-                    <pluginArtifacts>
-                        <pluginArtifact>
-                            <groupId>com.atlassian.plugins</groupId>
-                            <artifactId>jquery</artifactId>
-                            <version>${atlassian.plugin.jquery.version}</version>
-                        </pluginArtifact>
-                    </pluginArtifacts>
+                    <!-- No jQuery pluginArtifact: Confluence 11 bundles com.atlassian.plugins.jquery 4.0.0.8. Overriding it with
+                         4.0.0-m004 (jQuery 4 + jquery-migrate 3.6.0) makes $.fn.css drop unitless numbers, which breaks
+                         select2 dropdown positioning. -->
                     <systemPropertyVariables combine.children="append">
                         <plugin.resource.directories>
                             ${plugin.parent.directory}/slack-server-integration-common/src/main/resources,

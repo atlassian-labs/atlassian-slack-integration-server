@@ -6,6 +6,7 @@ import com.atlassian.pageobjects.elements.query.Poller;
 import com.google.inject.Inject;
 import jakarta.annotation.Nonnull;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -32,7 +33,12 @@ public class ChannelSelector {
     private void trySelectingChannel(String channelName) {
         container.click();
         Poller.waitUntilTrue(finder.find(By.cssSelector(".select2-results .public-channel")).timed().isVisible());
-        finder.find(By.cssSelector("input.select2-focused")).click().clear().type(channelName).type("\n");
+        final PageElement searchInput = finder.find(By.cssSelector("input.select2-focused"));
+        searchInput.click().clear().type(channelName);
+        // wait until the channel query has highlighted the typed channel, then confirm with an explicit Enter key
+        // (typing "\n" no longer selected the highlighted result with Selenium 4 / Firefox 153)
+        Poller.waitUntilTrue(finder.find(By.cssSelector(".select2-results .select2-highlighted")).timed().hasText(channelName));
+        searchInput.type(Keys.ENTER);
     }
 
     private void flakyWait() {
