@@ -329,6 +329,11 @@
             <artifactId>atlassian-spring-scanner-annotation</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -396,6 +401,8 @@
                         <exclude>commons-codec:commons-codec</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
                         <exclude>net.bytebuddy:byte-buddy</exclude>
+                        <exclude>commons-collections:commons-collections</exclude>
+                        <exclude>commons-io:commons-io</exclude>
                     </banningExcludes>
 
                     <pluginArtifacts>
@@ -449,11 +456,11 @@
                         <Atlassian-Plugin-Key>${plugin.key}</Atlassian-Plugin-Key>
                         <Bundle-SymbolicName>com.atlassian.jira.plugins.jira-slack-server-integration-plugin</Bundle-SymbolicName>
                         <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            org.springframework.osgi.*;resolution:=optional,
+                            org.eclipse.gemini.blueprint.*;resolution:=optional,
                             com.atlassian.plugin.osgi.bridge.external,
                             com.atlassian.jira.plugin.webfragment.conditions,
-                            *;resolution:="optional"
+                            *;resolution:=optional
                         </Import-Package>
                         <Spring-Context>*</Spring-Context>
                     </instructions>

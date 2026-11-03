@@ -139,7 +139,8 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <scope>provided</scope>
+            <!-- bundled: embedded slack-server-integration-common uses it (bundle-platform-dependencies) -->
+            <version>1.22.1</version>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -349,6 +350,8 @@
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
+                        <exclude>commons-codec:commons-codec</exclude>
+                        <exclude>commons-io:commons-io</exclude>
                         <exclude>net.bytebuddy:byte-buddy</exclude>
                         <exclude>commons-beanutils:commons-beanutils</exclude>
                     </banningExcludes>
@@ -409,12 +412,12 @@
                         <Atlassian-Plugin-Key>${plugin.key}</Atlassian-Plugin-Key>
                         <Bundle-SymbolicName>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin</Bundle-SymbolicName>
                         <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            org.springframework.osgi.*;resolution:=optional,
+                            org.eclipse.gemini.blueprint.*;resolution:=optional,
                             com.atlassian.plugin.osgi.bridge.external,
                             com.atlassian.confluence.plugin.descriptor.web.conditions,
                             com.atlassian.confluence.plugin.descriptor.web.urlreadingconditions,
-                            *;resolution:="optional"
+                            *;resolution:=optional
                         </Import-Package>
                         <Spring-Context>*</Spring-Context>
                     </instructions>
