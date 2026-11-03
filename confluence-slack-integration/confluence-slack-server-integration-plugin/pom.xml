@@ -240,6 +240,13 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Confluence 11 actions (AbstractSpaceAdminAction) use log4j; no longer on the test classpath transitively -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.26.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
