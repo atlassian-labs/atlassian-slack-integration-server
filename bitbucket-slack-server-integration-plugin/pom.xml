@@ -36,19 +36,19 @@
 
         <!-- AMPS related properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.amps.version>9.5.4</bitbucket.amps.version>
+        <bitbucket.amps.version>9.13.1</bitbucket.amps.version>
 
         <!-- Bitbucket API version used during the build -->
-        <bitbucket.api.version>10.0.0</bitbucket.api.version>
+        <bitbucket.api.version>11.0.0-m2</bitbucket.api.version>
 
         <!-- Bitbucket version used for integration tests; can be overridden to test against different versions -->
-        <bitbucket.version>10.0.0</bitbucket.version>
+        <bitbucket.version>11.0.0-m2</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
         <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements on login page -->
         <bitbucket.page.objects.version>9.2.1</bitbucket.page.objects.version>
 
         <!-- Platform version used for dependency management -->
-        <platform.version>8.0.0</platform.version>
+        <platform.version>9.0.8</platform.version>
 
         <!-- Dependency versions -->
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>

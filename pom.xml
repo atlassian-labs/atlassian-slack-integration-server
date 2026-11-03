@@ -59,8 +59,8 @@
         <hamcrest-core.version>1.3</hamcrest-core.version>
 
         <slack.common.version>3.0.0</slack.common.version>
-        <platform.version>8.0.0</platform.version>
-        <amps.version>9.5.4</amps.version>
+        <platform.version>9.0.8</platform.version>
+        <amps.version>9.12.6</amps.version>
         <lombok.version>1.18.42</lombok.version>
         <jvm17.opens />
     </properties>
