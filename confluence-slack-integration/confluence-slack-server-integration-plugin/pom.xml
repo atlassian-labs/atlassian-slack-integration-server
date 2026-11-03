@@ -35,6 +35,20 @@
     </properties>
 
     <dependencies>
+        <!-- Guava is internal on Platform 9 Confluence/Bitbucket (check-public-api-readiness): bundle it -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.6.0-jre</version>
+            <exclusions>
+                <exclusion><groupId>com.google.guava</groupId><artifactId>listenablefuture</artifactId></exclusion>
+                <exclusion><groupId>com.google.code.findbugs</groupId><artifactId>jsr305</artifactId></exclusion>
+                <exclusion><groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId></exclusion>
+                <exclusion><groupId>com.google.errorprone</groupId><artifactId>error_prone_annotations</artifactId></exclusion>
+                <exclusion><groupId>com.google.j2objc</groupId><artifactId>j2objc-annotations</artifactId></exclusion>
+                <exclusion><groupId>org.jspecify</groupId><artifactId>jspecify</artifactId></exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>slack-server-integration-common</artifactId>
@@ -72,9 +86,14 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
+            <!-- bundled: commons-beanutils is internal on Confluence 11 (check-public-api-readiness) -->
             <version>1.11.0</version>
-            <scope>provided</scope>
             <exclusions>
+                <!-- exported by Confluence 11; use the product's copy -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>commons-collections</groupId>
                     <artifactId>commons-collections</artifactId>
@@ -350,6 +369,8 @@
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
+                        <exclude>com.google.guava:guava</exclude>
+                        <exclude>com.google.guava:failureaccess</exclude>
                         <exclude>commons-codec:commons-codec</exclude>
                         <exclude>commons-io:commons-io</exclude>
                         <exclude>net.bytebuddy:byte-buddy</exclude>

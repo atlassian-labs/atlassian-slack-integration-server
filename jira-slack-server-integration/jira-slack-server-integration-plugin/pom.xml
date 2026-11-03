@@ -334,6 +334,11 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <!-- io.atlassian.util.concurrent is not in Jira 12's public allowlist; used by embedded slack-server-integration-common -->
+        <dependency>
+            <groupId>io.atlassian.util.concurrent</groupId>
+            <artifactId>atlassian-util-concurrent</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -403,6 +408,7 @@
                         <exclude>net.bytebuddy:byte-buddy</exclude>
                         <exclude>commons-collections:commons-collections</exclude>
                         <exclude>commons-io:commons-io</exclude>
+                        <exclude>io.atlassian.util.concurrent:atlassian-util-concurrent</exclude>
                     </banningExcludes>
 
                     <pluginArtifacts>
