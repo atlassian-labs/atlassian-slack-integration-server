@@ -422,11 +422,6 @@
                             <artifactId>jira-testkit-plugin</artifactId>
                             <version>${testkit.version}</version>
                         </pluginArtifact>
-                        <pluginArtifact>
-                            <groupId>com.atlassian.plugins</groupId>
-                            <artifactId>jquery</artifactId>
-                            <version>${atlassian.plugin.jquery.version}</version>
-                        </pluginArtifact>
                     </pluginArtifacts>
 
                     <includedFeModuleManifests>

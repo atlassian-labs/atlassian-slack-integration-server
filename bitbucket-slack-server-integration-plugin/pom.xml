@@ -53,7 +53,6 @@
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
         <atlassian.selenium.version>4.0.0</atlassian.selenium.version>
         <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
-        <atlassian.plugin.jquery.version>4.0.0-m004</atlassian.plugin.jquery.version>
         <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <mockito-core.version>5.21.0</mockito-core.version>
         <commons-codec.version>1.22.1</commons-codec.version>
@@ -579,13 +578,6 @@
                         </feManifestAssociation>
                     </feManifestAssociations>
 
-                    <pluginArtifacts>
-                        <pluginArtifact>
-                            <groupId>com.atlassian.plugins</groupId>
-                            <artifactId>jquery</artifactId>
-                            <version>${atlassian.plugin.jquery.version}</version>
-                        </pluginArtifact>
-                    </pluginArtifacts>
                     <systemPropertyVariables>
                         <plugin.resource.directories>
                             ${project.basedir}/../slack-server-integration-common/src/main/resources,
