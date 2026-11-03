@@ -34,6 +34,8 @@
 
         <!-- Jira API version used during the build -->
         <jira.api.version>12.0.0-QR-20260910110626</jira.api.version>
+        <!-- JSM API is versioned separately from Jira; no 12.0.0-QR-<date> build is published -->
+        <jira.servicedesk.api.version>12.0.0-QR-0171</jira.servicedesk.api.version>
 
         <!-- Other dependencies -->
         <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
@@ -129,7 +131,7 @@
             <dependency>
                 <groupId>com.atlassian.servicedesk</groupId>
                 <artifactId>jira-servicedesk-api</artifactId>
-                <version>${jira.api.version}</version>
+                <version>${jira.servicedesk.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>

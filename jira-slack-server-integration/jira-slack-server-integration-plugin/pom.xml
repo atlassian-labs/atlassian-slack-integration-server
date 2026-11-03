@@ -182,6 +182,12 @@
             <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- Platform 9: no longer provided transitively by the product API -->
+        <dependency>
+            <groupId>com.atlassian.crowd</groupId>
+            <artifactId>crowd-events</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Test dependencies-->
         <dependency>

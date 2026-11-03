@@ -1,6 +1,6 @@
 package com.atlassian.jira.plugins.slack.service.listener;
 
-import com.atlassian.crowd.event.user.UserDeletedEvent;
+import com.atlassian.crowd.event.user.UsersDeletedEvent;
 import com.atlassian.crowd.event.user.UserEditedEvent;
 import com.atlassian.crowd.model.user.User;
 import com.atlassian.event.api.EventPublisher;
@@ -43,7 +43,7 @@ public class TokensRevokedEventListenerTest {
     @Mock
     private TokensRevokedSlackEvent tokensRevokedSlackEvent;
     @Mock
-    private UserDeletedEvent userDeletedEvent;
+    private UsersDeletedEvent usersDeletedEvent;
     @Mock
     private UserEditedEvent userEditedEvent;
     @Mock
@@ -83,10 +83,10 @@ public class TokensRevokedEventListenerTest {
     @Test
     public void userWasRemoved() {
         UserKey k = new UserKey("U");
-        when(userDeletedEvent.getUsername()).thenReturn("U");
+        when(usersDeletedEvent.getUsernames()).thenReturn(java.util.List.of("U"));
         when(slackUserManager.getByUserKey(k)).thenReturn(Collections.singletonList(slackUser));
 
-        target.userWasRemoved(userDeletedEvent);
+        target.usersWereRemoved(usersDeletedEvent);
 
         verify(slackUserManager).delete(slackUser);
     }

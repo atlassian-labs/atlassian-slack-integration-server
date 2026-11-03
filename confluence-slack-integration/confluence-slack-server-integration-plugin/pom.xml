@@ -30,6 +30,8 @@
 
         <!-- Confluence API version used during the build -->
         <confluence.api.version>11.0.1</confluence.api.version>
+        <!-- confluence-rest-client-jakarta (tests only) is not published for 11.0.1; latest Confluence 11 build -->
+        <confluence.rest.client.version>11.0.0-m148</confluence.rest.client.version>
     </properties>
 
     <dependencies>
@@ -120,6 +122,18 @@
         <dependency>
             <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Platform 9: no longer provided transitively by the product API -->
+        <dependency>
+            <groupId>com.atlassian.crowd</groupId>
+            <artifactId>crowd-events</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Platform 9: no longer provided transitively by the product API -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -287,7 +301,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-rest-client-jakarta</artifactId>
-            <version>${confluence.api.version}</version>
+            <version>${confluence.rest.client.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
