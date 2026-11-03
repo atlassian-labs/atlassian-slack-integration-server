@@ -32,7 +32,7 @@ jobs:
     if: "(github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'unit-tests')) && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        java-version: [21,25]
+        java-version: [25]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -62,8 +62,8 @@ jobs:
     needs: unit-tests
     strategy:
       matrix:
-        java-version: [21,25]
-        jira-version: [11.0.0]
+        java-version: [25]
+        jira-version: [12.0.0-QR-20260910110626]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -101,8 +101,8 @@ jobs:
     strategy:
       matrix:
         # every version part should be 0 <= <version> <= 255; otherwise Confluence fails to start
-        java-version: [21,25]
-        confluence-version: [10.0.1]
+        java-version: [25]
+        confluence-version: [11.0.1]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -139,9 +139,9 @@ jobs:
     needs: unit-tests
     strategy:
       matrix:
-        # Bitbucket doesn't support JDK25
-        java-version: [21]
-        bitbucket-version: [10.0.0]
+        # Platform 9 products run on JDK 25 only
+        java-version: [25]
+        bitbucket-version: [11.0.0-m2]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
