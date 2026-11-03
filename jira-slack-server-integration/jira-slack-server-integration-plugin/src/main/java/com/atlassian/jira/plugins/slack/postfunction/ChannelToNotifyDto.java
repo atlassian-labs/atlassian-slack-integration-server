@@ -1,22 +1,23 @@
 package com.atlassian.jira.plugins.slack.postfunction;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
 public class ChannelToNotifyDto {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builderWithJackson2Defaults().build();
     private static final TypeReference<List<ChannelToNotifyDto>> listType = new TypeReference<List<ChannelToNotifyDto>>() {
     };
 
-    static List<ChannelToNotifyDto> fromJson(String json) throws IOException {
+    static List<ChannelToNotifyDto> fromJson(String json) throws JacksonException {
         return OBJECT_MAPPER.readValue(json, listType);
     }
 
-    static String toJson(List<ChannelToNotifyDto> list) throws IOException {
+    static String toJson(List<ChannelToNotifyDto> list) throws JacksonException {
         return OBJECT_MAPPER.writeValueAsString(list);
     }
 

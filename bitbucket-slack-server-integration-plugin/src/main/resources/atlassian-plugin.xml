@@ -186,7 +186,7 @@
         <rest-v2/>
     </rest-migration>
 
-    <rest key="slack-rest" name="Slack Confluence Resources" path="/slack" version="1.0">
+    <rest key="slack-rest" name="Slack Confluence Resources" path="/slack" version="1.0" use-jackson="3">
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </rest>

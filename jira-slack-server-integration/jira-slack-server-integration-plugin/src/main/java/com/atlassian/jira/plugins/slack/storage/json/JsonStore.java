@@ -3,14 +3,15 @@ package com.atlassian.jira.plugins.slack.storage.json;
 import com.atlassian.jira.entity.property.EntityProperty;
 import com.atlassian.jira.entity.property.JsonEntityPropertyManager;
 import com.atlassian.jira.plugins.slack.storage.StorableEntity;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import static java.util.Collections.emptyList;
  */
 public class JsonStore<T extends StorableEntity<String>> {
     private static final Logger log = LoggerFactory.getLogger(JsonStore.class);
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builderWithJackson2Defaults().build();
 
     private final JsonEntityPropertyManager jsonEntityPropertyManager;
     private final String entityName;
@@ -47,8 +48,11 @@ public class JsonStore<T extends StorableEntity<String>> {
         this.jsonEntityPropertyManager = checkNotNull(jsonEntityPropertyManager, "jsonEntityPropertyManager is null");
         this.entityName = checkNotNull(entityName, "entityName is null");
         this.storedClass = checkNotNull(storedClass, "storedClass is null");
-        if (!OBJECT_MAPPER.canSerialize(storedClass)) {
-            throw new IllegalArgumentException("Can't serialise " + storedClass);
+        // ObjectMapper.canSerialize() was removed in Jackson 3; resolve the serializer eagerly instead
+        try {
+            OBJECT_MAPPER._serializationContext().findValueSerializer(storedClass);
+        } catch (JacksonException e) {
+            throw new IllegalArgumentException("Can't serialise " + storedClass, e);
         }
     }
 
@@ -106,7 +110,7 @@ public class JsonStore<T extends StorableEntity<String>> {
         final Optional<String> valueAsJson = value.flatMap(input -> {
             try {
                 return Optional.of(OBJECT_MAPPER.writeValueAsString(input));
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 log.error("Error serialising value to JSON: " + input, e);
                 return Optional.empty();
             }
@@ -146,7 +150,7 @@ public class JsonStore<T extends StorableEntity<String>> {
 
         try {
             valueAsObject = OBJECT_MAPPER.readValue(jsonObject, storedClass);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             log.error("Error deserialising value from JSON: " + jsonObject, e);
             return Optional.empty();
         }

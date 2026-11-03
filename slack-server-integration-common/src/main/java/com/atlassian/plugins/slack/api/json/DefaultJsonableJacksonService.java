@@ -2,8 +2,9 @@ package com.atlassian.plugins.slack.api.json;
 
 import com.atlassian.annotations.VisibleForTesting;
 import com.atlassian.json.marshal.Jsonable;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.StreamWriteFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;
@@ -16,7 +17,7 @@ public class DefaultJsonableJacksonService implements JsonableJacksonService {
 
     @SuppressWarnings("unused")
     public DefaultJsonableJacksonService() {
-        this(ObjectMapper::new);
+        this(() -> JsonMapper.builderWithJackson2Defaults().build());
     }
 
     @VisibleForTesting
@@ -27,8 +28,8 @@ public class DefaultJsonableJacksonService implements JsonableJacksonService {
     @Override
     public Jsonable toJsonable(final Object object) {
         return writer -> {
-            objectMapperSupplier.get().getJsonFactory().disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
-            objectMapperSupplier.get().writeValue(writer, object);
+            // Jackson 3 mappers are immutable: disable AUTO_CLOSE_TARGET per write instead of on the shared factory
+            objectMapperSupplier.get().writer().without(StreamWriteFeature.AUTO_CLOSE_TARGET).writeValue(writer, object);
         };
     }
 }
