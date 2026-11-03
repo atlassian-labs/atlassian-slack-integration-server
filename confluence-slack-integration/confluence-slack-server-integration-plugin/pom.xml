@@ -145,12 +145,6 @@
         </dependency>
         <!-- Platform 9: no longer provided transitively by the product API -->
         <dependency>
-            <groupId>com.atlassian.crowd</groupId>
-            <artifactId>crowd-events</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Platform 9: no longer provided transitively by the product API -->
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <scope>provided</scope>
