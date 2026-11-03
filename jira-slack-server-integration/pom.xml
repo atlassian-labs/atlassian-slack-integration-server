@@ -28,8 +28,8 @@
         <jira.data.version>${jira.version}</jira.data.version>
 
         <!-- Dependencies and plugins that must align with the running Jira during integration tests -->
-        <testkit.version>11.5.2</testkit.version>
-        <!-- jira-testkit-client 11.5.2 transitively brings publicly unavailable jira-rest-api version -->
+        <testkit.version>15.0.0</testkit.version>
+        <!-- jira-testkit-client may transitively bring a publicly unavailable jira-rest-api version -->
         <jira.rest.api.version>${jira.version}</jira.rest.api.version>
 
         <!-- Jira API version used during the build -->
