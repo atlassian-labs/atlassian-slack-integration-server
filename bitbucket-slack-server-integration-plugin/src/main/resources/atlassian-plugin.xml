@@ -99,6 +99,8 @@
 
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
         <dependency>com.atlassian.bitbucket.server.bitbucket-web-api:server</dependency>
+        <dependency>com.atlassian.auiplugin:dialog</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </client-resource>
 
     <client-resource key="slack-repo-config" name="Repository configuration">
@@ -288,6 +290,7 @@
         <dependency>${plugin.key}:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
         <dependency>com.atlassian.auiplugin:aui-inline-dialog2</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <!-- JS and styles for configuration pages -->
@@ -313,6 +316,8 @@
 
         <context>admin</context>
         <context>atl.admin</context>
+        <dependency>com.atlassian.auiplugin:dialog</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <!-- JS for Workspace connection page -->
@@ -348,6 +353,7 @@
         <resource type="download" name="user/slack-user-link.js" location="user/slack-user-link.js"/>
 
         <dependency>com.atlassian.auiplugin:aui-core</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <!-- Slack channel and team links declarative support -->

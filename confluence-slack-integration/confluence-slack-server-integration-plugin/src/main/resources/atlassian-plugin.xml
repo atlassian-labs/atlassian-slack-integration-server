@@ -108,6 +108,8 @@
         <dependency>${plugin.key}:amd</dependency>
         <dependency>com.atlassian.auiplugin:aui-experimental-spinner</dependency>
         <dependency>com.atlassian.auiplugin:aui-message</dependency>
+        <dependency>com.atlassian.auiplugin:dialog</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource key="slack-global-css-resources" name="Slack CSS and related resources">
@@ -342,6 +344,8 @@
 
         <context>admin</context>
         <context>atl.admin</context>
+        <dependency>com.atlassian.auiplugin:dialog</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource name="Connect to Slack Workspace" key="slack-connect-workspace-resources">
@@ -372,6 +376,7 @@
         <resource type="download" name="user/slack-user-link.js" location="user/slack-user-link.js"/>
 
         <dependency>com.atlassian.auiplugin:aui-core</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource name="Slack Common Resources" key="base-slack-common-resources">
@@ -461,6 +466,7 @@
         <dependency>${plugin.key}:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
         <dependency>com.atlassian.auiplugin:aui-inline-dialog2</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource name="Disconnected Token Resources" key="slack-disconnected-token-resources">
