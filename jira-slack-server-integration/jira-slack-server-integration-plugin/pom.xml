@@ -178,8 +178,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Platform 9: no longer provided transitively by the product API -->
+        <dependency>
+            <groupId>com.atlassian.crowd</groupId>
+            <artifactId>crowd-events</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -323,6 +329,16 @@
             <artifactId>atlassian-spring-scanner-annotation</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+        <!-- io.atlassian.util.concurrent is not in Jira 12's public allowlist; used by embedded slack-server-integration-common -->
+        <dependency>
+            <groupId>io.atlassian.util.concurrent</groupId>
+            <artifactId>atlassian-util-concurrent</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -390,6 +406,9 @@
                         <exclude>commons-codec:commons-codec</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
                         <exclude>net.bytebuddy:byte-buddy</exclude>
+                        <exclude>commons-collections:commons-collections</exclude>
+                        <exclude>commons-io:commons-io</exclude>
+                        <exclude>io.atlassian.util.concurrent:atlassian-util-concurrent</exclude>
                     </banningExcludes>
 
                     <pluginArtifacts>
@@ -402,11 +421,6 @@
                             <groupId>com.atlassian.jira.tests</groupId>
                             <artifactId>jira-testkit-plugin</artifactId>
                             <version>${testkit.version}</version>
-                        </pluginArtifact>
-                        <pluginArtifact>
-                            <groupId>com.atlassian.plugins</groupId>
-                            <artifactId>jquery</artifactId>
-                            <version>${atlassian.plugin.jquery.version}</version>
                         </pluginArtifact>
                     </pluginArtifacts>
 
@@ -443,11 +457,11 @@
                         <Atlassian-Plugin-Key>${plugin.key}</Atlassian-Plugin-Key>
                         <Bundle-SymbolicName>com.atlassian.jira.plugins.jira-slack-server-integration-plugin</Bundle-SymbolicName>
                         <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            org.springframework.osgi.*;resolution:=optional,
+                            org.eclipse.gemini.blueprint.*;resolution:=optional,
                             com.atlassian.plugin.osgi.bridge.external,
                             com.atlassian.jira.plugin.webfragment.conditions,
-                            *;resolution:="optional"
+                            *;resolution:=optional
                         </Import-Package>
                         <Spring-Context>*</Spring-Context>
                     </instructions>

@@ -154,6 +154,7 @@
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-integration-steps-resources</dependency>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource key="widget-channelselector">
@@ -187,6 +188,7 @@
         <dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
         <dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-backbone-resource</dependency>
+        <dependency>com.atlassian.auiplugin:dialog</dependency>
     </web-resource>
 
     <web-resource key="slack-project-config-resources">
@@ -255,7 +257,7 @@
         <rest-v2/>
     </rest-migration>
 
-    <rest key="slack-rest" name="Slack Jira Resources" path="/slack" version="1.0">
+    <rest key="slack-rest" name="Slack Jira Resources" path="/slack" version="1.0" use-jackson="3">
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </rest>
@@ -305,6 +307,7 @@
         <resource name="initSlackChannelPickers.js" type="download" location="js/initSlackChannelPickers.js"/>
 
         <condition class="com.atlassian.plugins.slack.api.condition.IsSlackEnabledUrlReadingCondition"/>
+        <dependency>com.atlassian.auiplugin:dialog</dependency>
     </web-resource>
 
     <web-resource name="Slack Notification JQL Resources" key="slack-notification-jql-resources">
@@ -439,6 +442,7 @@
         <context>jira.view.issue</context>
 
         <condition class="com.atlassian.jira.plugins.slack.web.condition.UserLoggedInUrlReadingCondition"/>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <webwork1 key="slack-issue-panel-actions" name="Slack Issue Panel Action" class="java.lang.Object">
@@ -578,6 +582,8 @@
 
         <context>admin</context>
         <context>atl.admin</context>
+        <dependency>com.atlassian.auiplugin:dialog</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource name="Connect to Slack Workspace" key="slack-connect-workspace-resources">
@@ -608,6 +614,7 @@
         <resource type="download" name="user/slack-user-link.js" location="user/slack-user-link.js"/>
 
         <dependency>com.atlassian.auiplugin:aui-core</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource name="Slack Common Resources" key="base-slack-common-resources">
@@ -676,6 +683,7 @@
         <dependency>com.atlassian.jira.plugins.jira-slack-server-integration-plugin:slack-global</dependency>
         <!-- to show connection status tooltip on channel mapping page -->
         <dependency>com.atlassian.auiplugin:aui-inline-dialog2</dependency>
+        <dependency>com.atlassian.auiplugin:jquery-spin</dependency>
     </web-resource>
 
     <web-resource name="Disconnected Token Resources" key="slack-disconnected-token-resources">

@@ -1,6 +1,6 @@
 package com.atlassian.jira.plugins.slack.service.listener;
 
-import com.atlassian.crowd.event.user.UserDeletedEvent;
+import com.atlassian.crowd.event.user.UsersDeletedEvent;
 import com.atlassian.crowd.event.user.UserEditedEvent;
 import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
@@ -67,10 +67,12 @@ public class TokensRevokedEventListener extends AutoSubscribingEventListener {
     }
 
     @EventListener
-    public void userWasRemoved(@Nonnull final UserDeletedEvent event) {
-        logger.debug("Following user was removed: {}", event);
+    public void usersWereRemoved(@Nonnull final UsersDeletedEvent event) {
+        // Crowd 8 (Platform 9) removed the single-user UserDeletedEvent; deletions are published as UsersDeletedEvent
+        logger.debug("Following users were removed: {}", event.getUsernames());
 
-        slackUserManager.getByUserKey(new UserKey(event.getUsername())).forEach(slackUserManager::delete);
+        event.getUsernames().forEach(username ->
+                slackUserManager.getByUserKey(new UserKey(username)).forEach(slackUserManager::delete));
     }
 
     @EventListener

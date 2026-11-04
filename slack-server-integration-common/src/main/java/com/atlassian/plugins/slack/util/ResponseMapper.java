@@ -1,7 +1,8 @@
 package com.atlassian.plugins.slack.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.json.JsonMapper;
 import com.github.seratch.jslack.api.methods.SlackApiResponse;
 import io.atlassian.fugue.Either;
 import okhttp3.Response;
@@ -14,8 +15,9 @@ import java.util.Objects;
 
 public class ResponseMapper {
     private static final Logger log = LoggerFactory.getLogger(ResponseMapper.class);
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builderWithJackson2Defaults()
+            .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+            .build();
 
     private ResponseMapper() {
     }

@@ -15,9 +15,10 @@ or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-f
 Links to the official documentation are specified on Marketplace pages.
 
 Supported products. See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
-* `master` branch
-  * Next major version, based on Platform 9 (in development).
-  * Until the Platform 9 migration is released, see `release-3.x` for the currently supported product versions.
+* `master` branch (Platform 9, in development)
+  * Jira: 12+ on JDK 25.
+  * Confluence: 11+ on JDK 25.
+  * Bitbucket: 11+ on JDK 25.
 
 * `release-3.x` branch (Platform 8)
   * Jira: 11+ on JDK 21.
@@ -42,9 +43,11 @@ When Jira, Confluence, or Bitbucket Data Center release new versions, we will va
 
 # Installation
 
-1. Download and install [JDK 21](https://adoptium.net/en-GB/temurin/releases/?version=21). After installation `
+1. Download and install [JDK 25](https://adoptium.net/en-GB/temurin/releases/?version=25). After installation `
 java` command should be available in the terminal and `JAVA_HOME` environment variable should point to JDK installation directory.
 Running `$JAVA_HOME/bin/java -version` should print a JDK version.
+> **Note:** Use [JDK 21](https://adoptium.net/en-GB/temurin/releases/?version=21) if working with the `release-3.x` branch
+>
 > **Note:** Use [JDK 17](https://adoptium.net/en-GB/temurin/releases/?version=17) if working with the `release-2.x` branch
 >
 > **Note:** Use [JDK 8](https://adoptium.net/en-GB/temurin/releases/?version=8) / [JDK 11](https://adoptium.net/en-GB/temurin/releases/?version=11) if working with the `release-1.x` branch

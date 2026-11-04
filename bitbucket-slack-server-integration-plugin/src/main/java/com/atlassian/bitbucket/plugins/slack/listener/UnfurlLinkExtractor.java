@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
@@ -99,8 +100,7 @@ public class UnfurlLinkExtractor {
         final URI link = URI.create(url);
         // it should contain only the path after the context path
         final URI relativeLink = getContentPath(link);
-        final MultiValueMap<String, String> queryParams = UriComponentsBuilder.fromHttpUrl(decodeValue(url))
-                .build().getQueryParams();
+        final MultiValueMap<String, String> queryParams = parseHttpUrl(decodeValue(url)).getQueryParams();
         try {
             final Comment comment = tryComment(queryParams).orElse(null);
             final String commentKey = comment != null ? String.valueOf(comment.getId()) : "";
@@ -184,6 +184,19 @@ public class UnfurlLinkExtractor {
         } catch (UnsupportedEncodingException e) {
             return value;
         }
+    }
+
+    /**
+     * Parses an absolute HTTP(S) URL. Replaces {@code UriComponentsBuilder.fromHttpUrl}, removed in Spring 7,
+     * keeping its contract: an {@link IllegalArgumentException} is thrown when the URL is not a valid HTTP URL.
+     */
+    private static UriComponents parseHttpUrl(final String httpUrl) {
+        final UriComponents components = UriComponentsBuilder.fromUriString(httpUrl).build();
+        final String scheme = components.getScheme();
+        if (!("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) || components.getHost() == null) {
+            throw new IllegalArgumentException("[" + httpUrl + "] is not a valid HTTP URL");
+        }
+        return components;
     }
 
     /**

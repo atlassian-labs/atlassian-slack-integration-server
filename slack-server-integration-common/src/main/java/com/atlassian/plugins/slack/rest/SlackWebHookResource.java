@@ -29,8 +29,10 @@ import com.atlassian.plugins.slack.api.webhooks.action.SlackAction;
 import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.SlackWebHookPayload;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,7 +68,7 @@ public class SlackWebHookResource {
     public static final String TYPE_URL_VERIFICATION = "url_verification";
 
     private static final Logger log = LoggerFactory.getLogger(SlackWebHookResource.class);
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builderWithJackson2Defaults().build();
 
     private static final Map<String, Class<? extends SlackEventHolder>> eventByType =
             ImmutableMap.<String, Class<? extends SlackEventHolder>>builder()
@@ -103,14 +105,14 @@ public class SlackWebHookResource {
         final JsonNode eventPayload;
         try {
             eventPayload = OBJECT_MAPPER.readTree(request.getReader());
-        } catch (IOException e) {
+        } catch (IOException | JacksonException e) {
             log.error("Failed to parse event payload", e);
             throw new RuntimeException(e);
         }
 
-        if (TYPE_URL_VERIFICATION.equals(eventPayload.path(EVENT_TYPE).asText())) {
+        if (TYPE_URL_VERIFICATION.equals(eventPayload.path(EVENT_TYPE).asString())) {
             return Response
-                    .ok(eventPayload.path("challenge").asText())
+                    .ok(eventPayload.path("challenge").asString())
                     .type(MediaType.TEXT_PLAIN)
                     .build();
         }
@@ -118,7 +120,7 @@ public class SlackWebHookResource {
         if (log.isDebugEnabled()) {
             try {
                 log.debug("Event received: {}", OBJECT_MAPPER.writeValueAsString(eventPayload));
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 //nothing
             }
         }
@@ -238,7 +240,7 @@ public class SlackWebHookResource {
             log.debug("Received action {}", payload);
             try {
                 JsonNode payloadNode = OBJECT_MAPPER.readTree(payload);
-                String type = payloadNode.get("type").asText();
+                String type = payloadNode.get("type").asString();
 
                 Class<? extends SlackAction> actionType = actionByType.get(type);
                 if (actionType != null) {
@@ -248,7 +250,7 @@ public class SlackWebHookResource {
                     eventPublisher.publish(action);
                 }
 
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 log.error("Error parsing action payload", e);
             }
         });

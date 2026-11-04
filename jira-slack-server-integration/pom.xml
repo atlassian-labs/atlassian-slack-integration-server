@@ -24,16 +24,22 @@
         <jira.amps.version>${amps.version}</jira.amps.version>
 
         <!-- Jira version used for integration tests; can be overridden to test against different versions -->
-        <jira.version>11.0.0</jira.version>
+        <jira.version>12.0.0-QR-20260910110626</jira.version>
         <jira.data.version>${jira.version}</jira.data.version>
 
         <!-- Dependencies and plugins that must align with the running Jira during integration tests -->
-        <testkit.version>11.5.2</testkit.version>
-        <!-- jira-testkit-client 11.5.2 transitively brings publicly unavailable jira-rest-api version -->
+        <testkit.version>14.0.2</testkit.version>
+        <!-- jira-testkit-client may transitively bring a publicly unavailable jira-rest-api version -->
         <jira.rest.api.version>${jira.version}</jira.rest.api.version>
 
         <!-- Jira API version used during the build -->
-        <jira.api.version>11.0.0</jira.api.version>
+        <jira.api.version>12.0.0-QR-20260910110626</jira.api.version>
+        <!-- Compile-time only (provided): no Jira 12 build is on maven-external yet. Jira 12 supplies the classes at runtime.
+             TODO DCPL-4562: remove this property and use ${jira.api.version} once jira-admin-project-config-plugin
+             is published to maven-external for Jira 12. -->
+        <jira.project.config.version>11.3.12</jira.project.config.version>
+        <!-- JSM API is versioned separately from Jira; no 12.0.0-QR-<date> build is published -->
+        <jira.servicedesk.api.version>12.0.0-QR-0171</jira.servicedesk.api.version>
 
         <!-- Other dependencies -->
         <atlassian.vcache.version>1.4.0</atlassian.vcache.version>
@@ -104,6 +110,23 @@
                         <groupId>com.atlassian.gadgets</groupId>
                         <artifactId>atlassian-gadgets-spi</artifactId>
                     </exclusion>
+                    <!-- Platform 9: internal milestone builds referenced by Jira 12 QR / Crowd 8 POMs, not on maven-external.
+                         Provided by Jira at runtime; the plugin does not use them.
+                         TODO DCPL-4562: remove these three exclusions once atlassian-secrets 7.0.0-m014,
+                         platform-security-guardian 2.0.0-m011 and beehive-db 7.0.2 are on maven-external
+                         (or the Jira 12 / Crowd 8 POMs and the platform-deps BOM reference published versions). -->
+                    <exclusion>
+                        <groupId>com.atlassian.secrets</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.atlassian.ptsg</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.atlassian.beehive</groupId>
+                        <artifactId>beehive-db</artifactId>
+                    </exclusion>
                     <!-- opensaml 5 unavailable publicly -->
                     <exclusion>
                         <groupId>org.opensaml</groupId>
@@ -118,7 +141,7 @@
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-admin-project-config-plugin</artifactId>
-                <version>${jira.api.version}</version>
+                <version>${jira.project.config.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>atlassian-spring-scanner-runtime</artifactId>
@@ -129,7 +152,7 @@
             <dependency>
                 <groupId>com.atlassian.servicedesk</groupId>
                 <artifactId>jira-servicedesk-api</artifactId>
-                <version>${jira.api.version}</version>
+                <version>${jira.servicedesk.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
@@ -163,6 +186,12 @@
                 <artifactId>atlassian-jira-pageobjects</artifactId>
                 <version>${jira.version}</version>
                 <exclusions>
+                    <!-- Platform 9: crowd-ldap 8.0.0-platform-02 is not on maven-external.
+                         TODO DCPL-4562: remove this exclusion once it is published. -->
+                    <exclusion>
+                        <groupId>com.atlassian.crowd</groupId>
+                        <artifactId>crowd-ldap</artifactId>
+                    </exclusion>
                     <!-- Exclude browser dependencies since transitive ones are publicly unavailable -->
                     <exclusion>
                         <groupId>com.atlassian.browsers</groupId>

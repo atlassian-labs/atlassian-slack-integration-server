@@ -34,7 +34,6 @@ import com.atlassian.jira.workflow.WorkflowSchemeManager;
 import com.atlassian.plugin.PluginAccessor;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.plugin.web.WebInterfaceManager;
-import com.atlassian.plugin.webresource.WebResourceIntegration;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.executor.ThreadLocalDelegateExecutorFactory;
@@ -120,8 +119,6 @@ public class ComponentImports {
     ProjectConfigRequestCache projectConfigRequestCache;
     @ComponentImport("pluginAccessor")
     PluginAccessor pluginAccessor;
-    @ComponentImport
-    WebResourceIntegration webResourceIntegration;
     @ComponentImport
     DateTimeFormatter dateTimeFormatter;
     @ComponentImport
