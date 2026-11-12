@@ -35,6 +35,18 @@ Supported products. See [EOL policy](https://confluence.atlassian.com/support/at
   * Confluence: 7.10 (EOL date: Dec 15, 2022) JDK 8, 11 - 8.0.0-m90 (EOL date: TBD - end of 2024) JDK 8, 11.
   * Bitbucket: 7.6.0 (EOL date: Q1 calendar year 2023) on JDK 8, 11 - 8.8.0 (EOL date: 7 Feb 2025) on JDK 8, 11, 17.
 
+Plugin versions released from each branch:
+
+| Branch | Jira plugin | Confluence plugin | Bitbucket plugin |
+|---|---|---|---|
+| `master` (Platform 9) | 6.0.x | 6.0.x | 7.0.x |
+| `release-3.x` (Platform 8) | 5.0.x | 5.0.x | 6.0.x |
+| `release-2.x` | 4.0.x | 4.0.x | 5.0.x |
+| `release-1.x` | 3.0.x | 3.0.x | 4.0.x |
+
+Each plugin is released independently (see the [Release](.github/workflows/release.yml) workflow), so the plugins
+have their own versions and Git tags, e.g. `jira-slack-server-integration-plugin-5.0.4`.
+
 ## A note on future development plans
 
 In order to [accelerate our journey to the cloud, together](https://www.atlassian.com/blog/announcements/journey-to-cloud), Atlassian will continue to maintain these apps' _compatibility_ with our Server products. However, we will not be creating new features or matching feature parity with our Cloud integrations. If you would like to add your own customizations/features to the integration, we encourage you to fork this repository and customize it as you wish like we’ve seen many customers do.
