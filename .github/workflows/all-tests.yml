@@ -141,7 +141,7 @@ jobs:
       matrix:
         # Platform 9 products run on JDK 25 only
         java-version: [25]
-        bitbucket-version: [11.0.0-m2]
+        bitbucket-version: [11.0.0-eap2]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
