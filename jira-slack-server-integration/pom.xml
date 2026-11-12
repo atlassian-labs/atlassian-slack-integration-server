@@ -112,8 +112,8 @@
                     </exclusion>
                     <!-- Platform 9: internal milestone builds referenced by Jira 12 QR / Crowd 8 POMs, not on maven-external.
                          Provided by Jira at runtime; the plugin does not use them.
-                         TODO DCPL-4562: remove these three exclusions once atlassian-secrets 7.0.0-m014,
-                         platform-security-guardian 2.0.0-m011 and beehive-db 7.0.2 are on maven-external
+                         TODO DCPL-4562: remove these two exclusions once atlassian-secrets 7.0.0-m014 and
+                         platform-security-guardian 2.0.0-m011 are on maven-external
                          (or the Jira 12 / Crowd 8 POMs and the platform-deps BOM reference published versions). -->
                     <exclusion>
                         <groupId>com.atlassian.secrets</groupId>
@@ -122,10 +122,6 @@
                     <exclusion>
                         <groupId>com.atlassian.ptsg</groupId>
                         <artifactId>*</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.atlassian.beehive</groupId>
-                        <artifactId>beehive-db</artifactId>
                     </exclusion>
                     <!-- opensaml 5 unavailable publicly -->
                     <exclusion>
