@@ -53,7 +53,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
@@ -373,19 +372,6 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
     }
 
     /**
-     * Parses an absolute HTTP(S) URL. Replaces {@code UriComponentsBuilder.fromHttpUrl}, removed in Spring 7,
-     * keeping its contract: an {@link IllegalArgumentException} is thrown when the URL is not a valid HTTP URL.
-     */
-    private static UriComponents parseHttpUrl(final String httpUrl) {
-        final UriComponents components = UriComponentsBuilder.fromUriString(httpUrl).build();
-        final String scheme = components.getScheme();
-        if (!("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) || components.getHost() == null) {
-            throw new IllegalArgumentException("[" + httpUrl + "] is not a valid HTTP URL");
-        }
-        return components;
-    }
-
-    /**
      * http://localhost:1990/confluence/display/TEAM/2019/02/06/Simple+blog
      */
     private Optional<AbstractPage> tryBlogTitle(final List<String> segments) {
@@ -443,7 +429,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
      * http://localhost:1990/confluence/pages/viewpage.action?pageId=851986
      */
     private Optional<AbstractPage> tryPageId(final String url) {
-        return parseHttpUrl(decodeValue(url)).getQueryParams().entrySet().stream()
+        return LinkHelper.parseHttpUrl(decodeValue(url)).getQueryParams().entrySet().stream()
                 .filter(param -> "pageId".equals(param.getKey()))
                 .map(param -> getContentById(param.getValue().get(0)))
                 .filter(Optional::isPresent)

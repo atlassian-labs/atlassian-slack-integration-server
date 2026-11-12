@@ -24,6 +24,22 @@ public class LinkHelperTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Test
+    public void parseHttpUrl_shouldParseHttpAndHttpsUrls() {
+        assertThat(LinkHelper.parseHttpUrl("https://example.com/path?commentId=1&x=2").getQueryParams().getFirst("commentId"), is("1"));
+        assertThat(LinkHelper.parseHttpUrl("HTTP://example.com:8080/path").getHost(), is("example.com"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parseHttpUrl_shouldRejectNonHttpScheme() {
+        LinkHelper.parseHttpUrl("ftp://example.com/file");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parseHttpUrl_shouldRejectRelativeUrl() {
+        LinkHelper.parseHttpUrl("/projects/HC/repos/webcore-next");
+    }
+
+    @Test
     public void absoluteUrl_shouldReturnExpectedValue() {
         when(applicationProperties.getBaseUrl(UrlMode.CANONICAL)).thenReturn(BASE_URL);
         String result = LinkHelper.absoluteUrl("/test", applicationProperties);

@@ -173,6 +173,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.atlassian.ozymandias</groupId>
             <artifactId>atlassian-plugin-point-safety</artifactId>
             <scope>provided</scope>
