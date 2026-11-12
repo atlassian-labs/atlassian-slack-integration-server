@@ -48,9 +48,7 @@ jobs:
           path: ~/.m2/repository
           key: maven-unit
       - run: bin/build/override-plugin-sdk-maven.sh
-      # TODO DCPL-4562: run the Bitbucket module again once Bitbucket 11 artifacts are on maven-external.
-      # No Bitbucket 11 build is public yet, so the module cannot resolve its dependencies on CI.
-      - run: bin/build/run-unit-tests.sh -pl '!bitbucket-slack-server-integration-plugin'
+      - run: bin/build/run-unit-tests.sh
       - uses: actions/upload-artifact@v4
         with:
           name: unit-tests-coverage-java-${{ matrix.java-version }}
@@ -137,8 +135,6 @@ jobs:
     name: Bitbucket
     runs-on: ubuntu-22.04
     timeout-minutes: 30
-    # TODO DCPL-4562: remove once Bitbucket 11 artifacts are on maven-external; until then this job cannot resolve them.
-    continue-on-error: true
     if: github.event.inputs.jobs == '' || contains(github.event.inputs.jobs, 'integration-tests-bitbucket')
     needs: unit-tests
     strategy:
