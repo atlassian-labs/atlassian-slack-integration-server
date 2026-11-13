@@ -25,7 +25,7 @@ Supported products. See [EOL policy](https://confluence.atlassian.com/support/at
   * Confluence: 10+ on JDK 21.
   * Bitbucket: 10+ on JDK 21.
 
-* `release-2.x` branch
+* `release-2.x` branch (Platform 7)
   * Jira: 10+ on JDK 17.
   * Confluence: 9+ on JDK 17.
   * Bitbucket: 9+ on JDK 17.
@@ -41,7 +41,7 @@ Plugin versions released from each branch:
 |---|---|---|---|
 | `master` (Platform 9) | 6.0.x | 6.0.x | 7.0.x |
 | `release-3.x` (Platform 8) | 5.0.x | 5.0.x | 6.0.x |
-| `release-2.x` | 4.0.x | 4.0.x | 5.0.x |
+| `release-2.x` (Platform 7) | 4.0.x | 4.0.x | 5.0.x |
 | `release-1.x` | 3.0.x | 3.0.x | 4.0.x |
 
 Each plugin is released independently (see the [Release](.github/workflows/release.yml) workflow), so the plugins
