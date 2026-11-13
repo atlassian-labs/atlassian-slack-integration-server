@@ -15,7 +15,7 @@ or [Bitbucket](https://marketplace.atlassian.com/apps/1220729/bitbucket-server-f
 Links to the official documentation are specified on Marketplace pages.
 
 Supported products. See [EOL policy](https://confluence.atlassian.com/support/atlassian-support-end-of-life-policy-201851003.html).
-* `master` branch (Platform 9, in development)
+* `master` branch (Platform 9)
   * Jira: 12+ on JDK 25.
   * Confluence: 11+ on JDK 25.
   * Bitbucket: 11+ on JDK 25.
@@ -25,7 +25,7 @@ Supported products. See [EOL policy](https://confluence.atlassian.com/support/at
   * Confluence: 10+ on JDK 21.
   * Bitbucket: 10+ on JDK 21.
 
-* `release-2.x` branch
+* `release-2.x` branch (Platform 7)
   * Jira: 10+ on JDK 17.
   * Confluence: 9+ on JDK 17.
   * Bitbucket: 9+ on JDK 17.
@@ -34,6 +34,18 @@ Supported products. See [EOL policy](https://confluence.atlassian.com/support/at
   * Jira: 8.15.0 (EOL date: 2 Feb 2023) JDK 8, 11 - 9.5.0 (EOL date: 6 Dec 2024) on JDK 8, 11, 17.
   * Confluence: 7.10 (EOL date: Dec 15, 2022) JDK 8, 11 - 8.0.0-m90 (EOL date: TBD - end of 2024) JDK 8, 11.
   * Bitbucket: 7.6.0 (EOL date: Q1 calendar year 2023) on JDK 8, 11 - 8.8.0 (EOL date: 7 Feb 2025) on JDK 8, 11, 17.
+
+Plugin versions released from each branch:
+
+| Branch | Jira plugin | Confluence plugin | Bitbucket plugin |
+|---|---|---|---|
+| `master` (Platform 9) | 6.0.x | 6.0.x | 7.0.x |
+| `release-3.x` (Platform 8) | 5.0.x | 5.0.x | 6.0.x |
+| `release-2.x` (Platform 7) | 4.0.x | 4.0.x | 5.0.x |
+| `release-1.x` | 3.0.x | 3.0.x | 4.0.x |
+
+Each plugin is released independently (see the [Release](.github/workflows/release.yml) workflow), so the plugins
+have their own versions and Git tags, e.g. `jira-slack-server-integration-plugin-5.0.4`.
 
 ## A note on future development plans
 
