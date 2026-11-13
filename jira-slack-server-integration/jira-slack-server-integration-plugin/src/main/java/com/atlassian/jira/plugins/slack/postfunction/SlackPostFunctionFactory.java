@@ -25,8 +25,8 @@ import io.atlassian.fugue.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import tools.jackson.core.JacksonException;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -165,7 +165,7 @@ public class SlackPostFunctionFactory extends AbstractWorkflowPluginFactory impl
                                 isPrivate));
                     })
                     .collect(Collectors.toList());
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             log.error("Error loading post function data", e);
             return Collections.emptyList();
         }
@@ -185,7 +185,7 @@ public class SlackPostFunctionFactory extends AbstractWorkflowPluginFactory impl
                             })
                             .collect(Collectors.toList());
             channelsToNotifyJson = ChannelToNotifyDto.toJson(channelsToNotify);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             log.error("Error parsing channel data", e);
             channelsToNotifyJson = "";
         }

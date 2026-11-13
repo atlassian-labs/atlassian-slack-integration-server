@@ -18,8 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
         <jvm17.opens />
 
         <!-- default properties. copied from parent POM in order to allow to resolve plugin dependencies during BBS build -->
@@ -36,28 +35,27 @@
 
         <!-- AMPS related properties -->
         <plugin.key>${project.groupId}.${project.artifactId}</plugin.key>
-        <bitbucket.amps.version>9.5.4</bitbucket.amps.version>
+        <bitbucket.amps.version>9.13.1</bitbucket.amps.version>
 
         <!-- Bitbucket API version used during the build -->
-        <bitbucket.api.version>10.0.0</bitbucket.api.version>
+        <bitbucket.api.version>11.0.0-eap2</bitbucket.api.version>
 
         <!-- Bitbucket version used for integration tests; can be overridden to test against different versions -->
-        <bitbucket.version>10.0.0</bitbucket.version>
+        <bitbucket.version>11.0.0-eap2</bitbucket.version>
         <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
         <!-- Starting from 9.3+ BitbucketLoginPage fails to find web elements on login page -->
         <bitbucket.page.objects.version>9.2.1</bitbucket.page.objects.version>
 
         <!-- Platform version used for dependency management -->
-        <platform.version>8.0.0</platform.version>
+        <platform.version>9.0.8</platform.version>
 
         <!-- Dependency versions -->
         <atlassian.spring.scanner.version>6.0.0</atlassian.spring.scanner.version>
         <atlassian.selenium.version>4.0.0</atlassian.selenium.version>
         <atlassian.plugin.point.safety.version>1.0.0</atlassian.plugin.point.safety.version>
-        <atlassian.plugin.jquery.version>4.0.0-m004</atlassian.plugin.jquery.version>
         <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <mockito-core.version>5.21.0</mockito-core.version>
-        <commons-codec.version>1.11</commons-codec.version>
+        <commons-codec.version>1.22.1</commons-codec.version>
         <slack.common.version>3.0.0</slack.common.version>
         <lombok.version>1.18.42</lombok.version>
     </properties>
@@ -108,6 +106,20 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- Guava is internal on Platform 9 Confluence/Bitbucket (check-public-api-readiness): bundle it -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.6.0-jre</version>
+            <exclusions>
+                <exclusion><groupId>com.google.guava</groupId><artifactId>listenablefuture</artifactId></exclusion>
+                <exclusion><groupId>com.google.code.findbugs</groupId><artifactId>jsr305</artifactId></exclusion>
+                <exclusion><groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId></exclusion>
+                <exclusion><groupId>com.google.errorprone</groupId><artifactId>error_prone_annotations</artifactId></exclusion>
+                <exclusion><groupId>com.google.j2objc</groupId><artifactId>j2objc-annotations</artifactId></exclusion>
+                <exclusion><groupId>org.jspecify</groupId><artifactId>jspecify</artifactId></exclusion>
+            </exclusions>
+        </dependency>
         <!-- Embedded dependencies -->
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
@@ -124,7 +136,14 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.9</version>
+            <version>2.14.0</version>
+            <exclusions>
+                <!-- compile-time only annotations; not needed at runtime -->
+                <exclusion>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>error_prone_annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian.ozymandias</groupId>
@@ -207,7 +226,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -282,8 +301,8 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.version}</version>
-            <scope>provided</scope>
+            <!-- bundled: embedded slack-server-integration-common uses it (bundle-platform-dependencies) -->
+            <version>1.22.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -535,6 +554,10 @@
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
+                        <exclude>com.google.guava:guava</exclude>
+                        <exclude>com.google.guava:failureaccess</exclude>
+                        <exclude>commons-codec:commons-codec</exclude>
+                        <exclude>commons-io:commons-io</exclude>
                     </banningExcludes>
 
                     <includedFeModuleManifests>
@@ -555,13 +578,6 @@
                         </feManifestAssociation>
                     </feManifestAssociations>
 
-                    <pluginArtifacts>
-                        <pluginArtifact>
-                            <groupId>com.atlassian.plugins</groupId>
-                            <artifactId>jquery</artifactId>
-                            <version>${atlassian.plugin.jquery.version}</version>
-                        </pluginArtifact>
-                    </pluginArtifacts>
                     <systemPropertyVariables>
                         <plugin.resource.directories>
                             ${project.basedir}/../slack-server-integration-common/src/main/resources,

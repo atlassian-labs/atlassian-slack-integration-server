@@ -429,7 +429,7 @@ public class SlackMessageEventListener extends AutoSubscribingEventListener {
      * http://localhost:1990/confluence/pages/viewpage.action?pageId=851986
      */
     private Optional<AbstractPage> tryPageId(final String url) {
-        return UriComponentsBuilder.fromHttpUrl(decodeValue(url)).build().getQueryParams().entrySet().stream()
+        return LinkHelper.parseHttpUrl(decodeValue(url)).getQueryParams().entrySet().stream()
                 .filter(param -> "pageId".equals(param.getKey()))
                 .map(param -> getContentById(param.getValue().get(0)))
                 .filter(Optional::isPresent)

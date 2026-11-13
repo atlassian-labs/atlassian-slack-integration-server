@@ -3,4 +3,4 @@ set -ex
 trap 'set +ex' EXIT
 
 atlas-version
-atlas-mvn --batch-mode verify -P jacoco
+atlas-mvn --batch-mode --fail-at-end verify -P jacoco

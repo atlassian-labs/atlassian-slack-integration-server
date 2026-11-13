@@ -25,14 +25,30 @@
         <confluence.amps.version>${amps.version}</confluence.amps.version>
 
         <!-- Confluence version used for integration tests; can be overridden to test against different versions -->
-        <confluence.version>10.2.11</confluence.version>
+        <confluence.version>11.0.1</confluence.version>
         <confluence.data.version>${confluence.version}</confluence.data.version>
 
         <!-- Confluence API version used during the build -->
-        <confluence.api.version>10.0.1</confluence.api.version>
+        <confluence.api.version>11.0.1</confluence.api.version>
+        <!-- confluence-rest-client-jakarta (tests only) is not published for 11.0.1; latest Confluence 11 build -->
+        <confluence.rest.client.version>11.0.0-m148</confluence.rest.client.version>
     </properties>
 
     <dependencies>
+        <!-- Guava is internal on Platform 9 Confluence/Bitbucket (check-public-api-readiness): bundle it -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.6.0-jre</version>
+            <exclusions>
+                <exclusion><groupId>com.google.guava</groupId><artifactId>listenablefuture</artifactId></exclusion>
+                <exclusion><groupId>com.google.code.findbugs</groupId><artifactId>jsr305</artifactId></exclusion>
+                <exclusion><groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId></exclusion>
+                <exclusion><groupId>com.google.errorprone</groupId><artifactId>error_prone_annotations</artifactId></exclusion>
+                <exclusion><groupId>com.google.j2objc</groupId><artifactId>j2objc-annotations</artifactId></exclusion>
+                <exclusion><groupId>org.jspecify</groupId><artifactId>jspecify</artifactId></exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>slack-server-integration-common</artifactId>
@@ -70,9 +86,14 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
+            <!-- bundled: commons-beanutils is internal on Confluence 11 (check-public-api-readiness) -->
             <version>1.11.0</version>
-            <scope>provided</scope>
             <exclusions>
+                <!-- exported by Confluence 11; use the product's copy -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>commons-collections</groupId>
                     <artifactId>commons-collections</artifactId>
@@ -118,14 +139,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Platform 9: no longer provided transitively by the product API -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <scope>provided</scope>
+            <!-- bundled: embedded slack-server-integration-common uses it (bundle-platform-dependencies) -->
+            <version>1.22.1</version>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -226,6 +254,13 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Confluence 11 actions (AbstractSpaceAdminAction) use log4j; no longer on the test classpath transitively -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.26.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -270,7 +305,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-webdriver-pageobjects</artifactId>
-            <version>15.0.2</version>
+            <version>16.0.8</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -283,11 +318,51 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Transitive confluence-rest-client-jakarta from confluence-webdriver-pageobjects:15.0.2 is publicly unavailable -->
+        <!-- Align atlassian-selenium with confluence-webdriver-pageobjects:16.x (webdriver-core 4.7.0, Selenium 4):
+             slack-server-integration-test-common otherwise pulls the 3.x pageobjects API, and the 3.x stack's Firefox 92
+             cannot parse Confluence 11 batches (ES2022 class static blocks), leaving the page without jQuery/AJS. -->
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-pageobjects-api</artifactId>
+            <version>4.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.selenium</groupId>
+            <artifactId>atlassian-pageobjects-elements</artifactId>
+            <version>4.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- webdriver-core 4.7.0 brings atlassian-browsers 4.3.0 (Firefox 139), whose macOS build fails to start here;
+             4.4.0 (Firefox 153) is what the Jira ITs run with -->
+        <dependency>
+            <groupId>com.atlassian.browsers</groupId>
+            <artifactId>atlassian-browsers-auto</artifactId>
+            <version>4.4.0</version>
+            <scope>test</scope>
+            <exclusions>
+                <!-- Exclude browser dependencies since transitive ones are publicly unavailable -->
+                <exclusion>
+                    <groupId>com.atlassian.browsers</groupId>
+                    <artifactId>chrome</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.atlassian.browsers</groupId>
+                    <artifactId>chrome-profile</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Used by the calendar event test stubs; previously only arrived transitively via the 3.x selenium stack -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Transitive confluence-rest-client-jakarta from confluence-webdriver-pageobjects is publicly unavailable -->
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence-rest-client-jakarta</artifactId>
-            <version>${confluence.api.version}</version>
+            <version>${confluence.rest.client.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -328,6 +403,10 @@
                     <banningExcludes>
                         <exclude>com.atlassian.security:atlassian-secure-random</exclude>
                         <exclude>com.google.code.gson:gson</exclude>
+                        <exclude>com.google.guava:guava</exclude>
+                        <exclude>com.google.guava:failureaccess</exclude>
+                        <exclude>commons-codec:commons-codec</exclude>
+                        <exclude>commons-io:commons-io</exclude>
                         <exclude>net.bytebuddy:byte-buddy</exclude>
                         <exclude>commons-beanutils:commons-beanutils</exclude>
                     </banningExcludes>
@@ -359,13 +438,9 @@
                         </feManifestAssociation>
                     </feManifestAssociations>
 
-                    <pluginArtifacts>
-                        <pluginArtifact>
-                            <groupId>com.atlassian.plugins</groupId>
-                            <artifactId>jquery</artifactId>
-                            <version>${atlassian.plugin.jquery.version}</version>
-                        </pluginArtifact>
-                    </pluginArtifacts>
+                    <!-- No jQuery pluginArtifact: Confluence 11 bundles com.atlassian.plugins.jquery 4.0.0.8. Overriding it with
+                         4.0.0-m004 (jQuery 4 + jquery-migrate 3.6.0) makes $.fn.css drop unitless numbers, which breaks
+                         select2 dropdown positioning. -->
                     <systemPropertyVariables combine.children="append">
                         <plugin.resource.directories>
                             ${plugin.parent.directory}/slack-server-integration-common/src/main/resources,
@@ -388,12 +463,12 @@
                         <Atlassian-Plugin-Key>${plugin.key}</Atlassian-Plugin-Key>
                         <Bundle-SymbolicName>com.atlassian.confluence.plugins.confluence-slack-server-integration-plugin</Bundle-SymbolicName>
                         <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            org.springframework.osgi.*;resolution:=optional,
+                            org.eclipse.gemini.blueprint.*;resolution:=optional,
                             com.atlassian.plugin.osgi.bridge.external,
                             com.atlassian.confluence.plugin.descriptor.web.conditions,
                             com.atlassian.confluence.plugin.descriptor.web.urlreadingconditions,
-                            *;resolution:="optional"
+                            *;resolution:=optional
                         </Import-Package>
                         <Spring-Context>*</Spring-Context>
                     </instructions>

@@ -1,15 +1,15 @@
 package com.atlassian.plugins.slack.api.json;
 
 import com.atlassian.json.marshal.Jsonable;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import tools.jackson.core.StreamWriteFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -22,7 +22,9 @@ public class DefaultJsonableJacksonServiceTest {
     @Mock
     private ObjectMapper objectMapper;
     @Mock
-    private JsonFactory jsonFactory;
+    private ObjectWriter objectWriter;
+    @Mock
+    private ObjectWriter configuredObjectWriter;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -36,14 +38,15 @@ public class DefaultJsonableJacksonServiceTest {
 
     @Test
     public void toJsonable_shouldSetExpectedOption() throws Exception {
-        when(objectMapper.getJsonFactory()).thenReturn(jsonFactory);
+        when(objectMapper.writer()).thenReturn(objectWriter);
+        when(objectWriter.without(StreamWriteFeature.AUTO_CLOSE_TARGET)).thenReturn(configuredObjectWriter);
         StringWriter writer = new StringWriter();
         Map toSerialize = new HashMap<>();
 
         Jsonable jsonable = service.toJsonable(toSerialize);
         jsonable.write(writer);
 
-        verify(jsonFactory).disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
-        verify(objectMapper).writeValue(writer, toSerialize);
+        verify(objectWriter).without(StreamWriteFeature.AUTO_CLOSE_TARGET);
+        verify(configuredObjectWriter).writeValue(writer, toSerialize);
     }
 }

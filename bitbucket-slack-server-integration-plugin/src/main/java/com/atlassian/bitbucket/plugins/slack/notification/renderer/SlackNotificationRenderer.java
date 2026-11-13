@@ -38,7 +38,9 @@ import com.atlassian.bitbucket.util.PageUtils;
 import com.atlassian.plugins.slack.api.notification.Verbosity;
 import com.atlassian.plugins.slack.settings.SlackSettingService;
 import com.atlassian.sal.api.message.I18nResolver;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest.ChatPostMessageRequestBuilder;
 import com.github.seratch.jslack.api.model.block.ActionsBlock;
@@ -54,7 +56,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class SlackNotificationRenderer {
     protected static final int MAX_COMMITS_TO_SHOW = 7;
 
     private static final Logger logger = LoggerFactory.getLogger(SlackNotificationRenderer.class);
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builderWithJackson2Defaults().build();
 
     private final CommitService commitService;
     private final SecurityService securityService;
@@ -420,7 +421,7 @@ public class SlackNotificationRenderer {
         String payload = null;
         try {
             payload = OBJECT_MAPPER.writeValueAsString(new ReplyToCommentPayload(objectType, objectId, repositoryId, commentId));
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             logger.error("Failed to serialize ReplyToCommentPayload", e);
         }
         return payload;

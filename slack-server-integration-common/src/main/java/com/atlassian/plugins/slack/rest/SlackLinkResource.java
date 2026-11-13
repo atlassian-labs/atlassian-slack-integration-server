@@ -8,8 +8,9 @@ import com.atlassian.plugins.slack.link.SlackLinkManager;
 import com.atlassian.plugins.slack.rest.model.GetWorkspacesResponse;
 import com.atlassian.plugins.slack.rest.model.LimitedSlackLinkDto;
 import com.atlassian.sal.api.message.I18nResolver;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -31,7 +32,7 @@ import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 @ReadOnlyAccessAllowed
 @Path("/connection")
 public class SlackLinkResource {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builderWithJackson2Defaults().build();
 
     private final SlackConnectionService slackConnectionService;
     private final SlackLinkManager slackLinkManager;
@@ -50,7 +51,7 @@ public class SlackLinkResource {
     }
 
     private String nonNullString(final JsonNode node) {
-        String textValue = node.asText();
+        String textValue = node.asString();
         if (textValue == null || textValue.isEmpty()) {
             throw new IllegalArgumentException("Required field has no value");
         }

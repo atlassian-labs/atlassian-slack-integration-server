@@ -19,6 +19,7 @@ import com.atlassian.bitbucket.repository.ResolveRefRequest;
 import com.atlassian.bitbucket.repository.StandardRefType;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.user.SecurityService;
+import com.atlassian.plugins.slack.util.LinkHelper;
 import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 import com.google.common.primitives.Ints;
@@ -99,8 +100,7 @@ public class UnfurlLinkExtractor {
         final URI link = URI.create(url);
         // it should contain only the path after the context path
         final URI relativeLink = getContentPath(link);
-        final MultiValueMap<String, String> queryParams = UriComponentsBuilder.fromHttpUrl(decodeValue(url))
-                .build().getQueryParams();
+        final MultiValueMap<String, String> queryParams = LinkHelper.parseHttpUrl(decodeValue(url)).getQueryParams();
         try {
             final Comment comment = tryComment(queryParams).orElse(null);
             final String commentKey = comment != null ? String.valueOf(comment.getId()) : "";

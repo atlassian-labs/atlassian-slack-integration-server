@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.UriBuilder;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -73,5 +75,18 @@ public class LinkHelper {
             log.debug(e.getMessage(), e);
             return Optional.empty();
         }
+    }
+
+    /**
+     * Parses an absolute HTTP(S) URL. Replaces {@code UriComponentsBuilder.fromHttpUrl}, removed in Spring 7,
+     * keeping its contract: an {@link IllegalArgumentException} is thrown when the URL is not a valid HTTP URL.
+     */
+    public static UriComponents parseHttpUrl(final String httpUrl) {
+        final UriComponents components = UriComponentsBuilder.fromUriString(httpUrl).build();
+        final String scheme = components.getScheme();
+        if (!("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) || components.getHost() == null) {
+            throw new IllegalArgumentException("[" + httpUrl + "] is not a valid HTTP URL");
+        }
+        return components;
     }
 }

@@ -14,7 +14,9 @@ import com.atlassian.plugins.slack.user.SlackUserManager;
 import com.atlassian.plugins.slack.util.AsyncExecutor;
 import com.atlassian.plugins.slack.util.ErrorResponse;
 import com.atlassian.sal.api.message.I18nResolver;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.github.seratch.jslack.api.model.dialog.Dialog;
 import com.github.seratch.jslack.api.model.dialog.DialogElement;
 import com.github.seratch.jslack.api.model.dialog.DialogTextAreaElement;
@@ -23,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 
 import static java.util.Collections.singletonList;
 
@@ -31,7 +32,7 @@ import static java.util.Collections.singletonList;
 public class SlackActionEventListener {
     public static final String COMMENT_FIELD_NAME = "comment";
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builderWithJackson2Defaults().build();
     private static final Logger log = LoggerFactory.getLogger(SlackActionEventListener.class);
 
     private final CommentService commentService;
@@ -104,7 +105,7 @@ public class SlackActionEventListener {
                             securityService.impersonating(user, "Slack integration posts a comment")
                                     .call(() -> commentService.addReply(request));
                         });
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 log.error("Failed to parse callback id", e);
             }
         });
